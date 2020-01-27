@@ -1,0 +1,44 @@
+# -*- mode: python -*-
+
+import distutils
+if distutils.distutils_path.endswith('__init__.py'):
+    distutils.distutils_path = os.path.dirname(distutils.distutils_path)
+
+
+block_cipher = None
+
+
+a = Analysis(['moses.py'],
+             pathex=['.'],
+             binaries=[],
+             datas=[("swagger.yaml","."),
+                    ("platforms","platforms"),
+                    ("../.pyenv/lib/python3.8/site-packages/openapi_spec_validator/resources/schemas","openapi_spec_validator/resources/schemas"),
+                    ("../.pyenv/lib/python3.8/site-packages/swagger_ui_bundle/vendor/swagger-ui-3.24.2","api/ui")],
+             hiddenimports=[],
+             hookspath=[],
+             runtime_hooks=[],
+             excludes=[],
+             win_no_prefer_redirects=False,
+             win_private_assemblies=False,
+             cipher=block_cipher,
+             noarchive=False)
+pyz = PYZ(a.pure, a.zipped_data,
+             cipher=block_cipher)
+exe = EXE(pyz,
+          a.scripts,
+          [],
+          exclude_binaries=True,
+          name='moses',
+          debug=False,
+          bootloader_ignore_signals=False,
+          strip=False,
+          upx=True,
+          console=True )
+coll = COLLECT(exe,
+               a.binaries,
+               a.zipfiles,
+               a.datas,
+               strip=False,
+               upx=True,
+               name='moses-linux')
