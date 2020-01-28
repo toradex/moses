@@ -1527,7 +1527,7 @@ definitions:
         additionalProperties:
           type: object
           additionalProperties:
-                type: string
+            type: string
       devices:
         type: object
         additionalProperties:
@@ -2393,13 +2393,11 @@ definitions:
         type: "string"
         description: |
           - Empty string means not to restart
-          - "no" No restart
           - `always` Always restart
           - `unless-stopped` Restart always except when the user has manually stopped the container
           - `on-failure` Restart only when the container exit code is non-zero
         enum:
           - ""
-          - "no"
           - "always"
           - "unless-stopped"
           - "on-failure"

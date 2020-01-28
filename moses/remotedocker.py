@@ -123,11 +123,14 @@ class RemoteDocker:
             dockervolumes = dict(
                 map(lambda x: (x[0], (x[1]+",rw").split(",")[0:2]), volumes.items()))
 
+            dockervolumes = dict(
+                map(lambda x: (x[0], {"bind": x[1][0], "mode": x[1][1]}), dockervolumes.items()))
+
             container = self.remotedocker.containers.run(image.id,
                                                          name=name,
                                                          privileged=privileged,
                                                          ports=dockerports,
-                                                         volumes=volumes,
+                                                         volumes=dockervolumes,
                                                          devices=devices,
                                                          detach=True,
                                                          **extraparms
