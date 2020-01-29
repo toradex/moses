@@ -58,7 +58,7 @@ class SSHConsole(console.GenericConsole):
         except socket.timeout:
             pass
 
-        return output+error
+        return (output+error).strip()
 
     def wait_for_prompt(self, channel, prompt=None, timeout=30):
         """Wait until the specific string is received

@@ -825,7 +825,13 @@ class TargetDevices(dict, metaclass=singleton.Singleton):
 
         with sshconsole.SSHConsole(hostname) as console:
             dev = self._setup_device(console, username, password, timeout)
-            dev.hostname = hostname
+
+            try:
+                ip=socket.gethostbyname(dev.hostname)
+            except socket.gaierror:
+                dev.hostname = hostname
+                logging.warning("Can't solve hostname "+hostname+" saving address used for detection instead.")
+                dev.save()
             return dev
 
     def refresh_device_info(self, device_id):

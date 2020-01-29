@@ -1216,7 +1216,7 @@ class ApplicationConfig(config.ConfigurableKeysObject):
             ports = container.attrs["NetworkSettings"]["Ports"]["22/tcp"]
             port = ports[0]["HostPort"]
 
-            rsynccommand = "rsync -rz "
+            rsynccommand = "rsync -rzv "
             rsynccommand += "-e \"ssh -p " + port\
                 + " -o \\\"StrictHostKeyChecking no\\\"\" "
             # source
@@ -1225,10 +1225,19 @@ class ApplicationConfig(config.ConfigurableKeysObject):
             rsynccommand += self.username + "@" + socket.gethostbyname(device.hostname)\
                 + ":" + containerfolder
 
-            stdout = ssh.exec_command(rsynccommand)[1]
+            _,stdout,stderr = ssh.exec_command(rsynccommand)
             status = stdout.channel.recv_exit_status()
 
             if status != 0:
+                output="";
+
+                try:
+                    output="".join(stderr.readlines())
+                    output+="".join(stdout.readlines())
+
+                    logging.warning(output)
+                except:
+                    pass
                 raise exceptions.RemoteCommandError(rsynccommand,
                                                     status)
 
