@@ -19,6 +19,9 @@ supportedmodels:
     "0050",
     "0051",
     "0052",
+    "0055",
+    "0056",
+    "0057",
   ]
 unsupportedmodels: []
 # defines base image and dockerfile templates for the containers
