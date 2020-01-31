@@ -332,8 +332,8 @@ class ApplicationConfig(config.ConfigurableKeysObject):
 
             img = localdocker.images.build(path=str(self.folder),
                                            dockerfile=dockerfilerelpath,
-                                           tag=self.platformid+"_"+self.id,
-                                           pull=True
+                                           tag=self.platformid+"_"+self.id+"_"+configuration,
+                                           pull=False
                                            )[0]
 
             tag = self.get_custom_prop(configuration,"tag")
@@ -372,6 +372,12 @@ class ApplicationConfig(config.ConfigurableKeysObject):
                 limg = ld.images.get(imgid)
             except docker.errors.ImageNotFound:
                 logging.error("Image %s not found when deploying application %s.", imgid, self.folder)
+                raise exceptions.ImageNotFoundError(imgid)
+
+            if (len(limg.tags)==0):
+                self.images[configuration]=None
+                self.save()
+                logging.error("Image %s has no tags when deploying application %s.", imgid, self.folder)
                 raise exceptions.ImageNotFoundError(imgid)
 
             plat = platformconfig.PlatformConfigs().get_platform(self.platformid)
