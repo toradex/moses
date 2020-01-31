@@ -45,7 +45,7 @@ COPY work/#%application.appname%# /#%application.appname%#
 USER #%application.username%#
 WORKDIR /#%application.appname%#
 
-CMD "/usr/bin/python3 #%application.main%# #%application.appargs%#"
+CMD /usr/bin/python3 #%application.main%# #%application.appargs%#
 
 # commands that will run on the target (ENTRYPOINT or CMD)
 #%application.targetcommands%#
