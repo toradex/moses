@@ -78,6 +78,16 @@ class SharedSSHDockerTunnel(sshtunnel.SSHTunnelForwarder):
                     self.stop()
 
 
+class IgnorePolicy(paramiko.MissingHostKeyPolicy):
+    """
+    Policy for automatically adding the hostname and new host key to the
+    local `.HostKeys` object, and saving it.  This is used by `.SSHClient`.
+    """
+
+    def missing_host_key(self, client, hostname, key):
+        pass
+
+
 class SharedSSHClient(paramiko.SSHClient):
 
     __connections = {}
@@ -112,7 +122,7 @@ class SharedSSHClient(paramiko.SSHClient):
             ssh = cls(device.id)
 
             ssh.load_system_host_keys()
-            ssh.set_missing_host_key_policy(paramiko.AutoAddPolicy())
+            ssh.set_missing_host_key_policy(IgnorePolicy())
 
             ssh.connect(device.hostname,
                         22,
@@ -165,7 +175,7 @@ class SSHForwarder(threading.Thread):
 
             self.ssh = paramiko.SSHClient()
             self.ssh.load_system_host_keys()
-            self.ssh.set_missing_host_key_policy(paramiko.AutoAddPolicy())
+            self.ssh.set_missing_host_key_policy(IgnorePolicy())
 
             self.ssh.connect(self.device.hostname,
                              22,
