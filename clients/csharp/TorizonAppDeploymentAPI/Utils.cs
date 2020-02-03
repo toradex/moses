@@ -69,6 +69,11 @@ namespace TorizonAppDeploymentAPI
                     }
                 }
 
+                if (prop.PropertyType.FullName.StartsWith("TorizonRestAPI.Model."))
+                {
+                    notify = true;
+                }
+
                 if (notify)
                     propertyChanged?.Invoke(dest, new PropertyChangedEventArgs(prop.Name));
             }
