@@ -717,6 +717,16 @@ class ApplicationConfig(config.ConfigurableKeysObject):
                 configuration, "dockercomposefile")
 
         if dockercomposefile is not None:
+
+            # try to detach from network first
+            networks=list(dict.fromkeys(self._append_props(plat,configuration,"networks")))
+
+            # collect networks to ensure that they are available
+            nets = map(self.remotedocker.networks.get, networks)
+
+            for network in nets:
+                network.disconnect(container,force=True)
+
             ssh = sharedssh.SharedSSHClient.get_connection(
                 device)
 
