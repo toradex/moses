@@ -1,0 +1,82 @@
+---
+# set to true for platforms that are provided by Toradex
+standard: true
+# descriptive information
+name: ASP.NET for arm32v7
+version: "1.0"
+description: platform for ASP.NET applications
+# supported modules (using product id),* means all modules except unsupported ones
+supportedmodels: ["*"]
+unsupportedmodels: []
+# defines base image and dockerfile templates for the containers
+baseimage:
+  common:
+    - torizon/arm32v7-debian-aspdotnet
+    - buster
+  debug:
+  release:
+# names of dockerfile templates
+container:
+  common:
+  debug: debug.dockerfile
+  release: release.dockerfile
+# defines what languages/runtimes are supported by this platform
+runtimes:
+  - aspdotnet
+# information about how containers should run
+ports:
+  common: {}
+  debug: { "22/tcp": null, "5000/tcp": 5000, "5001/tcp": 5001 }
+  release: { "5000/tcp": 5000, "5001/tcp": 5001 }
+volumes:
+  common: {}
+  debug: {}
+  release: {}
+devices:
+  common: []
+  debug: []
+  release: []
+privileged: false
+extraparms:
+  common: {}
+  debug: {}
+  release: {}
+# information about the SDK (if required)
+usesdk: false
+# set to false to use a container template
+usesysroot: false
+# base image for the container/template
+sdkbaseimage:
+  common:
+  debug:
+  release:
+# template file for SDK container build
+sdkcontainer:
+  common: null
+  debug: null
+  release: null
+
+# additional platform-specific properties that can be used in projects or plugins
+props:
+  common: { "runtimeid": "linux-arm" }
+  debug: {}
+  release: {}
+# additional scripts (docker-compose or shell) that can be used to start/stop
+# the container
+# If you use dockerfile the container should NOT be started there
+dockercomposefile:
+  common: null
+  debug: null
+  release: null
+startupscript:
+  common: null
+  debug: null
+  release: null
+shutdownscript:
+  common: null
+  debug: null
+  release: null
+networks:
+  common: []
+  debug: []
+  release: []

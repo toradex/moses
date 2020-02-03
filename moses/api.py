@@ -81,9 +81,13 @@ def version_docker_get() -> dict:
 
     Returns: Docker information
     """
-    client = docker.from_env()
 
-    return client.version()
+    try:
+        client = docker.from_env()
+
+        return client.version()
+    except:
+        return ("Docker not responding",500)
 
 
 def devices_get():

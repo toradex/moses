@@ -25,7 +25,13 @@ RUN if [[ -z "#%application.extrapackages%#" ]]; then \
 
 #%application.targetfiles%#
 
+COPY work/#%application.appname%# /#%application.appname%#
+
 USER #%application.username%#
+
+WORKDIR /#%application.appname%#
+
+CMD /dotnet/dotnet #%application.appname%#.dll #%application.appargs%#
 
 # commands that will run on the target (ENTRYPOINT or CMD)
 #%application.targetcommands%#

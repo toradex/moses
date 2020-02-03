@@ -2,7 +2,7 @@
 # set to true for platforms that are provided by Toradex
 standard: true
 # descriptive information
-name: netcore arm32v7
+name: .NET core support for arm32v7
 version: "1.0"
 description: platform for console applications with .NET core
 # supported modules (using product id),* means all modules except unsupported ones
@@ -11,7 +11,7 @@ unsupportedmodels: []
 # defines base image and dockerfile templates for the containers
 baseimage:
   common:
-    - torizon/arm32v7-debian-base
+    - torizon/arm32v7-debian-dotnet
     - buster
   debug:
   release:
