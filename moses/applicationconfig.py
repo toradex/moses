@@ -144,6 +144,15 @@ class ApplicationConfig(config.ConfigurableKeysObject):
 
         super().save()
 
+    def load(self):
+        super().load()
+
+        if (self.id=="00000000-0000-0000-0000-000000000000"):
+            self.id = str(uuid.uuid4())
+            self.privatekey = None
+            self.publickey = None
+            self.save()
+
     def _generate_keys(self):
         super()._generate_keys()
         with open(str(self.folder / "id_rsa.pub"), "w") as f:
@@ -1284,6 +1293,25 @@ class ApplicationConfig(config.ConfigurableKeysObject):
             super().destroy()
         except:
             logging.exception("Exception destroying application object")
+
+    def reseal(self):
+        """ Cleans up app-id and keys. Those will be re-created next time
+            the application will be re-opened. This can be used to upload
+            the app configuration to a git repo that can be cloned/forked
+            and avoids that all the clones keep the same IDsself.
+            After this operation the application won't be usable anymore.
+        """
+        applications=ApplicationConfigs()
+        applications.pop(self.id)
+        self.id="00000000-0000-0000-0000-000000000000"
+        self.privatekey=""
+        self.publickey=""
+        try:
+            os.remove(self.folder / "id_rsa")
+            os.remove(self.folder / "id_rsa.pub")
+        except:
+            pass
+        self.save()
 
 
 class ApplicationConfigs(dict, metaclass=singleton.Singleton):

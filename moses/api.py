@@ -765,6 +765,15 @@ def applications_application_privatekey_get(application_id):
     app = applications.get(application_id)
     return (app.get_privatekeypath(), 200)
 
+def applications_application_reseal_get(application_id):
+    applications = applicationconfig.ApplicationConfigs()
+
+    if application_id not in applications:
+        return ("Application not found", 404)
+
+    app = applications.get(application_id)
+    app.reseal()
+    return (connexion.NoContent, 200)
 
 def setup_pullcontainers_get():
     """Pulls all base containers needed for the different applications
