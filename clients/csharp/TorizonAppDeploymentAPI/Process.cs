@@ -39,14 +39,14 @@ namespace TorizonAppDeploymentAPI
             this.container = container;
             this.device = container.Device;
 
-            api = new TorizonRestAPI.Api.DevicesApi();
+            api = TorizonAPIManager.GetDevicesApi();
         }
 
         public Processes(TargetDevice device) : base("Pid", new ProcessInstantiator())
         {
             this.device = device;
 
-            api = new TorizonRestAPI.Api.DevicesApi();
+            api = TorizonAPIManager.GetDevicesApi();
         }
 
         public Task CommitAsync(Action OnCommitCompleted)

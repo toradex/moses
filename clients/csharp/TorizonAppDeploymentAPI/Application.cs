@@ -29,7 +29,7 @@ namespace TorizonAppDeploymentAPI
 
         public static async Task<Application> CreateAsync(string platformid, string path, string username)
         {
-            TorizonRestAPI.Api.ApplicationsApi api = new TorizonRestAPI.Api.ApplicationsApi();
+            TorizonRestAPI.Api.ApplicationsApi api = TorizonAPIManager.GetApplicationsApi();
 
             TorizonRestAPI.Model.Application model = Utils.ObjectOrException<TorizonRestAPI.Model.Application>(await api.ApplicationsCreateAsync(platformid, path, username));
 
@@ -38,7 +38,7 @@ namespace TorizonAppDeploymentAPI
 
         public static async Task<Application> LoadAsync(string path)
         {
-            TorizonRestAPI.Api.ApplicationsApi api = new TorizonRestAPI.Api.ApplicationsApi();
+            TorizonRestAPI.Api.ApplicationsApi api = TorizonAPIManager.GetApplicationsApi();
 
             TorizonRestAPI.Model.Application model = Utils.ObjectOrException<TorizonRestAPI.Model.Application>(await api.ApplicationsLoadAsync(path));
 
@@ -47,7 +47,7 @@ namespace TorizonAppDeploymentAPI
 
         private Application(TorizonRestAPI.Model.Application model)
         {
-            api = new TorizonRestAPI.Api.ApplicationsApi();
+            api = TorizonAPIManager.GetApplicationsApi();
             Utils.CopyProperties<TorizonRestAPI.Model.Application>(model, this, PropertyChanged);
         }
 

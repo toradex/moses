@@ -54,7 +54,7 @@ namespace TorizonAppDeploymentAPI
         {
             Utils.CopyProperties<TorizonRestAPI.Model.TargetDevice>(model, this, PropertyChanged);
 
-            api= new TorizonRestAPI.Api.DevicesApi();
+            api= TorizonAPIManager.GetDevicesApi();
 
             this.images = new DockerImages(this);
             this.containers = new DockerContainers(this);
@@ -167,7 +167,7 @@ namespace TorizonAppDeploymentAPI
 
         protected TargetDevices(IObjectsCollectionInstantiator<TargetDevice, TorizonRestAPI.Model.TargetDevice> instantiator) : base("Id", instantiator)
         {
-            api= new TorizonRestAPI.Api.DevicesApi();
+            api= TorizonAPIManager.GetDevicesApi();
         }
 
         public async Task RefreshAsync(Action OnRefreshCompleted, bool full)

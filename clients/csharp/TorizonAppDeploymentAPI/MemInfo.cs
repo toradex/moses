@@ -17,13 +17,13 @@ namespace TorizonAppDeploymentAPI
             this.container = container;
             this.device = container.Device;
 
-            api = new TorizonRestAPI.Api.DevicesApi();
+            api = TorizonAPIManager.GetDevicesApi();
         }
         public MemInfo(TargetDevice device)
         {
             this.device = device;
 
-            api = new TorizonRestAPI.Api.DevicesApi();
+            api = TorizonAPIManager.GetDevicesApi();
         }
 
         public Task CommitAsync(Action OnCommitCompleted)

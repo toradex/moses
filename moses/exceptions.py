@@ -3,6 +3,8 @@ import inspect
 import logging
 import json
 import flask
+import docker
+import os
 
 """
 Exceptions and tools to convert them to API response codes
@@ -159,8 +161,13 @@ class LocalDockerError(MosesError):
     description = "Local docker exception."
 
     def __init__(self, e):
-        super().__init__("Docker exception: " +
-                         str(e), exception=e)
+        message = "Docker exception: " + str(e)
+
+        if isinstance(e, docker.errors.BuildError):
+            for line in e.build_log:
+                if 'stream' in line:
+                    message += os.linesep + line['stream'].strip()
+        super().__init__(message, exception=e)
 
 
 class InvalidObjectIdError(MosesError):
