@@ -121,7 +121,7 @@ class SharedSSHClient(paramiko.SSHClient):
 
             ssh = cls(device.id)
 
-            ssh.load_system_host_keys()
+            #ssh.load_system_host_keys()
             ssh.set_missing_host_key_policy(IgnorePolicy())
 
             ssh.connect(device.hostname,
