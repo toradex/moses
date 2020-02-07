@@ -17,7 +17,7 @@ namespace TorizonAppDeploymentAPI
         public DockerImage(TorizonRestAPI.Model.DockerImage model, TargetDevice device)
         {
             Utils.CopyProperties<TorizonRestAPI.Model.DockerImage>(model, this, PropertyChanged);
-            api = new TorizonRestAPI.Api.DevicesApi();
+            api = TorizonAPIManager.GetDevicesApi();
 
             this.Device = device;
         }
@@ -92,7 +92,7 @@ namespace TorizonAppDeploymentAPI
 
         public DockerImages(TargetDevice device) : base("Id",new DockerImageInstantiator(device))
         {
-            this.api = new TorizonRestAPI.Api.DevicesApi();
+            this.api = TorizonAPIManager.GetDevicesApi();
             this.device = device;
         }
 

@@ -116,7 +116,7 @@ namespace TorizonAppDeploymentAPI
         {
             try
             {
-                TorizonRestAPI.Api.VersionApi api = new TorizonRestAPI.Api.VersionApi();
+                TorizonRestAPI.Api.VersionApi api = TorizonAPIManager.GetVersionApi();
                 TorizonRestAPI.Model.DockerVersion dockerVersion = Utils.ObjectOrException<TorizonRestAPI.Model.DockerVersion>(await api.VersionDockerAsync());
             }
             catch (Exception)

@@ -18,7 +18,7 @@ namespace TorizonAppDeploymentAPI
         {
             Utils.CopyProperties<TorizonRestAPI.Model.Platform>(model, this, PropertyChanged);
 
-            this.api = new TorizonRestAPI.Api.PlatformsApi();
+            this.api = TorizonAPIManager.GetPlatformsApi();
         }
 
         public async Task RefreshAsync(Action OnRefreshCompleted, bool full)
@@ -78,7 +78,7 @@ namespace TorizonAppDeploymentAPI
 
         protected Platforms(IObjectsCollectionInstantiator<Platform,TorizonRestAPI.Model.Platform> instantiator) : base("Name",instantiator)
         {
-            api=new TorizonRestAPI.Api.PlatformsApi();
+            api = TorizonAPIManager.GetPlatformsApi();
         }
 
         public async Task RefreshAsync(Action OnRefreshCompleted,bool full)
