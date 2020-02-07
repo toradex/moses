@@ -4,6 +4,7 @@ import logging
 import paramiko
 import sshtunnel
 import select
+import time
 
 
 class SharedSSHDockerTunnel(sshtunnel.SSHTunnelForwarder):
@@ -40,6 +41,14 @@ class SharedSSHDockerTunnel(sshtunnel.SSHTunnelForwarder):
 
             if tunnel is None:
                 return None
+
+            timeout=100
+
+            while ( not ( tunnel.is_active and tunnel.is_alive )):
+                time.sleep(0.1)
+                timeout=timeout-1
+                if (timeout==0):
+                    return None
 
             cls.__tunnels[device.id] = tunnel
             return tunnel
