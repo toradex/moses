@@ -121,7 +121,7 @@ class RemoteDocker:
 
             # convert volumes from string into docker format
             dockervolumes = dict(
-                map(lambda x: (x[0], (x[1]+",rw").split(",")[0:2]), volumes.items()))
+                map(lambda x: (x[0].strip(), (x[1].strip()+",rw").split(",")[0:2]), volumes.items()))
 
             dockervolumes = dict(
                 map(lambda x: (x[0], {"bind": x[1][0], "mode": x[1][1]}), dockervolumes.items()))
