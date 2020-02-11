@@ -543,6 +543,12 @@ class ApplicationConfig(config.ConfigurableKeysObject):
         platformscript = plat.get_prop(
             configuration, scriptname)
 
+        if script=="":
+            script=None
+
+        if platformscript="":
+            platformscript=None
+
         if script is not None or platformscript is not None:
 
             ssh = sharedssh.SharedSSHClient.get_connection(device)
@@ -644,14 +650,14 @@ class ApplicationConfig(config.ConfigurableKeysObject):
             dockercomposefile=self.get_prop(configuration,"dockercomposefile")
             dockercomposefilepath=None
 
-            if dockercomposefile is not None:
+            if dockercomposefile is not None and len(dockercomposefile) > 0:
                 dockercomposefilepath=self.folder / dockercomposefile
             else:
                 dockercomposefile=plat.get_prop(configuration,"dockercomposefile")
                 if dockercomposefile is not None and len(dockercomposefile) > 0:
                     dockercomposefilepath = plat.folder / dockercomposefile
 
-            if dockercomposefile is not None:
+            if dockercomposefilepath is not None:
                 ssh = sharedssh.SharedSSHClient.get_connection(
                     device)
 
@@ -721,11 +727,11 @@ class ApplicationConfig(config.ConfigurableKeysObject):
         dockercomposefile = self.get_prop(
             configuration, "dockercomposefile")
 
-        if dockercomposefile is None:
+        if dockercomposefile is None and and len(dockercomposefile) > 0:
             dockercomposefile = plat.get_prop(
                 configuration, "dockercomposefile")
 
-        if dockercomposefile is not None:
+        if dockercomposefile is not None and len(dockercomposefile) > 0:
 
             # try to detach from network first
             networks=list(dict.fromkeys(self._append_props(plat,configuration,"networks")))
