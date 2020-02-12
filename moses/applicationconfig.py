@@ -555,7 +555,7 @@ class ApplicationConfig(config.ConfigurableKeysObject):
         if script=="":
             script=None
 
-        if platformscript="":
+        if platformscript=="":
             platformscript=None
 
         if script is not None or platformscript is not None:
@@ -772,7 +772,7 @@ class ApplicationConfig(config.ConfigurableKeysObject):
         dockercomposefile = self.get_prop(
             configuration, "dockercomposefile")
 
-        if dockercomposefile is None and and len(dockercomposefile) > 0:
+        if dockercomposefile is None and len(dockercomposefile) > 0:
             dockercomposefile = plat.get_prop(
                 configuration, "dockercomposefile")
 
