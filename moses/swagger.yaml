@@ -1295,6 +1295,22 @@ paths:
         500:
           $ref: "#/responses/InternalServerError_500"
 
+  /applications/{application_id}/reseal:
+
+    get:
+      operationId: application_reseal
+      tags:
+        - Applications
+      summary: Cleans id and keys for git repo uploading
+      description: This operation make the application no longer valid, but allow you to upload it to a git repo from where it can be cloned/forked re-generating new ids every time, avoiding that all clones share the same id/keys.
+      parameters:
+        - $ref: "#/parameters/application_id"
+      responses:
+        200:
+          description: key returned
+        404:
+          description: Application not found
+
   /setup/pullcontainers:
     get:
       operationId: setup_pullcontainers

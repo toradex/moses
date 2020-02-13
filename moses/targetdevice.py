@@ -482,6 +482,9 @@ class TargetDevice(config.ConfigurableKeysObject):
 
             fields = line.split()
 
+            if (len(fields) < 6):
+                continue
+
             storage = {}
             storage["filesystem"] = fields[0]
             storage["size"] = int(fields[1])
@@ -560,17 +563,17 @@ class TargetDevices(dict, metaclass=singleton.Singleton):
         self.modeldict = dict.fromkeys(
             ["0014", "0015", "0016", "0017"], "colibri-imx6")
         self.modeldict.update(dict.fromkeys(
-            ["0032", "0033"], "colibri-imx7"))
+            ["0032", "0033", "0039"], "colibri-imx7"))
         self.modeldict.update(dict.fromkeys(
             ["0027", "0028", "0029", "0035"], "apalis-imx6"))
         self.modeldict.update(dict.fromkeys(
             ["0036"], "colibri-imx6ull"))
         self.modeldict.update(dict.fromkeys(
-            ["0037","0047","0048","0049","0046","0053","0054","0038"], "apalis-imx8"))
+            ["0037", "0047", "0048", "0049", "0046", "0053", "0054", "0038"], "apalis-imx8"))
         self.modeldict.update(dict.fromkeys(
-            ["0038","0050","0051","0052"], "colibri-imx8"))
+            ["0038", "0050", "0051", "0052"], "colibri-imx8"))
         self.modeldict.update(dict.fromkeys(
-            ["0055","0056","0057"], "verdin-imx8"))
+            ["0055", "0056", "0057"], "verdin-imx8"))
 
         # Iterates on all devices
         subfolders = [dir for dir
@@ -829,10 +832,11 @@ class TargetDevices(dict, metaclass=singleton.Singleton):
             dev = self._setup_device(console, username, password, timeout)
 
             try:
-                ip=socket.gethostbyname(dev.hostname)
+                ip = socket.gethostbyname(dev.hostname)
             except socket.gaierror:
                 dev.hostname = hostname
-                logging.warning("Can't solve hostname "+hostname+" saving address used for detection instead.")
+                logging.warning("Can't solve hostname "+hostname +
+                                " saving address used for detection instead.")
                 dev.save()
             return dev
 

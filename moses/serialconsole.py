@@ -197,7 +197,6 @@ class SerialConsole(console.GenericConsole):
             self.wait_for_prompt()
             self.ser.write("cd".encode("utf-8"))
             self.wait_for_prompt()
-            self.wait_for_prompt()
 
             if changepwd:
                 self.ser.write("passwd".encode("utf-8"))
@@ -208,6 +207,10 @@ class SerialConsole(console.GenericConsole):
                 self.wait_for_prompt("Retype new password: ")
                 self.ser.write(password.encode("utf-8"))
                 self.wait_for_prompt()
+
+            time.sleep(5)
+            self.ser.flush()
+            self.ser.read_all()
 
         except serial.SerialException as e:
             raise exceptions.SerialError(e)

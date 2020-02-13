@@ -344,12 +344,7 @@ def cmd_handler_device_image_delete(args) -> int:
 
 def generate_container_list_item(c: moses_client.models.DockerContainer) -> dict:
     """Convert image into dump table row
-
-    Arguments:
-        p {moses_client.models.TargetDevice} -- object from the API
-
-    Returns:
-        dict -- name-value dict
+applications_application_reseal
     """
     item = dict()
 
@@ -610,6 +605,21 @@ def cmd_handler_application_key(args) -> int:
     logging.info(keypath)
     return 0
 
+def cmd_handler_application_reseal(args) -> int:
+    """prints path of private key file
+
+    Arguments:
+        args {[type]} -- command line arguments
+
+    Returns:
+        int -- 0 for success
+    """
+    api = moses_client.ApplicationsApi()
+
+    api.application_reseal(args.application_id)
+    logging.warning("Application has been resealed. It should not be used for any further operation, otherwise keys will be regenerated.")
+    return 0
+
 
 def cmd_handler_detect(args) -> int:
     """Detects a new serial or network device
@@ -831,6 +841,7 @@ def create_parser() -> argparse.ArgumentParser:
         "updatesdk")
     application_runsdk_parser = application_subparsers.add_parser("runsdk")
     application_key_parser = application_subparsers.add_parser("key")
+    application_reseal_parser = application_subparsers.add_parser("reseal")
 
     application_build_parser.add_argument(
         "configuration", help="Build/release or other app-specific configuration")

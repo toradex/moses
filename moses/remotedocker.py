@@ -1,6 +1,7 @@
 """ Class used to manage remote docker instance
 """
 import io
+import time
 import logging
 import json
 import paramiko
@@ -121,7 +122,7 @@ class RemoteDocker:
 
             # convert volumes from string into docker format
             dockervolumes = dict(
-                map(lambda x: (x[0], (x[1]+",rw").split(",")[0:2]), volumes.items()))
+                map(lambda x: (x[0].strip(), (x[1].strip()+",rw").split(",")[0:2]), volumes.items()))
 
             dockervolumes = dict(
                 map(lambda x: (x[0], {"bind": x[1][0], "mode": x[1][1]}), dockervolumes.items()))
@@ -261,9 +262,23 @@ class RemoteDocker:
         except docker.errors.DockerException as e:
             raise exceptions.RemoteDockerError(self.dev, str(e))
 
-    # enable object to be used in "with" statements
+    def get_network(self, network):
+        list = self.remotedocker.networks.list(names=[network])
+
+        if len(list) == 0:
+            return None
+
+        return list[0]
+
+        # enable object to be used in "with" statements
 
     def __enter__(self):
+        if (not (self.sshtunnel.is_active and self.sshtunnel.is_alive)):
+            e = exceptions.SSHTunnelError(
+                Exception("Tunnel is not connected."))
+            self.sshtunnel.__exit__(e.type, e, None)
+            raise e
+
         localdocker = "tcp://127.0.0.1:"+str(self.sshtunnel.local_bind_port)
         self.remotedocker = docker.DockerClient(
             base_url=localdocker, timeout=1800)

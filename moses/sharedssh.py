@@ -4,6 +4,7 @@ import logging
 import paramiko
 import sshtunnel
 import select
+import time
 
 
 class SharedSSHDockerTunnel(sshtunnel.SSHTunnelForwarder):
@@ -41,6 +42,14 @@ class SharedSSHDockerTunnel(sshtunnel.SSHTunnelForwarder):
             if tunnel is None:
                 return None
 
+            timeout = 100
+
+            while (not (tunnel.is_active and tunnel.is_alive)):
+                time.sleep(0.1)
+                timeout = timeout-1
+                if (timeout == 0):
+                    return None
+
             cls.__tunnels[device.id] = tunnel
             return tunnel
 
@@ -75,7 +84,8 @@ class SharedSSHDockerTunnel(sshtunnel.SSHTunnelForwarder):
             with SharedSSHDockerTunnel.__lock:
                 if self.device in SharedSSHDockerTunnel.__tunnels:
                     del SharedSSHDockerTunnel.__tunnels[self.device]
-                    self.stop()
+                    thread = threading.Thread(target=self.stop)
+                    thread.start()
 
 
 class IgnorePolicy(paramiko.MissingHostKeyPolicy):
@@ -121,7 +131,7 @@ class SharedSSHClient(paramiko.SSHClient):
 
             ssh = cls(device.id)
 
-            ssh.load_system_host_keys()
+            # ssh.load_system_host_keys()
             ssh.set_missing_host_key_policy(IgnorePolicy())
 
             ssh.connect(device.hostname,
