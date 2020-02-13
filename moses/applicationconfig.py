@@ -275,22 +275,27 @@ class ApplicationConfig(config.ConfigurableKeysObject):
         try:
             localdocker = docker.from_env()
 
-            if self.images[configuration] is not None:
+            if self.images[configuration] is None:
+                logging.info("Image has never been built.")
+                return False;
 
-                img = None
+            img = None
 
-                try:
-                    img = localdocker.images.get(self.images[configuration])
-                except docker.errors.ImageNotFound:
-                    pass
+            try:
+                img = localdocker.images.get(self.images[configuration])
+            except docker.errors.ImageNotFound:
+                pass
 
-                if img is None:
-                    return False
+            if img is None:
+                logging.info("Image does not exist.")
+                return False
 
-                if img.attrs["Created"] < self.modificationdate:
-                    return False
+            if img.attrs["Created"] < self.modificationdate:
+                logging.info("Image is older than configuration.")
+                return False
 
-                return True
+            logging.info("Image is up to date.")
+            return True
         except docker.errors.DockerException as e:
             raise exceptions.LocalDockerError(e)
 
@@ -542,8 +547,6 @@ class ApplicationConfig(config.ConfigurableKeysObject):
             scriptname {str} -- name of the property storing the script filename
         """
 
-        logging.info("Running script:"+scriptname)
-
         # check scripts for both application and platform, both are deployed
         # if app script exist, then it's the only one invoked (but still has a
         # chance to invoke platform one if needed since it has been deployed in
@@ -559,6 +562,8 @@ class ApplicationConfig(config.ConfigurableKeysObject):
             platformscript = None
 
         if script is not None or platformscript is not None:
+
+            logging.info("Running script:"+scriptname)
 
             ssh = sharedssh.SharedSSHClient.get_connection(device)
 
@@ -616,7 +621,7 @@ class ApplicationConfig(config.ConfigurableKeysObject):
                 if session.recv_exit_status() != 0:
                     logging.error("Error executing "+scriptname+".")
 
-        logging.info("Running script:"+scriptname+" done.")
+            logging.info("Running script:"+scriptname+" done.")
 
     def run(self, configuration: str, device: targetdevice.TargetDevice):
         """Runs application selected container on the specified device.
@@ -772,7 +777,7 @@ class ApplicationConfig(config.ConfigurableKeysObject):
         dockercomposefile = self.get_prop(
             configuration, "dockercomposefile")
 
-        if dockercomposefile is None and len(dockercomposefile) > 0:
+        if dockercomposefile is not None and len(dockercomposefile) > 0:
             dockercomposefile = plat.get_prop(
                 configuration, "dockercomposefile")
 
