@@ -1,6 +1,7 @@
 connexion 2.4.0 Apache License Version 2.0 https://github.com/zalando/connexion (license: https://raw.githubusercontent.com/zalando/connexion/master/LICENSE.txt)
 docker 4.1.0 Apache License 2.0 https://github.com/docker/docker-py (license: https://raw.githubusercontent.com/docker/docker-py/master/LICENSE)
 paramiko 2.6.0 LGPL https://github.com/paramiko/paramiko/ (license: https://raw.githubusercontent.com/paramiko/paramiko/master/LICENSE)
+PyInstaller 4.0.dev0 GPL license with a special exception which allows to use PyInstaller to build and distribute non-free programs (including commercial ones) http://www.pyinstaller.org (license: http://www.pyinstaller.org/license)
 pyserial 3.4 BSD https://github.com/pyserial/pyserial (license: https://raw.githubusercontent.com/pyserial/pyserial/master/LICENSE.txt)
 python-dateutil 2.8.1 Dual License https://dateutil.readthedocs.io
 PyYAML 5.1.2 MIT https://github.com/yaml/pyyaml (license: https://raw.githubusercontent.com/yaml/pyyaml/master/LICENSE)
