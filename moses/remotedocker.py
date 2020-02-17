@@ -276,7 +276,7 @@ class RemoteDocker:
         if (not (self.sshtunnel.is_active and self.sshtunnel.is_alive)):
             e = exceptions.SSHTunnelError(
                 Exception("Tunnel is not connected."))
-            self.sshtunnel.__exit__(e.type, e, None)
+            self.sshtunnel.__exit__(type(e), e, None)
             raise e
 
         localdocker = "tcp://127.0.0.1:"+str(self.sshtunnel.local_bind_port)
@@ -285,6 +285,6 @@ class RemoteDocker:
         self.sshtunnel.__enter__()
         return self
 
-    def __exit__(self, type, value, traceback):
+    def __exit__(self, etype, value, traceback):
         self.remotedocker.close()
-        self.sshtunnel.__exit__(type, value, traceback)
+        self.sshtunnel.__exit__(etype, value, traceback)
