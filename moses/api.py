@@ -87,7 +87,7 @@ def version_docker_get() -> dict:
 
         return client.version()
     except:
-        return ("Docker not responding",500)
+        return ("Docker not responding", 500)
 
 
 def devices_get():
@@ -101,6 +101,7 @@ def devices_get():
     for dev in targetdevice.TargetDevices().values():
         deviceslist.append(dev)
 
+    deviceslist.sort(key=lambda x: x.name)
     return deviceslist
 
 
@@ -270,7 +271,9 @@ def devices_device_processes_get(device_id):
     if device_id not in devices:
         return ("Device not found", 404)
 
-    return (devices[device_id].get_process_list(), 200)
+    processes = devices[device_id].get_process_list()
+    processes.sort(key=lambda x: x["pid"])
+    return (processes, 200)
 
 
 def devices_device_memory_get(device_id):
@@ -288,7 +291,9 @@ def devices_device_storage_get(device_id):
     if device_id not in devices:
         return ("Device not found", 404)
 
-    return (devices[device_id].get_storageinfo(), 200)
+    mountpoints = devices[device_id].get_storageinfo()
+    mountpoints.sort(key=lambda x: x["mountpoint"])
+    return (mountpoints, 200)
 
 
 def devices_device_images_get(device_id):
@@ -303,6 +308,8 @@ def devices_device_images_get(device_id):
         return ("Device not found", 404)
 
     images = devices[device_id].get_images()
+    images.sort(key=lambda x: x["RepoTags"][0] if (
+        "RepoTags" in x.keys() and len(x["RepoTags"]) > 0) else "~"+x["Id"])
     return (images, 200)
 
 
@@ -342,6 +349,8 @@ def devices_device_containers_get(device_id):
         return ("Device not found", 404)
 
     containers = devices[device_id].get_containers()
+    containers.sort(key=lambda x: x["Name"]
+                    if ("Name" in x.keys() and x["Name"] is not None) else "~"+x["Id"])
     return (containers, 200)
 
 
@@ -397,7 +406,9 @@ def devices_device_containers_container_processes_get(device_id, container_id):
     if device_id not in devices:
         return ("Device not found", 404)
 
-    return (devices[device_id].get_container_process_list(container_id), 200)
+    processes = devices[device_id].get_container_process_list(container_id)
+    processes.sort(key=lambda x: x["pid"])
+    return (processes, 200)
 
 
 def devices_device_containers_container_memory_get(device_id, container_id):
@@ -415,7 +426,9 @@ def devices_device_containers_container_storage_get(device_id, container_id):
     if device_id not in devices:
         return ("Device not found", 404)
 
-    return (devices[device_id].get_container_storageinfo(container_id), 200)
+    mountpoints = devices[device_id].get_container_storageinfo(container_id)
+    mountpoints.sort(key=lambda x: x["mountpoint"])
+    return (mountpoints, 200)
 
 
 def devices_device_privatekey_get(device_id):
@@ -440,7 +453,10 @@ def platforms_get(runtime=None):
 
     platforms = platformconfig.PlatformConfigs()
 
-    return platforms.get_platforms(runtime)
+    platformslist = platforms.get_platforms(runtime)
+
+    platformslist.sort(key=lambda x: x.name)
+    return platformslist
 
 
 def platforms_platform_get(platform_id):
@@ -477,7 +493,9 @@ def platforms_platform_compatibledevices_get(platform_id):
         return ("Platform not found", 404)
 
     platform = platforms.get(platform_id)
-    return platform.get_compatible_devices()
+    deviceslist = platform.get_compatible_devices()
+    deviceslist.sort(key=lambda x: x.name)
+    return deviceslist
 
 
 def applications_create_get(platform_id, path, username):
@@ -765,6 +783,7 @@ def applications_application_privatekey_get(application_id):
     app = applications.get(application_id)
     return (app.get_privatekeypath(), 200)
 
+
 def applications_application_reseal_get(application_id):
     applications = applicationconfig.ApplicationConfigs()
 
@@ -774,6 +793,7 @@ def applications_application_reseal_get(application_id):
     app = applications.get(application_id)
     app.reseal()
     return (connexion.NoContent, 200)
+
 
 def setup_pullcontainers_get():
     """Pulls all base containers needed for the different applications
