@@ -14,6 +14,7 @@ import targetdevice
 import applicationconfig
 import argparse
 import requests
+import paramiko
 
 if getattr(sys, 'frozen', False):
     options = {'swagger_path': os.path.dirname(sys.executable) + '/api/ui'}
@@ -46,6 +47,7 @@ if __name__ == '__main__':
     args = parser.parse_args()
 
     logging.basicConfig(level=logging.INFO)
+    logging.getLogger("paramiko").setLevel(logging.WARNING)
 
     if args.logfile is not None:
         logging.getLogger().addHandler(logging.StreamHandler(args.logfile))
