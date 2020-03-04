@@ -20,6 +20,7 @@ import singleton
 import sshconsole
 import sharedssh
 import yaml
+import rsync
 
 
 """ This module contain classes used to manage devices and their connections
@@ -537,6 +538,15 @@ class TargetDevice(config.ConfigurableKeysObject):
             )[1]
 
             return self._process_df_output(io.StringIO(plist.decode("utf-8")))
+
+    def sync_folders(self, sourcefolder, destfolder):
+        """Syncronizes a local folder and a folder on the target device
+
+        Arguments:
+            sourcefolder {str} -- source folder
+            destfolder {str} -- destination folder
+        """
+        rsync.run_rsync(sourcefolder, self.id, destfolder)
 
     # support for serialization
     def __getstate__(self):

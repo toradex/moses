@@ -20,6 +20,7 @@ import sharedssh
 import stat
 import time
 import socket
+import rsync
 
 
 class RemoteImageNotFoundException(Exception):
@@ -1239,11 +1240,23 @@ class ApplicationConfig(config.ConfigurableKeysObject):
         else:
             self.sdksshaddress = container.attrs["NetworkSettings"]["Ports"]["22/tcp"][0]
 
-    def sync_folders(self, sdkfolder, configuration,
-                     deviceid, containerfolder):
-        """ Syncronizes folders between the SDK container and app container
-        """
+    def sync_folders(self, sourcefolder, configuration,
+                     deviceid, containerfolder,source_is_sdk):
+        """Sync folders from host/SDK container to the app container
 
+        Arguments:
+            sourcefolder {str} -- source folder
+            configuration {str} -- app configuration (debug/release)
+            deviceid {str} -- target device
+            containerfolder {str} -- target folder inside the app container
+            source_is_sdk {bool} -- source folder is inside the app container
+
+        Raises:
+            exceptions.ContainerNotRunningError: [description]
+            exceptions.ContainerNotRunningError: [description]
+            exceptions.SDKContainerNotRunningError: [description]
+            exceptions.RemoteCommandError: [description]
+        """
         # get device info
         plat = platformconfig.PlatformConfigs().get_platform(self.platformid)
         device = targetdevice.TargetDevices()[deviceid]
@@ -1257,66 +1270,72 @@ class ApplicationConfig(config.ConfigurableKeysObject):
         if container.status != "running":
             raise exceptions.ContainerNotRunningError(device, self.id)
 
-        self.start_sdk_container(configuration)
+        ports = container.attrs["NetworkSettings"]["Ports"]["22/tcp"]
+        port = ports[0]["HostPort"]
 
-        if self.sdksshaddress is None:
-            raise exceptions.SDKContainerNotRunningError(self.id)
+        if source_is_sdk:
+            self.start_sdk_container(configuration)
 
-        # connect to SDK container
-        with paramiko.SSHClient() as ssh:
-            ssh.load_system_host_keys()
-            ssh.set_missing_host_key_policy(paramiko.AutoAddPolicy())
+            if self.sdksshaddress is None:
+                raise exceptions.SDKContainerNotRunningError(self.id)
 
-            ssh.connect("localhost",
-                        self.sdksshaddress["HostPort"],
-                        username=plat.sdkcontainerusername,
-                        password=plat.sdkcontainerpassword)
+            # connect to SDK container
+            with paramiko.SSHClient() as ssh:
+                ssh.load_system_host_keys()
+                ssh.set_missing_host_key_policy(paramiko.AutoAddPolicy())
 
-            with paramiko.SFTPClient.from_transport(ssh.get_transport())\
-                    as sftp:
+                ssh.connect("localhost",
+                            self.sdksshaddress["HostPort"],
+                            username=plat.sdkcontainerusername,
+                            password=plat.sdkcontainerpassword)
 
-                try:
-                    sftp.stat(".ssh")
-                except FileNotFoundError:
-                    sftp.mkdir(".ssh")
+                with paramiko.SFTPClient.from_transport(ssh.get_transport())\
+                        as sftp:
 
-                try:
-                    sftp.stat(".ssh/id_rsa")
-                    sftp.remove(".ssh/id_rsa")
-                except FileNotFoundError:
-                    pass
+                    try:
+                        sftp.stat(".ssh")
+                    except FileNotFoundError:
+                        sftp.mkdir(".ssh")
 
-                sftp.put(str(self.folder / "id_rsa"),
-                         ".ssh/id_rsa", confirm=True)
-                sftp.chmod(".ssh/id_rsa", 0o600)
+                    try:
+                        sftp.stat(".ssh/id_rsa")
+                        sftp.remove(".ssh/id_rsa")
+                    except FileNotFoundError:
+                        pass
 
-            ports = container.attrs["NetworkSettings"]["Ports"]["22/tcp"]
-            port = ports[0]["HostPort"]
+                    sftp.put(str(self.folder / "id_rsa"),
+                            ".ssh/id_rsa", confirm=True)
+                    sftp.chmod(".ssh/id_rsa", 0o600)
 
-            rsynccommand = "rsync -rzv "
-            rsynccommand += "-e \"ssh -p " + port\
-                + " -o \\\"StrictHostKeyChecking no\\\"\" "
-            # source
-            rsynccommand += sdkfolder + "/* "
-            # destination
-            rsynccommand += self.username + "@" + socket.gethostbyname(device.hostname)\
-                + ":" + containerfolder
 
-            _, stdout, stderr = ssh.exec_command(rsynccommand)
-            status = stdout.channel.recv_exit_status()
 
-            if status != 0:
-                output = ""
+                rsynccommand = "rsync -rzv "
+                rsynccommand += "-e \"ssh -p " + port\
+                    + " -o \\\"StrictHostKeyChecking no\\\"\" "
+                # source
+                rsynccommand += sourcefolder + "/* "
 
-                try:
-                    output = "".join(stderr.readlines())
-                    output += "".join(stdout.readlines())
+                # destination
+                rsynccommand += self.username + "@" + socket.gethostbyname(device.hostname)\
+                    + ":" + containerfolder
 
-                    logging.warning(output)
-                except:
-                    pass
-                raise exceptions.RemoteCommandError(rsynccommand,
-                                                    status)
+                _, stdout, stderr = ssh.exec_command(rsynccommand)
+                status = stdout.channel.recv_exit_status()
+
+                if status != 0:
+                    output = ""
+
+                    try:
+                        output = "".join(stderr.readlines())
+                        output += "".join(stdout.readlines())
+
+                        logging.warning(output)
+                    except:
+                        pass
+                    raise exceptions.RemoteCommandError(rsynccommand,
+                                                        status)
+        else:
+            rsync.run_rsync(sourcefolder,deviceid,containerfolder,self.get_privatekeypath(),port)
 
     def touch(self):
         """ Set modification date to current time

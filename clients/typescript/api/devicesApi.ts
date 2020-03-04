@@ -1521,6 +1521,88 @@ export class DevicesApi {
         });
     }
     /**
+     * synchronizes folders between host and target
+     * @summary synchronizes folders
+     * @param deviceId Target device serial number
+     * @param sourcefolder 
+     * @param destfolder 
+     */
+    public async deviceSyncfolders (deviceId: string, sourcefolder: string, destfolder: string, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<{ response: http.IncomingMessage; body?: any;  }> {
+        const localVarPath = this.basePath + '/devices/{device_id}/syncfolders'
+            .replace('{' + 'device_id' + '}', encodeURIComponent(String(deviceId)));
+        let localVarQueryParameters: any = {};
+        let localVarHeaderParams: any = (<any>Object).assign({}, this.defaultHeaders);
+        const produces = ['application/json'];
+        // give precedence to 'application/json'
+        if (produces.indexOf('application/json') >= 0) {
+            localVarHeaderParams.Accept = 'application/json';
+        } else {
+            localVarHeaderParams.Accept = produces.join(',');
+        }
+        let localVarFormParams: any = {};
+
+        // verify required parameter 'deviceId' is not null or undefined
+        if (deviceId === null || deviceId === undefined) {
+            throw new Error('Required parameter deviceId was null or undefined when calling deviceSyncfolders.');
+        }
+
+        // verify required parameter 'sourcefolder' is not null or undefined
+        if (sourcefolder === null || sourcefolder === undefined) {
+            throw new Error('Required parameter sourcefolder was null or undefined when calling deviceSyncfolders.');
+        }
+
+        // verify required parameter 'destfolder' is not null or undefined
+        if (destfolder === null || destfolder === undefined) {
+            throw new Error('Required parameter destfolder was null or undefined when calling deviceSyncfolders.');
+        }
+
+        if (sourcefolder !== undefined) {
+            localVarQueryParameters['sourcefolder'] = ObjectSerializer.serialize(sourcefolder, "string");
+        }
+
+        if (destfolder !== undefined) {
+            localVarQueryParameters['destfolder'] = ObjectSerializer.serialize(destfolder, "string");
+        }
+
+        (<any>Object).assign(localVarHeaderParams, options.headers);
+
+        let localVarUseFormData = false;
+
+        let localVarRequestOptions: localVarRequest.Options = {
+            method: 'GET',
+            qs: localVarQueryParameters,
+            headers: localVarHeaderParams,
+            uri: localVarPath,
+            useQuerystring: this._useQuerystring,
+            json: true,
+        };
+
+        let authenticationPromise = Promise.resolve();
+        authenticationPromise = authenticationPromise.then(() => this.authentications.default.applyToRequest(localVarRequestOptions));
+        return authenticationPromise.then(() => {
+            if (Object.keys(localVarFormParams).length) {
+                if (localVarUseFormData) {
+                    (<any>localVarRequestOptions).formData = localVarFormParams;
+                } else {
+                    localVarRequestOptions.form = localVarFormParams;
+                }
+            }
+            return new Promise<{ response: http.IncomingMessage; body?: any;  }>((resolve, reject) => {
+                localVarRequest(localVarRequestOptions, (error, response, body) => {
+                    if (error) {
+                        reject(error);
+                    } else {
+                        if (response.statusCode && response.statusCode >= 200 && response.statusCode <= 299) {
+                            resolve({ response: response, body: body });
+                        } else {
+                            reject(new HttpError(response, body, response.statusCode));
+                        }
+                    }
+                });
+            });
+        });
+    }
+    /**
      * Returns a specified device, with updated info if available
      * @summary update information for a specific device
      * @param deviceId Target device serial number

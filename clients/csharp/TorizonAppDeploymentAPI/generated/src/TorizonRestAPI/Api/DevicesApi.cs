@@ -507,6 +507,31 @@ namespace TorizonRestAPI.Api
         /// <returns>ApiResponse of int</returns>
         ApiResponse<int> DeviceOpensshWithHttpInfo (string deviceId, int port = default(int));
         /// <summary>
+        /// synchronizes folders
+        /// </summary>
+        /// <remarks>
+        /// synchronizes folders between host and target
+        /// </remarks>
+        /// <exception cref="TorizonRestAPI.Client.ApiException">Thrown when fails to make API call</exception>
+        /// <param name="deviceId">Target device serial number</param>
+        /// <param name="sourcefolder"></param>
+        /// <param name="destfolder"></param>
+        /// <returns></returns>
+        void DeviceSyncfolders (string deviceId, string sourcefolder, string destfolder);
+
+        /// <summary>
+        /// synchronizes folders
+        /// </summary>
+        /// <remarks>
+        /// synchronizes folders between host and target
+        /// </remarks>
+        /// <exception cref="TorizonRestAPI.Client.ApiException">Thrown when fails to make API call</exception>
+        /// <param name="deviceId">Target device serial number</param>
+        /// <param name="sourcefolder"></param>
+        /// <param name="destfolder"></param>
+        /// <returns>ApiResponse of Object(void)</returns>
+        ApiResponse<Object> DeviceSyncfoldersWithHttpInfo (string deviceId, string sourcefolder, string destfolder);
+        /// <summary>
         /// update information for a specific device
         /// </summary>
         /// <remarks>
@@ -1126,6 +1151,31 @@ namespace TorizonRestAPI.Api
         /// <param name="port"> (optional)</param>
         /// <returns>Task of ApiResponse (int)</returns>
         System.Threading.Tasks.Task<ApiResponse<int>> DeviceOpensshAsyncWithHttpInfo (string deviceId, int port = default(int));
+        /// <summary>
+        /// synchronizes folders
+        /// </summary>
+        /// <remarks>
+        /// synchronizes folders between host and target
+        /// </remarks>
+        /// <exception cref="TorizonRestAPI.Client.ApiException">Thrown when fails to make API call</exception>
+        /// <param name="deviceId">Target device serial number</param>
+        /// <param name="sourcefolder"></param>
+        /// <param name="destfolder"></param>
+        /// <returns>Task of void</returns>
+        System.Threading.Tasks.Task DeviceSyncfoldersAsync (string deviceId, string sourcefolder, string destfolder);
+
+        /// <summary>
+        /// synchronizes folders
+        /// </summary>
+        /// <remarks>
+        /// synchronizes folders between host and target
+        /// </remarks>
+        /// <exception cref="TorizonRestAPI.Client.ApiException">Thrown when fails to make API call</exception>
+        /// <param name="deviceId">Target device serial number</param>
+        /// <param name="sourcefolder"></param>
+        /// <param name="destfolder"></param>
+        /// <returns>Task of ApiResponse</returns>
+        System.Threading.Tasks.Task<ApiResponse<Object>> DeviceSyncfoldersAsyncWithHttpInfo (string deviceId, string sourcefolder, string destfolder);
         /// <summary>
         /// update information for a specific device
         /// </summary>
@@ -4407,6 +4457,161 @@ namespace TorizonRestAPI.Api
             return new ApiResponse<int>(localVarStatusCode,
                 localVarResponse.Headers.ToDictionary(x => x.Name, x => string.Join(",", x.Value)),
                 (int) this.Configuration.ApiClient.Deserialize(localVarResponse, typeof(int)));
+        }
+
+        /// <summary>
+        /// synchronizes folders synchronizes folders between host and target
+        /// </summary>
+        /// <exception cref="TorizonRestAPI.Client.ApiException">Thrown when fails to make API call</exception>
+        /// <param name="deviceId">Target device serial number</param>
+        /// <param name="sourcefolder"></param>
+        /// <param name="destfolder"></param>
+        /// <returns></returns>
+        public void DeviceSyncfolders (string deviceId, string sourcefolder, string destfolder)
+        {
+             DeviceSyncfoldersWithHttpInfo(deviceId, sourcefolder, destfolder);
+        }
+
+        /// <summary>
+        /// synchronizes folders synchronizes folders between host and target
+        /// </summary>
+        /// <exception cref="TorizonRestAPI.Client.ApiException">Thrown when fails to make API call</exception>
+        /// <param name="deviceId">Target device serial number</param>
+        /// <param name="sourcefolder"></param>
+        /// <param name="destfolder"></param>
+        /// <returns>ApiResponse of Object(void)</returns>
+        public ApiResponse<Object> DeviceSyncfoldersWithHttpInfo (string deviceId, string sourcefolder, string destfolder)
+        {
+            // verify the required parameter 'deviceId' is set
+            if (deviceId == null)
+                throw new ApiException(400, "Missing required parameter 'deviceId' when calling DevicesApi->DeviceSyncfolders");
+            // verify the required parameter 'sourcefolder' is set
+            if (sourcefolder == null)
+                throw new ApiException(400, "Missing required parameter 'sourcefolder' when calling DevicesApi->DeviceSyncfolders");
+            // verify the required parameter 'destfolder' is set
+            if (destfolder == null)
+                throw new ApiException(400, "Missing required parameter 'destfolder' when calling DevicesApi->DeviceSyncfolders");
+
+            var localVarPath = "/devices/{device_id}/syncfolders";
+            var localVarPathParams = new Dictionary<String, String>();
+            var localVarQueryParams = new List<KeyValuePair<String, String>>();
+            var localVarHeaderParams = new Dictionary<String, String>(this.Configuration.DefaultHeader);
+            var localVarFormParams = new Dictionary<String, String>();
+            var localVarFileParams = new Dictionary<String, FileParameter>();
+            Object localVarPostBody = null;
+
+            // to determine the Content-Type header
+            String[] localVarHttpContentTypes = new String[] {
+            };
+            String localVarHttpContentType = this.Configuration.ApiClient.SelectHeaderContentType(localVarHttpContentTypes);
+
+            // to determine the Accept header
+            String[] localVarHttpHeaderAccepts = new String[] {
+                "application/json"
+            };
+            String localVarHttpHeaderAccept = this.Configuration.ApiClient.SelectHeaderAccept(localVarHttpHeaderAccepts);
+            if (localVarHttpHeaderAccept != null)
+                localVarHeaderParams.Add("Accept", localVarHttpHeaderAccept);
+
+            if (deviceId != null) localVarPathParams.Add("device_id", this.Configuration.ApiClient.ParameterToString(deviceId)); // path parameter
+            if (sourcefolder != null) localVarQueryParams.AddRange(this.Configuration.ApiClient.ParameterToKeyValuePairs("", "sourcefolder", sourcefolder)); // query parameter
+            if (destfolder != null) localVarQueryParams.AddRange(this.Configuration.ApiClient.ParameterToKeyValuePairs("", "destfolder", destfolder)); // query parameter
+
+
+            // make the HTTP request
+            IRestResponse localVarResponse = (IRestResponse) this.Configuration.ApiClient.CallApi(localVarPath,
+                Method.GET, localVarQueryParams, localVarPostBody, localVarHeaderParams, localVarFormParams, localVarFileParams,
+                localVarPathParams, localVarHttpContentType);
+
+            int localVarStatusCode = (int) localVarResponse.StatusCode;
+
+            if (ExceptionFactory != null)
+            {
+                Exception exception = ExceptionFactory("DeviceSyncfolders", localVarResponse);
+                if (exception != null) throw exception;
+            }
+
+            return new ApiResponse<Object>(localVarStatusCode,
+                localVarResponse.Headers.ToDictionary(x => x.Name, x => string.Join(",", x.Value)),
+                null);
+        }
+
+        /// <summary>
+        /// synchronizes folders synchronizes folders between host and target
+        /// </summary>
+        /// <exception cref="TorizonRestAPI.Client.ApiException">Thrown when fails to make API call</exception>
+        /// <param name="deviceId">Target device serial number</param>
+        /// <param name="sourcefolder"></param>
+        /// <param name="destfolder"></param>
+        /// <returns>Task of void</returns>
+        public async System.Threading.Tasks.Task DeviceSyncfoldersAsync (string deviceId, string sourcefolder, string destfolder)
+        {
+             await DeviceSyncfoldersAsyncWithHttpInfo(deviceId, sourcefolder, destfolder);
+
+        }
+
+        /// <summary>
+        /// synchronizes folders synchronizes folders between host and target
+        /// </summary>
+        /// <exception cref="TorizonRestAPI.Client.ApiException">Thrown when fails to make API call</exception>
+        /// <param name="deviceId">Target device serial number</param>
+        /// <param name="sourcefolder"></param>
+        /// <param name="destfolder"></param>
+        /// <returns>Task of ApiResponse</returns>
+        public async System.Threading.Tasks.Task<ApiResponse<Object>> DeviceSyncfoldersAsyncWithHttpInfo (string deviceId, string sourcefolder, string destfolder)
+        {
+            // verify the required parameter 'deviceId' is set
+            if (deviceId == null)
+                throw new ApiException(400, "Missing required parameter 'deviceId' when calling DevicesApi->DeviceSyncfolders");
+            // verify the required parameter 'sourcefolder' is set
+            if (sourcefolder == null)
+                throw new ApiException(400, "Missing required parameter 'sourcefolder' when calling DevicesApi->DeviceSyncfolders");
+            // verify the required parameter 'destfolder' is set
+            if (destfolder == null)
+                throw new ApiException(400, "Missing required parameter 'destfolder' when calling DevicesApi->DeviceSyncfolders");
+
+            var localVarPath = "/devices/{device_id}/syncfolders";
+            var localVarPathParams = new Dictionary<String, String>();
+            var localVarQueryParams = new List<KeyValuePair<String, String>>();
+            var localVarHeaderParams = new Dictionary<String, String>(this.Configuration.DefaultHeader);
+            var localVarFormParams = new Dictionary<String, String>();
+            var localVarFileParams = new Dictionary<String, FileParameter>();
+            Object localVarPostBody = null;
+
+            // to determine the Content-Type header
+            String[] localVarHttpContentTypes = new String[] {
+            };
+            String localVarHttpContentType = this.Configuration.ApiClient.SelectHeaderContentType(localVarHttpContentTypes);
+
+            // to determine the Accept header
+            String[] localVarHttpHeaderAccepts = new String[] {
+                "application/json"
+            };
+            String localVarHttpHeaderAccept = this.Configuration.ApiClient.SelectHeaderAccept(localVarHttpHeaderAccepts);
+            if (localVarHttpHeaderAccept != null)
+                localVarHeaderParams.Add("Accept", localVarHttpHeaderAccept);
+
+            if (deviceId != null) localVarPathParams.Add("device_id", this.Configuration.ApiClient.ParameterToString(deviceId)); // path parameter
+            if (sourcefolder != null) localVarQueryParams.AddRange(this.Configuration.ApiClient.ParameterToKeyValuePairs("", "sourcefolder", sourcefolder)); // query parameter
+            if (destfolder != null) localVarQueryParams.AddRange(this.Configuration.ApiClient.ParameterToKeyValuePairs("", "destfolder", destfolder)); // query parameter
+
+
+            // make the HTTP request
+            IRestResponse localVarResponse = (IRestResponse) await this.Configuration.ApiClient.CallApiAsync(localVarPath,
+                Method.GET, localVarQueryParams, localVarPostBody, localVarHeaderParams, localVarFormParams, localVarFileParams,
+                localVarPathParams, localVarHttpContentType);
+
+            int localVarStatusCode = (int) localVarResponse.StatusCode;
+
+            if (ExceptionFactory != null)
+            {
+                Exception exception = ExceptionFactory("DeviceSyncfolders", localVarResponse);
+                if (exception != null) throw exception;
+            }
+
+            return new ApiResponse<Object>(localVarStatusCode,
+                localVarResponse.Headers.ToDictionary(x => x.Name, x => string.Join(",", x.Value)),
+                null);
         }
 
         /// <summary>

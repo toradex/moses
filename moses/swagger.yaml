@@ -766,6 +766,40 @@ paths:
         500:
           $ref: "#/responses/InternalServerError_500"
 
+  /devices/{device_id}/syncfolders:
+
+    get:
+      operationId: device_syncfolders
+      tags:
+        - Devices
+      summary: synchronizes folders
+      description: synchronizes folders between host and target
+      parameters:
+        - $ref: "#/parameters/device_id"
+        - name: sourcefolder
+          in: query
+          type: string
+          required: true
+        - name: destfolder
+          in: query
+          type: string
+          required: true
+
+      responses:
+        200:
+          description: Sysroot updated
+        404:
+          description: Device not found
+        500:
+          $ref: "#/responses/InternalServerError_500"
+        520:
+          $ref: "#/responses/ImageNotFoundError_520"
+        523:
+          $ref: "#/responses/ContainerNotRunningError_523"
+        533:
+          $ref: "#/responses/SSHError_533"
+        544:
+          $ref: "#/responses/LocalCommandError_544"
 
   /platforms:
     get:
@@ -1231,7 +1265,7 @@ paths:
       tags:
         - Applications
       summary: synchronizes folders
-      description: synchronizes folders between SDK container and application container
+      description: synchronizes folders between host/SDK container and application container
       parameters:
         - $ref: "#/parameters/application_id"
         - name: sourcefolder
@@ -1252,6 +1286,10 @@ paths:
           in: query
           type: string
           required: true
+        - name: source_is_sdk
+          in: query
+          type: boolean
+          required: false
 
       responses:
         200:
@@ -2967,5 +3005,13 @@ responses:
       $ref: "#/definitions/ErrorInfo"
   SDKRequiresConfigurationError_543:
     description: Platform requires debug/release configuration for SDK.
+    schema:
+      $ref: "#/definitions/ErrorInfo"
+  LocalCommandError_544:
+    description: Local command execution failed.
+    schema:
+      $ref: "#/definitions/ErrorInfo"
+  DNSError_545:
+    description: Can't resolve hostname.
     schema:
       $ref: "#/definitions/ErrorInfo"

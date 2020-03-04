@@ -11,6 +11,7 @@ Method | HTTP request | Description
 [**ApplicationGetcontainer**](ApplicationsApi.md#applicationgetcontainer) | **GET** /applications/{application_id}/container | Get container information
 [**ApplicationGetprivatekey**](ApplicationsApi.md#applicationgetprivatekey) | **GET** /applications/{application_id}/privatekey | Retrieves the path of the RSA private key
 [**ApplicationModify**](ApplicationsApi.md#applicationmodify) | **PUT** /applications/{application_id} | Change application properties
+[**ApplicationReseal**](ApplicationsApi.md#applicationreseal) | **GET** /applications/{application_id}/reseal | Cleans id and keys for git repo uploading
 [**ApplicationRun**](ApplicationsApi.md#applicationrun) | **GET** /applications/{application_id}/run | Runs container image
 [**ApplicationRunsdk**](ApplicationsApi.md#applicationrunsdk) | **GET** /applications/{application_id}/sdk/run | Runs SDK containers
 [**ApplicationStop**](ApplicationsApi.md#applicationstop) | **GET** /applications/{application_id}/stop | Stops running container image
@@ -582,6 +583,81 @@ No authorization required
 [[Back to README]](../README.md)
 
 
+## ApplicationReseal
+
+> void ApplicationReseal (string applicationId)
+
+Cleans id and keys for git repo uploading
+
+This operation make the application no longer valid, but allow you to upload it to a git repo from where it can be cloned/forked re-generating new ids every time, avoiding that all clones share the same id/keys.
+
+### Example
+
+```csharp
+using System.Collections.Generic;
+using System.Diagnostics;
+using TorizonRestAPI.Api;
+using TorizonRestAPI.Client;
+using TorizonRestAPI.Model;
+
+namespace Example
+{
+    public class ApplicationResealExample
+    {
+        public static void Main()
+        {
+            Configuration.Default.BasePath = "http://localhost:5000/api";
+            var apiInstance = new ApplicationsApi(Configuration.Default);
+            var applicationId = applicationId_example;  // string | Id of an application (uuid)
+
+            try
+            {
+                // Cleans id and keys for git repo uploading
+                apiInstance.ApplicationReseal(applicationId);
+            }
+            catch (ApiException e)
+            {
+                Debug.Print("Exception when calling ApplicationsApi.ApplicationReseal: " + e.Message );
+                Debug.Print("Status Code: "+ e.ErrorCode);
+                Debug.Print(e.StackTrace);
+            }
+        }
+    }
+}
+```
+
+### Parameters
+
+
+Name | Type | Description  | Notes
+------------- | ------------- | ------------- | -------------
+ **applicationId** | **string**| Id of an application (uuid) | 
+
+### Return type
+
+void (empty response body)
+
+### Authorization
+
+No authorization required
+
+### HTTP request headers
+
+- **Content-Type**: Not defined
+- **Accept**: Not defined
+
+### HTTP response details
+| Status code | Description | Response headers |
+|-------------|-------------|------------------|
+| **200** | key returned |  -  |
+| **404** | Application not found |  -  |
+
+[[Back to top]](#)
+[[Back to API list]](../README.md#documentation-for-api-endpoints)
+[[Back to Model list]](../README.md#documentation-for-models)
+[[Back to README]](../README.md)
+
+
 ## ApplicationRun
 
 > DockerContainer ApplicationRun (string applicationId, string configuration, string deviceid)
@@ -833,11 +909,11 @@ No authorization required
 
 ## ApplicationSyncfolders
 
-> void ApplicationSyncfolders (string applicationId, string sourcefolder, string configuration, string deviceid, string destfolder)
+> void ApplicationSyncfolders (string applicationId, string sourcefolder, string configuration, string deviceid, string destfolder, bool sourceIsSdk = null)
 
 synchronizes folders
 
-synchronizes folders between SDK container and application container
+synchronizes folders between host/SDK container and application container
 
 ### Example
 
@@ -861,11 +937,12 @@ namespace Example
             var configuration = configuration_example;  // string | 
             var deviceid = deviceid_example;  // string | 
             var destfolder = destfolder_example;  // string | 
+            var sourceIsSdk = true;  // bool |  (optional) 
 
             try
             {
                 // synchronizes folders
-                apiInstance.ApplicationSyncfolders(applicationId, sourcefolder, configuration, deviceid, destfolder);
+                apiInstance.ApplicationSyncfolders(applicationId, sourcefolder, configuration, deviceid, destfolder, sourceIsSdk);
             }
             catch (ApiException e)
             {
@@ -888,6 +965,7 @@ Name | Type | Description  | Notes
  **configuration** | **string**|  | 
  **deviceid** | **string**|  | 
  **destfolder** | **string**|  | 
+ **sourceIsSdk** | **bool**|  | [optional] 
 
 ### Return type
 

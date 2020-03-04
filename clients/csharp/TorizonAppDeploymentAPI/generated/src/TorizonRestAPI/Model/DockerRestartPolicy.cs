@@ -31,9 +31,9 @@ namespace TorizonRestAPI.Model
     public partial class DockerRestartPolicy :  IEquatable<DockerRestartPolicy>, IValidatableObject
     {
         /// <summary>
-        /// - Empty string means not to restart - \&quot;no\&quot; No restart - &#x60;always&#x60; Always restart - &#x60;unless-stopped&#x60; Restart always except when the user has manually stopped the container - &#x60;on-failure&#x60; Restart only when the container exit code is non-zero 
+        /// - Empty string means not to restart - &#x60;always&#x60; Always restart - &#x60;unless-stopped&#x60; Restart always except when the user has manually stopped the container - &#x60;on-failure&#x60; Restart only when the container exit code is non-zero 
         /// </summary>
-        /// <value>- Empty string means not to restart - \&quot;no\&quot; No restart - &#x60;always&#x60; Always restart - &#x60;unless-stopped&#x60; Restart always except when the user has manually stopped the container - &#x60;on-failure&#x60; Restart only when the container exit code is non-zero </value>
+        /// <value>- Empty string means not to restart - &#x60;always&#x60; Always restart - &#x60;unless-stopped&#x60; Restart always except when the user has manually stopped the container - &#x60;on-failure&#x60; Restart only when the container exit code is non-zero </value>
         [JsonConverter(typeof(StringEnumConverter))]
         public enum NameEnum
         {
@@ -44,41 +44,35 @@ namespace TorizonRestAPI.Model
             Empty = 1,
 
             /// <summary>
-            /// Enum No for value: no
-            /// </summary>
-            [EnumMember(Value = "no")]
-            No = 2,
-
-            /// <summary>
             /// Enum Always for value: always
             /// </summary>
             [EnumMember(Value = "always")]
-            Always = 3,
+            Always = 2,
 
             /// <summary>
             /// Enum UnlessStopped for value: unless-stopped
             /// </summary>
             [EnumMember(Value = "unless-stopped")]
-            UnlessStopped = 4,
+            UnlessStopped = 3,
 
             /// <summary>
             /// Enum OnFailure for value: on-failure
             /// </summary>
             [EnumMember(Value = "on-failure")]
-            OnFailure = 5
+            OnFailure = 4
 
         }
 
         /// <summary>
-        /// - Empty string means not to restart - \&quot;no\&quot; No restart - &#x60;always&#x60; Always restart - &#x60;unless-stopped&#x60; Restart always except when the user has manually stopped the container - &#x60;on-failure&#x60; Restart only when the container exit code is non-zero 
+        /// - Empty string means not to restart - &#x60;always&#x60; Always restart - &#x60;unless-stopped&#x60; Restart always except when the user has manually stopped the container - &#x60;on-failure&#x60; Restart only when the container exit code is non-zero 
         /// </summary>
-        /// <value>- Empty string means not to restart - \&quot;no\&quot; No restart - &#x60;always&#x60; Always restart - &#x60;unless-stopped&#x60; Restart always except when the user has manually stopped the container - &#x60;on-failure&#x60; Restart only when the container exit code is non-zero </value>
+        /// <value>- Empty string means not to restart - &#x60;always&#x60; Always restart - &#x60;unless-stopped&#x60; Restart always except when the user has manually stopped the container - &#x60;on-failure&#x60; Restart only when the container exit code is non-zero </value>
         [DataMember(Name="Name", EmitDefaultValue=false)]
         public NameEnum? Name { get; set; }
         /// <summary>
         /// Initializes a new instance of the <see cref="DockerRestartPolicy" /> class.
         /// </summary>
-        /// <param name="name">- Empty string means not to restart - \&quot;no\&quot; No restart - &#x60;always&#x60; Always restart - &#x60;unless-stopped&#x60; Restart always except when the user has manually stopped the container - &#x60;on-failure&#x60; Restart only when the container exit code is non-zero .</param>
+        /// <param name="name">- Empty string means not to restart - &#x60;always&#x60; Always restart - &#x60;unless-stopped&#x60; Restart always except when the user has manually stopped the container - &#x60;on-failure&#x60; Restart only when the container exit code is non-zero .</param>
         /// <param name="maximumRetryCount">If &#x60;on-failure&#x60; is used, the number of times to retry before giving up.</param>
         public DockerRestartPolicy(NameEnum? name = default(NameEnum?), int maximumRetryCount = default(int))
         {
