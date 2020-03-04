@@ -26,6 +26,7 @@ Method | HTTP request | Description
 [**device_modify**](DevicesApi.md#device_modify) | **PUT** /devices/{device_id} | Change device properties
 [**device_opendocker**](DevicesApi.md#device_opendocker) | **GET** /devices/{device_id}/docker/open | Expose remote docker
 [**device_openssh**](DevicesApi.md#device_openssh) | **GET** /devices/{device_id}/ssh/open | Expose remote ssh
+[**device_syncfolders**](DevicesApi.md#device_syncfolders) | **GET** /devices/{device_id}/syncfolders | synchronizes folders
 [**device_update**](DevicesApi.md#device_update) | **GET** /devices/{device_id}/update | update information for a specific device
 [**devices_get**](DevicesApi.md#devices_get) | **GET** /devices | Get all devices
 [**devices_networkdetect**](DevicesApi.md#devices_networkdetect) | **GET** /devices/network_detect | Finds a network device
@@ -1319,6 +1320,69 @@ No authorization required
 **500** | Unexpected exception. |  -  |
 **533** | SSH error. |  -  |
 **539** | SSH tunnel error. |  -  |
+
+[[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
+
+# **device_syncfolders**
+> device_syncfolders(device_id, sourcefolder, destfolder)
+
+synchronizes folders
+
+synchronizes folders between host and target
+
+### Example
+
+```python
+from __future__ import print_function
+import time
+import moses_client
+from moses_client.rest import ApiException
+from pprint import pprint
+
+# Create an instance of the API class
+api_instance = moses_client.DevicesApi()
+device_id = 'device_id_example' # str | Target device serial number
+sourcefolder = 'sourcefolder_example' # str | 
+destfolder = 'destfolder_example' # str | 
+
+try:
+    # synchronizes folders
+    api_instance.device_syncfolders(device_id, sourcefolder, destfolder)
+except ApiException as e:
+    print("Exception when calling DevicesApi->device_syncfolders: %s\n" % e)
+```
+
+### Parameters
+
+Name | Type | Description  | Notes
+------------- | ------------- | ------------- | -------------
+ **device_id** | **str**| Target device serial number | 
+ **sourcefolder** | **str**|  | 
+ **destfolder** | **str**|  | 
+
+### Return type
+
+void (empty response body)
+
+### Authorization
+
+No authorization required
+
+### HTTP request headers
+
+ - **Content-Type**: Not defined
+ - **Accept**: application/json
+
+### HTTP response details
+| Status code | Description | Response headers |
+|-------------|-------------|------------------|
+**200** | Sysroot updated |  -  |
+**404** | Device not found |  -  |
+**500** | Unexpected exception. |  -  |
+**520** | Container image not found on local host. |  -  |
+**523** | Container is not running. |  -  |
+**533** | SSH error. |  -  |
+**544** | Local command execution failed. |  -  |
 
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
 

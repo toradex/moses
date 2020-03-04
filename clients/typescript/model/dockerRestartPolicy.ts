@@ -16,7 +16,7 @@
 */
 export class DockerRestartPolicy {
     /**
-    * - Empty string means not to restart - \"no\" No restart - `always` Always restart - `unless-stopped` Restart always except when the user has manually stopped the container - `on-failure` Restart only when the container exit code is non-zero 
+    * - Empty string means not to restart - `always` Always restart - `unless-stopped` Restart always except when the user has manually stopped the container - `on-failure` Restart only when the container exit code is non-zero 
     */
     'name'?: DockerRestartPolicy.NameEnum;
     /**
@@ -46,7 +46,6 @@ export class DockerRestartPolicy {
 export namespace DockerRestartPolicy {
     export enum NameEnum {
         Empty = <any> '',
-        No = <any> 'no',
         Always = <any> 'always',
         UnlessStopped = <any> 'unless-stopped',
         OnFailure = <any> 'on-failure'

@@ -862,6 +862,112 @@ class ApplicationsApi(object):
             _request_timeout=local_var_params.get('_request_timeout'),
             collection_formats=collection_formats)
 
+    def application_reseal(self, application_id, **kwargs):  # noqa: E501
+        """Cleans id and keys for git repo uploading  # noqa: E501
+
+        This operation make the application no longer valid, but allow you to upload it to a git repo from where it can be cloned/forked re-generating new ids every time, avoiding that all clones share the same id/keys.  # noqa: E501
+        This method makes a synchronous HTTP request by default. To make an
+        asynchronous HTTP request, please pass async_req=True
+        >>> thread = api.application_reseal(application_id, async_req=True)
+        >>> result = thread.get()
+
+        :param async_req bool: execute request asynchronously
+        :param str application_id: Id of an application (uuid) (required)
+        :param _preload_content: if False, the urllib3.HTTPResponse object will
+                                 be returned without reading/decoding response
+                                 data. Default is True.
+        :param _request_timeout: timeout setting for this request. If one
+                                 number provided, it will be total request
+                                 timeout. It can also be a pair (tuple) of
+                                 (connection, read) timeouts.
+        :return: None
+                 If the method is called asynchronously,
+                 returns the request thread.
+        """
+        kwargs['_return_http_data_only'] = True
+        return self.application_reseal_with_http_info(application_id, **kwargs)  # noqa: E501
+
+    def application_reseal_with_http_info(self, application_id, **kwargs):  # noqa: E501
+        """Cleans id and keys for git repo uploading  # noqa: E501
+
+        This operation make the application no longer valid, but allow you to upload it to a git repo from where it can be cloned/forked re-generating new ids every time, avoiding that all clones share the same id/keys.  # noqa: E501
+        This method makes a synchronous HTTP request by default. To make an
+        asynchronous HTTP request, please pass async_req=True
+        >>> thread = api.application_reseal_with_http_info(application_id, async_req=True)
+        >>> result = thread.get()
+
+        :param async_req bool: execute request asynchronously
+        :param str application_id: Id of an application (uuid) (required)
+        :param _return_http_data_only: response data without head status code
+                                       and headers
+        :param _preload_content: if False, the urllib3.HTTPResponse object will
+                                 be returned without reading/decoding response
+                                 data. Default is True.
+        :param _request_timeout: timeout setting for this request. If one
+                                 number provided, it will be total request
+                                 timeout. It can also be a pair (tuple) of
+                                 (connection, read) timeouts.
+        :return: None
+                 If the method is called asynchronously,
+                 returns the request thread.
+        """
+
+        local_var_params = locals()
+
+        all_params = ['application_id']  # noqa: E501
+        all_params.append('async_req')
+        all_params.append('_return_http_data_only')
+        all_params.append('_preload_content')
+        all_params.append('_request_timeout')
+
+        for key, val in six.iteritems(local_var_params['kwargs']):
+            if key not in all_params:
+                raise ApiTypeError(
+                    "Got an unexpected keyword argument '%s'"
+                    " to method application_reseal" % key
+                )
+            local_var_params[key] = val
+        del local_var_params['kwargs']
+        # verify the required parameter 'application_id' is set
+        if self.api_client.client_side_validation and ('application_id' not in local_var_params or  # noqa: E501
+                                                        local_var_params['application_id'] is None):  # noqa: E501
+            raise ApiValueError("Missing the required parameter `application_id` when calling `application_reseal`")  # noqa: E501
+
+        if self.api_client.client_side_validation and 'application_id' in local_var_params and not re.search(r'^[0-9,a-f,A-F]{8}-[0-9,a-f,A-F]{4}-[0-9,a-f,A-F]{4}-[0-9,a-f,A-F]{4}-[0-9,a-f,A-F]{12}$', local_var_params['application_id']):  # noqa: E501
+            raise ApiValueError("Invalid value for parameter `application_id` when calling `application_reseal`, must conform to the pattern `/^[0-9,a-f,A-F]{8}-[0-9,a-f,A-F]{4}-[0-9,a-f,A-F]{4}-[0-9,a-f,A-F]{4}-[0-9,a-f,A-F]{12}$/`")  # noqa: E501
+        collection_formats = {}
+
+        path_params = {}
+        if 'application_id' in local_var_params:
+            path_params['application_id'] = local_var_params['application_id']  # noqa: E501
+
+        query_params = []
+
+        header_params = {}
+
+        form_params = []
+        local_var_files = {}
+
+        body_params = None
+        # Authentication setting
+        auth_settings = []  # noqa: E501
+
+        return self.api_client.call_api(
+            '/applications/{application_id}/reseal', 'GET',
+            path_params,
+            query_params,
+            header_params,
+            body=body_params,
+            post_params=form_params,
+            files=local_var_files,
+            response_type=None,  # noqa: E501
+            auth_settings=auth_settings,
+            async_req=local_var_params.get('async_req'),
+            _return_http_data_only=local_var_params.get('_return_http_data_only'),  # noqa: E501
+            _preload_content=local_var_params.get('_preload_content', True),
+            _request_timeout=local_var_params.get('_request_timeout'),
+            collection_formats=collection_formats)
+
     def application_run(self, application_id, configuration, deviceid, **kwargs):  # noqa: E501
         """Runs container image  # noqa: E501
 
@@ -1245,7 +1351,7 @@ class ApplicationsApi(object):
     def application_syncfolders(self, application_id, sourcefolder, configuration, deviceid, destfolder, **kwargs):  # noqa: E501
         """synchronizes folders  # noqa: E501
 
-        synchronizes folders between SDK container and application container  # noqa: E501
+        synchronizes folders between host/SDK container and application container  # noqa: E501
         This method makes a synchronous HTTP request by default. To make an
         asynchronous HTTP request, please pass async_req=True
         >>> thread = api.application_syncfolders(application_id, sourcefolder, configuration, deviceid, destfolder, async_req=True)
@@ -1257,6 +1363,7 @@ class ApplicationsApi(object):
         :param str configuration: (required)
         :param str deviceid: (required)
         :param str destfolder: (required)
+        :param bool source_is_sdk:
         :param _preload_content: if False, the urllib3.HTTPResponse object will
                                  be returned without reading/decoding response
                                  data. Default is True.
@@ -1274,7 +1381,7 @@ class ApplicationsApi(object):
     def application_syncfolders_with_http_info(self, application_id, sourcefolder, configuration, deviceid, destfolder, **kwargs):  # noqa: E501
         """synchronizes folders  # noqa: E501
 
-        synchronizes folders between SDK container and application container  # noqa: E501
+        synchronizes folders between host/SDK container and application container  # noqa: E501
         This method makes a synchronous HTTP request by default. To make an
         asynchronous HTTP request, please pass async_req=True
         >>> thread = api.application_syncfolders_with_http_info(application_id, sourcefolder, configuration, deviceid, destfolder, async_req=True)
@@ -1286,6 +1393,7 @@ class ApplicationsApi(object):
         :param str configuration: (required)
         :param str deviceid: (required)
         :param str destfolder: (required)
+        :param bool source_is_sdk:
         :param _return_http_data_only: response data without head status code
                                        and headers
         :param _preload_content: if False, the urllib3.HTTPResponse object will
@@ -1302,7 +1410,7 @@ class ApplicationsApi(object):
 
         local_var_params = locals()
 
-        all_params = ['application_id', 'sourcefolder', 'configuration', 'deviceid', 'destfolder']  # noqa: E501
+        all_params = ['application_id', 'sourcefolder', 'configuration', 'deviceid', 'destfolder', 'source_is_sdk']  # noqa: E501
         all_params.append('async_req')
         all_params.append('_return_http_data_only')
         all_params.append('_preload_content')
@@ -1358,6 +1466,8 @@ class ApplicationsApi(object):
             query_params.append(('deviceid', local_var_params['deviceid']))  # noqa: E501
         if 'destfolder' in local_var_params and local_var_params['destfolder'] is not None:  # noqa: E501
             query_params.append(('destfolder', local_var_params['destfolder']))  # noqa: E501
+        if 'source_is_sdk' in local_var_params and local_var_params['source_is_sdk'] is not None:  # noqa: E501
+            query_params.append(('source_is_sdk', local_var_params['source_is_sdk']))  # noqa: E501
 
         header_params = {}
 

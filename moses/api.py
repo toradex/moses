@@ -440,6 +440,28 @@ def devices_device_privatekey_get(device_id):
     return (devices[device_id].get_privatekeypath(), 200)
 
 
+def devices_device_syncfolders_get(device_id, sourcefolder, destfolder):
+    """Syncs a folder on the host with one on the target device
+
+    Arguments:
+        device_id {str} -- target device
+        sourcefolder {src} -- source folder
+        destfolder {src} -- target folder
+    """
+    devices = targetdevice.TargetDevices()
+
+    if device_id not in devices:
+        return ("Device not found", 404)
+
+    devices = targetdevice.TargetDevices()
+
+    if device_id not in devices:
+        return ("Device not found", 404)
+
+    devices[device_id].sync_folders(sourcefolder, destfolder)
+    return (connexion.NoContent, 200)
+
+
 def platforms_get(runtime=None):
     """Returns a list of platforms
 
@@ -754,15 +776,17 @@ def applications_application_sdk_update_get(application_id, configuration):
 
 
 def applications_application_syncfolders_get(application_id, sourcefolder,
-                                             configuration, deviceid, destfolder):
+                                             configuration, deviceid, destfolder, source_is_sdk):
     """Sincronizes a folder between the SDK container and the target
 
     Arguments:
-        application_id {[type]} -- application
-        sourcefolder {[type]} -- path on the SDK container
-        configuration {[type]} -- debug/release
-        deviceid {[type]} -- device
-        destfolder {[type]} -- path on the target device
+        application_id {str} -- application
+        sourcefolder {str}} -- path on the SDK container
+        configuration {str} -- debug/release
+        deviceid {str} -- device
+        destfolder {str} -- path on the target device
+        source_is_sdk {bool} -- source if from SDK container
+
     """
     applications = applicationconfig.ApplicationConfigs()
 
@@ -770,7 +794,12 @@ def applications_application_syncfolders_get(application_id, sourcefolder,
         return ("Application not found", 404)
 
     app = applications.get(application_id)
-    app.sync_folders(sourcefolder, configuration, deviceid, destfolder)
+
+    if source_is_sdk is None:
+        source_is_sdk = True
+
+    app.sync_folders(sourcefolder, configuration,
+                     deviceid, destfolder, source_is_sdk)
     return (connexion.NoContent, 200)
 
 
