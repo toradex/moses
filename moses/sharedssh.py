@@ -190,7 +190,6 @@ class SSHForwarder(threading.Thread):
                 io.StringIO(self.device.privatekey))
 
             self.ssh = paramiko.SSHClient()
-            self.ssh.load_system_host_keys()
             self.ssh.set_missing_host_key_policy(IgnorePolicy())
 
             self.ssh.connect(self.device.hostname,
