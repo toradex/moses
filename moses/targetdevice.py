@@ -666,9 +666,12 @@ class TargetDevices(dict, metaclass=singleton.Singleton):
         ).rstrip('\x00\n')
 
         dev.torizonversion = console.send_cmd(
-            "cat /etc/version",
+            "cat /usr/lib/os-release | grep VERSION=",
             timeout
         ).rstrip('\x00').strip()
+
+        dev.torizonversion = dev.torizonversion.lstrip("VERSION=")
+        dev.torizonversion = dev.torizonversion.strip('"')
 
     def _create_device_from_console(self, console, timeout) -> TargetDevice:
         """Create a new device collecting its information from the console
