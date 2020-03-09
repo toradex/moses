@@ -50,7 +50,8 @@ if __name__ == '__main__':
     logging.getLogger("paramiko").setLevel(logging.WARNING)
 
     if args.logfile is not None:
-        logging.getLogger().addHandler(logging.StreamHandler(args.logfile))
+        logging.getLogger().addHandler(
+            logging.handlers.RotatingFileHandler(args.logfile, "a", 1024*1024, 4))
 
     try:
         r = requests.get("http://localhost:"+str(args.port)+"/api/version")
