@@ -9,6 +9,7 @@ import paramiko
 import logging
 import io
 import exceptions
+import sharedssh
 
 
 class SSHConsole(console.GenericConsole):
@@ -108,8 +109,7 @@ class SSHConsole(console.GenericConsole):
 
         self.password = password
         self.ssh = paramiko.SSHClient()
-        self.ssh.load_system_host_keys()
-        self.ssh.set_missing_host_key_policy(paramiko.AutoAddPolicy())
+        self.ssh.set_missing_host_key_policy(sharedssh.IgnorePolicy())
 
         try:
 
@@ -181,7 +181,6 @@ class SSHConsole(console.GenericConsole):
             k = paramiko.RSAKey.from_private_key(io.StringIO(key))
 
             self.ssh = paramiko.SSHClient()
-            self.ssh.load_system_host_keys()
             self.ssh.set_missing_host_key_policy(paramiko.AutoAddPolicy())
 
             self.ssh.connect(self.hostname,
