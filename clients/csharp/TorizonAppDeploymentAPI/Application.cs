@@ -126,7 +126,7 @@ namespace TorizonAppDeploymentAPI
 
         public async Task SyncFoldersAsync(string sdkfolder, string configuration, TargetDevice device, string destfolder, Action FolderSynced)
         {
-            await api.ApplicationSyncfoldersAsync(this.Id, sdkfolder, configuration, device.Id, destfolder);
+            await api.ApplicationSyncfoldersAsync(this.Id, sdkfolder, configuration, device.Id, destfolder, true);
             FolderSynced?.Invoke();
         }
 
