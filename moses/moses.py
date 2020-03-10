@@ -3,6 +3,7 @@
 import sys
 import os
 import logging
+import logging.handlers
 import connexion
 import api
 import exceptions
@@ -42,7 +43,7 @@ if __name__ == '__main__':
     parser.add_argument("--port", type=int, default=5000,
                         choices=range(1, 65535), metavar="port used for REST server, range is 1..65535")
     parser.add_argument(
-        "--logfile", type=argparse.FileType('w'), default=None)
+        "--logfile", type=str, default=None)
 
     args = parser.parse_args()
 
