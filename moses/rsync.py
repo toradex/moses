@@ -25,14 +25,16 @@ def translate_path(originalpath) -> str:
     Returns:
         str -- path that is valid inside WSL
     """
+
+    originalpath = originalpath.replace("\\", "/")
+
     result = subprocess.run(
         ["wsl.exe", "wslpath", originalpath], stdout=subprocess.PIPE, stderr=subprocess.PIPE)
 
     if result.returncode != 0:
-        raise exceptions.LocalCommandError(
-            "wsl.exe wslpath "+originalpath, result.returncode)
+        raise exceptions.LocalCommandError(result)
 
-    return result.stdout.decode("utf-8")
+    return result.stdout.decode("utf-8").rstrip('\n')
 
 
 def create_tmp_key(keypath) -> str:
@@ -45,12 +47,13 @@ def create_tmp_key(keypath) -> str:
     Returns:
         str -- path of temp key
     """
-    result = subprocess.run(["wls.exe", "mktemp"], stderr=subprocess.PIPE)
+    result = subprocess.run(["wsl.exe", "mktemp"],
+                            stdout=subprocess.PIPE, stderr=subprocess.PIPE)
 
     if result.returncode != 0:
         raise exceptions.LocalCommandError(result.stderr)
 
-    tmppath = result.stdout.decode("utf-8")
+    tmppath = result.stdout.decode("utf-8").strip("\n")
 
     result = subprocess.run(
         ["wsl.exe", "cp", keypath, tmppath], stderr=subprocess.PIPE)
