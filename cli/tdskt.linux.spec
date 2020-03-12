@@ -1,10 +1,5 @@
 # -*- mode: python -*-
 
-import distutils
-if distutils.distutils_path.endswith('__init__.py'):
-    distutils.distutils_path = os.path.dirname(distutils.distutils_path)
-
-
 block_cipher = None
 
 
