@@ -1,9 +1,9 @@
 stages:
-  - linux-build
+  - build
 
 build-moses-linux:
   image: ubuntu:18.04
-  stage: linux-build
+  stage: build
   script:
     - apt-get update -y
     - apt-get install -y software-properties-common
@@ -24,3 +24,27 @@ build-moses-linux:
 
   tags:
     - docker
+
+build-moses-windows:
+  stage: build
+  script:
+    - python -m pip install pip
+    - python -m pip install virtualenv
+    - python -m virtualenv .pyenv
+    - .\.pyenv\Scripts\activate
+    - python -m pip install -r requirements.txt
+    - python -m pip install https://github.com/pyinstaller/pyinstaller/tarball/develop
+    - cd clients\python
+    - python -m setup install
+    - cd ..\..
+    - cd moses
+    - set PYTHONOPTIMIZE=1
+    - pyinstaller -y moses.windows.spec
+    - pyinstaller -y ..\cli\tdskt.windows.spec
+    - xcopy /sy dist\tdskt-windows dist\moses-windows
+  artifacts:
+    paths:
+      - moses/dist/moses-windows/
+
+  tags:
+    - vstudio
