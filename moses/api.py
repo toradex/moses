@@ -87,7 +87,7 @@ def version_docker_get() -> dict:
 
         return client.version()
     except:
-        return ("Docker not responding",500)
+        return ("Docker not responding", 500)
 
 
 def devices_get():
@@ -101,6 +101,7 @@ def devices_get():
     for dev in targetdevice.TargetDevices().values():
         deviceslist.append(dev)
 
+    deviceslist.sort(key=lambda x: x.name)
     return deviceslist
 
 
@@ -270,7 +271,9 @@ def devices_device_processes_get(device_id):
     if device_id not in devices:
         return ("Device not found", 404)
 
-    return (devices[device_id].get_process_list(), 200)
+    processes = devices[device_id].get_process_list()
+    processes.sort(key=lambda x: x["pid"])
+    return (processes, 200)
 
 
 def devices_device_memory_get(device_id):
@@ -288,7 +291,9 @@ def devices_device_storage_get(device_id):
     if device_id not in devices:
         return ("Device not found", 404)
 
-    return (devices[device_id].get_storageinfo(), 200)
+    mountpoints = devices[device_id].get_storageinfo()
+    mountpoints.sort(key=lambda x: x["mountpoint"])
+    return (mountpoints, 200)
 
 
 def devices_device_images_get(device_id):
@@ -303,6 +308,8 @@ def devices_device_images_get(device_id):
         return ("Device not found", 404)
 
     images = devices[device_id].get_images()
+    images.sort(key=lambda x: x["RepoTags"][0] if (
+        "RepoTags" in x.keys() and len(x["RepoTags"]) > 0) else "~"+x["Id"])
     return (images, 200)
 
 
@@ -342,6 +349,8 @@ def devices_device_containers_get(device_id):
         return ("Device not found", 404)
 
     containers = devices[device_id].get_containers()
+    containers.sort(key=lambda x: x["Name"]
+                    if ("Name" in x.keys() and x["Name"] is not None) else "~"+x["Id"])
     return (containers, 200)
 
 
@@ -397,7 +406,9 @@ def devices_device_containers_container_processes_get(device_id, container_id):
     if device_id not in devices:
         return ("Device not found", 404)
 
-    return (devices[device_id].get_container_process_list(container_id), 200)
+    processes = devices[device_id].get_container_process_list(container_id)
+    processes.sort(key=lambda x: x["pid"])
+    return (processes, 200)
 
 
 def devices_device_containers_container_memory_get(device_id, container_id):
@@ -415,7 +426,9 @@ def devices_device_containers_container_storage_get(device_id, container_id):
     if device_id not in devices:
         return ("Device not found", 404)
 
-    return (devices[device_id].get_container_storageinfo(container_id), 200)
+    mountpoints = devices[device_id].get_container_storageinfo(container_id)
+    mountpoints.sort(key=lambda x: x["mountpoint"])
+    return (mountpoints, 200)
 
 
 def devices_device_privatekey_get(device_id):
@@ -425,6 +438,28 @@ def devices_device_privatekey_get(device_id):
         return ("Device not found", 404)
 
     return (devices[device_id].get_privatekeypath(), 200)
+
+
+def devices_device_syncfolders_get(device_id, sourcefolder, destfolder):
+    """Syncs a folder on the host with one on the target device
+
+    Arguments:
+        device_id {str} -- target device
+        sourcefolder {src} -- source folder
+        destfolder {src} -- target folder
+    """
+    devices = targetdevice.TargetDevices()
+
+    if device_id not in devices:
+        return ("Device not found", 404)
+
+    devices = targetdevice.TargetDevices()
+
+    if device_id not in devices:
+        return ("Device not found", 404)
+
+    devices[device_id].sync_folders(sourcefolder, destfolder)
+    return (connexion.NoContent, 200)
 
 
 def platforms_get(runtime=None):
@@ -440,7 +475,10 @@ def platforms_get(runtime=None):
 
     platforms = platformconfig.PlatformConfigs()
 
-    return platforms.get_platforms(runtime)
+    platformslist = platforms.get_platforms(runtime)
+
+    platformslist.sort(key=lambda x: x.name)
+    return platformslist
 
 
 def platforms_platform_get(platform_id):
@@ -477,7 +515,9 @@ def platforms_platform_compatibledevices_get(platform_id):
         return ("Platform not found", 404)
 
     platform = platforms.get(platform_id)
-    return platform.get_compatible_devices()
+    deviceslist = platform.get_compatible_devices()
+    deviceslist.sort(key=lambda x: x.name)
+    return deviceslist
 
 
 def applications_create_get(platform_id, path, username):
@@ -736,15 +776,17 @@ def applications_application_sdk_update_get(application_id, configuration):
 
 
 def applications_application_syncfolders_get(application_id, sourcefolder,
-                                             configuration, deviceid, destfolder):
+                                             configuration, deviceid, destfolder, source_is_sdk):
     """Sincronizes a folder between the SDK container and the target
 
     Arguments:
-        application_id {[type]} -- application
-        sourcefolder {[type]} -- path on the SDK container
-        configuration {[type]} -- debug/release
-        deviceid {[type]} -- device
-        destfolder {[type]} -- path on the target device
+        application_id {str} -- application
+        sourcefolder {str}} -- path on the SDK container
+        configuration {str} -- debug/release
+        deviceid {str} -- device
+        destfolder {str} -- path on the target device
+        source_is_sdk {bool} -- source if from SDK container
+
     """
     applications = applicationconfig.ApplicationConfigs()
 
@@ -752,7 +794,12 @@ def applications_application_syncfolders_get(application_id, sourcefolder,
         return ("Application not found", 404)
 
     app = applications.get(application_id)
-    app.sync_folders(sourcefolder, configuration, deviceid, destfolder)
+
+    if source_is_sdk is None:
+        source_is_sdk = True
+
+    app.sync_folders(sourcefolder, configuration,
+                     deviceid, destfolder, source_is_sdk)
     return (connexion.NoContent, 200)
 
 
@@ -765,6 +812,7 @@ def applications_application_privatekey_get(application_id):
     app = applications.get(application_id)
     return (app.get_privatekeypath(), 200)
 
+
 def applications_application_reseal_get(application_id):
     applications = applicationconfig.ApplicationConfigs()
 
@@ -774,6 +822,7 @@ def applications_application_reseal_get(application_id):
     app = applications.get(application_id)
     app.reseal()
     return (connexion.NoContent, 200)
+
 
 def setup_pullcontainers_get():
     """Pulls all base containers needed for the different applications

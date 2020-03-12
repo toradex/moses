@@ -53,6 +53,7 @@
     <Reference Include="System.Runtime" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Configuration.cs" />
     <Compile Include="generated\src\TorizonRestAPI\Api\ApplicationsApi.cs" />
     <Compile Include="generated\src\TorizonRestAPI\Api\DevicesApi.cs" />
     <Compile Include="generated\src\TorizonRestAPI\Api\PlatformsApi.cs" />
@@ -61,7 +62,6 @@
     <Compile Include="generated\src\TorizonRestAPI\Client\ApiClient.cs" />
     <Compile Include="generated\src\TorizonRestAPI\Client\ApiException.cs" />
     <Compile Include="generated\src\TorizonRestAPI\Client\ApiResponse.cs" />
-    <Compile Include="generated\src\TorizonRestAPI\Client\Configuration.cs" />
     <Compile Include="generated\src\TorizonRestAPI\Client\ExceptionFactory.cs" />
     <Compile Include="generated\src\TorizonRestAPI\Client\GlobalConfiguration.cs" />
     <Compile Include="generated\src\TorizonRestAPI\Client\IApiAccessor.cs" />

@@ -3,6 +3,7 @@
 import sys
 import os
 import logging
+import logging.handlers
 import connexion
 import api
 import exceptions
@@ -14,6 +15,7 @@ import targetdevice
 import applicationconfig
 import argparse
 import requests
+import paramiko
 
 if getattr(sys, 'frozen', False):
     options = {'swagger_path': os.path.dirname(sys.executable) + '/api/ui'}
@@ -41,14 +43,16 @@ if __name__ == '__main__':
     parser.add_argument("--port", type=int, default=5000,
                         choices=range(1, 65535), metavar="port used for REST server, range is 1..65535")
     parser.add_argument(
-        "--logfile", type=argparse.FileType('w'), default=None)
+        "--logfile", type=str, default=None)
 
     args = parser.parse_args()
 
     logging.basicConfig(level=logging.INFO)
+    logging.getLogger("paramiko").setLevel(logging.WARNING)
 
     if args.logfile is not None:
-        logging.getLogger().addHandler(logging.StreamHandler(args.logfile))
+        logging.getLogger().addHandler(
+            logging.handlers.RotatingFileHandler(args.logfile, "a", 1024*1024, 4))
 
     try:
         r = requests.get("http://localhost:"+str(args.port)+"/api/version")

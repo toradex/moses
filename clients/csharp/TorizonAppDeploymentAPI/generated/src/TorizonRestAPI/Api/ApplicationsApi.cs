@@ -184,6 +184,27 @@ namespace TorizonRestAPI.Api
         /// <returns>ApiResponse of Application</returns>
         ApiResponse<Application> ApplicationModifyWithHttpInfo (string applicationId, Application application = default(Application));
         /// <summary>
+        /// Cleans id and keys for git repo uploading
+        /// </summary>
+        /// <remarks>
+        /// This operation make the application no longer valid, but allow you to upload it to a git repo from where it can be cloned/forked re-generating new ids every time, avoiding that all clones share the same id/keys.
+        /// </remarks>
+        /// <exception cref="TorizonRestAPI.Client.ApiException">Thrown when fails to make API call</exception>
+        /// <param name="applicationId">Id of an application (uuid)</param>
+        /// <returns></returns>
+        void ApplicationReseal (string applicationId);
+
+        /// <summary>
+        /// Cleans id and keys for git repo uploading
+        /// </summary>
+        /// <remarks>
+        /// This operation make the application no longer valid, but allow you to upload it to a git repo from where it can be cloned/forked re-generating new ids every time, avoiding that all clones share the same id/keys.
+        /// </remarks>
+        /// <exception cref="TorizonRestAPI.Client.ApiException">Thrown when fails to make API call</exception>
+        /// <param name="applicationId">Id of an application (uuid)</param>
+        /// <returns>ApiResponse of Object(void)</returns>
+        ApiResponse<Object> ApplicationResealWithHttpInfo (string applicationId);
+        /// <summary>
         /// Runs container image
         /// </summary>
         /// <remarks>
@@ -260,7 +281,7 @@ namespace TorizonRestAPI.Api
         /// synchronizes folders
         /// </summary>
         /// <remarks>
-        /// synchronizes folders between SDK container and application container
+        /// synchronizes folders between host/SDK container and application container
         /// </remarks>
         /// <exception cref="TorizonRestAPI.Client.ApiException">Thrown when fails to make API call</exception>
         /// <param name="applicationId">Id of an application (uuid)</param>
@@ -268,14 +289,15 @@ namespace TorizonRestAPI.Api
         /// <param name="configuration"></param>
         /// <param name="deviceid"></param>
         /// <param name="destfolder"></param>
+        /// <param name="sourceIsSdk"> (optional)</param>
         /// <returns></returns>
-        void ApplicationSyncfolders (string applicationId, string sourcefolder, string configuration, string deviceid, string destfolder);
+        void ApplicationSyncfolders (string applicationId, string sourcefolder, string configuration, string deviceid, string destfolder, bool sourceIsSdk = default(bool));
 
         /// <summary>
         /// synchronizes folders
         /// </summary>
         /// <remarks>
-        /// synchronizes folders between SDK container and application container
+        /// synchronizes folders between host/SDK container and application container
         /// </remarks>
         /// <exception cref="TorizonRestAPI.Client.ApiException">Thrown when fails to make API call</exception>
         /// <param name="applicationId">Id of an application (uuid)</param>
@@ -283,8 +305,9 @@ namespace TorizonRestAPI.Api
         /// <param name="configuration"></param>
         /// <param name="deviceid"></param>
         /// <param name="destfolder"></param>
+        /// <param name="sourceIsSdk"> (optional)</param>
         /// <returns>ApiResponse of Object(void)</returns>
-        ApiResponse<Object> ApplicationSyncfoldersWithHttpInfo (string applicationId, string sourcefolder, string configuration, string deviceid, string destfolder);
+        ApiResponse<Object> ApplicationSyncfoldersWithHttpInfo (string applicationId, string sourcefolder, string configuration, string deviceid, string destfolder, bool sourceIsSdk = default(bool));
         /// <summary>
         /// Builds container image
         /// </summary>
@@ -539,6 +562,27 @@ namespace TorizonRestAPI.Api
         /// <returns>Task of ApiResponse (Application)</returns>
         System.Threading.Tasks.Task<ApiResponse<Application>> ApplicationModifyAsyncWithHttpInfo (string applicationId, Application application = default(Application));
         /// <summary>
+        /// Cleans id and keys for git repo uploading
+        /// </summary>
+        /// <remarks>
+        /// This operation make the application no longer valid, but allow you to upload it to a git repo from where it can be cloned/forked re-generating new ids every time, avoiding that all clones share the same id/keys.
+        /// </remarks>
+        /// <exception cref="TorizonRestAPI.Client.ApiException">Thrown when fails to make API call</exception>
+        /// <param name="applicationId">Id of an application (uuid)</param>
+        /// <returns>Task of void</returns>
+        System.Threading.Tasks.Task ApplicationResealAsync (string applicationId);
+
+        /// <summary>
+        /// Cleans id and keys for git repo uploading
+        /// </summary>
+        /// <remarks>
+        /// This operation make the application no longer valid, but allow you to upload it to a git repo from where it can be cloned/forked re-generating new ids every time, avoiding that all clones share the same id/keys.
+        /// </remarks>
+        /// <exception cref="TorizonRestAPI.Client.ApiException">Thrown when fails to make API call</exception>
+        /// <param name="applicationId">Id of an application (uuid)</param>
+        /// <returns>Task of ApiResponse</returns>
+        System.Threading.Tasks.Task<ApiResponse<Object>> ApplicationResealAsyncWithHttpInfo (string applicationId);
+        /// <summary>
         /// Runs container image
         /// </summary>
         /// <remarks>
@@ -615,7 +659,7 @@ namespace TorizonRestAPI.Api
         /// synchronizes folders
         /// </summary>
         /// <remarks>
-        /// synchronizes folders between SDK container and application container
+        /// synchronizes folders between host/SDK container and application container
         /// </remarks>
         /// <exception cref="TorizonRestAPI.Client.ApiException">Thrown when fails to make API call</exception>
         /// <param name="applicationId">Id of an application (uuid)</param>
@@ -623,14 +667,15 @@ namespace TorizonRestAPI.Api
         /// <param name="configuration"></param>
         /// <param name="deviceid"></param>
         /// <param name="destfolder"></param>
+        /// <param name="sourceIsSdk"> (optional)</param>
         /// <returns>Task of void</returns>
-        System.Threading.Tasks.Task ApplicationSyncfoldersAsync (string applicationId, string sourcefolder, string configuration, string deviceid, string destfolder);
+        System.Threading.Tasks.Task ApplicationSyncfoldersAsync (string applicationId, string sourcefolder, string configuration, string deviceid, string destfolder, bool sourceIsSdk = default(bool));
 
         /// <summary>
         /// synchronizes folders
         /// </summary>
         /// <remarks>
-        /// synchronizes folders between SDK container and application container
+        /// synchronizes folders between host/SDK container and application container
         /// </remarks>
         /// <exception cref="TorizonRestAPI.Client.ApiException">Thrown when fails to make API call</exception>
         /// <param name="applicationId">Id of an application (uuid)</param>
@@ -638,8 +683,9 @@ namespace TorizonRestAPI.Api
         /// <param name="configuration"></param>
         /// <param name="deviceid"></param>
         /// <param name="destfolder"></param>
+        /// <param name="sourceIsSdk"> (optional)</param>
         /// <returns>Task of ApiResponse</returns>
-        System.Threading.Tasks.Task<ApiResponse<Object>> ApplicationSyncfoldersAsyncWithHttpInfo (string applicationId, string sourcefolder, string configuration, string deviceid, string destfolder);
+        System.Threading.Tasks.Task<ApiResponse<Object>> ApplicationSyncfoldersAsyncWithHttpInfo (string applicationId, string sourcefolder, string configuration, string deviceid, string destfolder, bool sourceIsSdk = default(bool));
         /// <summary>
         /// Builds container image
         /// </summary>
@@ -1851,6 +1897,135 @@ namespace TorizonRestAPI.Api
         }
 
         /// <summary>
+        /// Cleans id and keys for git repo uploading This operation make the application no longer valid, but allow you to upload it to a git repo from where it can be cloned/forked re-generating new ids every time, avoiding that all clones share the same id/keys.
+        /// </summary>
+        /// <exception cref="TorizonRestAPI.Client.ApiException">Thrown when fails to make API call</exception>
+        /// <param name="applicationId">Id of an application (uuid)</param>
+        /// <returns></returns>
+        public void ApplicationReseal (string applicationId)
+        {
+             ApplicationResealWithHttpInfo(applicationId);
+        }
+
+        /// <summary>
+        /// Cleans id and keys for git repo uploading This operation make the application no longer valid, but allow you to upload it to a git repo from where it can be cloned/forked re-generating new ids every time, avoiding that all clones share the same id/keys.
+        /// </summary>
+        /// <exception cref="TorizonRestAPI.Client.ApiException">Thrown when fails to make API call</exception>
+        /// <param name="applicationId">Id of an application (uuid)</param>
+        /// <returns>ApiResponse of Object(void)</returns>
+        public ApiResponse<Object> ApplicationResealWithHttpInfo (string applicationId)
+        {
+            // verify the required parameter 'applicationId' is set
+            if (applicationId == null)
+                throw new ApiException(400, "Missing required parameter 'applicationId' when calling ApplicationsApi->ApplicationReseal");
+
+            var localVarPath = "/applications/{application_id}/reseal";
+            var localVarPathParams = new Dictionary<String, String>();
+            var localVarQueryParams = new List<KeyValuePair<String, String>>();
+            var localVarHeaderParams = new Dictionary<String, String>(this.Configuration.DefaultHeader);
+            var localVarFormParams = new Dictionary<String, String>();
+            var localVarFileParams = new Dictionary<String, FileParameter>();
+            Object localVarPostBody = null;
+
+            // to determine the Content-Type header
+            String[] localVarHttpContentTypes = new String[] {
+            };
+            String localVarHttpContentType = this.Configuration.ApiClient.SelectHeaderContentType(localVarHttpContentTypes);
+
+            // to determine the Accept header
+            String[] localVarHttpHeaderAccepts = new String[] {
+            };
+            String localVarHttpHeaderAccept = this.Configuration.ApiClient.SelectHeaderAccept(localVarHttpHeaderAccepts);
+            if (localVarHttpHeaderAccept != null)
+                localVarHeaderParams.Add("Accept", localVarHttpHeaderAccept);
+
+            if (applicationId != null) localVarPathParams.Add("application_id", this.Configuration.ApiClient.ParameterToString(applicationId)); // path parameter
+
+
+            // make the HTTP request
+            IRestResponse localVarResponse = (IRestResponse) this.Configuration.ApiClient.CallApi(localVarPath,
+                Method.GET, localVarQueryParams, localVarPostBody, localVarHeaderParams, localVarFormParams, localVarFileParams,
+                localVarPathParams, localVarHttpContentType);
+
+            int localVarStatusCode = (int) localVarResponse.StatusCode;
+
+            if (ExceptionFactory != null)
+            {
+                Exception exception = ExceptionFactory("ApplicationReseal", localVarResponse);
+                if (exception != null) throw exception;
+            }
+
+            return new ApiResponse<Object>(localVarStatusCode,
+                localVarResponse.Headers.ToDictionary(x => x.Name, x => string.Join(",", x.Value)),
+                null);
+        }
+
+        /// <summary>
+        /// Cleans id and keys for git repo uploading This operation make the application no longer valid, but allow you to upload it to a git repo from where it can be cloned/forked re-generating new ids every time, avoiding that all clones share the same id/keys.
+        /// </summary>
+        /// <exception cref="TorizonRestAPI.Client.ApiException">Thrown when fails to make API call</exception>
+        /// <param name="applicationId">Id of an application (uuid)</param>
+        /// <returns>Task of void</returns>
+        public async System.Threading.Tasks.Task ApplicationResealAsync (string applicationId)
+        {
+             await ApplicationResealAsyncWithHttpInfo(applicationId);
+
+        }
+
+        /// <summary>
+        /// Cleans id and keys for git repo uploading This operation make the application no longer valid, but allow you to upload it to a git repo from where it can be cloned/forked re-generating new ids every time, avoiding that all clones share the same id/keys.
+        /// </summary>
+        /// <exception cref="TorizonRestAPI.Client.ApiException">Thrown when fails to make API call</exception>
+        /// <param name="applicationId">Id of an application (uuid)</param>
+        /// <returns>Task of ApiResponse</returns>
+        public async System.Threading.Tasks.Task<ApiResponse<Object>> ApplicationResealAsyncWithHttpInfo (string applicationId)
+        {
+            // verify the required parameter 'applicationId' is set
+            if (applicationId == null)
+                throw new ApiException(400, "Missing required parameter 'applicationId' when calling ApplicationsApi->ApplicationReseal");
+
+            var localVarPath = "/applications/{application_id}/reseal";
+            var localVarPathParams = new Dictionary<String, String>();
+            var localVarQueryParams = new List<KeyValuePair<String, String>>();
+            var localVarHeaderParams = new Dictionary<String, String>(this.Configuration.DefaultHeader);
+            var localVarFormParams = new Dictionary<String, String>();
+            var localVarFileParams = new Dictionary<String, FileParameter>();
+            Object localVarPostBody = null;
+
+            // to determine the Content-Type header
+            String[] localVarHttpContentTypes = new String[] {
+            };
+            String localVarHttpContentType = this.Configuration.ApiClient.SelectHeaderContentType(localVarHttpContentTypes);
+
+            // to determine the Accept header
+            String[] localVarHttpHeaderAccepts = new String[] {
+            };
+            String localVarHttpHeaderAccept = this.Configuration.ApiClient.SelectHeaderAccept(localVarHttpHeaderAccepts);
+            if (localVarHttpHeaderAccept != null)
+                localVarHeaderParams.Add("Accept", localVarHttpHeaderAccept);
+
+            if (applicationId != null) localVarPathParams.Add("application_id", this.Configuration.ApiClient.ParameterToString(applicationId)); // path parameter
+
+
+            // make the HTTP request
+            IRestResponse localVarResponse = (IRestResponse) await this.Configuration.ApiClient.CallApiAsync(localVarPath,
+                Method.GET, localVarQueryParams, localVarPostBody, localVarHeaderParams, localVarFormParams, localVarFileParams,
+                localVarPathParams, localVarHttpContentType);
+
+            int localVarStatusCode = (int) localVarResponse.StatusCode;
+
+            if (ExceptionFactory != null)
+            {
+                Exception exception = ExceptionFactory("ApplicationReseal", localVarResponse);
+                if (exception != null) throw exception;
+            }
+
+            return new ApiResponse<Object>(localVarStatusCode,
+                localVarResponse.Headers.ToDictionary(x => x.Name, x => string.Join(",", x.Value)),
+                null);
+        }
+
+        /// <summary>
         /// Runs container image Runs application release or debug container on target, if the application is already running, restarts it
         /// </summary>
         /// <exception cref="TorizonRestAPI.Client.ApiException">Thrown when fails to make API call</exception>
@@ -2308,7 +2483,7 @@ namespace TorizonRestAPI.Api
         }
 
         /// <summary>
-        /// synchronizes folders synchronizes folders between SDK container and application container
+        /// synchronizes folders synchronizes folders between host/SDK container and application container
         /// </summary>
         /// <exception cref="TorizonRestAPI.Client.ApiException">Thrown when fails to make API call</exception>
         /// <param name="applicationId">Id of an application (uuid)</param>
@@ -2316,14 +2491,15 @@ namespace TorizonRestAPI.Api
         /// <param name="configuration"></param>
         /// <param name="deviceid"></param>
         /// <param name="destfolder"></param>
+        /// <param name="sourceIsSdk"> (optional)</param>
         /// <returns></returns>
-        public void ApplicationSyncfolders (string applicationId, string sourcefolder, string configuration, string deviceid, string destfolder)
+        public void ApplicationSyncfolders (string applicationId, string sourcefolder, string configuration, string deviceid, string destfolder, bool sourceIsSdk = default(bool))
         {
-             ApplicationSyncfoldersWithHttpInfo(applicationId, sourcefolder, configuration, deviceid, destfolder);
+             ApplicationSyncfoldersWithHttpInfo(applicationId, sourcefolder, configuration, deviceid, destfolder, sourceIsSdk);
         }
 
         /// <summary>
-        /// synchronizes folders synchronizes folders between SDK container and application container
+        /// synchronizes folders synchronizes folders between host/SDK container and application container
         /// </summary>
         /// <exception cref="TorizonRestAPI.Client.ApiException">Thrown when fails to make API call</exception>
         /// <param name="applicationId">Id of an application (uuid)</param>
@@ -2331,8 +2507,9 @@ namespace TorizonRestAPI.Api
         /// <param name="configuration"></param>
         /// <param name="deviceid"></param>
         /// <param name="destfolder"></param>
+        /// <param name="sourceIsSdk"> (optional)</param>
         /// <returns>ApiResponse of Object(void)</returns>
-        public ApiResponse<Object> ApplicationSyncfoldersWithHttpInfo (string applicationId, string sourcefolder, string configuration, string deviceid, string destfolder)
+        public ApiResponse<Object> ApplicationSyncfoldersWithHttpInfo (string applicationId, string sourcefolder, string configuration, string deviceid, string destfolder, bool sourceIsSdk = default(bool))
         {
             // verify the required parameter 'applicationId' is set
             if (applicationId == null)
@@ -2376,6 +2553,7 @@ namespace TorizonRestAPI.Api
             if (configuration != null) localVarQueryParams.AddRange(this.Configuration.ApiClient.ParameterToKeyValuePairs("", "configuration", configuration)); // query parameter
             if (deviceid != null) localVarQueryParams.AddRange(this.Configuration.ApiClient.ParameterToKeyValuePairs("", "deviceid", deviceid)); // query parameter
             if (destfolder != null) localVarQueryParams.AddRange(this.Configuration.ApiClient.ParameterToKeyValuePairs("", "destfolder", destfolder)); // query parameter
+            if (sourceIsSdk != null) localVarQueryParams.AddRange(this.Configuration.ApiClient.ParameterToKeyValuePairs("", "source_is_sdk", sourceIsSdk)); // query parameter
 
 
             // make the HTTP request
@@ -2397,7 +2575,7 @@ namespace TorizonRestAPI.Api
         }
 
         /// <summary>
-        /// synchronizes folders synchronizes folders between SDK container and application container
+        /// synchronizes folders synchronizes folders between host/SDK container and application container
         /// </summary>
         /// <exception cref="TorizonRestAPI.Client.ApiException">Thrown when fails to make API call</exception>
         /// <param name="applicationId">Id of an application (uuid)</param>
@@ -2405,15 +2583,16 @@ namespace TorizonRestAPI.Api
         /// <param name="configuration"></param>
         /// <param name="deviceid"></param>
         /// <param name="destfolder"></param>
+        /// <param name="sourceIsSdk"> (optional)</param>
         /// <returns>Task of void</returns>
-        public async System.Threading.Tasks.Task ApplicationSyncfoldersAsync (string applicationId, string sourcefolder, string configuration, string deviceid, string destfolder)
+        public async System.Threading.Tasks.Task ApplicationSyncfoldersAsync (string applicationId, string sourcefolder, string configuration, string deviceid, string destfolder, bool sourceIsSdk = default(bool))
         {
-             await ApplicationSyncfoldersAsyncWithHttpInfo(applicationId, sourcefolder, configuration, deviceid, destfolder);
+             await ApplicationSyncfoldersAsyncWithHttpInfo(applicationId, sourcefolder, configuration, deviceid, destfolder, sourceIsSdk);
 
         }
 
         /// <summary>
-        /// synchronizes folders synchronizes folders between SDK container and application container
+        /// synchronizes folders synchronizes folders between host/SDK container and application container
         /// </summary>
         /// <exception cref="TorizonRestAPI.Client.ApiException">Thrown when fails to make API call</exception>
         /// <param name="applicationId">Id of an application (uuid)</param>
@@ -2421,8 +2600,9 @@ namespace TorizonRestAPI.Api
         /// <param name="configuration"></param>
         /// <param name="deviceid"></param>
         /// <param name="destfolder"></param>
+        /// <param name="sourceIsSdk"> (optional)</param>
         /// <returns>Task of ApiResponse</returns>
-        public async System.Threading.Tasks.Task<ApiResponse<Object>> ApplicationSyncfoldersAsyncWithHttpInfo (string applicationId, string sourcefolder, string configuration, string deviceid, string destfolder)
+        public async System.Threading.Tasks.Task<ApiResponse<Object>> ApplicationSyncfoldersAsyncWithHttpInfo (string applicationId, string sourcefolder, string configuration, string deviceid, string destfolder, bool sourceIsSdk = default(bool))
         {
             // verify the required parameter 'applicationId' is set
             if (applicationId == null)
@@ -2466,6 +2646,7 @@ namespace TorizonRestAPI.Api
             if (configuration != null) localVarQueryParams.AddRange(this.Configuration.ApiClient.ParameterToKeyValuePairs("", "configuration", configuration)); // query parameter
             if (deviceid != null) localVarQueryParams.AddRange(this.Configuration.ApiClient.ParameterToKeyValuePairs("", "deviceid", deviceid)); // query parameter
             if (destfolder != null) localVarQueryParams.AddRange(this.Configuration.ApiClient.ParameterToKeyValuePairs("", "destfolder", destfolder)); // query parameter
+            if (sourceIsSdk != null) localVarQueryParams.AddRange(this.Configuration.ApiClient.ParameterToKeyValuePairs("", "source_is_sdk", sourceIsSdk)); // query parameter
 
 
             // make the HTTP request

@@ -278,6 +278,29 @@ class SDKRequiresConfiguration(MosesError):
         super().__init__("Platform requires debug/release configuration for SDK generation.")
 
 
+class LocalCommandError(MosesError):
+
+    code = 544
+    description = "Local command execution failed."
+
+    def __init__(self, result):
+        message = "Local command " + \
+            str(result.args) + " returned error " + str(result.returncode)
+
+        if result.stderr is not None:
+            message = result.stderr.decode("utf-8")
+
+        super().__init__(message)
+
+
+class DNSError(MosesError):
+    code = 545
+    description = "Error resolving device hostname."
+
+    def __init__(self, hostname):
+        super().__init__("Can't find a valid IP for "+hostname)
+
+
 def encode_error(e: MosesError):
 
     fields = {

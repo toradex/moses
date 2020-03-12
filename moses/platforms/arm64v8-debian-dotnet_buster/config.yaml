@@ -58,7 +58,7 @@ sdkcontainer:
 
 # additional platform-specific properties that can be used in projects or plugins
 props:
-  common: { "runtimeid": "linux-arm" }
+  common: { "runtimeid": "linux-arm64" }
   debug: {}
   release: {}
 # additional scripts (docker-compose or shell) that can be used to start/stop

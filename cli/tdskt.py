@@ -501,6 +501,22 @@ def cmd_handler_device_key(args) -> int:
     return 0
 
 
+def cmd_handler_device_sync(args) -> int:
+    """Sync a local folder with a folder on the device
+
+    Arguments:
+        args -- parsed command line arguments
+
+    Returns:
+        int -- 0 for success
+    """
+    api = moses_client.DevicesApi()
+    device = api.device_syncfolders(args.device_id,
+                                    os.path.abspath(args.source_folder),
+                                    args.destination_folder)
+    return 0
+
+
 def cmd_handler_application_info(args) -> int:
     """dumps application info
 
@@ -605,6 +621,7 @@ def cmd_handler_application_key(args) -> int:
     logging.info(keypath)
     return 0
 
+
 def cmd_handler_application_reseal(args) -> int:
     """prints path of private key file
 
@@ -617,7 +634,8 @@ def cmd_handler_application_reseal(args) -> int:
     api = moses_client.ApplicationsApi()
 
     api.application_reseal(args.application_id)
-    logging.warning("Application has been resealed. It should not be used for any further operation, otherwise keys will be regenerated.")
+    logging.warning(
+        "Application has been resealed. It should not be used for any further operation, otherwise keys will be regenerated.")
     return 0
 
 
@@ -782,6 +800,7 @@ def create_parser() -> argparse.ArgumentParser:
     device_subparsers.add_parser("mem")
     device_subparsers.add_parser("storage")
     device_subparsers.add_parser("key")
+    device_sync_parser = device_subparsers.add_parser("sync")
 
     # add sub-commands for device image
     device_image_parser.add_argument(
@@ -804,6 +823,11 @@ def create_parser() -> argparse.ArgumentParser:
     device_container_subparsers.add_parser("ps")
     device_container_subparsers.add_parser("mem")
     device_container_subparsers.add_parser("storage")
+
+    device_sync_parser.add_argument(
+        "source_folder", help="Source folder (host PC)", metavar="source-folder")
+    device_sync_parser.add_argument(
+        "destination_folder", help="Destination folder (target device)", metavar="destination-folder")
 
     detect_parser.add_argument(
         "target", type=str, help="serial port or ip address/hostname")

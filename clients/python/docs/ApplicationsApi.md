@@ -11,6 +11,7 @@ Method | HTTP request | Description
 [**application_getcontainer**](ApplicationsApi.md#application_getcontainer) | **GET** /applications/{application_id}/container | Get container information
 [**application_getprivatekey**](ApplicationsApi.md#application_getprivatekey) | **GET** /applications/{application_id}/privatekey | Retrieves the path of the RSA private key
 [**application_modify**](ApplicationsApi.md#application_modify) | **PUT** /applications/{application_id} | Change application properties
+[**application_reseal**](ApplicationsApi.md#application_reseal) | **GET** /applications/{application_id}/reseal | Cleans id and keys for git repo uploading
 [**application_run**](ApplicationsApi.md#application_run) | **GET** /applications/{application_id}/run | Runs container image
 [**application_runsdk**](ApplicationsApi.md#application_runsdk) | **GET** /applications/{application_id}/sdk/run | Runs SDK containers
 [**application_stop**](ApplicationsApi.md#application_stop) | **GET** /applications/{application_id}/stop | Stops running container image
@@ -434,6 +435,60 @@ No authorization required
 
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
 
+# **application_reseal**
+> application_reseal(application_id)
+
+Cleans id and keys for git repo uploading
+
+This operation make the application no longer valid, but allow you to upload it to a git repo from where it can be cloned/forked re-generating new ids every time, avoiding that all clones share the same id/keys.
+
+### Example
+
+```python
+from __future__ import print_function
+import time
+import moses_client
+from moses_client.rest import ApiException
+from pprint import pprint
+
+# Create an instance of the API class
+api_instance = moses_client.ApplicationsApi()
+application_id = 'application_id_example' # str | Id of an application (uuid)
+
+try:
+    # Cleans id and keys for git repo uploading
+    api_instance.application_reseal(application_id)
+except ApiException as e:
+    print("Exception when calling ApplicationsApi->application_reseal: %s\n" % e)
+```
+
+### Parameters
+
+Name | Type | Description  | Notes
+------------- | ------------- | ------------- | -------------
+ **application_id** | **str**| Id of an application (uuid) | 
+
+### Return type
+
+void (empty response body)
+
+### Authorization
+
+No authorization required
+
+### HTTP request headers
+
+ - **Content-Type**: Not defined
+ - **Accept**: Not defined
+
+### HTTP response details
+| Status code | Description | Response headers |
+|-------------|-------------|------------------|
+**200** | key returned |  -  |
+**404** | Application not found |  -  |
+
+[[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
+
 # **application_run**
 > DockerContainer application_run(application_id, configuration, deviceid)
 
@@ -621,11 +676,11 @@ No authorization required
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
 
 # **application_syncfolders**
-> application_syncfolders(application_id, sourcefolder, configuration, deviceid, destfolder)
+> application_syncfolders(application_id, sourcefolder, configuration, deviceid, destfolder, source_is_sdk=source_is_sdk)
 
 synchronizes folders
 
-synchronizes folders between SDK container and application container
+synchronizes folders between host/SDK container and application container
 
 ### Example
 
@@ -643,10 +698,11 @@ sourcefolder = 'sourcefolder_example' # str |
 configuration = 'configuration_example' # str | 
 deviceid = 'deviceid_example' # str | 
 destfolder = 'destfolder_example' # str | 
+source_is_sdk = True # bool |  (optional)
 
 try:
     # synchronizes folders
-    api_instance.application_syncfolders(application_id, sourcefolder, configuration, deviceid, destfolder)
+    api_instance.application_syncfolders(application_id, sourcefolder, configuration, deviceid, destfolder, source_is_sdk=source_is_sdk)
 except ApiException as e:
     print("Exception when calling ApplicationsApi->application_syncfolders: %s\n" % e)
 ```
@@ -660,6 +716,7 @@ Name | Type | Description  | Notes
  **configuration** | **str**|  | 
  **deviceid** | **str**|  | 
  **destfolder** | **str**|  | 
+ **source_is_sdk** | **bool**|  | [optional] 
 
 ### Return type
 

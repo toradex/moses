@@ -77,15 +77,21 @@ class SharedSSHDockerTunnel(sshtunnel.SSHTunnelForwarder):
         return self
 
     def __exit__(self, type, value, traceback):
-        self.__objlock.release()
+        try:
+            self.__objlock.release()
+        except:
+            pass
 
-        if type:
-            logging.info("SSH - Tunnel to " + self.device + " closed")
-            with SharedSSHDockerTunnel.__lock:
-                if self.device in SharedSSHDockerTunnel.__tunnels:
-                    del SharedSSHDockerTunnel.__tunnels[self.device]
-                    thread = threading.Thread(target=self.stop)
-                    thread.start()
+        try:
+            if type:
+                logging.info("SSH - Tunnel to " + self.device + " closed")
+                with SharedSSHDockerTunnel.__lock:
+                    if self.device in SharedSSHDockerTunnel.__tunnels:
+                        del SharedSSHDockerTunnel.__tunnels[self.device]
+                        thread = threading.Thread(target=self.stop)
+                        thread.start()
+        except:
+            pass
 
 
 class IgnorePolicy(paramiko.MissingHostKeyPolicy):
@@ -184,7 +190,6 @@ class SSHForwarder(threading.Thread):
                 io.StringIO(self.device.privatekey))
 
             self.ssh = paramiko.SSHClient()
-            self.ssh.load_system_host_keys()
             self.ssh.set_missing_host_key_policy(IgnorePolicy())
 
             self.ssh.connect(self.device.hostname,

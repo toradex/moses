@@ -20,6 +20,7 @@ import singleton
 import sshconsole
 import sharedssh
 import yaml
+import rsync
 
 
 """ This module contain classes used to manage devices and their connections
@@ -538,6 +539,15 @@ class TargetDevice(config.ConfigurableKeysObject):
 
             return self._process_df_output(io.StringIO(plist.decode("utf-8")))
 
+    def sync_folders(self, sourcefolder, destfolder):
+        """Syncronizes a local folder and a folder on the target device
+
+        Arguments:
+            sourcefolder {str} -- source folder
+            destfolder {str} -- destination folder
+        """
+        rsync.run_rsync(sourcefolder, self.id, destfolder)
+
     # support for serialization
     def __getstate__(self):
         fields = super().__getstate__()
@@ -656,9 +666,12 @@ class TargetDevices(dict, metaclass=singleton.Singleton):
         ).rstrip('\x00\n')
 
         dev.torizonversion = console.send_cmd(
-            "cat /etc/version",
+            "cat /usr/lib/os-release | grep VERSION=",
             timeout
         ).rstrip('\x00').strip()
+
+        dev.torizonversion = dev.torizonversion.lstrip("VERSION=")
+        dev.torizonversion = dev.torizonversion.strip('"')
 
     def _create_device_from_console(self, console, timeout) -> TargetDevice:
         """Create a new device collecting its information from the console

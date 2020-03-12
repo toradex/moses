@@ -565,6 +565,61 @@ export class ApplicationsApi {
         });
     }
     /**
+     * This operation make the application no longer valid, but allow you to upload it to a git repo from where it can be cloned/forked re-generating new ids every time, avoiding that all clones share the same id/keys.
+     * @summary Cleans id and keys for git repo uploading
+     * @param applicationId Id of an application (uuid)
+     */
+    public async applicationReseal (applicationId: string, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<{ response: http.IncomingMessage; body?: any;  }> {
+        const localVarPath = this.basePath + '/applications/{application_id}/reseal'
+            .replace('{' + 'application_id' + '}', encodeURIComponent(String(applicationId)));
+        let localVarQueryParameters: any = {};
+        let localVarHeaderParams: any = (<any>Object).assign({}, this.defaultHeaders);
+        let localVarFormParams: any = {};
+
+        // verify required parameter 'applicationId' is not null or undefined
+        if (applicationId === null || applicationId === undefined) {
+            throw new Error('Required parameter applicationId was null or undefined when calling applicationReseal.');
+        }
+
+        (<any>Object).assign(localVarHeaderParams, options.headers);
+
+        let localVarUseFormData = false;
+
+        let localVarRequestOptions: localVarRequest.Options = {
+            method: 'GET',
+            qs: localVarQueryParameters,
+            headers: localVarHeaderParams,
+            uri: localVarPath,
+            useQuerystring: this._useQuerystring,
+            json: true,
+        };
+
+        let authenticationPromise = Promise.resolve();
+        authenticationPromise = authenticationPromise.then(() => this.authentications.default.applyToRequest(localVarRequestOptions));
+        return authenticationPromise.then(() => {
+            if (Object.keys(localVarFormParams).length) {
+                if (localVarUseFormData) {
+                    (<any>localVarRequestOptions).formData = localVarFormParams;
+                } else {
+                    localVarRequestOptions.form = localVarFormParams;
+                }
+            }
+            return new Promise<{ response: http.IncomingMessage; body?: any;  }>((resolve, reject) => {
+                localVarRequest(localVarRequestOptions, (error, response, body) => {
+                    if (error) {
+                        reject(error);
+                    } else {
+                        if (response.statusCode && response.statusCode >= 200 && response.statusCode <= 299) {
+                            resolve({ response: response, body: body });
+                        } else {
+                            reject(new HttpError(response, body, response.statusCode));
+                        }
+                    }
+                });
+            });
+        });
+    }
+    /**
      * Runs application release or debug container on target, if the application is already running, restarts it
      * @summary Runs container image
      * @param applicationId Id of an application (uuid)
@@ -803,15 +858,16 @@ export class ApplicationsApi {
         });
     }
     /**
-     * synchronizes folders between SDK container and application container
+     * synchronizes folders between host/SDK container and application container
      * @summary synchronizes folders
      * @param applicationId Id of an application (uuid)
      * @param sourcefolder 
      * @param configuration 
      * @param deviceid 
      * @param destfolder 
+     * @param sourceIsSdk 
      */
-    public async applicationSyncfolders (applicationId: string, sourcefolder: string, configuration: string, deviceid: string, destfolder: string, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<{ response: http.IncomingMessage; body?: any;  }> {
+    public async applicationSyncfolders (applicationId: string, sourcefolder: string, configuration: string, deviceid: string, destfolder: string, sourceIsSdk?: boolean, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<{ response: http.IncomingMessage; body?: any;  }> {
         const localVarPath = this.basePath + '/applications/{application_id}/syncfolders'
             .replace('{' + 'application_id' + '}', encodeURIComponent(String(applicationId)));
         let localVarQueryParameters: any = {};
@@ -864,6 +920,10 @@ export class ApplicationsApi {
 
         if (destfolder !== undefined) {
             localVarQueryParameters['destfolder'] = ObjectSerializer.serialize(destfolder, "string");
+        }
+
+        if (sourceIsSdk !== undefined) {
+            localVarQueryParameters['source_is_sdk'] = ObjectSerializer.serialize(sourceIsSdk, "boolean");
         }
 
         (<any>Object).assign(localVarHeaderParams, options.headers);

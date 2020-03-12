@@ -132,7 +132,7 @@ class ConfigurableObject:
 
         for key, value in fields.items():
             if key in self.readonlyfields:
-                if value != self.__dict__[key]:
+                if value != str(self.__dict__[key]):
                     logging.warning(
                         "REST - Attempt to change value of property %s", key)
                 readonlyitems.append(key)

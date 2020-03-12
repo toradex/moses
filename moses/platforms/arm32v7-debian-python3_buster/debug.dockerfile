@@ -48,4 +48,4 @@ RUN echo "#!/bin/sh" > /startptvsd && \
 
 USER #%application.username%#
 
-ENTRYPOINT ["/startptvsd"]
+CMD /startptvsd

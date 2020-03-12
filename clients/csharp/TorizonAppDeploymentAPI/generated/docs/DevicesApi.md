@@ -26,6 +26,7 @@ Method | HTTP request | Description
 [**DeviceModify**](DevicesApi.md#devicemodify) | **PUT** /devices/{device_id} | Change device properties
 [**DeviceOpendocker**](DevicesApi.md#deviceopendocker) | **GET** /devices/{device_id}/docker/open | Expose remote docker
 [**DeviceOpenssh**](DevicesApi.md#deviceopenssh) | **GET** /devices/{device_id}/ssh/open | Expose remote ssh
+[**DeviceSyncfolders**](DevicesApi.md#devicesyncfolders) | **GET** /devices/{device_id}/syncfolders | synchronizes folders
 [**DeviceUpdate**](DevicesApi.md#deviceupdate) | **GET** /devices/{device_id}/update | update information for a specific device
 [**DevicesGet**](DevicesApi.md#devicesget) | **GET** /devices | Get all devices
 [**DevicesNetworkdetect**](DevicesApi.md#devicesnetworkdetect) | **GET** /devices/network_detect | Finds a network device
@@ -1778,6 +1779,90 @@ No authorization required
 | **500** | Unexpected exception. |  -  |
 | **533** | SSH error. |  -  |
 | **539** | SSH tunnel error. |  -  |
+
+[[Back to top]](#)
+[[Back to API list]](../README.md#documentation-for-api-endpoints)
+[[Back to Model list]](../README.md#documentation-for-models)
+[[Back to README]](../README.md)
+
+
+## DeviceSyncfolders
+
+> void DeviceSyncfolders (string deviceId, string sourcefolder, string destfolder)
+
+synchronizes folders
+
+synchronizes folders between host and target
+
+### Example
+
+```csharp
+using System.Collections.Generic;
+using System.Diagnostics;
+using TorizonRestAPI.Api;
+using TorizonRestAPI.Client;
+using TorizonRestAPI.Model;
+
+namespace Example
+{
+    public class DeviceSyncfoldersExample
+    {
+        public static void Main()
+        {
+            Configuration.Default.BasePath = "http://localhost:5000/api";
+            var apiInstance = new DevicesApi(Configuration.Default);
+            var deviceId = deviceId_example;  // string | Target device serial number
+            var sourcefolder = sourcefolder_example;  // string | 
+            var destfolder = destfolder_example;  // string | 
+
+            try
+            {
+                // synchronizes folders
+                apiInstance.DeviceSyncfolders(deviceId, sourcefolder, destfolder);
+            }
+            catch (ApiException e)
+            {
+                Debug.Print("Exception when calling DevicesApi.DeviceSyncfolders: " + e.Message );
+                Debug.Print("Status Code: "+ e.ErrorCode);
+                Debug.Print(e.StackTrace);
+            }
+        }
+    }
+}
+```
+
+### Parameters
+
+
+Name | Type | Description  | Notes
+------------- | ------------- | ------------- | -------------
+ **deviceId** | **string**| Target device serial number | 
+ **sourcefolder** | **string**|  | 
+ **destfolder** | **string**|  | 
+
+### Return type
+
+void (empty response body)
+
+### Authorization
+
+No authorization required
+
+### HTTP request headers
+
+- **Content-Type**: Not defined
+- **Accept**: application/json
+
+### HTTP response details
+| Status code | Description | Response headers |
+|-------------|-------------|------------------|
+| **200** | Sysroot updated |  -  |
+| **404** | Device not found |  -  |
+| **500** | Unexpected exception. |  -  |
+| **520** | Container image not found on local host. |  -  |
+| **523** | Container is not running. |  -  |
+| **533** | SSH error. |  -  |
+| **544** | Local command execution failed. |  -  |
 
 [[Back to top]](#)
 [[Back to API list]](../README.md#documentation-for-api-endpoints)

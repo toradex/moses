@@ -23,7 +23,7 @@ pip install git+https://github.com/GIT_USER_ID/GIT_REPO_ID.git
 
 Then import the package:
 ```python
-import moses_client
+import moses_client 
 ```
 
 ### Setuptools
@@ -80,6 +80,7 @@ Class | Method | HTTP request | Description
 *ApplicationsApi* | [**application_getcontainer**](docs/ApplicationsApi.md#application_getcontainer) | **GET** /applications/{application_id}/container | Get container information
 *ApplicationsApi* | [**application_getprivatekey**](docs/ApplicationsApi.md#application_getprivatekey) | **GET** /applications/{application_id}/privatekey | Retrieves the path of the RSA private key
 *ApplicationsApi* | [**application_modify**](docs/ApplicationsApi.md#application_modify) | **PUT** /applications/{application_id} | Change application properties
+*ApplicationsApi* | [**application_reseal**](docs/ApplicationsApi.md#application_reseal) | **GET** /applications/{application_id}/reseal | Cleans id and keys for git repo uploading
 *ApplicationsApi* | [**application_run**](docs/ApplicationsApi.md#application_run) | **GET** /applications/{application_id}/run | Runs container image
 *ApplicationsApi* | [**application_runsdk**](docs/ApplicationsApi.md#application_runsdk) | **GET** /applications/{application_id}/sdk/run | Runs SDK containers
 *ApplicationsApi* | [**application_stop**](docs/ApplicationsApi.md#application_stop) | **GET** /applications/{application_id}/stop | Stops running container image
@@ -110,6 +111,7 @@ Class | Method | HTTP request | Description
 *DevicesApi* | [**device_modify**](docs/DevicesApi.md#device_modify) | **PUT** /devices/{device_id} | Change device properties
 *DevicesApi* | [**device_opendocker**](docs/DevicesApi.md#device_opendocker) | **GET** /devices/{device_id}/docker/open | Expose remote docker
 *DevicesApi* | [**device_openssh**](docs/DevicesApi.md#device_openssh) | **GET** /devices/{device_id}/ssh/open | Expose remote ssh
+*DevicesApi* | [**device_syncfolders**](docs/DevicesApi.md#device_syncfolders) | **GET** /devices/{device_id}/syncfolders | synchronizes folders
 *DevicesApi* | [**device_update**](docs/DevicesApi.md#device_update) | **GET** /devices/{device_id}/update | update information for a specific device
 *DevicesApi* | [**devices_get**](docs/DevicesApi.md#devices_get) | **GET** /devices | Get all devices
 *DevicesApi* | [**devices_networkdetect**](docs/DevicesApi.md#devices_networkdetect) | **GET** /devices/network_detect | Finds a network device
