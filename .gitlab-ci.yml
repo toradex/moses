@@ -34,8 +34,14 @@ build-moses-windows:
     - .\.pyenv\Scripts\activate
     - python -m pip install -r requirements.txt
     - python -m pip install https://github.com/pyinstaller/pyinstaller/tarball/develop
-    - cd clients\python && python3.8 -m setup install && cd ..\..
-    - cd moses && set PYTHONOPTIMIZE=1 && pyinstaller -y moses.windows.spec && pyinstaller -y ..\cli\tdskt.windows.spec && xcopy /sy dist\tdskt-windows dist\moses-windows
+    - cd clients\python
+    - python3.8 -m setup install
+    - cd ..\..
+    - cd moses
+    - set PYTHONOPTIMIZE=1
+    - pyinstaller -y moses.windows.spec
+    - pyinstaller -y ..\cli\tdskt.windows.spec
+    - xcopy /sy dist\tdskt-windows dist\moses-windows
   artifacts:
     paths:
       - moses/dist/moses-windows/
