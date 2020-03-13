@@ -35,7 +35,7 @@ build-moses-windows:
     - python -m pip install -r requirements.txt
     - python -m pip install https://github.com/pyinstaller/pyinstaller/tarball/develop
     - cd clients\python
-    - python3.8 -m setup install
+    - python -m setup install
     - cd ..\..
     - cd moses
     - set PYTHONOPTIMIZE=1
