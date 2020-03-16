@@ -45,6 +45,18 @@ build-moses-windows:
   artifacts:
     paths:
       - moses/dist/moses-windows/
+  tags:
+    - vstudio
 
+build-csharp-apis:
+  stage: build
+  script:
+    - certutil -decode $env:SIGN_KEY_FILE_MIME64 clients\csharp\TorizonAppDeploymentAPI\TorizonAppDevelopmentAPI.snk
+    - cmd.exe /C """%PROGRAMFILES(X86)%\Microsoft Visual Studio\2019\BuildTools\Common7\Tools\VsMSBuildCmd.bat"" && cd clients\csharp && msbuild -t:restore TorizonAppDeploymentAPI.sln /property:Configuration=Release /property:Platform=""Any CPU"" && msbuild TorizonAppDeploymentAPI.sln  /property:Configuration=Release /property:Platform=""Any CPU"""
+    - del clients\csharp\TorizonAppDeploymentAPI\TorizonAppDevelopmentAPI.snk
+    - del $env:SIGN_KEY_FILE_MIME64
+  artifacts:
+    paths:
+      - clients/csharp/TorizonAppDeploymentAPI/bin/Release/TorizonAppDeploymentAPI.dll
   tags:
     - vstudio
