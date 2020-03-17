@@ -278,7 +278,7 @@ class ApplicationConfig(config.ConfigurableKeysObject):
 
             if self.images[configuration] is None:
                 logging.info("Image has never been built.")
-                return False;
+                return False
 
             img = None
 
@@ -556,11 +556,11 @@ class ApplicationConfig(config.ConfigurableKeysObject):
         platformscript = plat.get_prop(
             configuration, scriptname)
 
-        if script=="":
-            script=None
+        if script == "":
+            script = None
 
-        if platformscript=="":
-            platformscript=None
+        if platformscript == "":
+            platformscript = None
 
         if script is not None or platformscript is not None:
 
@@ -674,7 +674,7 @@ class ApplicationConfig(config.ConfigurableKeysObject):
             dockercomposefilepath = None
 
             if dockercomposefile is not None and len(dockercomposefile) > 0:
-                dockercomposefilepath=self.folder / dockercomposefile
+                dockercomposefilepath = self.folder / dockercomposefile
             else:
                 dockercomposefile = plat.get_prop(
                     configuration, "dockercomposefile")
@@ -1241,7 +1241,7 @@ class ApplicationConfig(config.ConfigurableKeysObject):
             self.sdksshaddress = container.attrs["NetworkSettings"]["Ports"]["22/tcp"][0]
 
     def sync_folders(self, sourcefolder, configuration,
-                     deviceid, containerfolder,source_is_sdk):
+                     deviceid, containerfolder, source_is_sdk):
         """Sync folders from host/SDK container to the app container
 
         Arguments:
@@ -1304,10 +1304,8 @@ class ApplicationConfig(config.ConfigurableKeysObject):
                         pass
 
                     sftp.put(str(self.folder / "id_rsa"),
-                            ".ssh/id_rsa", confirm=True)
+                             ".ssh/id_rsa", confirm=True)
                     sftp.chmod(".ssh/id_rsa", 0o600)
-
-
 
                 rsynccommand = "rsync -rzv "
                 rsynccommand += "-e \"ssh -p " + port\
@@ -1335,7 +1333,8 @@ class ApplicationConfig(config.ConfigurableKeysObject):
                     raise exceptions.RemoteCommandError(rsynccommand,
                                                         status)
         else:
-            rsync.run_rsync(sourcefolder,deviceid,containerfolder,self.get_privatekeypath(),port)
+            rsync.run_rsync(sourcefolder, deviceid,
+                            containerfolder, self.get_privatekeypath(), port)
 
     def touch(self):
         """ Set modification date to current time
