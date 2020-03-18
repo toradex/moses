@@ -60,3 +60,16 @@ build-csharp-apis:
       - clients/csharp/TorizonAppDeploymentAPI/bin/Release/TorizonAppDeploymentAPI.dll
   tags:
     - vstudio
+
+build-typescript-client:
+  variables:
+    API_VERSION: 1.0.0
+  image: node
+  stage: build
+  script:
+    - npm install -g typescript
+    - cd clients/typescript && npm install && npm run-script build && npm pack
+
+  artifacts:
+    paths:
+      - clients/typescript/torizonrestapi-$API_VERSION.tgz
