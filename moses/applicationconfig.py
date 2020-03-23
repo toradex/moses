@@ -975,7 +975,7 @@ class ApplicationConfig(config.ConfigurableKeysObject):
         localdocker.containers.prune()
 
         if containerwasrunning:
-            self.start_sdk_container(configuration)
+            self.start_sdk_container(configuration, False)
 
     def _sync_sysroot(self, configuration: str):
         """Copies sysroot folders from container to SDK container
@@ -992,7 +992,7 @@ class ApplicationConfig(config.ConfigurableKeysObject):
             exceptions.SSHError: [description]
         """
 
-        self.start_sdk_container(configuration)
+        self.start_sdk_container(configuration, True)
 
         if self.sdksshaddress is None:
             raise exceptions.SDKContainerNotRunningError(self.id)
@@ -1152,13 +1152,14 @@ class ApplicationConfig(config.ConfigurableKeysObject):
                 raise exceptions.SDKRequiresConfiguration()
             self._build_sdk_image(configuration)
 
-    def start_sdk_container(self, configuration: str):
+    def start_sdk_container(self, configuration: str, build: bool):
         """
         Runs an instance of the SDK container that will be specific
         for this application object
 
         Arguments:
             configuration {str} - debug/release
+            build {bool} - build container if it does not exist yet
 
         Raises:
             exceptions.PlatformDoesNotRequireSDKError -- raised if the
@@ -1197,8 +1198,12 @@ class ApplicationConfig(config.ConfigurableKeysObject):
                     _ = localdocker.images.get(
                         self._get_sdk_image_name(configuration))
                 except docker.errors.NotFound:
-                    logging.info("SDK - SDK image not found, building it.")
-                    self._build_sdk_image(configuration)
+                    if build:
+                        logging.info("SDK - SDK image not found, building it.")
+                        self._build_sdk_image(configuration)
+                    else:
+                        raise exceptions.ImageNotFoundError(
+                            self._get_sdk_image_name(configuration))
 
             try:
                 container = localdocker.containers.run(
@@ -1274,7 +1279,7 @@ class ApplicationConfig(config.ConfigurableKeysObject):
         port = ports[0]["HostPort"]
 
         if source_is_sdk:
-            self.start_sdk_container(configuration)
+            self.start_sdk_container(configuration, True)
 
             if self.sdksshaddress is None:
                 raise exceptions.SDKContainerNotRunningError(self.id)

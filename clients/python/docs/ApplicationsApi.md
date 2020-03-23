@@ -555,7 +555,7 @@ No authorization required
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
 
 # **application_runsdk**
-> InlineResponse200 application_runsdk(application_id, configuration)
+> InlineResponse200 application_runsdk(application_id, configuration, build=build)
 
 Runs SDK containers
 
@@ -574,10 +574,11 @@ from pprint import pprint
 api_instance = moses_client.ApplicationsApi()
 application_id = 'application_id_example' # str | Id of an application (uuid)
 configuration = 'configuration_example' # str | 
+build = True # bool |  (optional) (default to True)
 
 try:
     # Runs SDK containers
-    api_response = api_instance.application_runsdk(application_id, configuration)
+    api_response = api_instance.application_runsdk(application_id, configuration, build=build)
     pprint(api_response)
 except ApiException as e:
     print("Exception when calling ApplicationsApi->application_runsdk: %s\n" % e)
@@ -589,6 +590,7 @@ Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
  **application_id** | **str**| Id of an application (uuid) | 
  **configuration** | **str**|  | 
+ **build** | **bool**|  | [optional] [default to True]
 
 ### Return type
 

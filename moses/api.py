@@ -738,7 +738,7 @@ def applications_application_container_get(
     return (configuration.attrs, 200)
 
 
-def applications_application_sdk_run_get(application_id, configuration):
+def applications_application_sdk_run_get(application_id, configuration, build):
     """Runs the SDK container and returns SSH address for connection
 
     Arguments:
@@ -753,7 +753,11 @@ def applications_application_sdk_run_get(application_id, configuration):
         return ("Application not found", 404)
 
     app = applications.get(application_id)
-    app.start_sdk_container(configuration)
+
+    if build is None:
+        build = True
+
+    app.start_sdk_container(configuration, build)
 
     return (app.sdksshaddress, 200)
 

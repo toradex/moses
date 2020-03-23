@@ -1207,6 +1207,11 @@ paths:
           type: string
           required: true
           pattern: "(?:debug|release)"
+        - name: build
+          in: query
+          type: boolean
+          required: false
+          default: true
       responses:
         200:
           description: Container started

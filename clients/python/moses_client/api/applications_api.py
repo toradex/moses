@@ -1110,6 +1110,7 @@ class ApplicationsApi(object):
         :param async_req bool: execute request asynchronously
         :param str application_id: Id of an application (uuid) (required)
         :param str configuration: (required)
+        :param bool build:
         :param _preload_content: if False, the urllib3.HTTPResponse object will
                                  be returned without reading/decoding response
                                  data. Default is True.
@@ -1136,6 +1137,7 @@ class ApplicationsApi(object):
         :param async_req bool: execute request asynchronously
         :param str application_id: Id of an application (uuid) (required)
         :param str configuration: (required)
+        :param bool build:
         :param _return_http_data_only: response data without head status code
                                        and headers
         :param _preload_content: if False, the urllib3.HTTPResponse object will
@@ -1152,7 +1154,7 @@ class ApplicationsApi(object):
 
         local_var_params = locals()
 
-        all_params = ['application_id', 'configuration']  # noqa: E501
+        all_params = ['application_id', 'configuration', 'build']  # noqa: E501
         all_params.append('async_req')
         all_params.append('_return_http_data_only')
         all_params.append('_preload_content')
@@ -1188,6 +1190,8 @@ class ApplicationsApi(object):
         query_params = []
         if 'configuration' in local_var_params and local_var_params['configuration'] is not None:  # noqa: E501
             query_params.append(('configuration', local_var_params['configuration']))  # noqa: E501
+        if 'build' in local_var_params and local_var_params['build'] is not None:  # noqa: E501
+            query_params.append(('build', local_var_params['build']))  # noqa: E501
 
         header_params = {}
 
