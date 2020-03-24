@@ -880,7 +880,7 @@ class ApplicationConfig(config.ConfigurableKeysObject):
         instance += "_"
         instance += self.id
         instance += "_"
-        instance += "configuration"
+        instance += configuration
         instance += "_sdk"
 
         instance = instance.replace(":", "_")
@@ -905,7 +905,7 @@ class ApplicationConfig(config.ConfigurableKeysObject):
         imagename += "_"
         imagename += self.id
         imagename += "_"
-        imagename += "configuration"
+        imagename += configuration
         imagename += "_sdk_image"
 
         imagename = imagename.replace(":", "_")
