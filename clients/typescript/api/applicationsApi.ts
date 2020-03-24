@@ -707,8 +707,9 @@ export class ApplicationsApi {
      * @summary Runs SDK containers
      * @param applicationId Id of an application (uuid)
      * @param configuration 
+     * @param build 
      */
-    public async applicationRunsdk (applicationId: string, configuration: string, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<{ response: http.IncomingMessage; body: InlineResponse200;  }> {
+    public async applicationRunsdk (applicationId: string, configuration: string, build?: boolean, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<{ response: http.IncomingMessage; body: InlineResponse200;  }> {
         const localVarPath = this.basePath + '/applications/{application_id}/sdk/run'
             .replace('{' + 'application_id' + '}', encodeURIComponent(String(applicationId)));
         let localVarQueryParameters: any = {};
@@ -734,6 +735,10 @@ export class ApplicationsApi {
 
         if (configuration !== undefined) {
             localVarQueryParameters['configuration'] = ObjectSerializer.serialize(configuration, "string");
+        }
+
+        if (build !== undefined) {
+            localVarQueryParameters['build'] = ObjectSerializer.serialize(build, "boolean");
         }
 
         (<any>Object).assign(localVarHeaderParams, options.headers);

@@ -238,8 +238,9 @@ namespace TorizonRestAPI.Api
         /// <exception cref="TorizonRestAPI.Client.ApiException">Thrown when fails to make API call</exception>
         /// <param name="applicationId">Id of an application (uuid)</param>
         /// <param name="configuration"></param>
+        /// <param name="build"> (optional, default to true)</param>
         /// <returns>InlineResponse200</returns>
-        InlineResponse200 ApplicationRunsdk (string applicationId, string configuration);
+        InlineResponse200 ApplicationRunsdk (string applicationId, string configuration, bool build = default(bool));
 
         /// <summary>
         /// Runs SDK containers
@@ -250,8 +251,9 @@ namespace TorizonRestAPI.Api
         /// <exception cref="TorizonRestAPI.Client.ApiException">Thrown when fails to make API call</exception>
         /// <param name="applicationId">Id of an application (uuid)</param>
         /// <param name="configuration"></param>
+        /// <param name="build"> (optional, default to true)</param>
         /// <returns>ApiResponse of InlineResponse200</returns>
-        ApiResponse<InlineResponse200> ApplicationRunsdkWithHttpInfo (string applicationId, string configuration);
+        ApiResponse<InlineResponse200> ApplicationRunsdkWithHttpInfo (string applicationId, string configuration, bool build = default(bool));
         /// <summary>
         /// Stops running container image
         /// </summary>
@@ -616,8 +618,9 @@ namespace TorizonRestAPI.Api
         /// <exception cref="TorizonRestAPI.Client.ApiException">Thrown when fails to make API call</exception>
         /// <param name="applicationId">Id of an application (uuid)</param>
         /// <param name="configuration"></param>
+        /// <param name="build"> (optional, default to true)</param>
         /// <returns>Task of InlineResponse200</returns>
-        System.Threading.Tasks.Task<InlineResponse200> ApplicationRunsdkAsync (string applicationId, string configuration);
+        System.Threading.Tasks.Task<InlineResponse200> ApplicationRunsdkAsync (string applicationId, string configuration, bool build = default(bool));
 
         /// <summary>
         /// Runs SDK containers
@@ -628,8 +631,9 @@ namespace TorizonRestAPI.Api
         /// <exception cref="TorizonRestAPI.Client.ApiException">Thrown when fails to make API call</exception>
         /// <param name="applicationId">Id of an application (uuid)</param>
         /// <param name="configuration"></param>
+        /// <param name="build"> (optional, default to true)</param>
         /// <returns>Task of ApiResponse (InlineResponse200)</returns>
-        System.Threading.Tasks.Task<ApiResponse<InlineResponse200>> ApplicationRunsdkAsyncWithHttpInfo (string applicationId, string configuration);
+        System.Threading.Tasks.Task<ApiResponse<InlineResponse200>> ApplicationRunsdkAsyncWithHttpInfo (string applicationId, string configuration, bool build = default(bool));
         /// <summary>
         /// Stops running container image
         /// </summary>
@@ -2188,10 +2192,11 @@ namespace TorizonRestAPI.Api
         /// <exception cref="TorizonRestAPI.Client.ApiException">Thrown when fails to make API call</exception>
         /// <param name="applicationId">Id of an application (uuid)</param>
         /// <param name="configuration"></param>
+        /// <param name="build"> (optional, default to true)</param>
         /// <returns>InlineResponse200</returns>
-        public InlineResponse200 ApplicationRunsdk (string applicationId, string configuration)
+        public InlineResponse200 ApplicationRunsdk (string applicationId, string configuration, bool build = default(bool))
         {
-             ApiResponse<InlineResponse200> localVarResponse = ApplicationRunsdkWithHttpInfo(applicationId, configuration);
+             ApiResponse<InlineResponse200> localVarResponse = ApplicationRunsdkWithHttpInfo(applicationId, configuration, build);
              return localVarResponse.Data;
         }
 
@@ -2201,8 +2206,9 @@ namespace TorizonRestAPI.Api
         /// <exception cref="TorizonRestAPI.Client.ApiException">Thrown when fails to make API call</exception>
         /// <param name="applicationId">Id of an application (uuid)</param>
         /// <param name="configuration"></param>
+        /// <param name="build"> (optional, default to true)</param>
         /// <returns>ApiResponse of InlineResponse200</returns>
-        public ApiResponse<InlineResponse200> ApplicationRunsdkWithHttpInfo (string applicationId, string configuration)
+        public ApiResponse<InlineResponse200> ApplicationRunsdkWithHttpInfo (string applicationId, string configuration, bool build = default(bool))
         {
             // verify the required parameter 'applicationId' is set
             if (applicationId == null)
@@ -2234,6 +2240,7 @@ namespace TorizonRestAPI.Api
 
             if (applicationId != null) localVarPathParams.Add("application_id", this.Configuration.ApiClient.ParameterToString(applicationId)); // path parameter
             if (configuration != null) localVarQueryParams.AddRange(this.Configuration.ApiClient.ParameterToKeyValuePairs("", "configuration", configuration)); // query parameter
+            if (build != null) localVarQueryParams.AddRange(this.Configuration.ApiClient.ParameterToKeyValuePairs("", "build", build)); // query parameter
 
 
             // make the HTTP request
@@ -2260,10 +2267,11 @@ namespace TorizonRestAPI.Api
         /// <exception cref="TorizonRestAPI.Client.ApiException">Thrown when fails to make API call</exception>
         /// <param name="applicationId">Id of an application (uuid)</param>
         /// <param name="configuration"></param>
+        /// <param name="build"> (optional, default to true)</param>
         /// <returns>Task of InlineResponse200</returns>
-        public async System.Threading.Tasks.Task<InlineResponse200> ApplicationRunsdkAsync (string applicationId, string configuration)
+        public async System.Threading.Tasks.Task<InlineResponse200> ApplicationRunsdkAsync (string applicationId, string configuration, bool build = default(bool))
         {
-             ApiResponse<InlineResponse200> localVarResponse = await ApplicationRunsdkAsyncWithHttpInfo(applicationId, configuration);
+             ApiResponse<InlineResponse200> localVarResponse = await ApplicationRunsdkAsyncWithHttpInfo(applicationId, configuration, build);
              return localVarResponse.Data;
 
         }
@@ -2274,8 +2282,9 @@ namespace TorizonRestAPI.Api
         /// <exception cref="TorizonRestAPI.Client.ApiException">Thrown when fails to make API call</exception>
         /// <param name="applicationId">Id of an application (uuid)</param>
         /// <param name="configuration"></param>
+        /// <param name="build"> (optional, default to true)</param>
         /// <returns>Task of ApiResponse (InlineResponse200)</returns>
-        public async System.Threading.Tasks.Task<ApiResponse<InlineResponse200>> ApplicationRunsdkAsyncWithHttpInfo (string applicationId, string configuration)
+        public async System.Threading.Tasks.Task<ApiResponse<InlineResponse200>> ApplicationRunsdkAsyncWithHttpInfo (string applicationId, string configuration, bool build = default(bool))
         {
             // verify the required parameter 'applicationId' is set
             if (applicationId == null)
@@ -2307,6 +2316,7 @@ namespace TorizonRestAPI.Api
 
             if (applicationId != null) localVarPathParams.Add("application_id", this.Configuration.ApiClient.ParameterToString(applicationId)); // path parameter
             if (configuration != null) localVarQueryParams.AddRange(this.Configuration.ApiClient.ParameterToKeyValuePairs("", "configuration", configuration)); // query parameter
+            if (build != null) localVarQueryParams.AddRange(this.Configuration.ApiClient.ParameterToKeyValuePairs("", "build", build)); // query parameter
 
 
             // make the HTTP request

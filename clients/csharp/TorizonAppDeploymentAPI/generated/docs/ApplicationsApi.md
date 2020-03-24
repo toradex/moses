@@ -746,7 +746,7 @@ No authorization required
 
 ## ApplicationRunsdk
 
-> InlineResponse200 ApplicationRunsdk (string applicationId, string configuration)
+> InlineResponse200 ApplicationRunsdk (string applicationId, string configuration, bool build = null)
 
 Runs SDK containers
 
@@ -771,11 +771,12 @@ namespace Example
             var apiInstance = new ApplicationsApi(Configuration.Default);
             var applicationId = applicationId_example;  // string | Id of an application (uuid)
             var configuration = configuration_example;  // string | 
+            var build = true;  // bool |  (optional)  (default to true)
 
             try
             {
                 // Runs SDK containers
-                InlineResponse200 result = apiInstance.ApplicationRunsdk(applicationId, configuration);
+                InlineResponse200 result = apiInstance.ApplicationRunsdk(applicationId, configuration, build);
                 Debug.WriteLine(result);
             }
             catch (ApiException e)
@@ -796,6 +797,7 @@ Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
  **applicationId** | **string**| Id of an application (uuid) | 
  **configuration** | **string**|  | 
+ **build** | **bool**|  | [optional] [default to true]
 
 ### Return type
 

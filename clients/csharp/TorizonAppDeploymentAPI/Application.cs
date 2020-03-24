@@ -9,7 +9,7 @@ namespace TorizonAppDeploymentAPI
     {
         public IPAddress IP { get; private set; }
         public UInt16 Port { get; private set; }
-        public ApplicationSDKContainerAddress(string ip,string port)
+        public ApplicationSDKContainerAddress(string ip, string port)
         {
             if (ip == "0.0.0.0")
                 IP = IPAddress.Loopback;
@@ -23,7 +23,7 @@ namespace TorizonAppDeploymentAPI
     {
         TorizonRestAPI.Api.ApplicationsApi api;
 
-        public string[] ReadOnlyProperties { get { return new string[] { "Id","Platformid","Folder"}; } }
+        public string[] ReadOnlyProperties { get { return new string[] { "Id", "Platformid", "Folder" }; } }
 
         public event PropertyChangedEventHandler PropertyChanged;
 
@@ -70,9 +70,9 @@ namespace TorizonAppDeploymentAPI
             OnCommitCompleted?.Invoke();
         }
 
-        public async Task<ApplicationSDKContainerAddress> RunSDKContainerAsync(string configuration, Action StartupCompleted)
+        public async Task<ApplicationSDKContainerAddress> RunSDKContainerAsync(string configuration, bool build, Action StartupCompleted)
         {
-            TorizonRestAPI.Model.InlineResponse200 resp= Utils.ObjectOrException<TorizonRestAPI.Model.InlineResponse200>(await api.ApplicationRunsdkAsync(this.Id,configuration));
+            TorizonRestAPI.Model.InlineResponse200 resp = Utils.ObjectOrException<TorizonRestAPI.Model.InlineResponse200>(await api.ApplicationRunsdkAsync(this.Id, configuration, build));
 
             StartupCompleted?.Invoke();
             return new ApplicationSDKContainerAddress(resp.HostIp, resp.HostPort);
@@ -80,29 +80,29 @@ namespace TorizonAppDeploymentAPI
 
         public async Task<bool> IsContainerUpToDateAsync(string configuration, Action<bool> CheckCompleted)
         {
-            bool updated = Utils.ObjectOrException<bool>(await api.ApplicationUpdatedAsync(this.Id,configuration));
+            bool updated = Utils.ObjectOrException<bool>(await api.ApplicationUpdatedAsync(this.Id, configuration));
 
             CheckCompleted?.Invoke(updated);
             return updated;
         }
 
-        public async Task BuildContainerAsync(string configuration,Action BuildCompleted)
-        {            
-            await api.ApplicationBuildAsync(this.Id,configuration);
+        public async Task BuildContainerAsync(string configuration, Action BuildCompleted)
+        {
+            await api.ApplicationBuildAsync(this.Id, configuration);
             BuildCompleted?.Invoke();
         }
 
         public async Task DeployContainerAsync(string configuration, TargetDevice targetdevice, Action DeploymentCompleted)
-        {            
-            await api.ApplicationDeployAsync(this.Id,configuration, targetdevice.Id);
+        {
+            await api.ApplicationDeployAsync(this.Id, configuration, targetdevice.Id);
             DeploymentCompleted?.Invoke();
         }
 
-        public async Task<DockerContainer> RunAsync(string configuration, TargetDevice targetdevice,Action<DockerContainer> ApplicationStarted)
+        public async Task<DockerContainer> RunAsync(string configuration, TargetDevice targetdevice, Action<DockerContainer> ApplicationStarted)
         {
-            TorizonRestAPI.Model.DockerContainer model=Utils.ObjectOrException<TorizonRestAPI.Model.DockerContainer>(await api.ApplicationRunAsync(this.Id, configuration, targetdevice.Id));
+            TorizonRestAPI.Model.DockerContainer model = Utils.ObjectOrException<TorizonRestAPI.Model.DockerContainer>(await api.ApplicationRunAsync(this.Id, configuration, targetdevice.Id));
 
-            DockerContainer container = new DockerContainer(model,targetdevice);
+            DockerContainer container = new DockerContainer(model, targetdevice);
 
             ApplicationStarted?.Invoke(container);
             return container;
@@ -116,7 +116,7 @@ namespace TorizonAppDeploymentAPI
 
         public async Task<DockerContainer> GetContainerAsync(string configuration, TargetDevice targetdevice, Action<DockerContainer> ContainerUpdated)
         {
-            TorizonRestAPI.Model.DockerContainer model = Utils.ObjectOrException<TorizonRestAPI.Model.DockerContainer>(await api.ApplicationGetcontainerAsync(this.Id,configuration,targetdevice.Id));
+            TorizonRestAPI.Model.DockerContainer model = Utils.ObjectOrException<TorizonRestAPI.Model.DockerContainer>(await api.ApplicationGetcontainerAsync(this.Id, configuration, targetdevice.Id));
 
             DockerContainer container = new DockerContainer(model, targetdevice);
 
@@ -130,7 +130,7 @@ namespace TorizonAppDeploymentAPI
             FolderSynced?.Invoke();
         }
 
-        public async Task UpdateSDKAsync(string configuration,Action UpdateCompleted)
+        public async Task UpdateSDKAsync(string configuration, Action UpdateCompleted)
         {
             await api.ApplicationUpdatesdkAsync(this.Id, configuration);
             UpdateCompleted?.Invoke();
