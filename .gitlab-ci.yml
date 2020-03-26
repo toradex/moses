@@ -17,7 +17,7 @@ build-moses-linux:
     - python -m pip install -r requirements.txt
     - python -m pip install https://github.com/pyinstaller/pyinstaller/tarball/develop
     - cd clients/python && python3.8 -m setup install && cd -
-    - cd moses && export PYTHONOPTIMIZE=1 && pyinstaller -y moses.linux.spec && pyinstaller -y ../cli/tdskt.linux.spec && cp -R dist/tdskt-linux/* dist/moses-linux/
+    - cd moses && export PYTHONOPTIMIZE=1 && pyinstaller -y moses.linux.spec && pyinstaller -y ../cli/tdskt.linux.spec && cp -R dist/tdskt-linux/* dist/moses-linux/ && cd dist/moses-linux && rm $(ls -1 lib*.so* | grep -v libffi | grep -v libpython | tr "\n" " ") && cd -
   artifacts:
     paths:
       - moses/dist/moses-linux/
