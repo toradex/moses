@@ -61,7 +61,7 @@ class DockerRestartPolicy(object):
     def name(self):
         """Gets the name of this DockerRestartPolicy.  # noqa: E501
 
-        - Empty string means not to restart - `always` Always restart - `unless-stopped` Restart always except when the user has manually stopped the container - `on-failure` Restart only when the container exit code is non-zero   # noqa: E501
+        - Empty string or `no`means not to restart - `always` Always restart - `unless-stopped` Restart always except when the user has manually stopped the container - `on-failure` Restart only when the container exit code is non-zero   # noqa: E501
 
         :return: The name of this DockerRestartPolicy.  # noqa: E501
         :rtype: str
@@ -72,12 +72,12 @@ class DockerRestartPolicy(object):
     def name(self, name):
         """Sets the name of this DockerRestartPolicy.
 
-        - Empty string means not to restart - `always` Always restart - `unless-stopped` Restart always except when the user has manually stopped the container - `on-failure` Restart only when the container exit code is non-zero   # noqa: E501
+        - Empty string or `no`means not to restart - `always` Always restart - `unless-stopped` Restart always except when the user has manually stopped the container - `on-failure` Restart only when the container exit code is non-zero   # noqa: E501
 
         :param name: The name of this DockerRestartPolicy.  # noqa: E501
         :type: str
         """
-        allowed_values = ["", "always", "unless-stopped", "on-failure"]  # noqa: E501
+        allowed_values = ["", "always", "unless-stopped", "on-failure", "no"]  # noqa: E501
         if self.local_vars_configuration.client_side_validation and name not in allowed_values:  # noqa: E501
             raise ValueError(
                 "Invalid value for `name` ({0}), must be one of {1}"  # noqa: E501
