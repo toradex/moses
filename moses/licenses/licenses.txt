@@ -1,0 +1,12 @@
+connexion 2.4.0 Apache License Version 2.0 https://github.com/zalando/connexion (license: https://raw.githubusercontent.com/zalando/connexion/master/LICENSE.txt)
+docker 4.1.0 Apache License 2.0 https://github.com/docker/docker-py (license: https://raw.githubusercontent.com/docker/docker-py/master/LICENSE)
+paramiko 2.6.0 LGPL https://github.com/paramiko/paramiko/ (license: https://raw.githubusercontent.com/paramiko/paramiko/master/LICENSE)
+PyInstaller 4.0.dev0 GPL license with a special exception which allows to use PyInstaller to build and distribute non-free programs (including commercial ones) http://www.pyinstaller.org (license: http://www.pyinstaller.org/license)
+pyserial 3.4 BSD https://github.com/pyserial/pyserial (license: https://raw.githubusercontent.com/pyserial/pyserial/master/LICENSE.txt)
+python-dateutil 2.8.1 Dual License https://dateutil.readthedocs.io
+PyYAML 5.1.2 MIT https://github.com/yaml/pyyaml (license: https://raw.githubusercontent.com/yaml/pyyaml/master/LICENSE)
+sshtunnel 0.1.5 MIT https://github.com/pahaz/sshtunnel (license: https://raw.githubusercontent.com/pahaz/sshtunnel/master/LICENSE)
+swagger-ui-bundle 0.0.6 Apache License Version 2.0 https://github.com/dtkav/swagger_ui_bundle (license: https://raw.githubusercontent.com/dtkav/swagger_ui_bundle/master/LICENSE)
+tabulate 0.8.6 MIT https://github.com/astanin/python-tabulate (license: https://raw.githubusercontent.com/astanin/python-tabulate/master/LICENSE)
+urllib3 1.25.7 MIT https://urllib3.readthedocs.io/
+waitress 1.3.1 ZPL 2.1 https://github.com/Pylons/waitress (license: https://raw.githubusercontent.com/Pylons/waitress/master/LICENSE.txt)

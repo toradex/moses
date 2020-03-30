@@ -1,0 +1,161 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="14.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="..\..\..\vs\TorizonVSExtension\packages\Microsoft.VSSDK.BuildTools.15.8.3252\build\Microsoft.VSSDK.BuildTools.props" Condition="Exists('..\..\..\vs2017\TorizonVSExtension\packages\Microsoft.VSSDK.BuildTools.15.8.3252\build\Microsoft.VSSDK.BuildTools.props')" />
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{9EB49F7A-8641-4E6C-9B90-9E4F85BA5A67}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>TorizonAppDeploymentAPI</RootNamespace>
+    <AssemblyName>TorizonAppDeploymentAPI</AssemblyName>
+    <TargetFrameworkVersion>v4.7.2</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+    <TargetFrameworkProfile />
+    <NuGetPackageImportStamp>
+    </NuGetPackageImportStamp>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup>
+    <SignAssembly>true</SignAssembly>
+  </PropertyGroup>
+  <PropertyGroup>
+    <AssemblyOriginatorKeyFile>TorizonAppDevelopmentAPI.snk</AssemblyOriginatorKeyFile>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="System" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Net" />
+    <Reference Include="System.Net.Http" />
+    <Reference Include="System.Runtime.Serialization" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Xml" />
+    <Reference Include="System.Runtime" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Configuration.cs" />
+    <Compile Include="generated\src\TorizonRestAPI\Api\ApplicationsApi.cs" />
+    <Compile Include="generated\src\TorizonRestAPI\Api\DevicesApi.cs" />
+    <Compile Include="generated\src\TorizonRestAPI\Api\PlatformsApi.cs" />
+    <Compile Include="generated\src\TorizonRestAPI\Api\SetupApi.cs" />
+    <Compile Include="generated\src\TorizonRestAPI\Api\VersionApi.cs" />
+    <Compile Include="generated\src\TorizonRestAPI\Client\ApiClient.cs" />
+    <Compile Include="generated\src\TorizonRestAPI\Client\ApiException.cs" />
+    <Compile Include="generated\src\TorizonRestAPI\Client\ApiResponse.cs" />
+    <Compile Include="generated\src\TorizonRestAPI\Client\ExceptionFactory.cs" />
+    <Compile Include="generated\src\TorizonRestAPI\Client\GlobalConfiguration.cs" />
+    <Compile Include="generated\src\TorizonRestAPI\Client\IApiAccessor.cs" />
+    <Compile Include="generated\src\TorizonRestAPI\Client\IReadableConfiguration.cs" />
+    <Compile Include="generated\src\TorizonRestAPI\Client\OpenAPIDateConverter.cs" />
+    <Compile Include="generated\src\TorizonRestAPI\Model\Application.cs" />
+    <Compile Include="generated\src\TorizonRestAPI\Model\DockerAddress.cs" />
+    <Compile Include="generated\src\TorizonRestAPI\Model\DockerContainer.cs" />
+    <Compile Include="generated\src\TorizonRestAPI\Model\DockerContainerConfig.cs" />
+    <Compile Include="generated\src\TorizonRestAPI\Model\DockerContainerState.cs" />
+    <Compile Include="generated\src\TorizonRestAPI\Model\DockerDeviceMapping.cs" />
+    <Compile Include="generated\src\TorizonRestAPI\Model\DockerEndpointIPAMConfig.cs" />
+    <Compile Include="generated\src\TorizonRestAPI\Model\DockerEndpointSettings.cs" />
+    <Compile Include="generated\src\TorizonRestAPI\Model\DockerGraphDriverData.cs" />
+    <Compile Include="generated\src\TorizonRestAPI\Model\DockerHealthConfig.cs" />
+    <Compile Include="generated\src\TorizonRestAPI\Model\DockerHostConfig.cs" />
+    <Compile Include="generated\src\TorizonRestAPI\Model\DockerHostConfigAllOf.cs" />
+    <Compile Include="generated\src\TorizonRestAPI\Model\DockerHostConfigAllOfLogConfig.cs" />
+    <Compile Include="generated\src\TorizonRestAPI\Model\DockerImage.cs" />
+    <Compile Include="generated\src\TorizonRestAPI\Model\DockerImageMetadata.cs" />
+    <Compile Include="generated\src\TorizonRestAPI\Model\DockerImageRootFS.cs" />
+    <Compile Include="generated\src\TorizonRestAPI\Model\DockerMount.cs" />
+    <Compile Include="generated\src\TorizonRestAPI\Model\DockerMountBindOptions.cs" />
+    <Compile Include="generated\src\TorizonRestAPI\Model\DockerMountPoint.cs" />
+    <Compile Include="generated\src\TorizonRestAPI\Model\DockerMountTmpfsOptions.cs" />
+    <Compile Include="generated\src\TorizonRestAPI\Model\DockerMountVolumeOptions.cs" />
+    <Compile Include="generated\src\TorizonRestAPI\Model\DockerMountVolumeOptionsDriverConfig.cs" />
+    <Compile Include="generated\src\TorizonRestAPI\Model\DockerNetworkSettings.cs" />
+    <Compile Include="generated\src\TorizonRestAPI\Model\DockerPortBinding.cs" />
+    <Compile Include="generated\src\TorizonRestAPI\Model\DockerResources.cs" />
+    <Compile Include="generated\src\TorizonRestAPI\Model\DockerResourcesBlkioWeightDevice.cs" />
+    <Compile Include="generated\src\TorizonRestAPI\Model\DockerResourcesUlimits.cs" />
+    <Compile Include="generated\src\TorizonRestAPI\Model\DockerRestartPolicy.cs" />
+    <Compile Include="generated\src\TorizonRestAPI\Model\DockerThrottleDevice.cs" />
+    <Compile Include="generated\src\TorizonRestAPI\Model\DockerVersion.cs" />
+    <Compile Include="generated\src\TorizonRestAPI\Model\DockerVersionComponents.cs" />
+    <Compile Include="generated\src\TorizonRestAPI\Model\DockerVersionPlatform.cs" />
+    <Compile Include="generated\src\TorizonRestAPI\Model\ErrorInfo.cs" />
+    <Compile Include="generated\src\TorizonRestAPI\Model\InlineResponse200.cs" />
+    <Compile Include="generated\src\TorizonRestAPI\Model\MemInfo.cs" />
+    <Compile Include="generated\src\TorizonRestAPI\Model\MountPoint.cs" />
+    <Compile Include="generated\src\TorizonRestAPI\Model\Platform.cs" />
+    <Compile Include="generated\src\TorizonRestAPI\Model\Process.cs" />
+    <Compile Include="generated\src\TorizonRestAPI\Model\TargetDevice.cs" />
+    <Compile Include="TorizonAPIException.cs" />
+    <Compile Include="Application.cs" />
+    <Compile Include="DockerContainer.cs" />
+    <Compile Include="DockerImage.cs" />
+    <Compile Include="ITorizonAPIObject.cs" />
+    <Compile Include="MemInfo.cs" />
+    <Compile Include="MountPoint.cs" />
+    <Compile Include="ObjectsCollection.cs" />
+    <Compile Include="Platform.cs" />
+    <Compile Include="Process.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="TargetDevice.cs" />
+    <Compile Include="TorizonAPIManager.cs" />
+    <Compile Include="Utils.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <WCFMetadata Include="Service References\" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="app.config" />
+    <None Include="TorizonAppDevelopmentAPI.snk" />
+  </ItemGroup>
+  <ItemGroup>
+    <PackageReference Include="JsonSubTypes">
+      <Version>1.6.0</Version>
+    </PackageReference>
+    <PackageReference Include="Newtonsoft.Json">
+      <Version>12.0.3</Version>
+    </PackageReference>
+    <PackageReference Include="RestSharp">
+      <Version>106.6.10</Version>
+    </PackageReference>
+    <PackageReference Include="StreamJsonRpc">
+      <Version>2.2.53</Version>
+    </PackageReference>
+    <PackageReference Include="System.ComponentModel.Annotations">
+      <Version>4.7.0</Version>
+    </PackageReference>
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
+    <PropertyGroup>
+      <ErrorText>This project references NuGet package(s) that are missing on this computer. Use NuGet Package Restore to download them.  For more information, see http://go.microsoft.com/fwlink/?LinkID=322105. The missing file is {0}.</ErrorText>
+    </PropertyGroup>
+  </Target>
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it.
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>

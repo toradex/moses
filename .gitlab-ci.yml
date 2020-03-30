@@ -1,0 +1,75 @@
+stages:
+  - build
+
+build-moses-linux:
+  image: ubuntu:18.04
+  stage: build
+  script:
+    - apt-get update -y
+    - apt-get install -y software-properties-common
+    - add-apt-repository -y ppa:deadsnakes/ppa
+    - apt-get update -y
+    - apt-get install -y python3.8 python3.8-dev python3-pip
+    - python3.8 -m pip install pip
+    - python3.8 -m pip install virtualenv
+    - python3.8 -m virtualenv .pyenv
+    - . ./.pyenv/bin/activate
+    - python -m pip install -r requirements.txt
+    - python -m pip install https://github.com/pyinstaller/pyinstaller/tarball/develop
+    - cd clients/python && python3.8 -m setup install && cd -
+    - cd moses && export PYTHONOPTIMIZE=1 && pyinstaller -y moses.linux.spec && pyinstaller -y ../cli/tdskt.linux.spec && cp -R dist/tdskt-linux/* dist/moses-linux/ && cd dist/moses-linux && rm $(ls -1 lib*.so* | grep -v libffi | grep -v libpython | tr "\n" " ") && cd -
+  artifacts:
+    paths:
+      - moses/dist/moses-linux/
+
+  tags:
+    - docker
+
+build-moses-windows:
+  stage: build
+  script:
+    - python -m pip install pip
+    - python -m pip install virtualenv
+    - python -m virtualenv .pyenv
+    - .\.pyenv\Scripts\activate
+    - python -m pip install -r requirements.txt
+    - python -m pip install https://github.com/pyinstaller/pyinstaller/tarball/develop
+    - cd clients\python
+    - python -m setup install
+    - cd ..\..
+    - cd moses
+    - set PYTHONOPTIMIZE=1
+    - pyinstaller -y moses.windows.spec
+    - pyinstaller -y ..\cli\tdskt.windows.spec
+    - xcopy /sy dist\tdskt-windows dist\moses-windows
+  artifacts:
+    paths:
+      - moses/dist/moses-windows/
+  tags:
+    - vstudio
+
+build-csharp-apis:
+  stage: build
+  script:
+    - certutil -decode $env:SIGN_KEY_FILE_MIME64 clients\csharp\TorizonAppDeploymentAPI\TorizonAppDevelopmentAPI.snk
+    - cmd.exe /C """%PROGRAMFILES(X86)%\Microsoft Visual Studio\2019\BuildTools\Common7\Tools\VsMSBuildCmd.bat"" && cd clients\csharp && msbuild -t:restore TorizonAppDeploymentAPI.sln /property:Configuration=Release /property:Platform=""Any CPU"" && msbuild TorizonAppDeploymentAPI.sln  /property:Configuration=Release /property:Platform=""Any CPU"""
+    - del clients\csharp\TorizonAppDeploymentAPI\TorizonAppDevelopmentAPI.snk
+    - del $env:SIGN_KEY_FILE_MIME64
+  artifacts:
+    paths:
+      - clients/csharp/TorizonAppDeploymentAPI/bin/Release/TorizonAppDeploymentAPI.dll
+  tags:
+    - vstudio
+
+build-typescript-client:
+  variables:
+    API_VERSION: 1.0.0
+  image: node
+  stage: build
+  script:
+    - npm install -g typescript
+    - cd clients/typescript && npm install && npm run-script build && npm pack
+
+  artifacts:
+    paths:
+      - clients/typescript/torizonrestapi-$API_VERSION.tgz
