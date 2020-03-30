@@ -31,9 +31,9 @@ namespace TorizonRestAPI.Model
     public partial class DockerRestartPolicy :  IEquatable<DockerRestartPolicy>, IValidatableObject
     {
         /// <summary>
-        /// - Empty string means not to restart - &#x60;always&#x60; Always restart - &#x60;unless-stopped&#x60; Restart always except when the user has manually stopped the container - &#x60;on-failure&#x60; Restart only when the container exit code is non-zero 
+        /// - Empty string or &#x60;no&#x60;means not to restart - &#x60;always&#x60; Always restart - &#x60;unless-stopped&#x60; Restart always except when the user has manually stopped the container - &#x60;on-failure&#x60; Restart only when the container exit code is non-zero 
         /// </summary>
-        /// <value>- Empty string means not to restart - &#x60;always&#x60; Always restart - &#x60;unless-stopped&#x60; Restart always except when the user has manually stopped the container - &#x60;on-failure&#x60; Restart only when the container exit code is non-zero </value>
+        /// <value>- Empty string or &#x60;no&#x60;means not to restart - &#x60;always&#x60; Always restart - &#x60;unless-stopped&#x60; Restart always except when the user has manually stopped the container - &#x60;on-failure&#x60; Restart only when the container exit code is non-zero </value>
         [JsonConverter(typeof(StringEnumConverter))]
         public enum NameEnum
         {
@@ -59,20 +59,26 @@ namespace TorizonRestAPI.Model
             /// Enum OnFailure for value: on-failure
             /// </summary>
             [EnumMember(Value = "on-failure")]
-            OnFailure = 4
+            OnFailure = 4,
+
+            /// <summary>
+            /// Enum No for value: no
+            /// </summary>
+            [EnumMember(Value = "no")]
+            No = 5
 
         }
 
         /// <summary>
-        /// - Empty string means not to restart - &#x60;always&#x60; Always restart - &#x60;unless-stopped&#x60; Restart always except when the user has manually stopped the container - &#x60;on-failure&#x60; Restart only when the container exit code is non-zero 
+        /// - Empty string or &#x60;no&#x60;means not to restart - &#x60;always&#x60; Always restart - &#x60;unless-stopped&#x60; Restart always except when the user has manually stopped the container - &#x60;on-failure&#x60; Restart only when the container exit code is non-zero 
         /// </summary>
-        /// <value>- Empty string means not to restart - &#x60;always&#x60; Always restart - &#x60;unless-stopped&#x60; Restart always except when the user has manually stopped the container - &#x60;on-failure&#x60; Restart only when the container exit code is non-zero </value>
+        /// <value>- Empty string or &#x60;no&#x60;means not to restart - &#x60;always&#x60; Always restart - &#x60;unless-stopped&#x60; Restart always except when the user has manually stopped the container - &#x60;on-failure&#x60; Restart only when the container exit code is non-zero </value>
         [DataMember(Name="Name", EmitDefaultValue=false)]
         public NameEnum? Name { get; set; }
         /// <summary>
         /// Initializes a new instance of the <see cref="DockerRestartPolicy" /> class.
         /// </summary>
-        /// <param name="name">- Empty string means not to restart - &#x60;always&#x60; Always restart - &#x60;unless-stopped&#x60; Restart always except when the user has manually stopped the container - &#x60;on-failure&#x60; Restart only when the container exit code is non-zero .</param>
+        /// <param name="name">- Empty string or &#x60;no&#x60;means not to restart - &#x60;always&#x60; Always restart - &#x60;unless-stopped&#x60; Restart always except when the user has manually stopped the container - &#x60;on-failure&#x60; Restart only when the container exit code is non-zero .</param>
         /// <param name="maximumRetryCount">If &#x60;on-failure&#x60; is used, the number of times to retry before giving up.</param>
         public DockerRestartPolicy(NameEnum? name = default(NameEnum?), int maximumRetryCount = default(int))
         {

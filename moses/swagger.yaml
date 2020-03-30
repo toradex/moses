@@ -2451,7 +2451,7 @@ definitions:
       Name:
         type: "string"
         description: |
-          - Empty string means not to restart
+          - Empty string or `no`means not to restart
           - `always` Always restart
           - `unless-stopped` Restart always except when the user has manually stopped the container
           - `on-failure` Restart only when the container exit code is non-zero
@@ -2460,6 +2460,7 @@ definitions:
           - "always"
           - "unless-stopped"
           - "on-failure"
+          - "no"
       MaximumRetryCount:
         type: "integer"
         description: "If `on-failure` is used, the number of times to retry before giving up"
