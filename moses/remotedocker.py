@@ -273,6 +273,13 @@ class RemoteDocker:
         # enable object to be used in "with" statements
 
     def __enter__(self):
+
+        if (self.sshtunnel is None):
+            e = exceptions.SSHTunnelError(
+                Exception("Tunnel is not connected."))
+            self.sshtunnel.__exit__(type(e), e, None)
+            raise e
+
         if (not (self.sshtunnel.is_active and self.sshtunnel.is_alive)):
             e = exceptions.SSHTunnelError(
                 Exception("Tunnel is not connected."))

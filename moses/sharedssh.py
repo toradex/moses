@@ -125,7 +125,7 @@ class SharedSSHClient(paramiko.SSHClient):
         with cls.__lock:
             if device.id in cls.__connections:
                 ssh = cls.__connections[device.id]
-                if ssh.get_transport().is_active():
+                if ssh.get_transport() is not None and ssh.get_transport().is_active():
                     return ssh
                 try:
                     ssh.close()
