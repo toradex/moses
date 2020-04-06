@@ -1,4 +1,4 @@
-FROM torizon/arm32v7-debian-aspdotnet-debug:buster
+FROM torizon/arm64v8-debian-aspdotnet-debug:buster
 
 # SSH
 EXPOSE 22

@@ -1,4 +1,4 @@
-FROM torizon/arm32v7-debian-aspdotnet:buster
+FROM torizon/arm64v8-debian-aspdotnet:buster
 
 EXPOSE 5000
 
