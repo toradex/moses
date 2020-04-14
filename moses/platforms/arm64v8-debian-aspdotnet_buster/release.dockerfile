@@ -1,4 +1,4 @@
-FROM torizon/arm32v7-debian-aspdotnet:buster
+FROM torizon/arm64v8-debian-aspdotnet:buster
 
 EXPOSE 5000
 
@@ -15,7 +15,7 @@ ENV DEBIAN_FRONTEND="noninteractive"
 
 # your regular RUN statements here
 # Install required packages
-RUN if [[ -z "#%application.extrapackages%#" ]]; then \
+RUN if [ ! -z "#%application.extrapackages%#" ]; then \
     apt-get -q -y update \
     && apt-get -q -y install #%application.extrapackages%# \
     && rm -rf /var/lib/apt/lists/* ; \
