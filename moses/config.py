@@ -8,6 +8,8 @@ import logging
 import paramiko
 import pathlib
 import exceptions
+import platform
+import subprocess
 
 APP_NAME = "moses"
 
@@ -197,16 +199,28 @@ class ConfigurableKeysObject(ConfigurableObject):
         """Generates SSH keys used to connect with the device over SSH
         """
         key = paramiko.RSAKey.generate(2048)
+        keypath = self.folder / "id_rsa"
         with io.StringIO() as keystrio:
             key.write_private_key(keystrio)
             self.privatekey = keystrio.getvalue()
 
             if self.folder is not None:
-                key.write_private_key_file(self.folder / "id_rsa")
+                key.write_private_key_file(keypath)
 
         self.publickey = "ssh-rsa "+key.get_base64()
 
+        if platform.system() == "Windows":
+            subprocess.run(
+                ["icacls.exe", keypath, "/c", "/t", "/Inheritance:d"])
+            subprocess.run(["icacls.exe", keypath, "/c", "/t",
+                            "/Grant "+os.getlogin()+"F"])
+            subprocess.run(["icacls.exe", keypath, "/c", "/t", "/Remove", "Administrator",
+                            "BUILTIN\Administrators", "BUILTIN", "Everyone", "System", "Users"])
+        else:
+            os.chmod(keypath, 0o600)
+
     # support serialization
+
     def _to_json(self):
         fields = super()._to_json()
         del fields["privatekey"]
