@@ -26,8 +26,8 @@ runtimes:
 # information about how containers should run
 ports:
   common: {}
-  debug: { "22/tcp": null, "5000/tcp": 5000, "5001/tcp": 5001 }
-  release: { "5000/tcp": 5000, "5001/tcp": 5001 }
+  debug: { "22/tcp": null }
+  release: {}
 volumes:
   common: {}
   debug: {}
