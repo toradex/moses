@@ -1,7 +1,7 @@
 swagger: "2.0"
 info:
   description: Toradex Development API to build and deploy application on Torizon
-  version: 1.0.0
+  version: 1.0.1
   title: Torizon Deployment API
 consumes:
   - application/json
@@ -1612,6 +1612,16 @@ definitions:
                 type: string
       username:
         type: string
+
+      images:
+        type: object
+        additionalProperties:
+          type: string
+
+      sdkimages:
+        type: object
+        additionalProperties:
+          type: string
 
   ErrorInfo:
     properties:
