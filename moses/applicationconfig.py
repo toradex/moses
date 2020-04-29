@@ -989,7 +989,7 @@ class ApplicationConfig(config.ConfigurableKeysObject):
 
         localdocker.containers.prune()
 
-        self.sdkimages[configuration] = sdkimage
+        self.sdkimages[configuration] = str(sdkimage.id)
         self.save()
 
         if containerwasrunning:
