@@ -22,7 +22,7 @@ container:
   release: release.dockerfile
 # defines what languages/runtimes are supported by this platform
 runtimes:
-  - C/C++
+  - c-cpp
 # information about how containers should run
 ports:
   common: {}
