@@ -93,8 +93,13 @@ class ApplicationConfig(config.ConfigurableKeysObject):
         }
 
         self.images = {
-            "debug": None,
-            "release": None
+            "debug": "",
+            "release": ""
+        }
+
+        self.sdkimages = {
+            "debug": "",
+            "release": ""
         }
 
         self.platformid = None
@@ -276,7 +281,7 @@ class ApplicationConfig(config.ConfigurableKeysObject):
         try:
             localdocker = docker.from_env()
 
-            if self.images[configuration] is None:
+            if self.images[configuration] is None or self.images[configuration] == "":
                 logging.info("Image has never been built.")
                 return False
 
@@ -312,7 +317,7 @@ class ApplicationConfig(config.ConfigurableKeysObject):
             localdocker = docker.from_env()
 
             # we must remove the old image first
-            if self.images[configuration] is not None:
+            if self.images[configuration] is not None and self.images[configuration] != "":
 
                 oldimg = None
 
@@ -384,6 +389,12 @@ class ApplicationConfig(config.ConfigurableKeysObject):
 
         try:
             imgid = self.images[configuration]
+
+            if imgid is None or imgid == "":
+                logging.error(
+                    "Image has never been build for application %s.", self.folder)
+                raise exceptions.ImageNotFoundError("")
+
             ld = docker.from_env()
 
             try:
@@ -394,7 +405,7 @@ class ApplicationConfig(config.ConfigurableKeysObject):
                 raise exceptions.ImageNotFoundError(imgid)
 
             if (len(limg.tags) == 0):
-                self.images[configuration] = None
+                self.images[configuration] = ""
                 self.save()
                 logging.error(
                     "Image %s has no tags when deploying application %s.", imgid, self.folder)
@@ -641,7 +652,7 @@ class ApplicationConfig(config.ConfigurableKeysObject):
 
         imgid = self.images[configuration]
 
-        if imgid is None:
+        if imgid is None or imgid == "":
             raise exceptions.ImageNotFoundError("")
 
         ld = docker.from_env()
@@ -817,6 +828,9 @@ class ApplicationConfig(config.ConfigurableKeysObject):
         """
         imgid = self.images[configuration]
 
+        if imgid is None or imgid == "":
+            raise exceptions.ImageNotFoundError("")
+
         try:
             ld = docker.from_env()
 
@@ -966,13 +980,17 @@ class ApplicationConfig(config.ConfigurableKeysObject):
         dockerfilerelpath = str(os.path.relpath(
             dockerfile, self.folder)).replace("\\", "/")
 
-        localdocker.images.build(path=str(self.folder),
-                                 dockerfile=dockerfilerelpath,
-                                 tag=self._get_sdk_image_name(configuration),
-                                 pull=False
-                                 )[0]
+        sdkimage = localdocker.images.build(path=str(self.folder),
+                                            dockerfile=dockerfilerelpath,
+                                            tag=self._get_sdk_image_name(
+                                                configuration),
+                                            pull=False
+                                            )[0]
 
         localdocker.containers.prune()
+
+        self.sdkimages[configuration] = sdkimage
+        self.save()
 
         if containerwasrunning:
             self.start_sdk_container(configuration, False)
@@ -999,7 +1017,7 @@ class ApplicationConfig(config.ConfigurableKeysObject):
 
         plat = platformconfig.PlatformConfigs().get_platform(self.platformid)
 
-        if self.images[configuration] is None:
+        if self.images[configuration] is None or self.images[configuration] == "":
             raise exceptions.ImageNotFoundError(configuration)
 
         try:
@@ -1354,17 +1372,25 @@ class ApplicationConfig(config.ConfigurableKeysObject):
         try:
             d = docker.from_env()
 
-            if self.images["debug"] is not None:
+            if self.images["debug"] is not None and self.images["debug"] != "":
                 if d.images.get(self.images["debug"]) is not None:
                     d.images.remove(
                         image=self.images["debug"], force=True, prune=True)
 
-            if self.images["release"] is not None:
+            if self.images["release"] is not None and self.images["release"] != "":
                 if d.images.get(self.images["release"]) is not None:
                     d.images.remove(
                         image=self.images["release"], force=True, prune=True)
 
-            # TODO delete SDK instance
+            if self.sdkimages["debug"] is not None and self.sdkimages["debug"] != "":
+                if d.images.get(self.sdkimages["debug"]) is not None:
+                    d.images.remove(
+                        image=self.sdkimages["debug"], force=True, prune=True)
+
+            if self.sdkimages["release"] is not None and self.sdkimages["release"] != "":
+                if d.images.get(self.sdkimages["release"]) is not None:
+                    d.images.remove(
+                        image=self.sdkimages["release"], force=True, prune=True)
             super().destroy()
         except:
             logging.exception("Exception destroying application object")
