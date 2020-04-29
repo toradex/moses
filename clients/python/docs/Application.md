@@ -16,6 +16,8 @@ Name | Type | Description | Notes
 **networks** | **dict(str, list[str])** |  | [optional] 
 **extraparms** | **dict(str, dict(str, object))** |  | [optional] 
 **username** | **str** |  | [optional] 
+**images** | **dict(str, str)** |  | [optional] 
+**sdkimages** | **dict(str, str)** |  | [optional] 
 
 [[Back to Model list]](../README.md#documentation-for-models) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to README]](../README.md)
 
