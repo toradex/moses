@@ -35,7 +35,8 @@ class ApplicationConfig(config.ConfigurableKeysObject):
     """Class used to manage an application
     """
 
-    readonlyfields = config.ConfigurableKeysObject.readonlyfields.copy()
+    readonlyfields = config.ConfigurableKeysObject.readonlyfields.union({"images", "sdkimages"})
+
     non_nullable_properties = ["dockercomposefile",
                                "startupscript", "shutdownscript"]
     configurations = ["common", "debug", "release"]
