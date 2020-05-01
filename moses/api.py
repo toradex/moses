@@ -453,13 +453,21 @@ def devices_device_syncfolders_get(device_id, sourcefolder, destfolder):
     if device_id not in devices:
         return ("Device not found", 404)
 
+    devices[device_id].sync_folders(sourcefolder, destfolder)
+    return (connexion.NoContent, 200)
+
+def devices_device_current_ip_get(device_id):
+    """Syncs a folder on the host with one on the target device
+
+    Arguments:
+        device_id {str} -- target device
+    """
     devices = targetdevice.TargetDevices()
 
     if device_id not in devices:
         return ("Device not found", 404)
 
-    devices[device_id].sync_folders(sourcefolder, destfolder)
-    return (connexion.NoContent, 200)
+    return (devices[device_id].get_current_ip(),200)
 
 
 def platforms_get(runtime=None):

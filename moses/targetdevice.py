@@ -548,6 +548,16 @@ class TargetDevice(config.ConfigurableKeysObject):
         """
         rsync.run_rsync(sourcefolder, self.id, destfolder)
 
+    def get_current_ip(self) -> str:
+        """Returns the device current ip or the hostname
+
+        Returns:
+            str -- device current ip or hostname if ip can't be solved
+        """
+        ip, mdns = sharedssh.resolve_hostname(self.hostname)
+
+        return ip
+
     # support for serialization
     def __getstate__(self):
         fields = super().__getstate__()
@@ -844,13 +854,19 @@ class TargetDevices(dict, metaclass=singleton.Singleton):
         with sshconsole.SSHConsole(hostname) as console:
             dev = self._setup_device(console, username, password, timeout)
 
-            try:
-                ip = socket.gethostbyname(dev.hostname)
-            except socket.gaierror:
+            ip, mdns = sharedssh.resolve_hostname(dev.hostname)
+
+            if ip == dev.hostname:
                 dev.hostname = hostname
                 logging.warning("Can't solve hostname "+hostname +
                                 " saving address used for detection instead.")
                 dev.save()
+            elif mdns:
+                dev.hostname = dev.hostname+".local"
+                logging.warning(
+                    "Added .local suffix to support mdns resolution.")
+                dev.save()
+
             return dev
 
     def refresh_device_info(self, device_id):
