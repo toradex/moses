@@ -13,6 +13,7 @@ Method | HTTP request | Description
 [**ContainersGetcontainer**](DevicesApi.md#containersgetcontainer) | **GET** /devices/{device_id}/containers/{container_id} | get container details
 [**DeviceClosedocker**](DevicesApi.md#deviceclosedocker) | **GET** /devices/{device_id}/docker/close | Disables remote docker
 [**DeviceClosessh**](DevicesApi.md#deviceclosessh) | **GET** /devices/{device_id}/ssh/close | Disables ssh tunneling
+[**DeviceCurrentIp**](DevicesApi.md#devicecurrentip) | **GET** /devices/{device_id}/current_ip | returns current ip of the device
 [**DeviceDelete**](DevicesApi.md#devicedelete) | **DELETE** /devices/{device_id} | Remove a device
 [**DeviceGet**](DevicesApi.md#deviceget) | **GET** /devices/{device_id} | Get device
 [**DeviceGetcontainers**](DevicesApi.md#devicegetcontainers) | **GET** /devices/{device_id}/containers | list containers
@@ -753,6 +754,85 @@ No authorization required
 | **200** | OK |  -  |
 | **404** | Device not found |  -  |
 | **500** | Unexpected exception. |  -  |
+
+[[Back to top]](#)
+[[Back to API list]](../README.md#documentation-for-api-endpoints)
+[[Back to Model list]](../README.md#documentation-for-models)
+[[Back to README]](../README.md)
+
+
+## DeviceCurrentIp
+
+> string DeviceCurrentIp (string deviceId)
+
+returns current ip of the device
+
+Returns current ip of the device using local DNS and mDNS
+
+### Example
+
+```csharp
+using System.Collections.Generic;
+using System.Diagnostics;
+using TorizonRestAPI.Api;
+using TorizonRestAPI.Client;
+using TorizonRestAPI.Model;
+
+namespace Example
+{
+    public class DeviceCurrentIpExample
+    {
+        public static void Main()
+        {
+            Configuration.Default.BasePath = "http://localhost:5000/api";
+            var apiInstance = new DevicesApi(Configuration.Default);
+            var deviceId = deviceId_example;  // string | Target device serial number
+
+            try
+            {
+                // returns current ip of the device
+                string result = apiInstance.DeviceCurrentIp(deviceId);
+                Debug.WriteLine(result);
+            }
+            catch (ApiException e)
+            {
+                Debug.Print("Exception when calling DevicesApi.DeviceCurrentIp: " + e.Message );
+                Debug.Print("Status Code: "+ e.ErrorCode);
+                Debug.Print(e.StackTrace);
+            }
+        }
+    }
+}
+```
+
+### Parameters
+
+
+Name | Type | Description  | Notes
+------------- | ------------- | ------------- | -------------
+ **deviceId** | **string**| Target device serial number | 
+
+### Return type
+
+**string**
+
+### Authorization
+
+No authorization required
+
+### HTTP request headers
+
+- **Content-Type**: Not defined
+- **Accept**: application/json
+
+### HTTP response details
+| Status code | Description | Response headers |
+|-------------|-------------|------------------|
+| **200** | ip |  -  |
+| **500** | Unexpected exception. |  -  |
+| **531** | Object Does not have a valid id. |  -  |
+| **534** | OS error. |  -  |
+| **535** | Invalid device id. |  -  |
 
 [[Back to top]](#)
 [[Back to API list]](../README.md#documentation-for-api-endpoints)
