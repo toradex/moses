@@ -1,7 +1,7 @@
 swagger: "2.0"
 info:
   description: Toradex Development API to build and deploy application on Torizon
-  version: 1.0.1
+  version: 1.0.2
   title: Torizon Deployment API
 consumes:
   - application/json
@@ -800,6 +800,31 @@ paths:
           $ref: "#/responses/SSHError_533"
         544:
           $ref: "#/responses/LocalCommandError_544"
+
+  /devices/{device_id}/current_ip:
+    get:
+      tags:
+        - Devices
+      operationId: device_current_ip
+      summary: returns current ip of the device
+      description: Returns current ip of the device using local DNS and mDNS
+      parameters:
+        - $ref: "#/parameters/device_id"
+      responses:
+        200:
+          description: ip
+          schema:
+            type: string
+        500:
+          $ref: "#/responses/InternalServerError_500"
+        531:
+          $ref: "#/responses/InvalidObjectIdError_531"
+        534:
+          $ref: "#/responses/OSError_534"
+        535:
+          $ref: "#/responses/InvalidDeviceIdError_535"
+
+
 
   /platforms:
     get:

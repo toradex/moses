@@ -517,6 +517,21 @@ def cmd_handler_device_sync(args) -> int:
     return 0
 
 
+def cmd_handler_device_ip(args) -> int:
+    """Sync a local folder with a folder on the device
+
+    Arguments:
+        args -- parsed command line arguments
+
+    Returns:
+        int -- 0 for success
+    """
+    api = moses_client.DevicesApi()
+    ip = api.device_current_ip(args.device_id)
+    logging.info(ip)
+    return 0
+
+
 def cmd_handler_application_info(args) -> int:
     """dumps application info
 
@@ -801,6 +816,7 @@ def create_parser() -> argparse.ArgumentParser:
     device_subparsers.add_parser("storage")
     device_subparsers.add_parser("key")
     device_sync_parser = device_subparsers.add_parser("sync")
+    device_subparsers.add_parser("ip")
 
     # add sub-commands for device image
     device_image_parser.add_argument(

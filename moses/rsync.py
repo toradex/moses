@@ -5,6 +5,7 @@ import exceptions
 import targetdevice
 import logging
 import socket
+import sharedssh
 
 if platform.system() == "Windows":
     should_translate_path = True
@@ -91,7 +92,7 @@ def run_rsync(sourcefolder, deviceid, targetfolder, keypath=None, port=None):
     device = targetdevice.TargetDevices()[deviceid]
 
     try:
-        ip = socket.gethostbyname(device.hostname)
+        ip, mdns = sharedssh.resolve_hostname(device.hostname)
     except socket.gaierror:
         raise exceptions.DNSError(device.hostname)
 

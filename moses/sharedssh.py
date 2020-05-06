@@ -5,6 +5,49 @@ import paramiko
 import sshtunnel
 import select
 import time
+import dns.resolver
+import socket
+
+resolver = dns.resolver.Resolver()
+resolver.nameservers = ["224.0.0.251"]
+resolver.port = 5353
+
+
+def resolve_hostname(hostname: str) -> (str, bool):
+    """
+    Convert a hostname to ip using dns first and then mdnsself.
+    If it does not resolve it, returns the original value (in
+    case this may be parsed in some smarter ways down the line)
+
+    Arguments:
+        hostname {str} -- mnemonic name
+
+    Returns:
+        str -- ip address as string
+        bool - true id mdns has been used
+    """
+    global resolver
+
+    ip = hostname
+    mdns = False
+
+    try:
+        ip = socket.gethostbyname(hostname)
+    except socket.gaierror:
+        if not hostname.endswith(".local"):
+            hostname += ".local"
+
+        try:
+            addr = resolver.query(hostname, "A")
+
+            if addr is not None and len(addr) > 0:
+                ip = addr[0].to_text()
+                mdns = True
+        except:
+            pass
+    except:
+        pass
+    return ip, mdns
 
 
 class SharedSSHDockerTunnel(sshtunnel.SSHTunnelForwarder):
@@ -59,11 +102,14 @@ class SharedSSHDockerTunnel(sshtunnel.SSHTunnelForwarder):
 
         self.device = device.id
         self.__objlock = threading.RLock()
+
         k = paramiko.RSAKey.from_private_key(
             io.StringIO(device.privatekey))
 
+        ip, mdns = resolve_hostname(device.hostname)
+
         super().__init__(
-            ssh_address_or_host=device.hostname,
+            ssh_address_or_host=ip,
             ssh_username=device.username,
             ssh_pkey=k,
             remote_bind_address=("127.0.0.1", 2375))
@@ -140,7 +186,9 @@ class SharedSSHClient(paramiko.SSHClient):
             # ssh.load_system_host_keys()
             ssh.set_missing_host_key_policy(IgnorePolicy())
 
-            ssh.connect(device.hostname,
+            ip, mdns = resolve_hostname(device.hostname)
+
+            ssh.connect(ip,
                         22,
                         username=device.username,
                         pkey=k)
@@ -192,7 +240,9 @@ class SSHForwarder(threading.Thread):
             self.ssh = paramiko.SSHClient()
             self.ssh.set_missing_host_key_policy(IgnorePolicy())
 
-            self.ssh.connect(self.device.hostname,
+            ip, mdns = resolve_hostname(self.device.hostname)
+
+            self.ssh.connect(ip,
                              22,
                              username=self.device.username,
                              pkey=k)

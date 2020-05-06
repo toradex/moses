@@ -35,7 +35,8 @@ class ApplicationConfig(config.ConfigurableKeysObject):
     """Class used to manage an application
     """
 
-    readonlyfields = config.ConfigurableKeysObject.readonlyfields.union({"images", "sdkimages"})
+    readonlyfields = config.ConfigurableKeysObject.readonlyfields.union(
+        {"images", "sdkimages"})
 
     non_nullable_properties = ["dockercomposefile",
                                "startupscript", "shutdownscript"]
@@ -1338,7 +1339,7 @@ class ApplicationConfig(config.ConfigurableKeysObject):
                 rsynccommand += sourcefolder + "/* "
 
                 # destination
-                rsynccommand += self.username + "@" + socket.gethostbyname(device.hostname)\
+                rsynccommand += self.username + "@" + device.get_current_ip()\
                     + ":" + containerfolder
 
                 _, stdout, stderr = ssh.exec_command(rsynccommand)

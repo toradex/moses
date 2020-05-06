@@ -13,6 +13,7 @@ Method | HTTP request | Description
 [**containers_getcontainer**](DevicesApi.md#containers_getcontainer) | **GET** /devices/{device_id}/containers/{container_id} | get container details
 [**device_closedocker**](DevicesApi.md#device_closedocker) | **GET** /devices/{device_id}/docker/close | Disables remote docker
 [**device_closessh**](DevicesApi.md#device_closessh) | **GET** /devices/{device_id}/ssh/close | Disables ssh tunneling
+[**device_current_ip**](DevicesApi.md#device_current_ip) | **GET** /devices/{device_id}/current_ip | returns current ip of the device
 [**device_delete**](DevicesApi.md#device_delete) | **DELETE** /devices/{device_id} | Remove a device
 [**device_get**](DevicesApi.md#device_get) | **GET** /devices/{device_id} | Get device
 [**device_getcontainers**](DevicesApi.md#device_getcontainers) | **GET** /devices/{device_id}/containers | list containers
@@ -567,6 +568,64 @@ No authorization required
 **200** | OK |  -  |
 **404** | Device not found |  -  |
 **500** | Unexpected exception. |  -  |
+
+[[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
+
+# **device_current_ip**
+> str device_current_ip(device_id)
+
+returns current ip of the device
+
+Returns current ip of the device using local DNS and mDNS
+
+### Example
+
+```python
+from __future__ import print_function
+import time
+import moses_client
+from moses_client.rest import ApiException
+from pprint import pprint
+
+# Create an instance of the API class
+api_instance = moses_client.DevicesApi()
+device_id = 'device_id_example' # str | Target device serial number
+
+try:
+    # returns current ip of the device
+    api_response = api_instance.device_current_ip(device_id)
+    pprint(api_response)
+except ApiException as e:
+    print("Exception when calling DevicesApi->device_current_ip: %s\n" % e)
+```
+
+### Parameters
+
+Name | Type | Description  | Notes
+------------- | ------------- | ------------- | -------------
+ **device_id** | **str**| Target device serial number | 
+
+### Return type
+
+**str**
+
+### Authorization
+
+No authorization required
+
+### HTTP request headers
+
+ - **Content-Type**: Not defined
+ - **Accept**: application/json
+
+### HTTP response details
+| Status code | Description | Response headers |
+|-------------|-------------|------------------|
+**200** | ip |  -  |
+**500** | Unexpected exception. |  -  |
+**531** | Object Does not have a valid id. |  -  |
+**534** | OS error. |  -  |
+**535** | Invalid device id. |  -  |
 
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
 
