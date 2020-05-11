@@ -5,7 +5,7 @@
 
 Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
-**Id** | **string** | Unique name (including version) | [optional] [readonly] 
+**Id** | **string** | Unique name (should be filesystem-compatible) | [optional] [readonly] 
 **Name** | **string** | Platform mnemnonic name | [optional] [readonly] 
 **Standard** | **bool** | true if the platform is provided by Toradex and can&#39;t be modified | [optional] [readonly] 
 **Version** | **string** | Version of the image (not related to distro version) | [optional] [readonly] 
@@ -21,6 +21,7 @@ Name | Type | Description | Notes
 **Networks** | **Dictionary&lt;string, List&lt;string&gt;&gt;** |  | [optional] 
 **Extraparms** | **Dictionary&lt;string, Dictionary&lt;string, Object&gt;&gt;** |  | [optional] 
 **Props** | **Dictionary&lt;string, Dictionary&lt;string, string&gt;&gt;** |  | [optional] 
+**Description** | **string** | Platform human-readable description | [optional] [readonly] 
 
 [[Back to Model list]](../README.md#documentation-for-models)
 [[Back to API list]](../README.md#documentation-for-api-endpoints)

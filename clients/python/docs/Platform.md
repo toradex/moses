@@ -3,7 +3,7 @@
 ## Properties
 Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
-**id** | **str** | Unique name (including version) | [optional] [readonly] 
+**id** | **str** | Unique name (should be filesystem-compatible) | [optional] [readonly] 
 **name** | **str** | Platform mnemnonic name | [optional] [readonly] 
 **standard** | **bool** | true if the platform is provided by Toradex and can&#39;t be modified | [optional] [readonly] 
 **version** | **str** | Version of the image (not related to distro version) | [optional] [readonly] 
@@ -19,6 +19,7 @@ Name | Type | Description | Notes
 **networks** | **dict(str, list[str])** |  | [optional] 
 **extraparms** | **dict(str, dict(str, object))** |  | [optional] 
 **props** | **dict(str, dict(str, str))** |  | [optional] 
+**description** | **str** | Platform human-readable description | [optional] [readonly] 
 
 [[Back to Model list]](../README.md#documentation-for-models) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to README]](../README.md)
 

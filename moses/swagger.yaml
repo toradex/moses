@@ -1,7 +1,7 @@
 swagger: "2.0"
 info:
   description: Toradex Development API to build and deploy application on Torizon
-  version: 1.0.2
+  version: 1.0.3
   title: Torizon Deployment API
 consumes:
   - application/json
@@ -1488,13 +1488,13 @@ definitions:
     properties:
       id:
         type: string
-        description: Unique name (including version)
-        example: debian-stretch-slim_1.0
+        description: Unique name (should be filesystem-compatible)
+        example: arm32v7-debian-base_buster
         readOnly: true
       name:
         type: string
         description: Platform mnemnonic name
-        example: Debian Stretch for native applications
+        example: debian buster-slim arm32v7
         readOnly: true
       standard:
         type: boolean
@@ -1566,6 +1566,12 @@ definitions:
           type: object
           additionalProperties:
             type: string
+      description:
+        type: string
+        description: Platform human-readable description
+        example: Debian Stretch for native applications
+        readOnly: true
+
 
   Application:
     type: object
