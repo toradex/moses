@@ -1,4 +1,4 @@
-FROM torizon/arm32v7-debian-base:buster
+FROM torizon/arm64v8-debian-base:buster
 
 #%application.expose%#
 #%application.arg%#

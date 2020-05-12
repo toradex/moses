@@ -2,7 +2,7 @@
 # set to true for platforms that are provided by Toradex
 standard: true
 # descriptive information
-name: debian buster-slim arm32v7
+name: debian buster-slim arm64v8
 version: "1.0"
 description: platform for headless applications with a minimal set of libraries and components
 # supported modules (using product id),* means all modules except unsupported ones
@@ -11,7 +11,7 @@ unsupportedmodels: []
 # defines base image and dockerfile templates for the containers
 baseimage:
   common:
-    - torizon/arm32v7-debian-base
+    - torizon/arm64v8-debian-base
     - buster
   debug:
   release:
@@ -48,7 +48,7 @@ usesysroot: false
 # base image for the container/template
 sdkbaseimage:
   common:
-    - torizon/debian-cross-toolchain-armhf
+    - torizon/debian-cross-toolchain-arm64
     - buster
   debug:
   release:
@@ -61,10 +61,10 @@ sdkcontainer:
 # additional platform-specific properties that can be used in projects or plugins
 props:
   common:
-    linkeroptions: "-Wl,--dynamic-linker=/lib/ld-linux-armhf.so.3"
-    prefix: "arm-linux-gnueabihf-"
-    vscode-arch: "arm"
-    gdb-arch: "arm"
+    linkeroptions: "-Wl,--dynamic-linker=/lib/ld-linux-arm64.so.3"
+    prefix: "aarch64-linux-gnu-"
+    vscode-arch: "arm64"
+    gdb-arch: "aarch64"
   debug: {}
   release: {}
 # additional scripts (docker-compose or shell) that can be used to start/stop
