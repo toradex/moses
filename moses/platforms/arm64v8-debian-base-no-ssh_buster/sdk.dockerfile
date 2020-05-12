@@ -1,4 +1,4 @@
-FROM torizon/debian-cross-toolchain-armhf:buster
+FROM torizon/debian-cross-toolchain-arm64:buster
 
 # commands that should be run before installing packages (ex: to add a feed or keys)
 #%application.sdkpreinstallcommands%#
