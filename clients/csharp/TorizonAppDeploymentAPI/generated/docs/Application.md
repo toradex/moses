@@ -16,7 +16,7 @@ Name | Type | Description | Notes
 **Volumes** | **Dictionary&lt;string, Dictionary&lt;string, string&gt;&gt;** |  | [optional] 
 **Devices** | **Dictionary&lt;string, List&lt;string&gt;&gt;** |  | [optional] 
 **Networks** | **Dictionary&lt;string, List&lt;string&gt;&gt;** |  | [optional] 
-**Extraparms** | **Dictionary&lt;string, Dictionary&lt;string, Object&gt;&gt;** |  | [optional] 
+**Extraparms** | **Dictionary&lt;string, Dictionary&lt;string, string&gt;&gt;** |  | [optional] 
 **Username** | **string** |  | [optional] 
 **Images** | **Dictionary&lt;string, string&gt;** |  | [optional] 
 **Sdkimages** | **Dictionary&lt;string, string&gt;** |  | [optional] 
