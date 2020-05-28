@@ -14,7 +14,7 @@ Name | Type | Description | Notes
 **volumes** | **dict(str, dict(str, str))** |  | [optional] 
 **devices** | **dict(str, list[str])** |  | [optional] 
 **networks** | **dict(str, list[str])** |  | [optional] 
-**extraparms** | **dict(str, dict(str, object))** |  | [optional] 
+**extraparms** | **dict(str, dict(str, str))** |  | [optional] 
 **username** | **str** |  | [optional] 
 **images** | **dict(str, str)** |  | [optional] 
 **sdkimages** | **dict(str, str)** |  | [optional] 

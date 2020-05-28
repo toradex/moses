@@ -4,6 +4,7 @@ import io
 import time
 import logging
 import json
+import yaml
 import paramiko
 import docker
 import exceptions
@@ -73,10 +74,6 @@ class RemoteDocker:
         except docker.errors.DockerException as e:
             raise exceptions.RemoteDockerError(self.dev, str(e))
 
-    @staticmethod
-    def make_volume(x: tuple) -> dict:
-        return {"bind": x[0], "mode": x[1]}
-
     def run_image(self,
                   img: docker.models.images.Image,
                   name: str,
@@ -126,6 +123,10 @@ class RemoteDocker:
 
             dockervolumes = dict(
                 map(lambda x: (x[0], {"bind": x[1][0], "mode": x[1][1]}), dockervolumes.items()))
+
+            extraparms = dict(
+                map(lambda x: (x[0].strip(), yaml.full_load(
+                    x[1])), extraparms.items()))
 
             container = self.remotedocker.containers.run(image.id,
                                                          name=name,

@@ -65,6 +65,7 @@ props:
     prefix: "arm-linux-gnueabihf-"
     vscode-arch: "arm"
     gdb-arch: "arm"
+    intellisensemode: "gcc-arm"
   debug: {}
   release: {}
 # additional scripts (docker-compose or shell) that can be used to start/stop
