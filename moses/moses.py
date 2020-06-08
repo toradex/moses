@@ -55,11 +55,17 @@ if __name__ == '__main__':
             logging.handlers.RotatingFileHandler(args.logfile, "a", 1024*1024, 4))
 
     try:
-        r = requests.get("http://localhost:"+str(args.port)+"/api/version")
+        proxies = {
+            "http": None,
+            "https": None,
+        }
+
+        r = requests.get("http://localhost:"+str(args.port) +
+                         "/api/version", proxies=proxies)
 
         if r.status_code != 200:
             logging.error(
-                "Port {} already used by an incompatible REST server.", args.port)
+                "Port " + args.port + " already used by an incompatible REST server.")
             sys.exit(-1)
 
         version = r.json()
