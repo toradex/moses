@@ -82,6 +82,7 @@ props:
     prefix: "aarch64-linux-gnu-"
     vscode-arch: "arm64"
     gdb-arch: "aarch64"
+    cmake-arch: "aarch64"
     intellisensemode: "gcc-arm64"
   debug: {}
   release: {}
