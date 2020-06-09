@@ -65,6 +65,7 @@ props:
     prefix: "arm-linux-gnueabihf-"
     vscode-arch: "arm"
     gdb-arch: "arm"
+    cmake-arch: "armhf"
     intellisensemode: "gcc-arm"
   debug: {}
   release: {}
