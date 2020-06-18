@@ -947,55 +947,60 @@ class ApplicationConfig(config.ConfigurableKeysObject):
 
         localdocker = docker.from_env()
 
-        # if an instance is running, stop and remove it
         try:
-            sdkcontainer = localdocker.containers.get(instance)
 
-            containerwasrunning = True
-            if sdkcontainer.status == "running":
-                sdkcontainer.stop()
-            else:
-                self.sdksshaddress = None
+            # if an instance is running, stop and remove it
+            try:
+                sdkcontainer = localdocker.containers.get(instance)
 
-            sdkcontainer.remove()
-        except docker.errors.NotFound:
-            pass
+                containerwasrunning = True
+                if sdkcontainer.status == "running":
+                    sdkcontainer.stop()
+                else:
+                    self.sdksshaddress = None
 
-        dockertemplatefull = (platform.folder /
-                              platform.get_prop(configuration, "sdkcontainer"))
+                sdkcontainer.remove()
+            except docker.errors.NotFound:
+                pass
 
-        dockerfile = self._get_work_folder() / ("Dockerfile_SDK." + configuration)
+            dockertemplatefull = (platform.folder /
+                                  platform.get_prop(configuration, "sdkcontainer"))
 
-        utils.apply_template(dockertemplatefull, dockerfile, lambda obj,
-                             tag, args: self._get_value(obj, tag, args), configuration)
+            dockerfile = self._get_work_folder() / ("Dockerfile_SDK." + configuration)
 
-        # copy contents of data subfolder to app path
-        platformfilesfolder = platform.folder / "sdkfiles"
-        filesfolder = self.folder / "sdkfiles"
+            utils.apply_template(dockertemplatefull, dockerfile, lambda obj,
+                                 tag, args: self._get_value(obj, tag, args), configuration)
 
-        if platformfilesfolder.exists():
-            if filesfolder.exists():
-                shutil.rmtree(filesfolder)
-            shutil.copytree(platformfilesfolder, filesfolder)
+            # copy contents of data subfolder to app path
+            platformfilesfolder = platform.folder / "sdkfiles"
+            filesfolder = self.folder / "sdkfiles"
 
-        # for some reasons also docker on windows wants / paths
-        dockerfilerelpath = str(os.path.relpath(
-            dockerfile, self.folder)).replace("\\", "/")
+            if platformfilesfolder.exists():
+                if filesfolder.exists():
+                    shutil.rmtree(filesfolder)
+                shutil.copytree(platformfilesfolder, filesfolder)
 
-        sdkimage = localdocker.images.build(path=str(self.folder),
-                                            dockerfile=dockerfilerelpath,
-                                            tag=self._get_sdk_image_name(
-                                                configuration),
-                                            pull=False
-                                            )[0]
+            # for some reasons also docker on windows wants / paths
+            dockerfilerelpath = str(os.path.relpath(
+                dockerfile, self.folder)).replace("\\", "/")
 
-        localdocker.containers.prune()
+            sdkimage = localdocker.images.build(path=str(self.folder),
+                                                dockerfile=dockerfilerelpath,
+                                                tag=self._get_sdk_image_name(
+                                                    configuration),
+                                                pull=False
+                                                )[0]
 
-        self.sdkimages[configuration] = str(sdkimage.id)
-        self.save()
+            localdocker.containers.prune()
 
-        if containerwasrunning:
-            self.start_sdk_container(configuration, False)
+            self.sdkimages[configuration] = str(sdkimage.id)
+            self.save()
+
+            if containerwasrunning:
+                self.start_sdk_container(configuration, False)
+
+        except docker.errors.DockerException as e:
+            raise exceptions.LocalDockerError(e)
 
     def _sync_sysroot(self, configuration: str):
         """Copies sysroot folders from container to SDK container
