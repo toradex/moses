@@ -23,6 +23,7 @@ RUN if [ ! -z "#%application.extrapackages%#" ]; then \
 #%application.buildfiles%#
 #%application.buildcommands%#
 
+COPY work/#%application.appname%# /#%application.appname%#
 #%application.targetfiles%#
 
 USER #%application.username%#
