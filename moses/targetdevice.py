@@ -230,13 +230,15 @@ class TargetDevice(config.ConfigurableKeysObject):
                     ssh_username=self.username,
                     ssh_pkey=k,
                     local_bind_address=("127.0.0.1", port),
-                    remote_bind_address=("127.0.0.1", 2375))
+                    remote_bind_address=("127.0.0.1", 2375),
+                    allow_agent=False)
             else:
                 self.dockertunnel = sshtunnel.SSHTunnelForwarder(
                     ssh_address_or_host=self.hostname,
                     ssh_username=self.username,
                     ssh_pkey=k,
-                    remote_bind_address=("127.0.0.1", 2375))
+                    remote_bind_address=("127.0.0.1", 2375),
+                    allow_agent=False)
 
             self.dockertunnel.start()
 
