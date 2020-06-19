@@ -44,11 +44,17 @@ if __name__ == '__main__':
                         choices=range(1, 65535), metavar="port used for REST server, range is 1..65535")
     parser.add_argument(
         "--logfile", type=str, default=None)
+    parser.add_argument(
+        "--debug", action="store_true")
 
     args = parser.parse_args()
 
-    logging.basicConfig(level=logging.INFO)
-    logging.getLogger("paramiko").setLevel(logging.WARNING)
+    if not args.debug:
+        logging.basicConfig(level=logging.INFO)
+        logging.getLogger("paramiko").setLevel(logging.WARNING)
+    else:
+        logging.basicConfig(level=logging.DEBUG)
+        logging.getLogger("paramiko").setLevel(logging.DEBUG)
 
     if args.logfile is not None:
         logging.getLogger().addHandler(

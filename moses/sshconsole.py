@@ -116,7 +116,8 @@ class SSHConsole(console.GenericConsole):
             self.ssh.connect(self.hostname,
                              port=self.port,
                              username=username,
-                             password=password)
+                             password=password,
+                             allow_agent=False)
 
             channel = self.ssh.invoke_shell()
 
@@ -146,7 +147,8 @@ class SSHConsole(console.GenericConsole):
                 self.ssh.connect(self.hostname,
                                  port=self.port,
                                  username=username,
-                                 password="thispasswordwontlast")
+                                 password="thispasswordwontlast",
+                                 allow_agent=False)
 
                 channel = self.ssh.invoke_shell()
                 channel.send("passwd".encode("utf-8"))
@@ -164,7 +166,8 @@ class SSHConsole(console.GenericConsole):
                 self.ssh.connect(self.hostname,
                                  port=self.port,
                                  username=username,
-                                 password=password)
+                                 password=password,
+                                 allow_agent=False)
 
         except paramiko.SSHException as e:
             raise exceptions.SSHError(e)
@@ -186,7 +189,8 @@ class SSHConsole(console.GenericConsole):
             self.ssh.connect(self.hostname,
                              port=self.port,
                              username=username,
-                             pkey=k)
+                             pkey=k,
+                             allow_agent=False)
 
         except paramiko.SSHException as e:
             raise exceptions.SSHError(e)

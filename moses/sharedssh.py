@@ -112,7 +112,8 @@ class SharedSSHDockerTunnel(sshtunnel.SSHTunnelForwarder):
             ssh_address_or_host=ip,
             ssh_username=device.username,
             ssh_pkey=k,
-            remote_bind_address=("127.0.0.1", 2375))
+            remote_bind_address=("127.0.0.1", 2375),
+            allow_agent=False)
 
         # otherwise first connection always fails
         self.start()
@@ -191,7 +192,8 @@ class SharedSSHClient(paramiko.SSHClient):
             ssh.connect(ip,
                         22,
                         username=device.username,
-                        pkey=k)
+                        pkey=k,
+                        allow_agent=False)
 
             logging.info("SSH - Connected to device " + device.id)
 
@@ -245,7 +247,8 @@ class SSHForwarder(threading.Thread):
             self.ssh.connect(ip,
                              22,
                              username=self.device.username,
-                             pkey=k)
+                             pkey=k,
+                             allow_agent=False)
 
             channel = self.ssh.invoke_shell()
 
