@@ -593,7 +593,7 @@ class TargetDevices(dict, metaclass=singleton.Singleton):
         self.modeldict.update(dict.fromkeys(
             ["0038", "0050", "0051", "0052"], "colibri-imx8"))
         self.modeldict.update(dict.fromkeys(
-            ["0055", "0056", "0057"], "verdin-imx8"))
+            ["0055", "0056", "0057", "0059", "0060"], "verdin-imx8"))
 
         # Iterates on all devices
         subfolders = [dir for dir
