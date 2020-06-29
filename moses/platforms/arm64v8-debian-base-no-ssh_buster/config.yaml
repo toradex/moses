@@ -22,6 +22,8 @@ supportedmodels:
     "0055",
     "0056",
     "0057",
+    "0059",
+    "0060",
   ]
 
 unsupportedmodels: []
