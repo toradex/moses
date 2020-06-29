@@ -44,7 +44,7 @@ extraparms:
   release: {}
 # information about the SDK (if required)
 usesdk: false
-# set to false to use a container template
+
 # additional platform-specific properties that can be used in projects or plugins
 props:
   common: {}
@@ -53,7 +53,7 @@ props:
 
 # additional scripts (docker-compose or shell) that can be used to start/stop
 # the container
-# If you use dockerfile the container should NOT be started there
+# If you use docker-compose file the application container should NOT be listed in the services, since it will be started by the debugger
 dockercomposefile:
   common: null
   debug: null

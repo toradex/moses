@@ -6,7 +6,25 @@ name: python3 arm64v8
 version: "1.0"
 description: minimal python3 setup on debian
 # supported modules (using product id),* means all modules except unsupported ones
-supportedmodels: ["*"]
+supportedmodels:
+  [
+    "0037",
+    "0047",
+    "0048",
+    "0049",
+    "0046",
+    "0053",
+    "0054",
+    "0038",
+    "0050",
+    "0051",
+    "0052",
+    "0055",
+    "0056",
+    "0057",
+    "0059",
+    "0060",
+  ]
 unsupportedmodels: []
 # defines base image and dockerfile templates for the containers
 baseimage:
@@ -43,7 +61,7 @@ extraparms:
   release: {}
 # information about the SDK (if required)
 usesdk: false
-# set to false to use a container template
+
 # additional platform-specific properties that can be used in projects or plugins
 props:
   common: {}
@@ -52,7 +70,7 @@ props:
 
 # additional scripts (docker-compose or shell) that can be used to start/stop
 # the container
-# If you use dockerfile the container should NOT be started there
+# If you use docker-compose file the application container should NOT be listed in the services, since it will be started by the debugger
 dockercomposefile:
   common: null
   debug: null

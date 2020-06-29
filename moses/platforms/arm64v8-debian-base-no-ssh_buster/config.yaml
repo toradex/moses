@@ -22,6 +22,8 @@ supportedmodels:
     "0055",
     "0056",
     "0057",
+    "0059",
+    "0060",
   ]
 
 unsupportedmodels: []
@@ -60,7 +62,7 @@ extraparms:
   release: {}
 # information about the SDK (if required)
 usesdk: true
-# set to false to use a container template
+
 usesysroot: false
 # base image for the container/template
 sdkbaseimage:
@@ -88,7 +90,7 @@ props:
   release: {}
 # additional scripts (docker-compose or shell) that can be used to start/stop
 # the container
-# If you use dockerfile the container should NOT be started there
+# If you use docker-compose file the application container should NOT be listed in the services, since it will be started by the debugger
 dockercomposefile:
   common: null
   debug: null
