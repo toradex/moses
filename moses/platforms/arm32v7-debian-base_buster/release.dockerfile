@@ -27,5 +27,7 @@ RUN if [ ! -z "#%application.extrapackages%#" ]; then \
 
 USER #%application.username%#
 
+WORKDIR /#%application.appname%#
+
 # commands that will run on the target (ENTRYPOINT or CMD)
 #%application.targetcommands%#
