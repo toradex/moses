@@ -108,7 +108,7 @@ namespace TorizonAppDeploymentAPI
             }
             catch (Exception e)
             {
-                if ((State != ConnectionState.Disconnected)&&(ErrorMessage!=e.Message))
+                if ((State != ConnectionState.Disconnected) || (ErrorMessage!=e.Message))
                 {
                     State = ConnectionState.Disconnected;
                     ErrorMessage = e.Message;
