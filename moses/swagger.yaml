@@ -1470,18 +1470,26 @@ definitions:
         readOnly: true
       kernelrelease:
         type: string
+        description: Kernel release
         example: 4.18.1
         readOnly: true
       torizonversion:
         type: string
+        description: Torizon version (date)
         example: 20180824141405
         readOnly: true
       hostname:
         type: string
+        description: Device host name
+        example: verdin-imx8mm-06632494
       username:
         type: string
+        description: User account used to connect to device via ssh
+        example: torizon
       homefolder:
         type: string
+        description: Home folder of ssh user (used to deploy files and apps, can be different from actual home)
+        example: /home/torizon
 
   Platform:
     type: object
@@ -1506,49 +1514,63 @@ definitions:
         example: 1.0
         readOnly: true
       runtimes:
-          type: array
-          items:
-            type: string
+        type: array
+        items:
+          type: string
+        description: runtimes/languages supported by the container
+        example: [ python, dotnet ]
       sdkcontainerusername:
-          type: string
+        type: string
+        description: ssh user supported by the SDK container
       sdkcontainerpassword:
-          type: string
+        type: string
+        description: password used to ssh inside the SDK container
       dockercomposefile:
         type: object
         additionalProperties:
           type: string
+        description: path of docker-compose file to be used to start additional containers needed by the app
       startupscript:
         type: object
         additionalProperties:
           type: string
+        description: path of script to be run when application debugging starts
       shutdownscript:
         type: object
         additionalProperties:
           type: string
+        description: path of script to be run when application debugging stops
       ports:
         type: object
         additionalProperties:
           type: object
           additionalProperties:
               type: string
+        description: ports to be exposed from the container
+        example: { 8080/tcp:8080 22/tcp:null }
       volumes:
         type: object
         additionalProperties:
           type: object
           additionalProperties:
             type: string
+        description: Local folders to be mounted as mount points inside a container
+        example: { /tmp:/tmp,rw /home/torizon:/userhome,ro }
       devices:
         type: object
         additionalProperties:
           type: array
           items:
             type: string
+        description: Additional devices to be shared inside container
+        example: [ /dev/gpiochip0 ]
       networks:
         type: object
         additionalProperties:
           type: array
           items:
             type: string
+        description: Networks used by container (in debug it will always be also on bridge)
       extraparms:
         type: object
         additionalProperties:
@@ -1560,18 +1582,20 @@ definitions:
                 type: string
               value:
                 type: string
+        description: Additional parameter passed to the run call (check docker SDK for python for reference, value is YAML)
+        example: { network_mode: host }
       props:
         type: object
         additionalProperties:
           type: object
           additionalProperties:
             type: string
+        description: Custom properties (may be used in dockerfile or by extensions)
       description:
         type: string
         description: Platform human-readable description
         example: Debian Stretch for native applications
         readOnly: true
-
 
   Application:
     type: object
@@ -1594,60 +1618,74 @@ definitions:
           type: object
           additionalProperties:
             type: string
+        description: Custom application properties
       dockercomposefile:
         type: object
         additionalProperties:
           type: string
+        description: path of docker-compose file to be used to start additional containers needed by the app
       startupscript:
         type: object
         additionalProperties:
           type: string
+        description: path of script to be run when application debugging starts
       shutdownscript:
         type: object
         additionalProperties:
           type: string
+        description: path of script to be run when application debugging stops
       ports:
         type: object
         additionalProperties:
           type: object
           additionalProperties:
               type: string
+        description: ports to be exposed from the container
+        example: { 8080/tcp:8080 22/tcp:null }
       volumes:
         type: object
         additionalProperties:
           type: object
           additionalProperties:
             type: string
+        description: Local folders to be mounted "A mount points inside a container
+        example: { /tmp:/tmp,rw /home/torizon:/userhome,ro }
       devices:
         type: object
         additionalProperties:
           type: array
           items:
             type: string
+        description: Additional devices to be shared inside container
+        example: [ /dev/gpiochip0 ]
       networks:
         type: object
         additionalProperties:
           type: array
           items:
             type: string
+        description: Networks used by container (in debug it will always be also on bridge)
       extraparms:
         type: object
         additionalProperties:
           type: object
           additionalProperties:
                 type: string
+        description: Additional parameter passed to the run call (check docker SDK for python for reference, value is YAML)
+        example: { network_mode: host }
       username:
         type: string
-
+        description: user account used to run the application inside the container
       images:
         type: object
         additionalProperties:
           type: string
-
+        description: SHA-ids of the debug and release images
       sdkimages:
         type: object
         additionalProperties:
           type: string
+        description: SHA-ids of the debug and release SDK images
 
   ErrorInfo:
     properties:
