@@ -68,6 +68,7 @@ props:
     vscode-arch: "arm"
     gdb-arch: "arm"
     cmake-arch: "armhf"
+    debian-arch: "armhf"
     intellisensemode: "gcc-arm"
   debug: {}
   release: {}

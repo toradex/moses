@@ -2,9 +2,9 @@
 # set to true for platforms that are provided by Toradex
 standard: true
 # descriptive information
-name: debian buster-slim arm64v8
+name: debian Qt buster-slim arm64v8 vivante
 version: "1.0"
-description: platform for headless applications with a minimal set of libraries and components
+description: platform for applications using Qt libraries on SOCs using Vivante GPUs
 # supported modules (using product id),* means all modules except unsupported ones
 supportedmodels:
   [
@@ -30,7 +30,7 @@ unsupportedmodels: []
 # defines base image and dockerfile templates for the containers
 baseimage:
   common:
-    - torizon/arm64v8-debian-base
+    - torizon/arm32v7-debian-qt5-wayland-vivante
     - buster
   debug:
   release:
@@ -43,14 +43,16 @@ container:
 runtimes:
   - c-cpp-nossh
 tags:
-  - console
+  - qt
 # information about how containers should run
 ports:
   common: {}
   debug: { "6502/tcp": null }
   release: {}
 volumes:
-  common: {}
+  common:
+    /tmp: /tmp
+    /dev/dri: /dev/dri
   debug: {}
   release: {}
 devices:
@@ -59,7 +61,9 @@ devices:
   release: []
 privileged: false
 extraparms:
-  common: {}
+  common:
+    device_cgroup_rules:
+      - c 226:* rmw
   debug: {}
   release: {}
 # information about the SDK (if required)
@@ -95,7 +99,7 @@ props:
 # the container
 # If you use docker-compose file the application container should NOT be listed in the services, since it will be started by the debugger
 dockercomposefile:
-  common: null
+  common: docker-compose.yml
   debug: null
   release: null
 startupscript:

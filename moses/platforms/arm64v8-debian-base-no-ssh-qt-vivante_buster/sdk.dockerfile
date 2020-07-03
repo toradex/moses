@@ -7,9 +7,8 @@ FROM torizon/debian-cross-toolchain-arm64:buster
 # Install required packages
 RUN apt-get -q -y update \
     && apt-get -q -y install gdb-multiarch procps rsync openssh-client\
-    libwayland-dev:arm64 \
-    libglvnd-core-dev:arm64 \
-    libglvnd-dev:arm64 \
+    qt5-qmake:arm64 \
+    qtbase5-dev:arm64 \
     #%application.devpackages%#\
     #%application.sdkpackages%#\
     && rm -rf /var/lib/apt/lists/*

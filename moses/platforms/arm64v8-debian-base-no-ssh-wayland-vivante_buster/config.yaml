@@ -50,7 +50,9 @@ ports:
   debug: { "6502/tcp": null }
   release: {}
 volumes:
-  common: {}
+  common:
+    /tmp: /tmp
+    /dev/dri: /dev/dri
   debug: {}
   release: {}
 devices:
@@ -59,7 +61,9 @@ devices:
   release: []
 privileged: false
 extraparms:
-  common: {}
+  common:
+    device_cgroup_rules:
+      - c 226:* rmw
   debug: {}
   release: {}
 # information about the SDK (if required)
@@ -69,7 +73,7 @@ usesysroot: false
 # base image for the container/template
 sdkbaseimage:
   common:
-    - torizon/debian-cross-toolchain-aarch64
+    - torizon/debian-cross-toolchain-arm64
     - buster
   debug:
   release:
@@ -87,6 +91,7 @@ props:
     vscode-arch: "arm64"
     gdb-arch: "aarch64"
     cmake-arch: "aarch64"
+    debian-arch: "arm64"
     intellisensemode: "gcc-arm64"
   debug: {}
   release: {}
@@ -94,7 +99,7 @@ props:
 # the container
 # If you use docker-compose file the application container should NOT be listed in the services, since it will be started by the debugger
 dockercomposefile:
-  common: null
+  common: docker-compose.yml
   debug: null
   release: null
 startupscript:
