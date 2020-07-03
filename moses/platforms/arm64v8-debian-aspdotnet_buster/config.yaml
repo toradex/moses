@@ -41,6 +41,7 @@ container:
 # defines what languages/runtimes are supported by this platform
 runtimes:
   - aspdotnet
+tags: []
 # information about how containers should run
 ports:
   common: {}

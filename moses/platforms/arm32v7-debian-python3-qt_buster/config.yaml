@@ -23,6 +23,8 @@ container:
 # defines what languages/runtimes are supported by this platform
 runtimes:
   - python3
+tags:
+  - qt
 # information about how containers should run
 ports:
   common: { "6502/tcp": null }
