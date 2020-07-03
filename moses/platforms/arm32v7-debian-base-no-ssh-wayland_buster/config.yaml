@@ -23,6 +23,8 @@ container:
 # defines what languages/runtimes are supported by this platform
 runtimes:
   - c-cpp-nossh
+tags:
+  - wayland
 # information about how containers should run
 ports:
   common: {}
