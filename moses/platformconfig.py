@@ -123,6 +123,8 @@ class PlatformConfig(config.ConfigurableObject):
             "release": []
         }
 
+        self.tags = []
+
         if self.folder is not None:
             self.load()
 

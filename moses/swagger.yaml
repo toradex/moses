@@ -1,7 +1,7 @@
 swagger: "2.0"
 info:
   description: Toradex API to build and deploy applications running as containers on Torizon
-  version: 1.0.4
+  version: 1.0.5
   title: Torizon IDE-backend API
 consumes:
   - application/json
@@ -1570,6 +1570,13 @@ definitions:
         type: string
         description: Platform human-readable description
         example: Debian Stretch for native applications
+        readOnly: true
+      tags:
+        type: array
+        items:
+          type: string
+        description: strings used to identify specific properties of the platform
+        example: [ console, wayland ]
         readOnly: true
 
 

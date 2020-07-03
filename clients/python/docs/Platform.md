@@ -20,6 +20,7 @@ Name | Type | Description | Notes
 **extraparms** | **dict(str, dict(str, object))** |  | [optional] 
 **props** | **dict(str, dict(str, str))** |  | [optional] 
 **description** | **str** | Platform human-readable description | [optional] [readonly] 
+**tags** | **list[str]** | strings used to identify specific properties of the platform | [optional] [readonly] 
 
 [[Back to Model list]](../README.md#documentation-for-models) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to README]](../README.md)
 

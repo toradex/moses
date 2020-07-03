@@ -22,6 +22,7 @@ Name | Type | Description | Notes
 **Extraparms** | **Dictionary&lt;string, Dictionary&lt;string, Object&gt;&gt;** |  | [optional] 
 **Props** | **Dictionary&lt;string, Dictionary&lt;string, string&gt;&gt;** |  | [optional] 
 **Description** | **string** | Platform human-readable description | [optional] [readonly] 
+**Tags** | **List&lt;string&gt;** | strings used to identify specific properties of the platform | [optional] [readonly] 
 
 [[Back to Model list]](../README.md#documentation-for-models)
 [[Back to API list]](../README.md#documentation-for-api-endpoints)
