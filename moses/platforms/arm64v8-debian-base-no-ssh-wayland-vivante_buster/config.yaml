@@ -62,8 +62,7 @@ devices:
 privileged: false
 extraparms:
   common:
-    device_cgroup_rules:
-      - c 226:* rmw
+    device_cgroup_rules: '[ "c 226:* rmw" ]'
   debug: {}
   release: {}
 # information about the SDK (if required)
