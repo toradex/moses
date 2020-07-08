@@ -30,7 +30,7 @@ unsupportedmodels: []
 # defines base image and dockerfile templates for the containers
 baseimage:
   common:
-    - torizon/arm32v7-debian-qt5-wayland-vivante
+    - torizon/arm64v8-debian-qt5-wayland-vivante
     - buster
   debug:
   release:

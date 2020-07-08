@@ -1,4 +1,4 @@
-FROM torizon/arm32v7-debian-wayland-base-vivante:buster
+FROM torizon/arm64v8-debian-wayland-base-vivante:buster
 
 #%application.expose%#
 #%application.arg%#
