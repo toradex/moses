@@ -53,6 +53,7 @@ volumes:
   common:
     /tmp: /tmp
     /dev/dri: /dev/dri
+    /dev/galcore: /dev/galcore
   debug: {}
   release: {}
 devices:
@@ -62,7 +63,7 @@ devices:
 privileged: false
 extraparms:
   common:
-    device_cgroup_rules: '[ "c 226:* rmw" ]'
+    device_cgroup_rules: '[ "c 199:* rmw" , "c 226:* rmw" ]'
   debug: {}
   release: {}
 # information about the SDK (if required)
