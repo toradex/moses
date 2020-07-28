@@ -40,7 +40,9 @@ COPY id_rsa.pub /id_rsa.pub
 RUN mkdir /var/run/sshd \
     && sed 's@session\s*required\s*pam_loginuid.so@session optional pam_loginuid.so@g' -i /etc/pam.d/sshd \
     && if test $SSHUSERNAME != root ; then mkdir -p /home/$SSHUSERNAME/.ssh ; else mkdir -p /root/.ssh ; fi \
-    && if test $SSHUSERNAME != root ; then cp /id_rsa.pub /home/$SSHUSERNAME/.ssh/authorized_keys ; else cp /id_rsa.pub /root/.ssh/authorized_keys ; fi
+    && if test $SSHUSERNAME != root ; then cp /id_rsa.pub /home/$SSHUSERNAME/.ssh/authorized_keys ; else cp /id_rsa.pub /root/.ssh/authorized_keys ; fi \
+    && echo "PermitUserEnvironment yes" >> /etc/ssh/sshd_config \
+    && su -c "env" $SSHUSERNAME > /etc/environment
 
 RUN rm -r /etc/ssh/ssh*key \
     && dpkg-reconfigure openssh-server
