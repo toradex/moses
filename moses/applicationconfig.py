@@ -63,6 +63,7 @@ class ApplicationConfig(config.ConfigurableKeysObject):
                 "buildfiles": "",
                 "buildcommands": "",
                 "targetfiles": "",
+                "targetcommands": "",
                 "command": "",
                 "sdkpreinstallcommands": "",
                 "sdkpostinstallcommands": ""
