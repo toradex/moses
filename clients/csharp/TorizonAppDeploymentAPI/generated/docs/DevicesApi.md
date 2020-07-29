@@ -4,6 +4,7 @@ All URIs are relative to *http://localhost:5000/api*
 
 Method | HTTP request | Description
 ------------- | ------------- | -------------
+[**ContainerGetlogs**](DevicesApi.md#containergetlogs) | **GET** /devices/{device_id}/containers/{container_id}/logs | return container logs one row a time
 [**ContainerGetmemory**](DevicesApi.md#containergetmemory) | **GET** /devices/{device_id}/containers/{container_id}/memory | Return container memory information
 [**ContainerGetmountpoints**](DevicesApi.md#containergetmountpoints) | **GET** /devices/{device_id}/containers/{container_id}/storage | return information about storage
 [**ContainerGetprocesses**](DevicesApi.md#containergetprocesses) | **GET** /devices/{device_id}/containers/{container_id}/processes | return processes running in container
@@ -35,6 +36,91 @@ Method | HTTP request | Description
 [**ImagesDeleteimage**](DevicesApi.md#imagesdeleteimage) | **DELETE** /devices/{device_id}/images/{image_id} | delete an image
 [**ImagesGetimage**](DevicesApi.md#imagesgetimage) | **GET** /devices/{device_id}/images/{image_id} | get image details
 
+
+
+## ContainerGetlogs
+
+> string ContainerGetlogs (string deviceId, string containerId, bool? restart = null)
+
+return container logs one row a time
+
+return one row of the log, waiting until it's available, this will allow clients to show logs in almost real time
+
+### Example
+
+```csharp
+using System.Collections.Generic;
+using System.Diagnostics;
+using TorizonRestAPI.Api;
+using TorizonRestAPI.Client;
+using TorizonRestAPI.Model;
+
+namespace Example
+{
+    public class ContainerGetlogsExample
+    {
+        public static void Main()
+        {
+            Configuration.Default.BasePath = "http://localhost:5000/api";
+            var apiInstance = new DevicesApi(Configuration.Default);
+            var deviceId = deviceId_example;  // string | Target device serial number
+            var containerId = containerId_example;  // string | Id of a container
+            var restart = true;  // bool? | when true reads the lock back from beginning (optional)  (default to false)
+
+            try
+            {
+                // return container logs one row a time
+                string result = apiInstance.ContainerGetlogs(deviceId, containerId, restart);
+                Debug.WriteLine(result);
+            }
+            catch (ApiException e)
+            {
+                Debug.Print("Exception when calling DevicesApi.ContainerGetlogs: " + e.Message );
+                Debug.Print("Status Code: "+ e.ErrorCode);
+                Debug.Print(e.StackTrace);
+            }
+        }
+    }
+}
+```
+
+### Parameters
+
+
+Name | Type | Description  | Notes
+------------- | ------------- | ------------- | -------------
+ **deviceId** | **string**| Target device serial number | 
+ **containerId** | **string**| Id of a container | 
+ **restart** | **bool?**| when true reads the lock back from beginning | [optional] [default to false]
+
+### Return type
+
+**string**
+
+### Authorization
+
+No authorization required
+
+### HTTP request headers
+
+- **Content-Type**: Not defined
+- **Accept**: application/json
+
+### HTTP response details
+| Status code | Description | Response headers |
+|-------------|-------------|------------------|
+| **200** | Returns list of storage informations |  -  |
+| **204** | No content, container is no longer running and log has ben fully read |  -  |
+| **404** | Device or container not found |  -  |
+| **500** | Unexpected exception. |  -  |
+| **525** | Remote docker exception. |  -  |
+| **533** | SSH error. |  -  |
+| **539** | SSH tunnel error. |  -  |
+
+[[Back to top]](#)
+[[Back to API list]](../README.md#documentation-for-api-endpoints)
+[[Back to Model list]](../README.md#documentation-for-models)
+[[Back to README]](../README.md)
 
 
 ## ContainerGetmemory
@@ -107,7 +193,7 @@ No authorization required
 | Status code | Description | Response headers |
 |-------------|-------------|------------------|
 | **200** | Returns memory information |  -  |
-| **404** | Device not found |  -  |
+| **404** | Device or container not found |  -  |
 | **500** | Unexpected exception. |  -  |
 | **533** | SSH error. |  -  |
 | **539** | SSH tunnel error. |  -  |
@@ -188,7 +274,7 @@ No authorization required
 | Status code | Description | Response headers |
 |-------------|-------------|------------------|
 | **200** | Returns list of storage informations |  -  |
-| **404** | Device not found |  -  |
+| **404** | Device or container not found |  -  |
 | **500** | Unexpected exception. |  -  |
 | **525** | Remote docker exception. |  -  |
 | **533** | SSH error. |  -  |
@@ -270,7 +356,7 @@ No authorization required
 | Status code | Description | Response headers |
 |-------------|-------------|------------------|
 | **200** | Returns list of processes |  -  |
-| **404** | Device not found |  -  |
+| **404** | Device or container not found |  -  |
 | **500** | Unexpected exception. |  -  |
 | **525** | Remote docker exception. |  -  |
 | **533** | SSH error. |  -  |
@@ -1706,7 +1792,7 @@ No authorization required
 
 ## DeviceOpendocker
 
-> int DeviceOpendocker (string deviceId, int port = null)
+> int DeviceOpendocker (string deviceId, int? port = null)
 
 Expose remote docker
 
@@ -1730,7 +1816,7 @@ namespace Example
             Configuration.Default.BasePath = "http://localhost:5000/api";
             var apiInstance = new DevicesApi(Configuration.Default);
             var deviceId = deviceId_example;  // string | Target device serial number
-            var port = 56;  // int |  (optional) 
+            var port = 56;  // int? |  (optional) 
 
             try
             {
@@ -1755,7 +1841,7 @@ namespace Example
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
  **deviceId** | **string**| Target device serial number | 
- **port** | **int**|  | [optional] 
+ **port** | **int?**|  | [optional] 
 
 ### Return type
 
@@ -1787,7 +1873,7 @@ No authorization required
 
 ## DeviceOpenssh
 
-> int DeviceOpenssh (string deviceId, int port = null)
+> int DeviceOpenssh (string deviceId, int? port = null)
 
 Expose remote ssh
 
@@ -1811,7 +1897,7 @@ namespace Example
             Configuration.Default.BasePath = "http://localhost:5000/api";
             var apiInstance = new DevicesApi(Configuration.Default);
             var deviceId = deviceId_example;  // string | Target device serial number
-            var port = 56;  // int |  (optional) 
+            var port = 56;  // int? |  (optional) 
 
             try
             {
@@ -1836,7 +1922,7 @@ namespace Example
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
  **deviceId** | **string**| Target device serial number | 
- **port** | **int**|  | [optional] 
+ **port** | **int?**|  | [optional] 
 
 ### Return type
 

@@ -148,6 +148,8 @@ class ApplicationConfig(config.ConfigurableKeysObject):
         else:
             self.id = str(uuid.uuid4())
 
+        self.logs = {}
+
     def save(self):
         # we got a folder, but it may not be an existing one
         if not self.folder.exists():
@@ -204,6 +206,7 @@ class ApplicationConfig(config.ConfigurableKeysObject):
         fields = super().__getstate__()
         fields["id"] = self.id
         fields["sdksshaddress"] = self.sdksshaddress
+        del fields["logs"]
         return fields
 
     def _to_json(self):
@@ -675,6 +678,9 @@ class ApplicationConfig(config.ConfigurableKeysObject):
             if container is not None:
                 self.stop(configuration, device)
 
+                if device.id is self.logs:
+                    del self.logs[device.id][configuration]
+
             # check scripts for both application and platform, both are deployed
             # if app script exist, then it's the only one invoked (but still has a
             # chance to invoke platform one if needed since it has been deployed in
@@ -822,12 +828,13 @@ class ApplicationConfig(config.ConfigurableKeysObject):
         # run shutdown scripts
         self._runscript(configuration, plat, device, "shutdownscript")
 
-    def get_container(self, configuration, device) -> docker.models.containers.Container:
+    def get_container(self, configuration, device, only_running=True) -> docker.models.containers.Container:
         """Returns information about current container running on target
 
         Arguments:
             configuration {str} -- debug/release
             device {TargetDevice} -- device
+            only_running {bool} -- return the container only if it's currently running
         """
         imgid = self.images[configuration]
 
@@ -843,7 +850,7 @@ class ApplicationConfig(config.ConfigurableKeysObject):
                 raise exceptions.ImageNotFoundError(imgid)
 
             with remotedocker.RemoteDocker(device) as rd:
-                if rd.is_container_running(self.get_container_name(limg)):
+                if not only_running or rd.is_container_running(self.get_container_name(limg)):
                     return rd.get_container(self.get_container_name(limg))
         except docker.errors.DockerException as e:
             raise exceptions.LocalDockerError(e)
@@ -1422,6 +1429,36 @@ class ApplicationConfig(config.ConfigurableKeysObject):
             pass
         self.save()
 
+    def get_container_logs(self, configuration, device, restart):
+        """Returns container logs
+
+        Arguments:
+            configuration {str} -- app configuration (debug/release)
+            device {TargetDevice} -- target device
+            restart {bool} -- reloads log generator
+
+        Returns:
+            line {str} -- log line on None for EOF
+        """
+
+        log = None
+
+        container = self.get_container(
+            configuration, device, only_running=False)
+
+        if container is None:
+            return None
+
+        if not device.id in self.logs:
+            self.logs[device.id] = {}
+
+        if configuration in self.logs[device.id] and not restart:
+            log = self.logs[device.id][configuration]
+        else:
+            log = container.logs(stream=True)
+            self.logs[device.id][configuration] = log
+
+        return utils.get_log_chunk(log)
 
 class ApplicationConfigs(dict, metaclass=singleton.Singleton):
     """Class used to manage the applications.

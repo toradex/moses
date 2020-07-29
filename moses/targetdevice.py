@@ -21,6 +21,7 @@ import sshconsole
 import sharedssh
 import yaml
 import rsync
+import utils
 
 
 """ This module contain classes used to manage devices and their connections
@@ -63,6 +64,8 @@ class TargetDevice(config.ConfigurableKeysObject):
 
         if self.folder is not None:
             self.load()
+
+        self.logs = {}
 
     def _build_folder_path(self) -> pathlib.Path:
         return config.SERVER_CONFIG["devicespath"] / self.id
@@ -146,6 +149,10 @@ class TargetDevice(config.ConfigurableKeysObject):
         with remotedocker.RemoteDocker(self) as rd:
             container = rd.get_container(container_id)
             container.start()
+
+            if container_id in self.logs:
+                del self.logs[container_id]
+
             return rd.get_container(container_id)
 
     def stop_container(self, container_id):
@@ -202,6 +209,9 @@ class TargetDevice(config.ConfigurableKeysObject):
         """
         with remotedocker.RemoteDocker(self) as rd:
             rd.remove_container(container_id)
+
+        if container_id in self.logs:
+            del self.logs[container_id]
 
     def expose_docker(self, port) -> int:
         """Exposes remote docker REST interface as local port
@@ -560,11 +570,35 @@ class TargetDevice(config.ConfigurableKeysObject):
 
         return ip
 
+    def get_container_logs(self, container_id, restart):
+        """Returns container logs
+
+        Arguments:
+            container_id {str} -- specific container id
+            restart {bool} -- reloads log generator
+
+        Returns:
+            line {str} -- log line on None for EOF
+        """
+
+        log = None
+
+        if container_id in self.logs and not restart:
+            log = self.logs[container_id]
+        else:
+            container = self.get_container(container_id)
+            log = container.logs(stream=True)
+            self.logs[container_id] = log
+
+        return utils.get_log_chunk(log)
+
     # support for serialization
+
     def __getstate__(self):
         fields = super().__getstate__()
         del fields["dockertunnel"]
         del fields["sshforwarder"]
+        del fields["logs"]
         return fields
 
     def save(self):

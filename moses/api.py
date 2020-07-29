@@ -11,6 +11,7 @@ import applicationconfig
 import platformconfig
 import config
 import exceptions
+import flask
 
 APP_VERSION = "1.0"
 API_VERSION = "1.0"
@@ -431,6 +432,21 @@ def devices_device_containers_container_storage_get(device_id, container_id):
     return (mountpoints, 200)
 
 
+def devices_device_containers_container_logs_get(device_id, container_id, restart):
+    devices = targetdevice.TargetDevices()
+
+    if device_id not in devices:
+        return ("Device not found", 404)
+
+    device = devices[device_id]
+    line = device.get_container_logs(container_id, restart)
+
+    if line is None:
+        return (connexion.NoContent, 204)
+
+    return (line, 200)
+
+
 def devices_device_privatekey_get(device_id):
     devices = targetdevice.TargetDevices()
 
@@ -456,6 +472,7 @@ def devices_device_syncfolders_get(device_id, sourcefolder, destfolder):
     devices[device_id].sync_folders(sourcefolder, destfolder)
     return (connexion.NoContent, 200)
 
+
 def devices_device_current_ip_get(device_id):
     """Syncs a folder on the host with one on the target device
 
@@ -467,7 +484,7 @@ def devices_device_current_ip_get(device_id):
     if device_id not in devices:
         return ("Device not found", 404)
 
-    return (devices[device_id].get_current_ip(),200)
+    return (devices[device_id].get_current_ip(), 200)
 
 
 def platforms_get(runtime=None):
@@ -744,6 +761,36 @@ def applications_application_container_get(
 
     configuration = app.get_container(configuration, devices[deviceid])
     return (configuration.attrs, 200)
+
+
+def applications_application_container_logs_get(application_id, configuration, deviceid, restart):
+    """Returns app currently running container
+
+    Arguments:
+        application_id {str} -- application
+        configuration {str} -- debug/release
+        deviceid {str} -- device
+        restart { bool } -- read log from the beginning
+    """
+    applications = applicationconfig.ApplicationConfigs()
+
+    if application_id not in applications:
+        return ("Application not found", 404)
+
+    app = applications.get(application_id)
+
+    devices = targetdevice.TargetDevices()
+
+    if deviceid not in devices:
+        return ("Device not found", 404)
+
+    line = app.get_container_logs(
+        configuration, devices[deviceid], restart)
+
+    if line is None:
+        return (connexion.NoContent, 204)
+
+    return (line, 200)
 
 
 def applications_application_sdk_run_get(application_id, configuration, build):

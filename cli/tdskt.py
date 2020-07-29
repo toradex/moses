@@ -486,6 +486,28 @@ def cmd_handler_device_container_ps(args) -> int:
     return 0
 
 
+def cmd_handler_device_container_logs(args) -> int:
+    """Returns information about mountpoints in a container
+
+    Arguments:
+        args -- parsed command line arguments
+
+    Returns:
+        int -- 0 for success
+    """
+    api = moses_client.DevicesApi()
+
+    restart = True
+
+    while True:
+        line = api.container_getlogs(
+            args.device_id, args.container_id, restart=restart)
+        restart = False
+        logging.info(line)
+
+    return 0
+
+
 def cmd_handler_device_key(args) -> int:
     """Returns path of the device private key file
 
@@ -839,6 +861,7 @@ def create_parser() -> argparse.ArgumentParser:
     device_container_subparsers.add_parser("ps")
     device_container_subparsers.add_parser("mem")
     device_container_subparsers.add_parser("storage")
+    device_container_subparsers.add_parser("logs")
 
     device_sync_parser.add_argument(
         "source_folder", help="Source folder (host PC)", metavar="source-folder")

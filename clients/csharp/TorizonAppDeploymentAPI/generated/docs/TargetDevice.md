@@ -10,11 +10,11 @@ Name | Type | Description | Notes
 **Model** | **string** | Device hardware ID | [optional] [readonly] 
 **Hwrev** | **string** | Device hardware revision | [optional] [readonly] 
 **Kernelversion** | **string** | Kernel name | [optional] [readonly] 
-**Kernelrelease** | **string** |  | [optional] [readonly] 
-**Torizonversion** | **string** |  | [optional] [readonly] 
-**Hostname** | **string** |  | [optional] 
-**Username** | **string** |  | [optional] 
-**Homefolder** | **string** |  | [optional] 
+**Kernelrelease** | **string** | Kernel release | [optional] [readonly] 
+**Torizonversion** | **string** | Torizon version (date) | [optional] [readonly] 
+**Hostname** | **string** | Device host name | [optional] 
+**Username** | **string** | User account used to connect to device via ssh | [optional] 
+**Homefolder** | **string** | Home folder of ssh user (used to deploy files and apps, can be different from actual home) | [optional] 
 
 [[Back to Model list]](../README.md#documentation-for-models)
 [[Back to API list]](../README.md#documentation-for-api-endpoints)

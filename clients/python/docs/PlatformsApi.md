@@ -24,17 +24,25 @@ import time
 import moses_client
 from moses_client.rest import ApiException
 from pprint import pprint
+# Defining the host is optional and defaults to http://localhost:5000/api
+# See configuration.py for a list of all supported configuration parameters.
+configuration = moses_client.Configuration(
+    host = "http://localhost:5000/api"
+)
 
-# Create an instance of the API class
-api_instance = moses_client.PlatformsApi()
-platform_id = 'platform_id_example' # str | Id of a platform formatted as name_version
 
-try:
-    # get compatible devices
-    api_response = api_instance.platform_compatibledevices_get(platform_id)
-    pprint(api_response)
-except ApiException as e:
-    print("Exception when calling PlatformsApi->platform_compatibledevices_get: %s\n" % e)
+# Enter a context with an instance of the API client
+with moses_client.ApiClient() as api_client:
+    # Create an instance of the API class
+    api_instance = moses_client.PlatformsApi(api_client)
+    platform_id = 'platform_id_example' # str | Id of a platform formatted as name_version
+
+    try:
+        # get compatible devices
+        api_response = api_instance.platform_compatibledevices_get(platform_id)
+        pprint(api_response)
+    except ApiException as e:
+        print("Exception when calling PlatformsApi->platform_compatibledevices_get: %s\n" % e)
 ```
 
 ### Parameters
@@ -80,17 +88,25 @@ import time
 import moses_client
 from moses_client.rest import ApiException
 from pprint import pprint
+# Defining the host is optional and defaults to http://localhost:5000/api
+# See configuration.py for a list of all supported configuration parameters.
+configuration = moses_client.Configuration(
+    host = "http://localhost:5000/api"
+)
 
-# Create an instance of the API class
-api_instance = moses_client.PlatformsApi()
-platform_id = 'platform_id_example' # str | Id of a platform formatted as name_version
 
-try:
-    # Get a platform
-    api_response = api_instance.platform_get(platform_id)
-    pprint(api_response)
-except ApiException as e:
-    print("Exception when calling PlatformsApi->platform_get: %s\n" % e)
+# Enter a context with an instance of the API client
+with moses_client.ApiClient() as api_client:
+    # Create an instance of the API class
+    api_instance = moses_client.PlatformsApi(api_client)
+    platform_id = 'platform_id_example' # str | Id of a platform formatted as name_version
+
+    try:
+        # Get a platform
+        api_response = api_instance.platform_get(platform_id)
+        pprint(api_response)
+    except ApiException as e:
+        print("Exception when calling PlatformsApi->platform_get: %s\n" % e)
 ```
 
 ### Parameters
@@ -136,17 +152,25 @@ import time
 import moses_client
 from moses_client.rest import ApiException
 from pprint import pprint
+# Defining the host is optional and defaults to http://localhost:5000/api
+# See configuration.py for a list of all supported configuration parameters.
+configuration = moses_client.Configuration(
+    host = "http://localhost:5000/api"
+)
 
-# Create an instance of the API class
-api_instance = moses_client.PlatformsApi()
-runtime = 'runtime_example' # str |  (optional)
 
-try:
-    # Get all platforms
-    api_response = api_instance.platforms_get(runtime=runtime)
-    pprint(api_response)
-except ApiException as e:
-    print("Exception when calling PlatformsApi->platforms_get: %s\n" % e)
+# Enter a context with an instance of the API client
+with moses_client.ApiClient() as api_client:
+    # Create an instance of the API class
+    api_instance = moses_client.PlatformsApi(api_client)
+    runtime = 'runtime_example' # str |  (optional)
+
+    try:
+        # Get all platforms
+        api_response = api_instance.platforms_get(runtime=runtime)
+        pprint(api_response)
+    except ApiException as e:
+        print("Exception when calling PlatformsApi->platforms_get: %s\n" % e)
 ```
 
 ### Parameters
