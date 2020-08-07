@@ -4,7 +4,7 @@ All URIs are relative to *http://localhost:5000/api*
 
 Method | HTTP request | Description
 ------------- | ------------- | -------------
-[**container_getlogs**](DevicesApi.md#container_getlogs) | **GET** /devices/{device_id}/containers/{container_id}/logs | return container logs one row a time
+[**container_getlogs**](DevicesApi.md#container_getlogs) | **GET** /devices/{device_id}/containers/{container_id}/logs | return container logs one chunk a time
 [**container_getmemory**](DevicesApi.md#container_getmemory) | **GET** /devices/{device_id}/containers/{container_id}/memory | Return container memory information
 [**container_getmountpoints**](DevicesApi.md#container_getmountpoints) | **GET** /devices/{device_id}/containers/{container_id}/storage | return information about storage
 [**container_getprocesses**](DevicesApi.md#container_getprocesses) | **GET** /devices/{device_id}/containers/{container_id}/processes | return processes running in container
@@ -40,9 +40,9 @@ Method | HTTP request | Description
 # **container_getlogs**
 > str container_getlogs(device_id, container_id, restart=restart)
 
-return container logs one row a time
+return container logs one chunk a time
 
-return one row of the log, waiting until it's available, this will allow clients to show logs in almost real time
+return one or more lines of the log, waiting until it's available, this will allow clients to show logs in almost real time
 
 ### Example
 
@@ -68,7 +68,7 @@ container_id = 'container_id_example' # str | Id of a container
 restart = False # bool | when true reads the lock back from beginning (optional) (default to False)
 
     try:
-        # return container logs one row a time
+        # return container logs one chunk a time
         api_response = api_instance.container_getlogs(device_id, container_id, restart=restart)
         pprint(api_response)
     except ApiException as e:

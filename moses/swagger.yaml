@@ -1,7 +1,7 @@
 swagger: "2.0"
 info:
   description: Toradex API to build and deploy applications running as containers on Torizon
-  version: 1.0.6
+  version: 1.0.7
   title: Torizon IDE-backend API
 consumes:
   - application/json
@@ -859,7 +859,67 @@ paths:
         535:
           $ref: "#/responses/InvalidDeviceIdError_535"
 
+  /eulas:
+    get:
+      operationId: eulas_get
+      tags:
+        - EULAs
+      summary: Get all eulas
+      description: Returns all eulas
+      responses:
+        200:
+          description: Successful
+          schema:
+            type: array
+            items:
+              $ref: "#/definitions/Eula"
+        500:
+          $ref: "#/responses/InternalServerError_500"
 
+  /eulas/{eula_id}:
+    get:
+      operationId: eula_get
+      tags:
+        - EULAs
+      summary: Get an eula
+      description: Returns data about a specific eula
+      parameters:
+        - $ref: "#/parameters/eula_id"
+      responses:
+        200:
+          description: Returns an eula
+          schema:
+            $ref: "#/definitions/Eula"
+        404:
+          description: eula not found
+        500:
+          $ref: "#/responses/InternalServerError_500"
+
+    put:
+      operationId: eula_modify
+      tags:
+        - EULAs
+      summary: Change eula properties
+      description: Set eula as visualized and/or accepted
+      parameters:
+        - $ref: "#/parameters/eula_id"
+        - name: e
+          in: body
+          schema:
+             $ref: "#/definitions/Eula"
+      responses:
+        200:
+          description: Returns eula
+          schema:
+            $ref: "#/definitions/Eula"
+        404:
+          description: eula not found
+        500:
+          $ref: "#/responses/InternalServerError_500"
+        531:
+          $ref: "#/responses/InvalidObjectIdError_531"
+        532:
+          $ref: "#/responses/InvalidObjectStateError_532"
 
   /platforms:
     get:
@@ -1485,6 +1545,14 @@ parameters:
     required: true
     pattern: "^[0-9]{8}$"
 
+  eula_id:
+    name: eula_id
+    description: Id of an eula
+    in: path
+    type: string
+    required: true
+    pattern: "^[-0-9a-zA-Z.]*$"
+
   platform_id:
     name: platform_id
     description: Id of a platform formatted as name_version
@@ -1568,6 +1636,35 @@ definitions:
         type: string
         description: Home folder of ssh user (used to deploy files and apps, can be different from actual home)
         example: /home/torizon
+
+  Eula:
+    type: object
+    properties: 
+      id:
+        type: string
+        description: Unique name (should be filesystem-compatible)
+        example: nxp
+        readOnly: true
+      title: 
+        type: string
+        description: eula title
+        readOnly: true
+      question:
+        type: string
+        description: message shown to the user to accept/decline license
+        readOnly: true
+      filepath:
+        type: string
+        description: full path of the file containing the license text
+        readOnly: true
+      visualized:
+        type: boolean
+        description: true if license has been shown at least once to user
+        readOnly: false
+      accepted:
+        type: boolean
+        description: true if user accepted the license
+        readOnly: false
 
   Platform:
     type: object

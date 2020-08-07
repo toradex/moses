@@ -9,7 +9,7 @@ Method | HTTP request | Description
 [**ApplicationDeploy**](ApplicationsApi.md#applicationdeploy) | **GET** /applications/{application_id}/deploy | Deploys container image
 [**ApplicationGet**](ApplicationsApi.md#applicationget) | **GET** /applications/{application_id} | Get application
 [**ApplicationGetcontainer**](ApplicationsApi.md#applicationgetcontainer) | **GET** /applications/{application_id}/container | Get container information
-[**ApplicationGetcontainerLogs**](ApplicationsApi.md#applicationgetcontainerlogs) | **GET** /applications/{application_id}/container_logs | Get container log, line by line
+[**ApplicationGetcontainerLogs**](ApplicationsApi.md#applicationgetcontainerlogs) | **GET** /applications/{application_id}/container_logs | Get container log, chunk by chunk
 [**ApplicationGetprivatekey**](ApplicationsApi.md#applicationgetprivatekey) | **GET** /applications/{application_id}/privatekey | Retrieves the path of the RSA private key
 [**ApplicationModify**](ApplicationsApi.md#applicationmodify) | **PUT** /applications/{application_id} | Change application properties
 [**ApplicationReseal**](ApplicationsApi.md#applicationreseal) | **GET** /applications/{application_id}/reseal | Cleans id and keys for git repo uploading
@@ -430,9 +430,9 @@ No authorization required
 
 > string ApplicationGetcontainerLogs (string applicationId, string configuration, string deviceid, bool? restart = null)
 
-Get container log, line by line
+Get container log, chunk by chunk
 
-Return one line of log, blocking if no data is available
+Return one chunk of log (one or more lines), blocking if no data is available
 
 ### Example
 
@@ -458,7 +458,7 @@ namespace Example
 
             try
             {
-                // Get container log, line by line
+                // Get container log, chunk by chunk
                 string result = apiInstance.ApplicationGetcontainerLogs(applicationId, configuration, deviceid, restart);
                 Debug.WriteLine(result);
             }

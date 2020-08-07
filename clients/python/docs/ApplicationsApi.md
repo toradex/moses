@@ -9,7 +9,7 @@ Method | HTTP request | Description
 [**application_deploy**](ApplicationsApi.md#application_deploy) | **GET** /applications/{application_id}/deploy | Deploys container image
 [**application_get**](ApplicationsApi.md#application_get) | **GET** /applications/{application_id} | Get application
 [**application_getcontainer**](ApplicationsApi.md#application_getcontainer) | **GET** /applications/{application_id}/container | Get container information
-[**application_getcontainer_logs**](ApplicationsApi.md#application_getcontainer_logs) | **GET** /applications/{application_id}/container_logs | Get container log, line by line
+[**application_getcontainer_logs**](ApplicationsApi.md#application_getcontainer_logs) | **GET** /applications/{application_id}/container_logs | Get container log, chunk by chunk
 [**application_getprivatekey**](ApplicationsApi.md#application_getprivatekey) | **GET** /applications/{application_id}/privatekey | Retrieves the path of the RSA private key
 [**application_modify**](ApplicationsApi.md#application_modify) | **PUT** /applications/{application_id} | Change application properties
 [**application_reseal**](ApplicationsApi.md#application_reseal) | **GET** /applications/{application_id}/reseal | Cleans id and keys for git repo uploading
@@ -363,9 +363,9 @@ No authorization required
 # **application_getcontainer_logs**
 > str application_getcontainer_logs(application_id, configuration, deviceid, restart=restart)
 
-Get container log, line by line
+Get container log, chunk by chunk
 
-Return one line of log, blocking if no data is available
+Return one chunk of log (one or more lines), blocking if no data is available
 
 ### Example
 
@@ -392,7 +392,7 @@ deviceid = 'deviceid_example' # str |
 restart = False # bool | when true reads the lock back from beginning (optional) (default to False)
 
     try:
-        # Get container log, line by line
+        # Get container log, chunk by chunk
         api_response = api_instance.application_getcontainer_logs(application_id, configuration, deviceid, restart=restart)
         pprint(api_response)
     except ApiException as e:

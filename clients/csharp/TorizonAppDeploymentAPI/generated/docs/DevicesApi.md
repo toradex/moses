@@ -4,7 +4,7 @@ All URIs are relative to *http://localhost:5000/api*
 
 Method | HTTP request | Description
 ------------- | ------------- | -------------
-[**ContainerGetlogs**](DevicesApi.md#containergetlogs) | **GET** /devices/{device_id}/containers/{container_id}/logs | return container logs one row a time
+[**ContainerGetlogs**](DevicesApi.md#containergetlogs) | **GET** /devices/{device_id}/containers/{container_id}/logs | return container logs one chunk a time
 [**ContainerGetmemory**](DevicesApi.md#containergetmemory) | **GET** /devices/{device_id}/containers/{container_id}/memory | Return container memory information
 [**ContainerGetmountpoints**](DevicesApi.md#containergetmountpoints) | **GET** /devices/{device_id}/containers/{container_id}/storage | return information about storage
 [**ContainerGetprocesses**](DevicesApi.md#containergetprocesses) | **GET** /devices/{device_id}/containers/{container_id}/processes | return processes running in container
@@ -42,9 +42,9 @@ Method | HTTP request | Description
 
 > string ContainerGetlogs (string deviceId, string containerId, bool? restart = null)
 
-return container logs one row a time
+return container logs one chunk a time
 
-return one row of the log, waiting until it's available, this will allow clients to show logs in almost real time
+return one or more lines of the log, waiting until it's available, this will allow clients to show logs in almost real time
 
 ### Example
 
@@ -69,7 +69,7 @@ namespace Example
 
             try
             {
-                // return container logs one row a time
+                // return container logs one chunk a time
                 string result = apiInstance.ContainerGetlogs(deviceId, containerId, restart);
                 Debug.WriteLine(result);
             }

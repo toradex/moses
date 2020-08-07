@@ -8,6 +8,7 @@ import connexion
 import pathlib
 import targetdevice
 import applicationconfig
+import eula
 import platformconfig
 import config
 import exceptions
@@ -486,6 +487,55 @@ def devices_device_current_ip_get(device_id):
 
     return (devices[device_id].get_current_ip(), 200)
 
+def eulas_get():
+    """Returns a list of eulas
+
+    Returns:
+        [list] -- eulas
+    """
+
+    eulas=eula.EULAs()
+
+    eulalist=list(eulas.values())
+    eulalist.sort(key=lambda x: x.title)
+
+    return eulalist
+
+def eulas_eula_get(eula_id):
+    """Returns an eula given its id
+
+    Arguments:
+        eula_id {str} -- eula id
+
+    Returns:
+        [dict] -- eula
+    """
+
+    eulas = eula.EULAs()
+
+    if eula_id not in eulas:
+        return ("eula not found", 404)
+
+    e = eulas.get(eula_id)
+    return e
+
+def eulas_eula_put(eula_id, e):
+    """Changes device properties
+
+    Arguments:
+        eula_id {str} -- eula id (must exists)
+        e {dict} -- eula properties
+    """
+    eulas = eula.EULAs()
+
+    if eula_id not in eulas:
+        return ("eula not found", 404)
+
+    eulaupdated = eulas[eula_id]
+
+    eulaupdated.import_data(e)
+    eulaupdated.save()
+    return eulaupdated
 
 def platforms_get(runtime=None):
     """Returns a list of platforms

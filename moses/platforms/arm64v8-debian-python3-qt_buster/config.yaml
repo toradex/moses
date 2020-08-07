@@ -93,3 +93,4 @@ networks:
 images:
   debug: null
   release: null
+eulas: [ "nxp-la-opt-v5" ]

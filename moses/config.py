@@ -249,6 +249,8 @@ def _create_folders():
     if not SERVER_CONFIG["standardplatformspath"].exists():
         SERVER_CONFIG["standardplatformspath"].mkdir()
 
+    if not SERVER_CONFIG["standardeulaspath"].exists():
+        SERVER_CONFIG["standardeulaspath"].mkdir()
 
 def init_config():
     """Initializes configuration
@@ -277,5 +279,10 @@ def init_config():
     if "standardplatformspath" not in SERVER_CONFIG:
         SERVER_CONFIG["standardplatformspath"] = SERVER_CONFIG["apppath"] \
             / "platforms"
+
+    if "standardeulaspath" not in SERVER_CONFIG:
+        SERVER_CONFIG["standardeulaspath"] = SERVER_CONFIG["apppath"] \
+            / "eulas"
+
 
     _create_folders()

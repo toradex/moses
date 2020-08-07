@@ -114,3 +114,4 @@ networks:
   common: []
   debug: []
   release: []
+eulas: [ "nxp-la-opt-v5" ]
