@@ -38,11 +38,18 @@ namespace TorizonAppDeploymentAPI
 
         public static SetupApi GetSetupApi()
         {
-            SetupApi api = TorizonAPIManager.GetSetupApi();
+            SetupApi api = new SetupApi();
 
             api.ExceptionFactory = TorizonAPIException.DefaultExceptionFactory;
             return api;
         }
-        
+
+        public static EulasApi GetEulasApi()
+        {
+            EulasApi api = new EulasApi();
+
+            api.ExceptionFactory = TorizonAPIException.DefaultExceptionFactory;
+            return api;
+        }
     }
 }

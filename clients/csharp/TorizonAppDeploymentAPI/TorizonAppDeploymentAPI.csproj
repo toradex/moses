@@ -53,9 +53,11 @@
     <Reference Include="System.Runtime" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Eula.cs" />
     <Compile Include="Configuration.cs" />
     <Compile Include="generated\src\TorizonRestAPI\Api\ApplicationsApi.cs" />
     <Compile Include="generated\src\TorizonRestAPI\Api\DevicesApi.cs" />
+    <Compile Include="generated\src\TorizonRestAPI\Api\EulasApi.cs" />
     <Compile Include="generated\src\TorizonRestAPI\Api\PlatformsApi.cs" />
     <Compile Include="generated\src\TorizonRestAPI\Api\SetupApi.cs" />
     <Compile Include="generated\src\TorizonRestAPI\Api\VersionApi.cs" />
@@ -100,6 +102,7 @@
     <Compile Include="generated\src\TorizonRestAPI\Model\DockerVersionComponents.cs" />
     <Compile Include="generated\src\TorizonRestAPI\Model\DockerVersionPlatform.cs" />
     <Compile Include="generated\src\TorizonRestAPI\Model\ErrorInfo.cs" />
+    <Compile Include="generated\src\TorizonRestAPI\Model\Eula.cs" />
     <Compile Include="generated\src\TorizonRestAPI\Model\InlineResponse200.cs" />
     <Compile Include="generated\src\TorizonRestAPI\Model\MemInfo.cs" />
     <Compile Include="generated\src\TorizonRestAPI\Model\MountPoint.cs" />
