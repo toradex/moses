@@ -63,3 +63,33 @@ def apply_template(templatepath: str, outputpath: str, tagfn, args):
             for _, line in enumerate(inp):
                 newline = replace_tags(line, tagfn, args)
                 out.write(newline)
+
+def get_log_chunk(log) -> str:
+    """Returns a chunk from the log, avoiding single bytes (from interactive containers)
+
+    Args:
+        log (generator): generator
+
+    Returns:
+        str: log chunk or None
+    """
+
+    line = ""
+    emptylog = True
+
+    try:
+
+        for b in log:
+            c = b.decode("utf-8")
+            line += c
+            emptylog = False
+            if "\n" in line:
+                break
+
+        if emptylog:
+            return None
+
+        return line
+
+    except StopIteration:
+        return line if not emptylog else None

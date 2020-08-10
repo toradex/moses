@@ -1,8 +1,8 @@
 swagger: "2.0"
 info:
-  description: Toradex Development API to build and deploy application on Torizon
-  version: 1.0.4
-  title: Torizon Deployment API
+  description: Toradex API to build and deploy applications running as containers on Torizon
+  version: 1.0.7
+  title: Torizon IDE-backend API
 consumes:
   - application/json
 produces:
@@ -683,7 +683,7 @@ paths:
             items:
               $ref: "#/definitions/Process"
         404:
-          description: Device not found
+          description: Device or container not found
         500:
           $ref: "#/responses/InternalServerError_500"
         525:
@@ -710,7 +710,7 @@ paths:
           schema:
             $ref: "#/definitions/MemInfo"
         404:
-          description: Device not found
+          description: Device or container not found
         500:
           $ref: "#/responses/InternalServerError_500"
         533:
@@ -737,7 +737,42 @@ paths:
             items:
               $ref: "#/definitions/MountPoint"
         404:
-          description: Device not found
+          description: Device or container not found
+        500:
+          $ref: "#/responses/InternalServerError_500"
+        525:
+          $ref: "#/responses/RemoteDockerError_525"
+        533:
+          $ref: "#/responses/SSHError_533"
+        539:
+          $ref: "#/responses/SSHTunnelError_539"
+
+  /devices/{device_id}/containers/{container_id}/logs:
+
+    get:
+      operationId: container_getlogs
+      tags:
+        - Devices
+      summary: return container logs one chunk a time
+      description: return one or more lines of the log, waiting until it's available, this will allow clients to show logs in almost real time
+      parameters:
+        - $ref: "#/parameters/device_id"
+        - $ref: "#/parameters/container_id"
+        - name: restart
+          type: boolean
+          in: query
+          required: false
+          default: false
+          description: when true reads the lock back from beginning
+      responses:
+        200:
+          description: Returns list of storage informations
+          schema:
+            type: string
+        204:
+          description: No content, container is no longer running and log has ben fully read
+        404:
+          description: Device or container not found
         500:
           $ref: "#/responses/InternalServerError_500"
         525:
@@ -824,7 +859,67 @@ paths:
         535:
           $ref: "#/responses/InvalidDeviceIdError_535"
 
+  /eulas:
+    get:
+      operationId: eulas_get
+      tags:
+        - EULAs
+      summary: Get all eulas
+      description: Returns all eulas
+      responses:
+        200:
+          description: Successful
+          schema:
+            type: array
+            items:
+              $ref: "#/definitions/Eula"
+        500:
+          $ref: "#/responses/InternalServerError_500"
 
+  /eulas/{eula_id}:
+    get:
+      operationId: eula_get
+      tags:
+        - EULAs
+      summary: Get an eula
+      description: Returns data about a specific eula
+      parameters:
+        - $ref: "#/parameters/eula_id"
+      responses:
+        200:
+          description: Returns an eula
+          schema:
+            $ref: "#/definitions/Eula"
+        404:
+          description: eula not found
+        500:
+          $ref: "#/responses/InternalServerError_500"
+
+    put:
+      operationId: eula_modify
+      tags:
+        - EULAs
+      summary: Change eula properties
+      description: Set eula as visualized and/or accepted
+      parameters:
+        - $ref: "#/parameters/eula_id"
+        - name: e
+          in: body
+          schema:
+             $ref: "#/definitions/Eula"
+      responses:
+        200:
+          description: Returns eula
+          schema:
+            $ref: "#/definitions/Eula"
+        404:
+          description: eula not found
+        500:
+          $ref: "#/responses/InternalServerError_500"
+        531:
+          $ref: "#/responses/InvalidObjectIdError_531"
+        532:
+          $ref: "#/responses/InvalidObjectStateError_532"
 
   /platforms:
     get:
@@ -1217,6 +1312,49 @@ paths:
         539:
           $ref: "#/responses/SSHTunnelError_539"
 
+  /applications/{application_id}/container_logs:
+
+    get:
+      operationId: application_getcontainer_logs
+      tags:
+        - Applications
+      summary: Get container log, chunk by chunk
+      description: Return one chunk of log (one or more lines), blocking if no data is available
+      parameters:
+        - $ref: "#/parameters/application_id"
+        - name: configuration
+          in: query
+          type: string
+          required: true
+          pattern: "(?:debug|release)"
+        - name: deviceid
+          in: query
+          type: string
+          required: true
+          pattern: "^[0-9]{8}$"
+        - name: restart
+          type: boolean
+          in: query
+          required: false
+          default: false
+          description: when true reads the lock back from beginning
+      responses:
+        200:
+          description: Returns application container
+          schema:
+            type: string
+        204:
+          description: No content
+        404:
+          description: Application not found
+        500:
+          $ref: "#/responses/InternalServerError_500"
+        525:
+          $ref: "#/responses/RemoteDockerError_525"
+        539:
+          $ref: "#/responses/SSHTunnelError_539"
+
+
   /applications/{application_id}/sdk/run:
 
     get:
@@ -1407,6 +1545,14 @@ parameters:
     required: true
     pattern: "^[0-9]{8}$"
 
+  eula_id:
+    name: eula_id
+    description: Id of an eula
+    in: path
+    type: string
+    required: true
+    pattern: "^[-0-9a-zA-Z.]*$"
+
   platform_id:
     name: platform_id
     description: Id of a platform formatted as name_version
@@ -1470,18 +1616,55 @@ definitions:
         readOnly: true
       kernelrelease:
         type: string
+        description: Kernel release
         example: 4.18.1
         readOnly: true
       torizonversion:
         type: string
+        description: Torizon version (date)
         example: 20180824141405
         readOnly: true
       hostname:
         type: string
+        description: Device host name
+        example: verdin-imx8mm-06632494
       username:
         type: string
+        description: User account used to connect to device via ssh
+        example: torizon
       homefolder:
         type: string
+        description: Home folder of ssh user (used to deploy files and apps, can be different from actual home)
+        example: /home/torizon
+
+  Eula:
+    type: object
+    properties: 
+      id:
+        type: string
+        description: Unique name (should be filesystem-compatible)
+        example: nxp
+        readOnly: true
+      title: 
+        type: string
+        description: eula title
+        readOnly: true
+      question:
+        type: string
+        description: message shown to the user to accept/decline license
+        readOnly: true
+      filepath:
+        type: string
+        description: full path of the file containing the license text
+        readOnly: true
+      visualized:
+        type: boolean
+        description: true if license has been shown at least once to user
+        readOnly: false
+      accepted:
+        type: boolean
+        description: true if user accepted the license
+        readOnly: false
 
   Platform:
     type: object
@@ -1506,49 +1689,63 @@ definitions:
         example: 1.0
         readOnly: true
       runtimes:
-          type: array
-          items:
-            type: string
+        type: array
+        items:
+          type: string
+        description: runtimes/languages supported by the container
+        example: [ python, dotnet ]
       sdkcontainerusername:
-          type: string
+        type: string
+        description: ssh user supported by the SDK container
       sdkcontainerpassword:
-          type: string
+        type: string
+        description: password used to ssh inside the SDK container
       dockercomposefile:
         type: object
         additionalProperties:
           type: string
+        description: path of docker-compose file to be used to start additional containers needed by the app
       startupscript:
         type: object
         additionalProperties:
           type: string
+        description: path of script to be run when application debugging starts
       shutdownscript:
         type: object
         additionalProperties:
           type: string
+        description: path of script to be run when application debugging stops
       ports:
         type: object
         additionalProperties:
           type: object
           additionalProperties:
               type: string
+        description: ports to be exposed from the container
+        example: { 8080/tcp:8080 22/tcp:null }
       volumes:
         type: object
         additionalProperties:
           type: object
           additionalProperties:
             type: string
+        description: Local folders to be mounted as mount points inside a container
+        example: { /tmp:/tmp,rw /home/torizon:/userhome,ro }
       devices:
         type: object
         additionalProperties:
           type: array
           items:
             type: string
+        description: Additional devices to be shared inside container
+        example: [ /dev/gpiochip0 ]
       networks:
         type: object
         additionalProperties:
           type: array
           items:
             type: string
+        description: Networks used by container (in debug it will always be also on bridge)
       extraparms:
         type: object
         additionalProperties:
@@ -1560,18 +1757,27 @@ definitions:
                 type: string
               value:
                 type: string
+        description: Additional parameter passed to the run call (check docker SDK for python for reference, value is YAML)
+        example: { network_mode: host }
       props:
         type: object
         additionalProperties:
           type: object
           additionalProperties:
             type: string
+        description: Custom properties (may be used in dockerfile or by extensions)
       description:
         type: string
         description: Platform human-readable description
         example: Debian Stretch for native applications
         readOnly: true
-
+      tags:
+        type: array
+        items:
+          type: string
+        description: strings used to identify specific properties of the platform
+        example: [ console, wayland ]
+        readOnly: true
 
   Application:
     type: object
@@ -1594,60 +1800,74 @@ definitions:
           type: object
           additionalProperties:
             type: string
+        description: Custom application properties
       dockercomposefile:
         type: object
         additionalProperties:
           type: string
+        description: path of docker-compose file to be used to start additional containers needed by the app
       startupscript:
         type: object
         additionalProperties:
           type: string
+        description: path of script to be run when application debugging starts
       shutdownscript:
         type: object
         additionalProperties:
           type: string
+        description: path of script to be run when application debugging stops
       ports:
         type: object
         additionalProperties:
           type: object
           additionalProperties:
               type: string
+        description: ports to be exposed from the container
+        example: { 8080/tcp:8080 22/tcp:null }
       volumes:
         type: object
         additionalProperties:
           type: object
           additionalProperties:
             type: string
+        description: Local folders to be mounted "A mount points inside a container
+        example: { /tmp:/tmp,rw /home/torizon:/userhome,ro }
       devices:
         type: object
         additionalProperties:
           type: array
           items:
             type: string
+        description: Additional devices to be shared inside container
+        example: [ /dev/gpiochip0 ]
       networks:
         type: object
         additionalProperties:
           type: array
           items:
             type: string
+        description: Networks used by container (in debug it will always be also on bridge)
       extraparms:
         type: object
         additionalProperties:
           type: object
           additionalProperties:
                 type: string
+        description: Additional parameter passed to the run call (check docker SDK for python for reference, value is YAML)
+        example: { network_mode: host }
       username:
         type: string
-
+        description: user account used to run the application inside the container
       images:
         type: object
         additionalProperties:
           type: string
-
+        description: SHA-ids of the debug and release images
       sdkimages:
         type: object
         additionalProperties:
           type: string
+        description: SHA-ids of the debug and release SDK images
 
   ErrorInfo:
     properties:

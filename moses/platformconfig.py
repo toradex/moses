@@ -8,6 +8,7 @@ from pathlib import Path
 import singleton
 import targetdevice
 import exceptions
+import eula
 
 
 class PlatformConfig(config.ConfigurableObject):
@@ -122,6 +123,9 @@ class PlatformConfig(config.ConfigurableObject):
             "debug": [],
             "release": []
         }
+
+        self.tags = []
+        self.eulas = []
 
         if self.folder is not None:
             self.load()
@@ -336,8 +340,22 @@ class PlatformConfigs(dict, metaclass=singleton.Singleton):
             list -- list of platforms
         """
         platformslist = []
+        eulas = eula.EULAs()
 
         for plat in self.values():
+
+            eulaaccepted = True
+
+            for e in plat.eulas:
+                if e in eulas:
+                    if not eulas[e].accepted:
+                        logging.warning("Platform %s can't be used because EULA %s has not been accepted.", plat.id, e)
+                        eulaaccepted = False
+                        break
+
+            if not eulaaccepted:
+                continue
+
             if runtime is not None:
                 if runtime not in plat.runtimes:
                     continue

@@ -55,6 +55,39 @@ def generate_prop_list(obj) -> list:
     return l
 
 
+def generate_eula_list_item(e: moses_client.models.Eula) -> dict:
+    """Convert platform into dump table row
+
+    Arguments:
+        p {moses_client.models.Platform} -- object from the API
+
+    Returns:
+        dict -- name-value dict
+    """
+    item = dict()
+
+    item["Id"] = e.id
+    item["Title"] = e.title
+    item["Accepted"] = e.accepted
+    item["Visualized"] = e.visualized
+    return item
+
+
+def cmd_handler_eulas(args) -> int:
+    """Dump out a list of all EULAs
+
+    Arguments:
+        args -- parsed command line arguments
+
+    Returns:
+        int -- 0 for success
+    """
+    api = moses_client.EulasApi()
+    eulas = api.eulas_get()
+    eulalist = map(generate_eula_list_item, eulas)
+    logging.info(tabulate.tabulate(eulalist, headers="keys", tablefmt="plain"))
+    return 0
+
 def generate_platform_list_item(p: moses_client.models.Platform) -> dict:
     """Convert platform into dump table row
 
@@ -486,6 +519,28 @@ def cmd_handler_device_container_ps(args) -> int:
     return 0
 
 
+def cmd_handler_device_container_logs(args) -> int:
+    """Returns information about mountpoints in a container
+
+    Arguments:
+        args -- parsed command line arguments
+
+    Returns:
+        int -- 0 for success
+    """
+    api = moses_client.DevicesApi()
+
+    restart = True
+
+    while True:
+        line = api.container_getlogs(
+            args.device_id, args.container_id, restart=restart)
+        restart = False
+        logging.info(line)
+
+    return 0
+
+
 def cmd_handler_device_key(args) -> int:
     """Returns path of the device private key file
 
@@ -793,7 +848,8 @@ def create_parser() -> argparse.ArgumentParser:
     # add first level commands
     device_parser = subparsers.add_parser("devices")
     device_parser = subparsers.add_parser("device")
-    platform_parser = subparsers.add_parser("platforms")
+    eulas_parser = subparsers.add_parser("eulas")
+    platforms_parser = subparsers.add_parser("platforms")
     platform_parser = subparsers.add_parser("platform")
     application_parser = subparsers.add_parser("application")
     detect_parser = subparsers.add_parser("detect")
@@ -839,6 +895,7 @@ def create_parser() -> argparse.ArgumentParser:
     device_container_subparsers.add_parser("ps")
     device_container_subparsers.add_parser("mem")
     device_container_subparsers.add_parser("storage")
+    device_container_subparsers.add_parser("logs")
 
     device_sync_parser.add_argument(
         "source_folder", help="Source folder (host PC)", metavar="source-folder")

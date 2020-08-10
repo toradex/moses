@@ -8,9 +8,11 @@ import connexion
 import pathlib
 import targetdevice
 import applicationconfig
+import eula
 import platformconfig
 import config
 import exceptions
+import flask
 
 APP_VERSION = "1.0"
 API_VERSION = "1.0"
@@ -431,6 +433,21 @@ def devices_device_containers_container_storage_get(device_id, container_id):
     return (mountpoints, 200)
 
 
+def devices_device_containers_container_logs_get(device_id, container_id, restart):
+    devices = targetdevice.TargetDevices()
+
+    if device_id not in devices:
+        return ("Device not found", 404)
+
+    device = devices[device_id]
+    line = device.get_container_logs(container_id, restart)
+
+    if line is None:
+        return (connexion.NoContent, 204)
+
+    return (line, 200)
+
+
 def devices_device_privatekey_get(device_id):
     devices = targetdevice.TargetDevices()
 
@@ -456,6 +473,7 @@ def devices_device_syncfolders_get(device_id, sourcefolder, destfolder):
     devices[device_id].sync_folders(sourcefolder, destfolder)
     return (connexion.NoContent, 200)
 
+
 def devices_device_current_ip_get(device_id):
     """Syncs a folder on the host with one on the target device
 
@@ -467,8 +485,57 @@ def devices_device_current_ip_get(device_id):
     if device_id not in devices:
         return ("Device not found", 404)
 
-    return (devices[device_id].get_current_ip(),200)
+    return (devices[device_id].get_current_ip(), 200)
 
+def eulas_get():
+    """Returns a list of eulas
+
+    Returns:
+        [list] -- eulas
+    """
+
+    eulas=eula.EULAs()
+
+    eulalist=list(eulas.values())
+    eulalist.sort(key=lambda x: x.title)
+
+    return eulalist
+
+def eulas_eula_get(eula_id):
+    """Returns an eula given its id
+
+    Arguments:
+        eula_id {str} -- eula id
+
+    Returns:
+        [dict] -- eula
+    """
+
+    eulas = eula.EULAs()
+
+    if eula_id not in eulas:
+        return ("eula not found", 404)
+
+    e = eulas.get(eula_id)
+    return e
+
+def eulas_eula_put(eula_id, e):
+    """Changes device properties
+
+    Arguments:
+        eula_id {str} -- eula id (must exists)
+        e {dict} -- eula properties
+    """
+    eulas = eula.EULAs()
+
+    if eula_id not in eulas:
+        return ("eula not found", 404)
+
+    eulaupdated = eulas[eula_id]
+
+    eulaupdated.import_data(e)
+    eulaupdated.save()
+    return eulaupdated
 
 def platforms_get(runtime=None):
     """Returns a list of platforms
@@ -744,6 +811,36 @@ def applications_application_container_get(
 
     configuration = app.get_container(configuration, devices[deviceid])
     return (configuration.attrs, 200)
+
+
+def applications_application_container_logs_get(application_id, configuration, deviceid, restart):
+    """Returns app currently running container
+
+    Arguments:
+        application_id {str} -- application
+        configuration {str} -- debug/release
+        deviceid {str} -- device
+        restart { bool } -- read log from the beginning
+    """
+    applications = applicationconfig.ApplicationConfigs()
+
+    if application_id not in applications:
+        return ("Application not found", 404)
+
+    app = applications.get(application_id)
+
+    devices = targetdevice.TargetDevices()
+
+    if deviceid not in devices:
+        return ("Device not found", 404)
+
+    line = app.get_container_logs(
+        configuration, devices[deviceid], restart)
+
+    if line is None:
+        return (connexion.NoContent, 204)
+
+    return (line, 200)
 
 
 def applications_application_sdk_run_get(application_id, configuration, build):

@@ -20,7 +20,8 @@ import paramiko
 if getattr(sys, 'frozen', False):
     options = {'swagger_path': os.path.dirname(sys.executable) + '/api/ui'}
 else:
-    options = {}
+    options = {'swagger_path': os.path.dirname(sys.executable) + '/../lib/python3.8/site-packages/swagger_ui_bundle/vendor/swagger-ui-3.24.2'}
+    
 
 app = connexion.App("moses", options=options)
 
@@ -44,11 +45,17 @@ if __name__ == '__main__':
                         choices=range(1, 65535), metavar="port used for REST server, range is 1..65535")
     parser.add_argument(
         "--logfile", type=str, default=None)
+    parser.add_argument(
+        "--debug", action="store_true")
 
     args = parser.parse_args()
 
-    logging.basicConfig(level=logging.INFO)
-    logging.getLogger("paramiko").setLevel(logging.WARNING)
+    if not args.debug:
+        logging.basicConfig(level=logging.INFO)
+        logging.getLogger("paramiko").setLevel(logging.WARNING)
+    else:
+        logging.basicConfig(level=logging.DEBUG)
+        logging.getLogger("paramiko").setLevel(logging.DEBUG)
 
     if args.logfile is not None:
         logging.getLogger().addHandler(

@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Configuration;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace TorizonAppDeploymentAPI
@@ -105,6 +107,21 @@ namespace TorizonAppDeploymentAPI
             throw new NotImplementedException();
         }
 
+        public async Task<string> GetLogBlockAsync(bool restart)
+        {
+            var response = await this.api.ContainerGetlogsAsyncWithHttpInfo(this.Device.Id, this.Id,restart);
+
+            if (response.StatusCode==204)
+            {
+                return null;
+            }
+
+            string block = response.Data;
+
+            block = block.Trim( new char[]{ '\n' });
+            block = block.Trim(new char[] { '\"' });
+            return Utils.ObjectOrException<string>(block);
+        }
     }
 
     public class DockerContainerInstantiator : IObjectsCollectionInstantiator<DockerContainer, TorizonRestAPI.Model.DockerContainer>

@@ -15,7 +15,7 @@ Name | Type | Description | Notes
 **HostnamePath** | **string** |  | [optional] 
 **HostsPath** | **string** |  | [optional] 
 **LogPath** | **string** |  | [optional] 
-**Node** | [**Object**](.md) | TODO | [optional] 
+**Node** | **Object** | TODO | [optional] 
 **Name** | **string** |  | [optional] 
 **RestartCount** | **int** |  | [optional] 
 **Driver** | **string** |  | [optional] 

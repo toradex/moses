@@ -9,6 +9,7 @@ Method | HTTP request | Description
 [**ApplicationDeploy**](ApplicationsApi.md#applicationdeploy) | **GET** /applications/{application_id}/deploy | Deploys container image
 [**ApplicationGet**](ApplicationsApi.md#applicationget) | **GET** /applications/{application_id} | Get application
 [**ApplicationGetcontainer**](ApplicationsApi.md#applicationgetcontainer) | **GET** /applications/{application_id}/container | Get container information
+[**ApplicationGetcontainerLogs**](ApplicationsApi.md#applicationgetcontainerlogs) | **GET** /applications/{application_id}/container_logs | Get container log, chunk by chunk
 [**ApplicationGetprivatekey**](ApplicationsApi.md#applicationgetprivatekey) | **GET** /applications/{application_id}/privatekey | Retrieves the path of the RSA private key
 [**ApplicationModify**](ApplicationsApi.md#applicationmodify) | **PUT** /applications/{application_id} | Change application properties
 [**ApplicationReseal**](ApplicationsApi.md#applicationreseal) | **GET** /applications/{application_id}/reseal | Cleans id and keys for git repo uploading
@@ -425,6 +426,92 @@ No authorization required
 [[Back to README]](../README.md)
 
 
+## ApplicationGetcontainerLogs
+
+> string ApplicationGetcontainerLogs (string applicationId, string configuration, string deviceid, bool? restart = null)
+
+Get container log, chunk by chunk
+
+Return one chunk of log (one or more lines), blocking if no data is available
+
+### Example
+
+```csharp
+using System.Collections.Generic;
+using System.Diagnostics;
+using TorizonRestAPI.Api;
+using TorizonRestAPI.Client;
+using TorizonRestAPI.Model;
+
+namespace Example
+{
+    public class ApplicationGetcontainerLogsExample
+    {
+        public static void Main()
+        {
+            Configuration.Default.BasePath = "http://localhost:5000/api";
+            var apiInstance = new ApplicationsApi(Configuration.Default);
+            var applicationId = applicationId_example;  // string | Id of an application (uuid)
+            var configuration = configuration_example;  // string | 
+            var deviceid = deviceid_example;  // string | 
+            var restart = true;  // bool? | when true reads the lock back from beginning (optional)  (default to false)
+
+            try
+            {
+                // Get container log, chunk by chunk
+                string result = apiInstance.ApplicationGetcontainerLogs(applicationId, configuration, deviceid, restart);
+                Debug.WriteLine(result);
+            }
+            catch (ApiException e)
+            {
+                Debug.Print("Exception when calling ApplicationsApi.ApplicationGetcontainerLogs: " + e.Message );
+                Debug.Print("Status Code: "+ e.ErrorCode);
+                Debug.Print(e.StackTrace);
+            }
+        }
+    }
+}
+```
+
+### Parameters
+
+
+Name | Type | Description  | Notes
+------------- | ------------- | ------------- | -------------
+ **applicationId** | **string**| Id of an application (uuid) | 
+ **configuration** | **string**|  | 
+ **deviceid** | **string**|  | 
+ **restart** | **bool?**| when true reads the lock back from beginning | [optional] [default to false]
+
+### Return type
+
+**string**
+
+### Authorization
+
+No authorization required
+
+### HTTP request headers
+
+- **Content-Type**: Not defined
+- **Accept**: application/json
+
+### HTTP response details
+| Status code | Description | Response headers |
+|-------------|-------------|------------------|
+| **200** | Returns application container |  -  |
+| **204** | No content |  -  |
+| **404** | Application not found |  -  |
+| **500** | Unexpected exception. |  -  |
+| **525** | Remote docker exception. |  -  |
+| **539** | SSH tunnel error. |  -  |
+
+[[Back to top]](#)
+[[Back to API list]](../README.md#documentation-for-api-endpoints)
+[[Back to Model list]](../README.md#documentation-for-models)
+[[Back to README]](../README.md)
+
+
 ## ApplicationGetprivatekey
 
 > string ApplicationGetprivatekey (string applicationId)
@@ -746,7 +833,7 @@ No authorization required
 
 ## ApplicationRunsdk
 
-> InlineResponse200 ApplicationRunsdk (string applicationId, string configuration, bool build = null)
+> InlineResponse200 ApplicationRunsdk (string applicationId, string configuration, bool? build = null)
 
 Runs SDK containers
 
@@ -771,7 +858,7 @@ namespace Example
             var apiInstance = new ApplicationsApi(Configuration.Default);
             var applicationId = applicationId_example;  // string | Id of an application (uuid)
             var configuration = configuration_example;  // string | 
-            var build = true;  // bool |  (optional)  (default to true)
+            var build = true;  // bool? |  (optional)  (default to true)
 
             try
             {
@@ -797,7 +884,7 @@ Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
  **applicationId** | **string**| Id of an application (uuid) | 
  **configuration** | **string**|  | 
- **build** | **bool**|  | [optional] [default to true]
+ **build** | **bool?**|  | [optional] [default to true]
 
 ### Return type
 
@@ -911,7 +998,7 @@ No authorization required
 
 ## ApplicationSyncfolders
 
-> void ApplicationSyncfolders (string applicationId, string sourcefolder, string configuration, string deviceid, string destfolder, bool sourceIsSdk = null)
+> void ApplicationSyncfolders (string applicationId, string sourcefolder, string configuration, string deviceid, string destfolder, bool? sourceIsSdk = null)
 
 synchronizes folders
 
@@ -939,7 +1026,7 @@ namespace Example
             var configuration = configuration_example;  // string | 
             var deviceid = deviceid_example;  // string | 
             var destfolder = destfolder_example;  // string | 
-            var sourceIsSdk = true;  // bool |  (optional) 
+            var sourceIsSdk = true;  // bool? |  (optional) 
 
             try
             {
@@ -967,7 +1054,7 @@ Name | Type | Description  | Notes
  **configuration** | **string**|  | 
  **deviceid** | **string**|  | 
  **destfolder** | **string**|  | 
- **sourceIsSdk** | **bool**|  | [optional] 
+ **sourceIsSdk** | **bool?**|  | [optional] 
 
 ### Return type
 

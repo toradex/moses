@@ -31,6 +31,7 @@ export * from './dockerVersion';
 export * from './dockerVersionComponents';
 export * from './dockerVersionPlatform';
 export * from './errorInfo';
+export * from './eula';
 export * from './inlineResponse200';
 export * from './memInfo';
 export * from './mountPoint';
@@ -73,6 +74,7 @@ import { DockerVersion } from './dockerVersion';
 import { DockerVersionComponents } from './dockerVersionComponents';
 import { DockerVersionPlatform } from './dockerVersionPlatform';
 import { ErrorInfo } from './errorInfo';
+import { Eula } from './eula';
 import { InlineResponse200 } from './inlineResponse200';
 import { MemInfo } from './memInfo';
 import { MountPoint } from './mountPoint';
@@ -134,6 +136,7 @@ let typeMap: {[index: string]: any} = {
     "DockerVersionComponents": DockerVersionComponents,
     "DockerVersionPlatform": DockerVersionPlatform,
     "ErrorInfo": ErrorInfo,
+    "Eula": Eula,
     "InlineResponse200": InlineResponse200,
     "MemInfo": MemInfo,
     "MountPoint": MountPoint,
@@ -271,6 +274,19 @@ export class HttpBasicAuth implements Authentication {
     }
 }
 
+export class HttpBearerAuth implements Authentication {
+    public accessToken: string | (() => string) = '';
+
+    applyToRequest(requestOptions: localVarRequest.Options): void {
+        if (requestOptions && requestOptions.headers) {
+            const accessToken = typeof this.accessToken === 'function'
+                            ? this.accessToken()
+                            : this.accessToken;
+            requestOptions.headers["Authorization"] = "Bearer " + accessToken;
+        }
+    }
+}
+
 export class ApiKeyAuth implements Authentication {
     public apiKey: string = '';
 
@@ -311,3 +327,5 @@ export class VoidAuth implements Authentication {
         // Do nothing
     }
 }
+
+export type Interceptor = (requestOptions: localVarRequest.Options) => (Promise<void> | void);

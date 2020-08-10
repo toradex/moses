@@ -9,6 +9,7 @@ Method | HTTP request | Description
 [**application_deploy**](ApplicationsApi.md#application_deploy) | **GET** /applications/{application_id}/deploy | Deploys container image
 [**application_get**](ApplicationsApi.md#application_get) | **GET** /applications/{application_id} | Get application
 [**application_getcontainer**](ApplicationsApi.md#application_getcontainer) | **GET** /applications/{application_id}/container | Get container information
+[**application_getcontainer_logs**](ApplicationsApi.md#application_getcontainer_logs) | **GET** /applications/{application_id}/container_logs | Get container log, chunk by chunk
 [**application_getprivatekey**](ApplicationsApi.md#application_getprivatekey) | **GET** /applications/{application_id}/privatekey | Retrieves the path of the RSA private key
 [**application_modify**](ApplicationsApi.md#application_modify) | **PUT** /applications/{application_id} | Change application properties
 [**application_reseal**](ApplicationsApi.md#application_reseal) | **GET** /applications/{application_id}/reseal | Cleans id and keys for git repo uploading
@@ -37,17 +38,25 @@ import time
 import moses_client
 from moses_client.rest import ApiException
 from pprint import pprint
+# Defining the host is optional and defaults to http://localhost:5000/api
+# See configuration.py for a list of all supported configuration parameters.
+configuration = moses_client.Configuration(
+    host = "http://localhost:5000/api"
+)
 
-# Create an instance of the API class
-api_instance = moses_client.ApplicationsApi()
-application_id = 'application_id_example' # str | Id of an application (uuid)
+
+# Enter a context with an instance of the API client
+with moses_client.ApiClient() as api_client:
+    # Create an instance of the API class
+    api_instance = moses_client.ApplicationsApi(api_client)
+    application_id = 'application_id_example' # str | Id of an application (uuid)
 configuration = 'configuration_example' # str | 
 
-try:
-    # Builds container image
-    api_instance.application_build(application_id, configuration)
-except ApiException as e:
-    print("Exception when calling ApplicationsApi->application_build: %s\n" % e)
+    try:
+        # Builds container image
+        api_instance.application_build(application_id, configuration)
+    except ApiException as e:
+        print("Exception when calling ApplicationsApi->application_build: %s\n" % e)
 ```
 
 ### Parameters
@@ -93,16 +102,24 @@ import time
 import moses_client
 from moses_client.rest import ApiException
 from pprint import pprint
+# Defining the host is optional and defaults to http://localhost:5000/api
+# See configuration.py for a list of all supported configuration parameters.
+configuration = moses_client.Configuration(
+    host = "http://localhost:5000/api"
+)
 
-# Create an instance of the API class
-api_instance = moses_client.ApplicationsApi()
-application_id = 'application_id_example' # str | Id of an application (uuid)
 
-try:
-    # Remove an application and all the associated data and containers
-    api_instance.application_delete(application_id)
-except ApiException as e:
-    print("Exception when calling ApplicationsApi->application_delete: %s\n" % e)
+# Enter a context with an instance of the API client
+with moses_client.ApiClient() as api_client:
+    # Create an instance of the API class
+    api_instance = moses_client.ApplicationsApi(api_client)
+    application_id = 'application_id_example' # str | Id of an application (uuid)
+
+    try:
+        # Remove an application and all the associated data and containers
+        api_instance.application_delete(application_id)
+    except ApiException as e:
+        print("Exception when calling ApplicationsApi->application_delete: %s\n" % e)
 ```
 
 ### Parameters
@@ -149,18 +166,26 @@ import time
 import moses_client
 from moses_client.rest import ApiException
 from pprint import pprint
+# Defining the host is optional and defaults to http://localhost:5000/api
+# See configuration.py for a list of all supported configuration parameters.
+configuration = moses_client.Configuration(
+    host = "http://localhost:5000/api"
+)
 
-# Create an instance of the API class
-api_instance = moses_client.ApplicationsApi()
-application_id = 'application_id_example' # str | Id of an application (uuid)
+
+# Enter a context with an instance of the API client
+with moses_client.ApiClient() as api_client:
+    # Create an instance of the API class
+    api_instance = moses_client.ApplicationsApi(api_client)
+    application_id = 'application_id_example' # str | Id of an application (uuid)
 configuration = 'configuration_example' # str | 
 deviceid = 'deviceid_example' # str | 
 
-try:
-    # Deploys container image
-    api_instance.application_deploy(application_id, configuration, deviceid)
-except ApiException as e:
-    print("Exception when calling ApplicationsApi->application_deploy: %s\n" % e)
+    try:
+        # Deploys container image
+        api_instance.application_deploy(application_id, configuration, deviceid)
+    except ApiException as e:
+        print("Exception when calling ApplicationsApi->application_deploy: %s\n" % e)
 ```
 
 ### Parameters
@@ -213,17 +238,25 @@ import time
 import moses_client
 from moses_client.rest import ApiException
 from pprint import pprint
+# Defining the host is optional and defaults to http://localhost:5000/api
+# See configuration.py for a list of all supported configuration parameters.
+configuration = moses_client.Configuration(
+    host = "http://localhost:5000/api"
+)
 
-# Create an instance of the API class
-api_instance = moses_client.ApplicationsApi()
-application_id = 'application_id_example' # str | Id of an application (uuid)
 
-try:
-    # Get application
-    api_response = api_instance.application_get(application_id)
-    pprint(api_response)
-except ApiException as e:
-    print("Exception when calling ApplicationsApi->application_get: %s\n" % e)
+# Enter a context with an instance of the API client
+with moses_client.ApiClient() as api_client:
+    # Create an instance of the API class
+    api_instance = moses_client.ApplicationsApi(api_client)
+    application_id = 'application_id_example' # str | Id of an application (uuid)
+
+    try:
+        # Get application
+        api_response = api_instance.application_get(application_id)
+        pprint(api_response)
+    except ApiException as e:
+        print("Exception when calling ApplicationsApi->application_get: %s\n" % e)
 ```
 
 ### Parameters
@@ -269,19 +302,27 @@ import time
 import moses_client
 from moses_client.rest import ApiException
 from pprint import pprint
+# Defining the host is optional and defaults to http://localhost:5000/api
+# See configuration.py for a list of all supported configuration parameters.
+configuration = moses_client.Configuration(
+    host = "http://localhost:5000/api"
+)
 
-# Create an instance of the API class
-api_instance = moses_client.ApplicationsApi()
-application_id = 'application_id_example' # str | Id of an application (uuid)
+
+# Enter a context with an instance of the API client
+with moses_client.ApiClient() as api_client:
+    # Create an instance of the API class
+    api_instance = moses_client.ApplicationsApi(api_client)
+    application_id = 'application_id_example' # str | Id of an application (uuid)
 configuration = 'configuration_example' # str | 
 deviceid = 'deviceid_example' # str | 
 
-try:
-    # Get container information
-    api_response = api_instance.application_getcontainer(application_id, configuration, deviceid)
-    pprint(api_response)
-except ApiException as e:
-    print("Exception when calling ApplicationsApi->application_getcontainer: %s\n" % e)
+    try:
+        # Get container information
+        api_response = api_instance.application_getcontainer(application_id, configuration, deviceid)
+        pprint(api_response)
+    except ApiException as e:
+        print("Exception when calling ApplicationsApi->application_getcontainer: %s\n" % e)
 ```
 
 ### Parameters
@@ -319,6 +360,79 @@ No authorization required
 
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
 
+# **application_getcontainer_logs**
+> str application_getcontainer_logs(application_id, configuration, deviceid, restart=restart)
+
+Get container log, chunk by chunk
+
+Return one chunk of log (one or more lines), blocking if no data is available
+
+### Example
+
+```python
+from __future__ import print_function
+import time
+import moses_client
+from moses_client.rest import ApiException
+from pprint import pprint
+# Defining the host is optional and defaults to http://localhost:5000/api
+# See configuration.py for a list of all supported configuration parameters.
+configuration = moses_client.Configuration(
+    host = "http://localhost:5000/api"
+)
+
+
+# Enter a context with an instance of the API client
+with moses_client.ApiClient() as api_client:
+    # Create an instance of the API class
+    api_instance = moses_client.ApplicationsApi(api_client)
+    application_id = 'application_id_example' # str | Id of an application (uuid)
+configuration = 'configuration_example' # str | 
+deviceid = 'deviceid_example' # str | 
+restart = False # bool | when true reads the lock back from beginning (optional) (default to False)
+
+    try:
+        # Get container log, chunk by chunk
+        api_response = api_instance.application_getcontainer_logs(application_id, configuration, deviceid, restart=restart)
+        pprint(api_response)
+    except ApiException as e:
+        print("Exception when calling ApplicationsApi->application_getcontainer_logs: %s\n" % e)
+```
+
+### Parameters
+
+Name | Type | Description  | Notes
+------------- | ------------- | ------------- | -------------
+ **application_id** | **str**| Id of an application (uuid) | 
+ **configuration** | **str**|  | 
+ **deviceid** | **str**|  | 
+ **restart** | **bool**| when true reads the lock back from beginning | [optional] [default to False]
+
+### Return type
+
+**str**
+
+### Authorization
+
+No authorization required
+
+### HTTP request headers
+
+ - **Content-Type**: Not defined
+ - **Accept**: application/json
+
+### HTTP response details
+| Status code | Description | Response headers |
+|-------------|-------------|------------------|
+**200** | Returns application container |  -  |
+**204** | No content |  -  |
+**404** | Application not found |  -  |
+**500** | Unexpected exception. |  -  |
+**525** | Remote docker exception. |  -  |
+**539** | SSH tunnel error. |  -  |
+
+[[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
+
 # **application_getprivatekey**
 > str application_getprivatekey(application_id)
 
@@ -334,17 +448,25 @@ import time
 import moses_client
 from moses_client.rest import ApiException
 from pprint import pprint
+# Defining the host is optional and defaults to http://localhost:5000/api
+# See configuration.py for a list of all supported configuration parameters.
+configuration = moses_client.Configuration(
+    host = "http://localhost:5000/api"
+)
 
-# Create an instance of the API class
-api_instance = moses_client.ApplicationsApi()
-application_id = 'application_id_example' # str | Id of an application (uuid)
 
-try:
-    # Retrieves the path of the RSA private key
-    api_response = api_instance.application_getprivatekey(application_id)
-    pprint(api_response)
-except ApiException as e:
-    print("Exception when calling ApplicationsApi->application_getprivatekey: %s\n" % e)
+# Enter a context with an instance of the API client
+with moses_client.ApiClient() as api_client:
+    # Create an instance of the API class
+    api_instance = moses_client.ApplicationsApi(api_client)
+    application_id = 'application_id_example' # str | Id of an application (uuid)
+
+    try:
+        # Retrieves the path of the RSA private key
+        api_response = api_instance.application_getprivatekey(application_id)
+        pprint(api_response)
+    except ApiException as e:
+        print("Exception when calling ApplicationsApi->application_getprivatekey: %s\n" % e)
 ```
 
 ### Parameters
@@ -390,18 +512,26 @@ import time
 import moses_client
 from moses_client.rest import ApiException
 from pprint import pprint
+# Defining the host is optional and defaults to http://localhost:5000/api
+# See configuration.py for a list of all supported configuration parameters.
+configuration = moses_client.Configuration(
+    host = "http://localhost:5000/api"
+)
 
-# Create an instance of the API class
-api_instance = moses_client.ApplicationsApi()
-application_id = 'application_id_example' # str | Id of an application (uuid)
+
+# Enter a context with an instance of the API client
+with moses_client.ApiClient() as api_client:
+    # Create an instance of the API class
+    api_instance = moses_client.ApplicationsApi(api_client)
+    application_id = 'application_id_example' # str | Id of an application (uuid)
 application = moses_client.Application() # Application |  (optional)
 
-try:
-    # Change application properties
-    api_response = api_instance.application_modify(application_id, application=application)
-    pprint(api_response)
-except ApiException as e:
-    print("Exception when calling ApplicationsApi->application_modify: %s\n" % e)
+    try:
+        # Change application properties
+        api_response = api_instance.application_modify(application_id, application=application)
+        pprint(api_response)
+    except ApiException as e:
+        print("Exception when calling ApplicationsApi->application_modify: %s\n" % e)
 ```
 
 ### Parameters
@@ -450,16 +580,24 @@ import time
 import moses_client
 from moses_client.rest import ApiException
 from pprint import pprint
+# Defining the host is optional and defaults to http://localhost:5000/api
+# See configuration.py for a list of all supported configuration parameters.
+configuration = moses_client.Configuration(
+    host = "http://localhost:5000/api"
+)
 
-# Create an instance of the API class
-api_instance = moses_client.ApplicationsApi()
-application_id = 'application_id_example' # str | Id of an application (uuid)
 
-try:
-    # Cleans id and keys for git repo uploading
-    api_instance.application_reseal(application_id)
-except ApiException as e:
-    print("Exception when calling ApplicationsApi->application_reseal: %s\n" % e)
+# Enter a context with an instance of the API client
+with moses_client.ApiClient() as api_client:
+    # Create an instance of the API class
+    api_instance = moses_client.ApplicationsApi(api_client)
+    application_id = 'application_id_example' # str | Id of an application (uuid)
+
+    try:
+        # Cleans id and keys for git repo uploading
+        api_instance.application_reseal(application_id)
+    except ApiException as e:
+        print("Exception when calling ApplicationsApi->application_reseal: %s\n" % e)
 ```
 
 ### Parameters
@@ -504,19 +642,27 @@ import time
 import moses_client
 from moses_client.rest import ApiException
 from pprint import pprint
+# Defining the host is optional and defaults to http://localhost:5000/api
+# See configuration.py for a list of all supported configuration parameters.
+configuration = moses_client.Configuration(
+    host = "http://localhost:5000/api"
+)
 
-# Create an instance of the API class
-api_instance = moses_client.ApplicationsApi()
-application_id = 'application_id_example' # str | Id of an application (uuid)
+
+# Enter a context with an instance of the API client
+with moses_client.ApiClient() as api_client:
+    # Create an instance of the API class
+    api_instance = moses_client.ApplicationsApi(api_client)
+    application_id = 'application_id_example' # str | Id of an application (uuid)
 configuration = 'configuration_example' # str | 
 deviceid = 'deviceid_example' # str | 
 
-try:
-    # Runs container image
-    api_response = api_instance.application_run(application_id, configuration, deviceid)
-    pprint(api_response)
-except ApiException as e:
-    print("Exception when calling ApplicationsApi->application_run: %s\n" % e)
+    try:
+        # Runs container image
+        api_response = api_instance.application_run(application_id, configuration, deviceid)
+        pprint(api_response)
+    except ApiException as e:
+        print("Exception when calling ApplicationsApi->application_run: %s\n" % e)
 ```
 
 ### Parameters
@@ -569,19 +715,27 @@ import time
 import moses_client
 from moses_client.rest import ApiException
 from pprint import pprint
+# Defining the host is optional and defaults to http://localhost:5000/api
+# See configuration.py for a list of all supported configuration parameters.
+configuration = moses_client.Configuration(
+    host = "http://localhost:5000/api"
+)
 
-# Create an instance of the API class
-api_instance = moses_client.ApplicationsApi()
-application_id = 'application_id_example' # str | Id of an application (uuid)
+
+# Enter a context with an instance of the API client
+with moses_client.ApiClient() as api_client:
+    # Create an instance of the API class
+    api_instance = moses_client.ApplicationsApi(api_client)
+    application_id = 'application_id_example' # str | Id of an application (uuid)
 configuration = 'configuration_example' # str | 
 build = True # bool |  (optional) (default to True)
 
-try:
-    # Runs SDK containers
-    api_response = api_instance.application_runsdk(application_id, configuration, build=build)
-    pprint(api_response)
-except ApiException as e:
-    print("Exception when calling ApplicationsApi->application_runsdk: %s\n" % e)
+    try:
+        # Runs SDK containers
+        api_response = api_instance.application_runsdk(application_id, configuration, build=build)
+        pprint(api_response)
+    except ApiException as e:
+        print("Exception when calling ApplicationsApi->application_runsdk: %s\n" % e)
 ```
 
 ### Parameters
@@ -631,18 +785,26 @@ import time
 import moses_client
 from moses_client.rest import ApiException
 from pprint import pprint
+# Defining the host is optional and defaults to http://localhost:5000/api
+# See configuration.py for a list of all supported configuration parameters.
+configuration = moses_client.Configuration(
+    host = "http://localhost:5000/api"
+)
 
-# Create an instance of the API class
-api_instance = moses_client.ApplicationsApi()
-application_id = 'application_id_example' # str | Id of an application (uuid)
+
+# Enter a context with an instance of the API client
+with moses_client.ApiClient() as api_client:
+    # Create an instance of the API class
+    api_instance = moses_client.ApplicationsApi(api_client)
+    application_id = 'application_id_example' # str | Id of an application (uuid)
 configuration = 'configuration_example' # str | 
 deviceid = 'deviceid_example' # str | 
 
-try:
-    # Stops running container image
-    api_instance.application_stop(application_id, configuration, deviceid)
-except ApiException as e:
-    print("Exception when calling ApplicationsApi->application_stop: %s\n" % e)
+    try:
+        # Stops running container image
+        api_instance.application_stop(application_id, configuration, deviceid)
+    except ApiException as e:
+        print("Exception when calling ApplicationsApi->application_stop: %s\n" % e)
 ```
 
 ### Parameters
@@ -692,21 +854,29 @@ import time
 import moses_client
 from moses_client.rest import ApiException
 from pprint import pprint
+# Defining the host is optional and defaults to http://localhost:5000/api
+# See configuration.py for a list of all supported configuration parameters.
+configuration = moses_client.Configuration(
+    host = "http://localhost:5000/api"
+)
 
-# Create an instance of the API class
-api_instance = moses_client.ApplicationsApi()
-application_id = 'application_id_example' # str | Id of an application (uuid)
+
+# Enter a context with an instance of the API client
+with moses_client.ApiClient() as api_client:
+    # Create an instance of the API class
+    api_instance = moses_client.ApplicationsApi(api_client)
+    application_id = 'application_id_example' # str | Id of an application (uuid)
 sourcefolder = 'sourcefolder_example' # str | 
 configuration = 'configuration_example' # str | 
 deviceid = 'deviceid_example' # str | 
 destfolder = 'destfolder_example' # str | 
 source_is_sdk = True # bool |  (optional)
 
-try:
-    # synchronizes folders
-    api_instance.application_syncfolders(application_id, sourcefolder, configuration, deviceid, destfolder, source_is_sdk=source_is_sdk)
-except ApiException as e:
-    print("Exception when calling ApplicationsApi->application_syncfolders: %s\n" % e)
+    try:
+        # synchronizes folders
+        api_instance.application_syncfolders(application_id, sourcefolder, configuration, deviceid, destfolder, source_is_sdk=source_is_sdk)
+    except ApiException as e:
+        print("Exception when calling ApplicationsApi->application_syncfolders: %s\n" % e)
 ```
 
 ### Parameters
@@ -764,18 +934,26 @@ import time
 import moses_client
 from moses_client.rest import ApiException
 from pprint import pprint
+# Defining the host is optional and defaults to http://localhost:5000/api
+# See configuration.py for a list of all supported configuration parameters.
+configuration = moses_client.Configuration(
+    host = "http://localhost:5000/api"
+)
 
-# Create an instance of the API class
-api_instance = moses_client.ApplicationsApi()
-application_id = 'application_id_example' # str | Id of an application (uuid)
+
+# Enter a context with an instance of the API client
+with moses_client.ApiClient() as api_client:
+    # Create an instance of the API class
+    api_instance = moses_client.ApplicationsApi(api_client)
+    application_id = 'application_id_example' # str | Id of an application (uuid)
 configuration = 'configuration_example' # str | 
 
-try:
-    # Builds container image
-    api_response = api_instance.application_updated(application_id, configuration)
-    pprint(api_response)
-except ApiException as e:
-    print("Exception when calling ApplicationsApi->application_updated: %s\n" % e)
+    try:
+        # Builds container image
+        api_response = api_instance.application_updated(application_id, configuration)
+        pprint(api_response)
+    except ApiException as e:
+        print("Exception when calling ApplicationsApi->application_updated: %s\n" % e)
 ```
 
 ### Parameters
@@ -823,17 +1001,25 @@ import time
 import moses_client
 from moses_client.rest import ApiException
 from pprint import pprint
+# Defining the host is optional and defaults to http://localhost:5000/api
+# See configuration.py for a list of all supported configuration parameters.
+configuration = moses_client.Configuration(
+    host = "http://localhost:5000/api"
+)
 
-# Create an instance of the API class
-api_instance = moses_client.ApplicationsApi()
-application_id = 'application_id_example' # str | Id of an application (uuid)
+
+# Enter a context with an instance of the API client
+with moses_client.ApiClient() as api_client:
+    # Create an instance of the API class
+    api_instance = moses_client.ApplicationsApi(api_client)
+    application_id = 'application_id_example' # str | Id of an application (uuid)
 configuration = 'configuration_example' # str | 
 
-try:
-    # Update SDK container
-    api_instance.application_updatesdk(application_id, configuration)
-except ApiException as e:
-    print("Exception when calling ApplicationsApi->application_updatesdk: %s\n" % e)
+    try:
+        # Update SDK container
+        api_instance.application_updatesdk(application_id, configuration)
+    except ApiException as e:
+        print("Exception when calling ApplicationsApi->application_updatesdk: %s\n" % e)
 ```
 
 ### Parameters
@@ -883,19 +1069,27 @@ import time
 import moses_client
 from moses_client.rest import ApiException
 from pprint import pprint
+# Defining the host is optional and defaults to http://localhost:5000/api
+# See configuration.py for a list of all supported configuration parameters.
+configuration = moses_client.Configuration(
+    host = "http://localhost:5000/api"
+)
 
-# Create an instance of the API class
-api_instance = moses_client.ApplicationsApi()
-platform_id = 'platform_id_example' # str | 
+
+# Enter a context with an instance of the API client
+with moses_client.ApiClient() as api_client:
+    # Create an instance of the API class
+    api_instance = moses_client.ApplicationsApi(api_client)
+    platform_id = 'platform_id_example' # str | 
 path = 'path_example' # str | 
 username = 'username_example' # str |  (optional)
 
-try:
-    # Loads an application configuration
-    api_response = api_instance.applications_create(platform_id, path, username=username)
-    pprint(api_response)
-except ApiException as e:
-    print("Exception when calling ApplicationsApi->applications_create: %s\n" % e)
+    try:
+        # Loads an application configuration
+        api_response = api_instance.applications_create(platform_id, path, username=username)
+        pprint(api_response)
+    except ApiException as e:
+        print("Exception when calling ApplicationsApi->applications_create: %s\n" % e)
 ```
 
 ### Parameters
@@ -946,17 +1140,25 @@ import time
 import moses_client
 from moses_client.rest import ApiException
 from pprint import pprint
+# Defining the host is optional and defaults to http://localhost:5000/api
+# See configuration.py for a list of all supported configuration parameters.
+configuration = moses_client.Configuration(
+    host = "http://localhost:5000/api"
+)
 
-# Create an instance of the API class
-api_instance = moses_client.ApplicationsApi()
-path = 'path_example' # str | 
 
-try:
-    # Loads an application configuration
-    api_response = api_instance.applications_load(path)
-    pprint(api_response)
-except ApiException as e:
-    print("Exception when calling ApplicationsApi->applications_load: %s\n" % e)
+# Enter a context with an instance of the API client
+with moses_client.ApiClient() as api_client:
+    # Create an instance of the API class
+    api_instance = moses_client.ApplicationsApi(api_client)
+    path = 'path_example' # str | 
+
+    try:
+        # Loads an application configuration
+        api_response = api_instance.applications_load(path)
+        pprint(api_response)
+    except ApiException as e:
+        print("Exception when calling ApplicationsApi->applications_load: %s\n" % e)
 ```
 
 ### Parameters

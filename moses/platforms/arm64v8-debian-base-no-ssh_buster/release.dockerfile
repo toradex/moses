@@ -28,6 +28,8 @@ COPY work/#%application.appname%# /#%application.appname%#
 
 USER #%application.username%#
 
+WORKDIR /#%application.appname%#
+
 # commands that will run on the target (ENTRYPOINT or CMD)
 CMD /#%application.appname%#/#%application.exename%# #%application.appargs%#
 #%application.targetcommands%#
