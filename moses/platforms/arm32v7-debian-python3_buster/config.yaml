@@ -27,8 +27,8 @@ tags:
   - console
 # information about how containers should run
 ports:
-  common: { "6502/tcp": null }
-  debug: {}
+  common: {}
+  debug: { "6502/tcp": null }
   release: {}
 volumes:
   common: {}

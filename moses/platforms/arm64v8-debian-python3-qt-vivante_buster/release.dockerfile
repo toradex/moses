@@ -1,8 +1,6 @@
-FROM torizon/arm64v8-debian-qt5-wayland:buster
+FROM torizon/arm64v8-debian-qt5-wayland-vivante:buster
 
-EXPOSE 6502
 #%application.expose%#
-
 #%application.arg%#
 
 # Make sure we don't get notifications we can't answer during building.
@@ -13,6 +11,8 @@ ENV DEBIAN_FRONTEND="noninteractive"
 # commands that should be run before installing packages (ex: to add a feed or keys)
 #%application.preinstallcommands%#
 
+# your regular RUN statements here
+# Install required packages
 RUN apt-get update \
     && apt-get install -y --no-install-recommends \
     python3 \
@@ -32,7 +32,6 @@ RUN apt-get update \
     && rm -rf /var/lib/apt/lists/*
 
 RUN pip3 install --upgrade pip
-RUN pip3 install ptvsd
 
 COPY work/setup.sh /setup.sh
 COPY work/cleanup.sh /cleanup.sh
@@ -45,18 +44,18 @@ RUN chmod a+x /setup.sh &&\
     pip install -r /requirements.txt &&\
     /cleanup.sh debug
 
-RUN echo "#!/bin/sh" > /startptvsd && \
-    echo "cd /#%application.appname%#" >> /startptvsd && \
-    echo "echo \"running #%application.appname%#\"" >> /startptvsd && \
-    echo "/usr/bin/python3 -m ptvsd --host 0.0.0.0 --port 6502 --wait #%application.main%# #%application.appargs%#" >> /startptvsd && \
-    chmod a+x /startptvsd
+COPY work/#%application.appname%# /#%application.appname%#
 
+# commands that should be run after all packages have been installed (RUN/COPY/ADD)
 #%application.buildfiles%#
 #%application.buildcommands%#
 
 #%application.targetfiles%#
 
 USER #%application.username%#
+WORKDIR /#%application.appname%#
 
-#ENTRYPOINT ["/startptvsd"]
-CMD /startptvsd
+CMD /usr/bin/python3 #%application.main%# #%application.appargs%#
+
+# commands that will run on the target (ENTRYPOINT or CMD)
+#%application.targetcommands%#

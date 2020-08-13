@@ -29,7 +29,7 @@ unsupportedmodels: []
 # defines base image and dockerfile templates for the containers
 baseimage:
   common:
-    - torizon/arm64v8-debian-qt5-wayland
+    - torizon/arm64v8-debian-qt5-wayland-vivante
     - buster
   debug:
   release:
@@ -45,12 +45,14 @@ tags:
   - qt
 # information about how containers should run
 ports:
-  common: { "6502/tcp": null }
-  debug: {}
+  common: { }
+  debug: {"6502/tcp": null}
   release: {}
 volumes:
   common:
     /tmp: /tmp,rw
+    /dev/dri: /dev/dri
+    /dev/galcore: /dev/galcore
   debug: {}
   release: {}
 devices:
@@ -59,7 +61,8 @@ devices:
   release: []
 privileged: false
 extraparms:
-  common: {}
+  common: 
+    device_cgroup_rules: '[ "c 199:* rmw" , "c 226:* rmw" ]'
   debug: {}
   release: {}
 # information about the SDK (if required)
@@ -75,7 +78,7 @@ props:
 # the container
 # If you use docker-compose file the application container should NOT be listed in the services, since it will be started by the debugger
 dockercomposefile:
-  common: null
+  common: docker-compose.yml
   debug: null
   release: null
 startupscript:
@@ -90,7 +93,5 @@ networks:
   common: []
   debug: []
   release: []
-images:
-  debug: null
-  release: null
+
 eulas: [ "nxp-la-opt-v5" ]

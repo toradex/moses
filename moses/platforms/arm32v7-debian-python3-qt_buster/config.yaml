@@ -27,12 +27,13 @@ tags:
   - qt
 # information about how containers should run
 ports:
-  common: { "6502/tcp": null }
-  debug: {}
+  common: {}
+  debug: { "6502/tcp": null }
   release: {}
 volumes:
   common:
     /tmp: /tmp,rw
+    /dev/dri: /dev/dri
   debug: {}
   release: {}
 devices:
@@ -41,7 +42,8 @@ devices:
   release: []
 privileged: false
 extraparms:
-  common: {}
+  common: 
+    device_cgroup_rules: '[ "c 226:* rmw" ]'
   debug: {}
   release: {}
 # information about the SDK (if required)
@@ -57,7 +59,7 @@ props:
 # the container
 # If you use docker-compose file the application container should NOT be listed in the services, since it will be started by the debugger
 dockercomposefile:
-  common: null
+  common: docker-compose.yml
   debug: null
   release: null
 startupscript:
