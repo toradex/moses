@@ -172,6 +172,52 @@ namespace TorizonRestAPI.Api
         /// <returns>ApiResponse of string</returns>
         ApiResponse<string> ApplicationGetcontainerLogsWithHttpInfo (string applicationId, string configuration, string deviceid, bool? restart = default(bool?));
         /// <summary>
+        /// Get docker command line used to run the container
+        /// </summary>
+        /// <remarks>
+        /// returns full command line
+        /// </remarks>
+        /// <exception cref="TorizonRestAPI.Client.ApiException">Thrown when fails to make API call</exception>
+        /// <param name="applicationId">Id of an application (uuid)</param>
+        /// <param name="configuration"></param>
+        /// <returns>string</returns>
+        string ApplicationGetdockerCommandline (string applicationId, string configuration);
+
+        /// <summary>
+        /// Get docker command line used to run the container
+        /// </summary>
+        /// <remarks>
+        /// returns full command line
+        /// </remarks>
+        /// <exception cref="TorizonRestAPI.Client.ApiException">Thrown when fails to make API call</exception>
+        /// <param name="applicationId">Id of an application (uuid)</param>
+        /// <param name="configuration"></param>
+        /// <returns>ApiResponse of string</returns>
+        ApiResponse<string> ApplicationGetdockerCommandlineWithHttpInfo (string applicationId, string configuration);
+        /// <summary>
+        /// Get docker compose file
+        /// </summary>
+        /// <remarks>
+        /// returns docker compose file that can be used to run the container and its dependencies
+        /// </remarks>
+        /// <exception cref="TorizonRestAPI.Client.ApiException">Thrown when fails to make API call</exception>
+        /// <param name="applicationId">Id of an application (uuid)</param>
+        /// <param name="configuration"></param>
+        /// <returns>string</returns>
+        string ApplicationGetdockerComposefile (string applicationId, string configuration);
+
+        /// <summary>
+        /// Get docker compose file
+        /// </summary>
+        /// <remarks>
+        /// returns docker compose file that can be used to run the container and its dependencies
+        /// </remarks>
+        /// <exception cref="TorizonRestAPI.Client.ApiException">Thrown when fails to make API call</exception>
+        /// <param name="applicationId">Id of an application (uuid)</param>
+        /// <param name="configuration"></param>
+        /// <returns>ApiResponse of string</returns>
+        ApiResponse<string> ApplicationGetdockerComposefileWithHttpInfo (string applicationId, string configuration);
+        /// <summary>
         /// Retrieves the path of the RSA private key
         /// </summary>
         /// <remarks>
@@ -625,6 +671,56 @@ namespace TorizonRestAPI.Api
         /// <param name="cancellationToken">Cancellation Token to cancel request (optional) </param>
         /// <returns>Task of ApiResponse (string)</returns>
         System.Threading.Tasks.Task<ApiResponse<string>> ApplicationGetcontainerLogsWithHttpInfoAsync (string applicationId, string configuration, string deviceid, bool? restart = default(bool?), CancellationToken cancellationToken = default(CancellationToken));
+        /// <summary>
+        /// Get docker command line used to run the container
+        /// </summary>
+        /// <remarks>
+        /// returns full command line
+        /// </remarks>
+        /// <exception cref="TorizonRestAPI.Client.ApiException">Thrown when fails to make API call</exception>
+        /// <param name="applicationId">Id of an application (uuid)</param>
+        /// <param name="configuration"></param>
+        /// <param name="cancellationToken">Cancellation Token to cancel request (optional) </param>
+        /// <returns>Task of string</returns>
+        System.Threading.Tasks.Task<string> ApplicationGetdockerCommandlineAsync (string applicationId, string configuration, CancellationToken cancellationToken = default(CancellationToken));
+
+        /// <summary>
+        /// Get docker command line used to run the container
+        /// </summary>
+        /// <remarks>
+        /// returns full command line
+        /// </remarks>
+        /// <exception cref="TorizonRestAPI.Client.ApiException">Thrown when fails to make API call</exception>
+        /// <param name="applicationId">Id of an application (uuid)</param>
+        /// <param name="configuration"></param>
+        /// <param name="cancellationToken">Cancellation Token to cancel request (optional) </param>
+        /// <returns>Task of ApiResponse (string)</returns>
+        System.Threading.Tasks.Task<ApiResponse<string>> ApplicationGetdockerCommandlineWithHttpInfoAsync (string applicationId, string configuration, CancellationToken cancellationToken = default(CancellationToken));
+        /// <summary>
+        /// Get docker compose file
+        /// </summary>
+        /// <remarks>
+        /// returns docker compose file that can be used to run the container and its dependencies
+        /// </remarks>
+        /// <exception cref="TorizonRestAPI.Client.ApiException">Thrown when fails to make API call</exception>
+        /// <param name="applicationId">Id of an application (uuid)</param>
+        /// <param name="configuration"></param>
+        /// <param name="cancellationToken">Cancellation Token to cancel request (optional) </param>
+        /// <returns>Task of string</returns>
+        System.Threading.Tasks.Task<string> ApplicationGetdockerComposefileAsync (string applicationId, string configuration, CancellationToken cancellationToken = default(CancellationToken));
+
+        /// <summary>
+        /// Get docker compose file
+        /// </summary>
+        /// <remarks>
+        /// returns docker compose file that can be used to run the container and its dependencies
+        /// </remarks>
+        /// <exception cref="TorizonRestAPI.Client.ApiException">Thrown when fails to make API call</exception>
+        /// <param name="applicationId">Id of an application (uuid)</param>
+        /// <param name="configuration"></param>
+        /// <param name="cancellationToken">Cancellation Token to cancel request (optional) </param>
+        /// <returns>Task of ApiResponse (string)</returns>
+        System.Threading.Tasks.Task<ApiResponse<string>> ApplicationGetdockerComposefileWithHttpInfoAsync (string applicationId, string configuration, CancellationToken cancellationToken = default(CancellationToken));
         /// <summary>
         /// Retrieves the path of the RSA private key
         /// </summary>
@@ -1952,6 +2048,300 @@ namespace TorizonRestAPI.Api
             if (ExceptionFactory != null)
             {
                 Exception exception = ExceptionFactory("ApplicationGetcontainerLogs", localVarResponse);
+                if (exception != null) throw exception;
+            }
+
+            return new ApiResponse<string>(localVarStatusCode,
+                localVarResponse.Headers.ToDictionary(x => x.Name, x => string.Join(",", x.Value)),
+                (string) this.Configuration.ApiClient.Deserialize(localVarResponse, typeof(string)));
+        }
+
+        /// <summary>
+        /// Get docker command line used to run the container returns full command line
+        /// </summary>
+        /// <exception cref="TorizonRestAPI.Client.ApiException">Thrown when fails to make API call</exception>
+        /// <param name="applicationId">Id of an application (uuid)</param>
+        /// <param name="configuration"></param>
+        /// <returns>string</returns>
+        public string ApplicationGetdockerCommandline (string applicationId, string configuration)
+        {
+             ApiResponse<string> localVarResponse = ApplicationGetdockerCommandlineWithHttpInfo(applicationId, configuration);
+             return localVarResponse.Data;
+        }
+
+        /// <summary>
+        /// Get docker command line used to run the container returns full command line
+        /// </summary>
+        /// <exception cref="TorizonRestAPI.Client.ApiException">Thrown when fails to make API call</exception>
+        /// <param name="applicationId">Id of an application (uuid)</param>
+        /// <param name="configuration"></param>
+        /// <returns>ApiResponse of string</returns>
+        public ApiResponse<string> ApplicationGetdockerCommandlineWithHttpInfo (string applicationId, string configuration)
+        {
+            // verify the required parameter 'applicationId' is set
+            if (applicationId == null)
+                throw new ApiException(400, "Missing required parameter 'applicationId' when calling ApplicationsApi->ApplicationGetdockerCommandline");
+            // verify the required parameter 'configuration' is set
+            if (configuration == null)
+                throw new ApiException(400, "Missing required parameter 'configuration' when calling ApplicationsApi->ApplicationGetdockerCommandline");
+
+            var localVarPath = "/applications/{application_id}/docker_commandline";
+            var localVarPathParams = new Dictionary<String, String>();
+            var localVarQueryParams = new List<KeyValuePair<String, String>>();
+            var localVarHeaderParams = new Dictionary<String, String>(this.Configuration.DefaultHeader);
+            var localVarFormParams = new Dictionary<String, String>();
+            var localVarFileParams = new Dictionary<String, FileParameter>();
+            Object localVarPostBody = null;
+
+            // to determine the Content-Type header
+            String[] localVarHttpContentTypes = new String[] {
+            };
+            String localVarHttpContentType = this.Configuration.ApiClient.SelectHeaderContentType(localVarHttpContentTypes);
+
+            // to determine the Accept header
+            String[] localVarHttpHeaderAccepts = new String[] {
+                "application/json"
+            };
+            String localVarHttpHeaderAccept = this.Configuration.ApiClient.SelectHeaderAccept(localVarHttpHeaderAccepts);
+            if (localVarHttpHeaderAccept != null)
+                localVarHeaderParams.Add("Accept", localVarHttpHeaderAccept);
+
+            if (applicationId != null) localVarPathParams.Add("application_id", this.Configuration.ApiClient.ParameterToString(applicationId)); // path parameter
+            if (configuration != null) localVarQueryParams.AddRange(this.Configuration.ApiClient.ParameterToKeyValuePairs("", "configuration", configuration)); // query parameter
+
+
+            // make the HTTP request
+            IRestResponse localVarResponse = (IRestResponse) this.Configuration.ApiClient.CallApi(localVarPath,
+                Method.GET, localVarQueryParams, localVarPostBody, localVarHeaderParams, localVarFormParams, localVarFileParams,
+                localVarPathParams, localVarHttpContentType);
+
+            int localVarStatusCode = (int) localVarResponse.StatusCode;
+
+            if (ExceptionFactory != null)
+            {
+                Exception exception = ExceptionFactory("ApplicationGetdockerCommandline", localVarResponse);
+                if (exception != null) throw exception;
+            }
+
+            return new ApiResponse<string>(localVarStatusCode,
+                localVarResponse.Headers.ToDictionary(x => x.Name, x => string.Join(",", x.Value)),
+                (string) this.Configuration.ApiClient.Deserialize(localVarResponse, typeof(string)));
+        }
+
+        /// <summary>
+        /// Get docker command line used to run the container returns full command line
+        /// </summary>
+        /// <exception cref="TorizonRestAPI.Client.ApiException">Thrown when fails to make API call</exception>
+        /// <param name="applicationId">Id of an application (uuid)</param>
+        /// <param name="configuration"></param>
+        /// <param name="cancellationToken">Cancellation Token to cancel request (optional) </param>
+        /// <returns>Task of string</returns>
+        public async System.Threading.Tasks.Task<string> ApplicationGetdockerCommandlineAsync (string applicationId, string configuration, CancellationToken cancellationToken = default(CancellationToken))
+        {
+             ApiResponse<string> localVarResponse = await ApplicationGetdockerCommandlineWithHttpInfoAsync(applicationId, configuration, cancellationToken);
+             return localVarResponse.Data;
+
+        }
+
+        /// <summary>
+        /// Get docker command line used to run the container returns full command line
+        /// </summary>
+        /// <exception cref="TorizonRestAPI.Client.ApiException">Thrown when fails to make API call</exception>
+        /// <param name="applicationId">Id of an application (uuid)</param>
+        /// <param name="configuration"></param>
+        /// <param name="cancellationToken">Cancellation Token to cancel request (optional) </param>
+        /// <returns>Task of ApiResponse (string)</returns>
+        public async System.Threading.Tasks.Task<ApiResponse<string>> ApplicationGetdockerCommandlineWithHttpInfoAsync (string applicationId, string configuration, CancellationToken cancellationToken = default(CancellationToken))
+        {
+            // verify the required parameter 'applicationId' is set
+            if (applicationId == null)
+                throw new ApiException(400, "Missing required parameter 'applicationId' when calling ApplicationsApi->ApplicationGetdockerCommandline");
+            // verify the required parameter 'configuration' is set
+            if (configuration == null)
+                throw new ApiException(400, "Missing required parameter 'configuration' when calling ApplicationsApi->ApplicationGetdockerCommandline");
+
+            var localVarPath = "/applications/{application_id}/docker_commandline";
+            var localVarPathParams = new Dictionary<String, String>();
+            var localVarQueryParams = new List<KeyValuePair<String, String>>();
+            var localVarHeaderParams = new Dictionary<String, String>(this.Configuration.DefaultHeader);
+            var localVarFormParams = new Dictionary<String, String>();
+            var localVarFileParams = new Dictionary<String, FileParameter>();
+            Object localVarPostBody = null;
+
+            // to determine the Content-Type header
+            String[] localVarHttpContentTypes = new String[] {
+            };
+            String localVarHttpContentType = this.Configuration.ApiClient.SelectHeaderContentType(localVarHttpContentTypes);
+
+            // to determine the Accept header
+            String[] localVarHttpHeaderAccepts = new String[] {
+                "application/json"
+            };
+            String localVarHttpHeaderAccept = this.Configuration.ApiClient.SelectHeaderAccept(localVarHttpHeaderAccepts);
+            if (localVarHttpHeaderAccept != null)
+                localVarHeaderParams.Add("Accept", localVarHttpHeaderAccept);
+
+            if (applicationId != null) localVarPathParams.Add("application_id", this.Configuration.ApiClient.ParameterToString(applicationId)); // path parameter
+            if (configuration != null) localVarQueryParams.AddRange(this.Configuration.ApiClient.ParameterToKeyValuePairs("", "configuration", configuration)); // query parameter
+
+
+            // make the HTTP request
+            IRestResponse localVarResponse = (IRestResponse) await this.Configuration.ApiClient.CallApiAsync(localVarPath,
+                Method.GET, localVarQueryParams, localVarPostBody, localVarHeaderParams, localVarFormParams, localVarFileParams,
+                localVarPathParams, localVarHttpContentType, cancellationToken);
+
+            int localVarStatusCode = (int) localVarResponse.StatusCode;
+
+            if (ExceptionFactory != null)
+            {
+                Exception exception = ExceptionFactory("ApplicationGetdockerCommandline", localVarResponse);
+                if (exception != null) throw exception;
+            }
+
+            return new ApiResponse<string>(localVarStatusCode,
+                localVarResponse.Headers.ToDictionary(x => x.Name, x => string.Join(",", x.Value)),
+                (string) this.Configuration.ApiClient.Deserialize(localVarResponse, typeof(string)));
+        }
+
+        /// <summary>
+        /// Get docker compose file returns docker compose file that can be used to run the container and its dependencies
+        /// </summary>
+        /// <exception cref="TorizonRestAPI.Client.ApiException">Thrown when fails to make API call</exception>
+        /// <param name="applicationId">Id of an application (uuid)</param>
+        /// <param name="configuration"></param>
+        /// <returns>string</returns>
+        public string ApplicationGetdockerComposefile (string applicationId, string configuration)
+        {
+             ApiResponse<string> localVarResponse = ApplicationGetdockerComposefileWithHttpInfo(applicationId, configuration);
+             return localVarResponse.Data;
+        }
+
+        /// <summary>
+        /// Get docker compose file returns docker compose file that can be used to run the container and its dependencies
+        /// </summary>
+        /// <exception cref="TorizonRestAPI.Client.ApiException">Thrown when fails to make API call</exception>
+        /// <param name="applicationId">Id of an application (uuid)</param>
+        /// <param name="configuration"></param>
+        /// <returns>ApiResponse of string</returns>
+        public ApiResponse<string> ApplicationGetdockerComposefileWithHttpInfo (string applicationId, string configuration)
+        {
+            // verify the required parameter 'applicationId' is set
+            if (applicationId == null)
+                throw new ApiException(400, "Missing required parameter 'applicationId' when calling ApplicationsApi->ApplicationGetdockerComposefile");
+            // verify the required parameter 'configuration' is set
+            if (configuration == null)
+                throw new ApiException(400, "Missing required parameter 'configuration' when calling ApplicationsApi->ApplicationGetdockerComposefile");
+
+            var localVarPath = "/applications/{application_id}/docker_composefile";
+            var localVarPathParams = new Dictionary<String, String>();
+            var localVarQueryParams = new List<KeyValuePair<String, String>>();
+            var localVarHeaderParams = new Dictionary<String, String>(this.Configuration.DefaultHeader);
+            var localVarFormParams = new Dictionary<String, String>();
+            var localVarFileParams = new Dictionary<String, FileParameter>();
+            Object localVarPostBody = null;
+
+            // to determine the Content-Type header
+            String[] localVarHttpContentTypes = new String[] {
+            };
+            String localVarHttpContentType = this.Configuration.ApiClient.SelectHeaderContentType(localVarHttpContentTypes);
+
+            // to determine the Accept header
+            String[] localVarHttpHeaderAccepts = new String[] {
+                "application/json"
+            };
+            String localVarHttpHeaderAccept = this.Configuration.ApiClient.SelectHeaderAccept(localVarHttpHeaderAccepts);
+            if (localVarHttpHeaderAccept != null)
+                localVarHeaderParams.Add("Accept", localVarHttpHeaderAccept);
+
+            if (applicationId != null) localVarPathParams.Add("application_id", this.Configuration.ApiClient.ParameterToString(applicationId)); // path parameter
+            if (configuration != null) localVarQueryParams.AddRange(this.Configuration.ApiClient.ParameterToKeyValuePairs("", "configuration", configuration)); // query parameter
+
+
+            // make the HTTP request
+            IRestResponse localVarResponse = (IRestResponse) this.Configuration.ApiClient.CallApi(localVarPath,
+                Method.GET, localVarQueryParams, localVarPostBody, localVarHeaderParams, localVarFormParams, localVarFileParams,
+                localVarPathParams, localVarHttpContentType);
+
+            int localVarStatusCode = (int) localVarResponse.StatusCode;
+
+            if (ExceptionFactory != null)
+            {
+                Exception exception = ExceptionFactory("ApplicationGetdockerComposefile", localVarResponse);
+                if (exception != null) throw exception;
+            }
+
+            return new ApiResponse<string>(localVarStatusCode,
+                localVarResponse.Headers.ToDictionary(x => x.Name, x => string.Join(",", x.Value)),
+                (string) this.Configuration.ApiClient.Deserialize(localVarResponse, typeof(string)));
+        }
+
+        /// <summary>
+        /// Get docker compose file returns docker compose file that can be used to run the container and its dependencies
+        /// </summary>
+        /// <exception cref="TorizonRestAPI.Client.ApiException">Thrown when fails to make API call</exception>
+        /// <param name="applicationId">Id of an application (uuid)</param>
+        /// <param name="configuration"></param>
+        /// <param name="cancellationToken">Cancellation Token to cancel request (optional) </param>
+        /// <returns>Task of string</returns>
+        public async System.Threading.Tasks.Task<string> ApplicationGetdockerComposefileAsync (string applicationId, string configuration, CancellationToken cancellationToken = default(CancellationToken))
+        {
+             ApiResponse<string> localVarResponse = await ApplicationGetdockerComposefileWithHttpInfoAsync(applicationId, configuration, cancellationToken);
+             return localVarResponse.Data;
+
+        }
+
+        /// <summary>
+        /// Get docker compose file returns docker compose file that can be used to run the container and its dependencies
+        /// </summary>
+        /// <exception cref="TorizonRestAPI.Client.ApiException">Thrown when fails to make API call</exception>
+        /// <param name="applicationId">Id of an application (uuid)</param>
+        /// <param name="configuration"></param>
+        /// <param name="cancellationToken">Cancellation Token to cancel request (optional) </param>
+        /// <returns>Task of ApiResponse (string)</returns>
+        public async System.Threading.Tasks.Task<ApiResponse<string>> ApplicationGetdockerComposefileWithHttpInfoAsync (string applicationId, string configuration, CancellationToken cancellationToken = default(CancellationToken))
+        {
+            // verify the required parameter 'applicationId' is set
+            if (applicationId == null)
+                throw new ApiException(400, "Missing required parameter 'applicationId' when calling ApplicationsApi->ApplicationGetdockerComposefile");
+            // verify the required parameter 'configuration' is set
+            if (configuration == null)
+                throw new ApiException(400, "Missing required parameter 'configuration' when calling ApplicationsApi->ApplicationGetdockerComposefile");
+
+            var localVarPath = "/applications/{application_id}/docker_composefile";
+            var localVarPathParams = new Dictionary<String, String>();
+            var localVarQueryParams = new List<KeyValuePair<String, String>>();
+            var localVarHeaderParams = new Dictionary<String, String>(this.Configuration.DefaultHeader);
+            var localVarFormParams = new Dictionary<String, String>();
+            var localVarFileParams = new Dictionary<String, FileParameter>();
+            Object localVarPostBody = null;
+
+            // to determine the Content-Type header
+            String[] localVarHttpContentTypes = new String[] {
+            };
+            String localVarHttpContentType = this.Configuration.ApiClient.SelectHeaderContentType(localVarHttpContentTypes);
+
+            // to determine the Accept header
+            String[] localVarHttpHeaderAccepts = new String[] {
+                "application/json"
+            };
+            String localVarHttpHeaderAccept = this.Configuration.ApiClient.SelectHeaderAccept(localVarHttpHeaderAccepts);
+            if (localVarHttpHeaderAccept != null)
+                localVarHeaderParams.Add("Accept", localVarHttpHeaderAccept);
+
+            if (applicationId != null) localVarPathParams.Add("application_id", this.Configuration.ApiClient.ParameterToString(applicationId)); // path parameter
+            if (configuration != null) localVarQueryParams.AddRange(this.Configuration.ApiClient.ParameterToKeyValuePairs("", "configuration", configuration)); // query parameter
+
+
+            // make the HTTP request
+            IRestResponse localVarResponse = (IRestResponse) await this.Configuration.ApiClient.CallApiAsync(localVarPath,
+                Method.GET, localVarQueryParams, localVarPostBody, localVarHeaderParams, localVarFormParams, localVarFileParams,
+                localVarPathParams, localVarHttpContentType, cancellationToken);
+
+            int localVarStatusCode = (int) localVarResponse.StatusCode;
+
+            if (ExceptionFactory != null)
+            {
+                Exception exception = ExceptionFactory("ApplicationGetdockerComposefile", localVarResponse);
                 if (exception != null) throw exception;
             }
 

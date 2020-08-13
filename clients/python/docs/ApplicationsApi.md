@@ -10,6 +10,8 @@ Method | HTTP request | Description
 [**application_get**](ApplicationsApi.md#application_get) | **GET** /applications/{application_id} | Get application
 [**application_getcontainer**](ApplicationsApi.md#application_getcontainer) | **GET** /applications/{application_id}/container | Get container information
 [**application_getcontainer_logs**](ApplicationsApi.md#application_getcontainer_logs) | **GET** /applications/{application_id}/container_logs | Get container log, chunk by chunk
+[**application_getdocker_commandline**](ApplicationsApi.md#application_getdocker_commandline) | **GET** /applications/{application_id}/docker_commandline | Get docker command line used to run the container
+[**application_getdocker_composefile**](ApplicationsApi.md#application_getdocker_composefile) | **GET** /applications/{application_id}/docker_composefile | Get docker compose file
 [**application_getprivatekey**](ApplicationsApi.md#application_getprivatekey) | **GET** /applications/{application_id}/privatekey | Retrieves the path of the RSA private key
 [**application_modify**](ApplicationsApi.md#application_modify) | **PUT** /applications/{application_id} | Change application properties
 [**application_reseal**](ApplicationsApi.md#application_reseal) | **GET** /applications/{application_id}/reseal | Cleans id and keys for git repo uploading
@@ -429,8 +431,144 @@ No authorization required
 ### HTTP response details
 | Status code | Description | Response headers |
 |-------------|-------------|------------------|
-**200** | Returns application container |  -  |
+**200** | Returns a chunk of logs |  -  |
 **204** | No content |  -  |
+**404** | Application not found |  -  |
+**500** | Unexpected exception. |  -  |
+**525** | Remote docker exception. |  -  |
+**539** | SSH tunnel error. |  -  |
+
+[[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
+
+# **application_getdocker_commandline**
+> str application_getdocker_commandline(application_id, configuration)
+
+Get docker command line used to run the container
+
+returns full command line
+
+### Example
+
+```python
+from __future__ import print_function
+import time
+import moses_client
+from moses_client.rest import ApiException
+from pprint import pprint
+# Defining the host is optional and defaults to http://localhost:5000/api
+# See configuration.py for a list of all supported configuration parameters.
+configuration = moses_client.Configuration(
+    host = "http://localhost:5000/api"
+)
+
+
+# Enter a context with an instance of the API client
+with moses_client.ApiClient() as api_client:
+    # Create an instance of the API class
+    api_instance = moses_client.ApplicationsApi(api_client)
+    application_id = 'application_id_example' # str | Id of an application (uuid)
+configuration = 'configuration_example' # str | 
+
+    try:
+        # Get docker command line used to run the container
+        api_response = api_instance.application_getdocker_commandline(application_id, configuration)
+        pprint(api_response)
+    except ApiException as e:
+        print("Exception when calling ApplicationsApi->application_getdocker_commandline: %s\n" % e)
+```
+
+### Parameters
+
+Name | Type | Description  | Notes
+------------- | ------------- | ------------- | -------------
+ **application_id** | **str**| Id of an application (uuid) | 
+ **configuration** | **str**|  | 
+
+### Return type
+
+**str**
+
+### Authorization
+
+No authorization required
+
+### HTTP request headers
+
+ - **Content-Type**: Not defined
+ - **Accept**: application/json
+
+### HTTP response details
+| Status code | Description | Response headers |
+|-------------|-------------|------------------|
+**200** | Returns command line |  -  |
+**404** | Application not found |  -  |
+**500** | Unexpected exception. |  -  |
+**525** | Remote docker exception. |  -  |
+**539** | SSH tunnel error. |  -  |
+
+[[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
+
+# **application_getdocker_composefile**
+> str application_getdocker_composefile(application_id, configuration)
+
+Get docker compose file
+
+returns docker compose file that can be used to run the container and its dependencies
+
+### Example
+
+```python
+from __future__ import print_function
+import time
+import moses_client
+from moses_client.rest import ApiException
+from pprint import pprint
+# Defining the host is optional and defaults to http://localhost:5000/api
+# See configuration.py for a list of all supported configuration parameters.
+configuration = moses_client.Configuration(
+    host = "http://localhost:5000/api"
+)
+
+
+# Enter a context with an instance of the API client
+with moses_client.ApiClient() as api_client:
+    # Create an instance of the API class
+    api_instance = moses_client.ApplicationsApi(api_client)
+    application_id = 'application_id_example' # str | Id of an application (uuid)
+configuration = 'configuration_example' # str | 
+
+    try:
+        # Get docker compose file
+        api_response = api_instance.application_getdocker_composefile(application_id, configuration)
+        pprint(api_response)
+    except ApiException as e:
+        print("Exception when calling ApplicationsApi->application_getdocker_composefile: %s\n" % e)
+```
+
+### Parameters
+
+Name | Type | Description  | Notes
+------------- | ------------- | ------------- | -------------
+ **application_id** | **str**| Id of an application (uuid) | 
+ **configuration** | **str**|  | 
+
+### Return type
+
+**str**
+
+### Authorization
+
+No authorization required
+
+### HTTP request headers
+
+ - **Content-Type**: Not defined
+ - **Accept**: application/json
+
+### HTTP response details
+| Status code | Description | Response headers |
+|-------------|-------------|------------------|
+**200** | Docker-compose file as string with *nix line ending |  -  |
 **404** | Application not found |  -  |
 **500** | Unexpected exception. |  -  |
 **525** | Remote docker exception. |  -  |

@@ -191,5 +191,25 @@ namespace TorizonAppDeploymentAPI
             _ = api.ApplicationUpdatesdkAsync(this.Id, configuration, progress?.Id);
             await Task.Run(taskBuild);
         }
+
+        public async Task<string> GetDockerCommandLineAsync(string configuration)
+        {
+            string cmdline=Utils.ObjectOrException<string>(await api.ApplicationGetdockerCommandlineAsync(this.Id, configuration));
+
+            cmdline = cmdline.Trim(new char[] { '\n' });
+            cmdline = cmdline.Trim(new char[] { '\"' });
+
+            return cmdline;
+        }
+
+        public async Task<string> GetDockerComposeFileAsync(string configuration)
+        {
+            string composefile =  Utils.ObjectOrException<string>(await api.ApplicationGetdockerComposefileAsync(this.Id, configuration));
+
+            composefile = composefile.Trim(new char[] { '\n' });
+            composefile = composefile.Trim(new char[] { '\"' });
+
+            return composefile;
+        }
     }
 }

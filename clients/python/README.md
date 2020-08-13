@@ -88,6 +88,8 @@ Class | Method | HTTP request | Description
 *ApplicationsApi* | [**application_get**](docs/ApplicationsApi.md#application_get) | **GET** /applications/{application_id} | Get application
 *ApplicationsApi* | [**application_getcontainer**](docs/ApplicationsApi.md#application_getcontainer) | **GET** /applications/{application_id}/container | Get container information
 *ApplicationsApi* | [**application_getcontainer_logs**](docs/ApplicationsApi.md#application_getcontainer_logs) | **GET** /applications/{application_id}/container_logs | Get container log, chunk by chunk
+*ApplicationsApi* | [**application_getdocker_commandline**](docs/ApplicationsApi.md#application_getdocker_commandline) | **GET** /applications/{application_id}/docker_commandline | Get docker command line used to run the container
+*ApplicationsApi* | [**application_getdocker_composefile**](docs/ApplicationsApi.md#application_getdocker_composefile) | **GET** /applications/{application_id}/docker_composefile | Get docker compose file
 *ApplicationsApi* | [**application_getprivatekey**](docs/ApplicationsApi.md#application_getprivatekey) | **GET** /applications/{application_id}/privatekey | Retrieves the path of the RSA private key
 *ApplicationsApi* | [**application_modify**](docs/ApplicationsApi.md#application_modify) | **PUT** /applications/{application_id} | Change application properties
 *ApplicationsApi* | [**application_reseal**](docs/ApplicationsApi.md#application_reseal) | **GET** /applications/{application_id}/reseal | Cleans id and keys for git repo uploading

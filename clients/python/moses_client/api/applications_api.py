@@ -980,6 +980,314 @@ class ApplicationsApi(object):
             collection_formats=collection_formats,
             _request_auth=local_var_params.get('_request_auth'))
 
+    def application_getdocker_commandline(self, application_id, configuration, **kwargs):  # noqa: E501
+        """Get docker command line used to run the container  # noqa: E501
+
+        returns full command line  # noqa: E501
+        This method makes a synchronous HTTP request by default. To make an
+        asynchronous HTTP request, please pass async_req=True
+
+        >>> thread = api.application_getdocker_commandline(application_id, configuration, async_req=True)
+        >>> result = thread.get()
+
+        :param application_id: Id of an application (uuid) (required)
+        :type application_id: str
+        :param configuration: (required)
+        :type configuration: str
+        :param async_req: Whether to execute the request asynchronously.
+        :type async_req: bool, optional
+        :param _preload_content: if False, the urllib3.HTTPResponse object will
+                                 be returned without reading/decoding response
+                                 data. Default is True.
+        :type _preload_content: bool, optional
+        :param _request_timeout: timeout setting for this request. If one
+                                 number provided, it will be total request
+                                 timeout. It can also be a pair (tuple) of
+                                 (connection, read) timeouts.
+        :return: Returns the result object.
+                 If the method is called asynchronously,
+                 returns the request thread.
+        :rtype: str
+        """
+        kwargs['_return_http_data_only'] = True
+        return self.application_getdocker_commandline_with_http_info(application_id, configuration, **kwargs)  # noqa: E501
+
+    def application_getdocker_commandline_with_http_info(self, application_id, configuration, **kwargs):  # noqa: E501
+        """Get docker command line used to run the container  # noqa: E501
+
+        returns full command line  # noqa: E501
+        This method makes a synchronous HTTP request by default. To make an
+        asynchronous HTTP request, please pass async_req=True
+
+        >>> thread = api.application_getdocker_commandline_with_http_info(application_id, configuration, async_req=True)
+        >>> result = thread.get()
+
+        :param application_id: Id of an application (uuid) (required)
+        :type application_id: str
+        :param configuration: (required)
+        :type configuration: str
+        :param async_req: Whether to execute the request asynchronously.
+        :type async_req: bool, optional
+        :param _return_http_data_only: response data without head status code
+                                       and headers
+        :type _return_http_data_only: bool, optional
+        :param _preload_content: if False, the urllib3.HTTPResponse object will
+                                 be returned without reading/decoding response
+                                 data. Default is True.
+        :type _preload_content: bool, optional
+        :param _request_timeout: timeout setting for this request. If one
+                                 number provided, it will be total request
+                                 timeout. It can also be a pair (tuple) of
+                                 (connection, read) timeouts.
+        :param _request_auth: set to override the auth_settings for an a single
+                              request; this effectively ignores the authentication
+                              in the spec for a single request.
+        :type _request_auth: dict, optional
+        :return: Returns the result object.
+                 If the method is called asynchronously,
+                 returns the request thread.
+        :rtype: tuple(str, status_code(int), headers(HTTPHeaderDict))
+        """
+
+        local_var_params = locals()
+
+        all_params = [
+            'application_id',
+            'configuration'
+        ]
+        all_params.extend(
+            [
+                'async_req',
+                '_return_http_data_only',
+                '_preload_content',
+                '_request_timeout',
+                '_request_auth'
+            ]
+        )
+
+        for key, val in six.iteritems(local_var_params['kwargs']):
+            if key not in all_params:
+                raise ApiTypeError(
+                    "Got an unexpected keyword argument '%s'"
+                    " to method application_getdocker_commandline" % key
+                )
+            local_var_params[key] = val
+        del local_var_params['kwargs']
+        # verify the required parameter 'application_id' is set
+        if self.api_client.client_side_validation and ('application_id' not in local_var_params or  # noqa: E501
+                                                        local_var_params['application_id'] is None):  # noqa: E501
+            raise ApiValueError("Missing the required parameter `application_id` when calling `application_getdocker_commandline`")  # noqa: E501
+        # verify the required parameter 'configuration' is set
+        if self.api_client.client_side_validation and ('configuration' not in local_var_params or  # noqa: E501
+                                                        local_var_params['configuration'] is None):  # noqa: E501
+            raise ApiValueError("Missing the required parameter `configuration` when calling `application_getdocker_commandline`")  # noqa: E501
+
+        if self.api_client.client_side_validation and 'application_id' in local_var_params and not re.search(r'^[0-9,a-f,A-F]{8}-[0-9,a-f,A-F]{4}-[0-9,a-f,A-F]{4}-[0-9,a-f,A-F]{4}-[0-9,a-f,A-F]{12}$', local_var_params['application_id']):  # noqa: E501
+            raise ApiValueError("Invalid value for parameter `application_id` when calling `application_getdocker_commandline`, must conform to the pattern `/^[0-9,a-f,A-F]{8}-[0-9,a-f,A-F]{4}-[0-9,a-f,A-F]{4}-[0-9,a-f,A-F]{4}-[0-9,a-f,A-F]{12}$/`")  # noqa: E501
+        if self.api_client.client_side_validation and 'configuration' in local_var_params and not re.search(r'(?:debug|release)', local_var_params['configuration']):  # noqa: E501
+            raise ApiValueError("Invalid value for parameter `configuration` when calling `application_getdocker_commandline`, must conform to the pattern `/(?:debug|release)/`")  # noqa: E501
+        collection_formats = {}
+
+        path_params = {}
+        if 'application_id' in local_var_params:
+            path_params['application_id'] = local_var_params['application_id']  # noqa: E501
+
+        query_params = []
+        if 'configuration' in local_var_params and local_var_params['configuration'] is not None:  # noqa: E501
+            query_params.append(('configuration', local_var_params['configuration']))  # noqa: E501
+
+        header_params = {}
+
+        form_params = []
+        local_var_files = {}
+
+        body_params = None
+        # HTTP header `Accept`
+        header_params['Accept'] = self.api_client.select_header_accept(
+            ['application/json'])  # noqa: E501
+
+        # Authentication setting
+        auth_settings = []  # noqa: E501
+        
+        response_types_map = {
+            200: "str",
+            404: None,
+            500: "ErrorInfo",
+            525: "ErrorInfo",
+            539: "ErrorInfo",
+        }
+
+        return self.api_client.call_api(
+            '/applications/{application_id}/docker_commandline', 'GET',
+            path_params,
+            query_params,
+            header_params,
+            body=body_params,
+            post_params=form_params,
+            files=local_var_files,
+            response_types_map=response_types_map,
+            auth_settings=auth_settings,
+            async_req=local_var_params.get('async_req'),
+            _return_http_data_only=local_var_params.get('_return_http_data_only'),  # noqa: E501
+            _preload_content=local_var_params.get('_preload_content', True),
+            _request_timeout=local_var_params.get('_request_timeout'),
+            collection_formats=collection_formats,
+            _request_auth=local_var_params.get('_request_auth'))
+
+    def application_getdocker_composefile(self, application_id, configuration, **kwargs):  # noqa: E501
+        """Get docker compose file  # noqa: E501
+
+        returns docker compose file that can be used to run the container and its dependencies  # noqa: E501
+        This method makes a synchronous HTTP request by default. To make an
+        asynchronous HTTP request, please pass async_req=True
+
+        >>> thread = api.application_getdocker_composefile(application_id, configuration, async_req=True)
+        >>> result = thread.get()
+
+        :param application_id: Id of an application (uuid) (required)
+        :type application_id: str
+        :param configuration: (required)
+        :type configuration: str
+        :param async_req: Whether to execute the request asynchronously.
+        :type async_req: bool, optional
+        :param _preload_content: if False, the urllib3.HTTPResponse object will
+                                 be returned without reading/decoding response
+                                 data. Default is True.
+        :type _preload_content: bool, optional
+        :param _request_timeout: timeout setting for this request. If one
+                                 number provided, it will be total request
+                                 timeout. It can also be a pair (tuple) of
+                                 (connection, read) timeouts.
+        :return: Returns the result object.
+                 If the method is called asynchronously,
+                 returns the request thread.
+        :rtype: str
+        """
+        kwargs['_return_http_data_only'] = True
+        return self.application_getdocker_composefile_with_http_info(application_id, configuration, **kwargs)  # noqa: E501
+
+    def application_getdocker_composefile_with_http_info(self, application_id, configuration, **kwargs):  # noqa: E501
+        """Get docker compose file  # noqa: E501
+
+        returns docker compose file that can be used to run the container and its dependencies  # noqa: E501
+        This method makes a synchronous HTTP request by default. To make an
+        asynchronous HTTP request, please pass async_req=True
+
+        >>> thread = api.application_getdocker_composefile_with_http_info(application_id, configuration, async_req=True)
+        >>> result = thread.get()
+
+        :param application_id: Id of an application (uuid) (required)
+        :type application_id: str
+        :param configuration: (required)
+        :type configuration: str
+        :param async_req: Whether to execute the request asynchronously.
+        :type async_req: bool, optional
+        :param _return_http_data_only: response data without head status code
+                                       and headers
+        :type _return_http_data_only: bool, optional
+        :param _preload_content: if False, the urllib3.HTTPResponse object will
+                                 be returned without reading/decoding response
+                                 data. Default is True.
+        :type _preload_content: bool, optional
+        :param _request_timeout: timeout setting for this request. If one
+                                 number provided, it will be total request
+                                 timeout. It can also be a pair (tuple) of
+                                 (connection, read) timeouts.
+        :param _request_auth: set to override the auth_settings for an a single
+                              request; this effectively ignores the authentication
+                              in the spec for a single request.
+        :type _request_auth: dict, optional
+        :return: Returns the result object.
+                 If the method is called asynchronously,
+                 returns the request thread.
+        :rtype: tuple(str, status_code(int), headers(HTTPHeaderDict))
+        """
+
+        local_var_params = locals()
+
+        all_params = [
+            'application_id',
+            'configuration'
+        ]
+        all_params.extend(
+            [
+                'async_req',
+                '_return_http_data_only',
+                '_preload_content',
+                '_request_timeout',
+                '_request_auth'
+            ]
+        )
+
+        for key, val in six.iteritems(local_var_params['kwargs']):
+            if key not in all_params:
+                raise ApiTypeError(
+                    "Got an unexpected keyword argument '%s'"
+                    " to method application_getdocker_composefile" % key
+                )
+            local_var_params[key] = val
+        del local_var_params['kwargs']
+        # verify the required parameter 'application_id' is set
+        if self.api_client.client_side_validation and ('application_id' not in local_var_params or  # noqa: E501
+                                                        local_var_params['application_id'] is None):  # noqa: E501
+            raise ApiValueError("Missing the required parameter `application_id` when calling `application_getdocker_composefile`")  # noqa: E501
+        # verify the required parameter 'configuration' is set
+        if self.api_client.client_side_validation and ('configuration' not in local_var_params or  # noqa: E501
+                                                        local_var_params['configuration'] is None):  # noqa: E501
+            raise ApiValueError("Missing the required parameter `configuration` when calling `application_getdocker_composefile`")  # noqa: E501
+
+        if self.api_client.client_side_validation and 'application_id' in local_var_params and not re.search(r'^[0-9,a-f,A-F]{8}-[0-9,a-f,A-F]{4}-[0-9,a-f,A-F]{4}-[0-9,a-f,A-F]{4}-[0-9,a-f,A-F]{12}$', local_var_params['application_id']):  # noqa: E501
+            raise ApiValueError("Invalid value for parameter `application_id` when calling `application_getdocker_composefile`, must conform to the pattern `/^[0-9,a-f,A-F]{8}-[0-9,a-f,A-F]{4}-[0-9,a-f,A-F]{4}-[0-9,a-f,A-F]{4}-[0-9,a-f,A-F]{12}$/`")  # noqa: E501
+        if self.api_client.client_side_validation and 'configuration' in local_var_params and not re.search(r'(?:debug|release)', local_var_params['configuration']):  # noqa: E501
+            raise ApiValueError("Invalid value for parameter `configuration` when calling `application_getdocker_composefile`, must conform to the pattern `/(?:debug|release)/`")  # noqa: E501
+        collection_formats = {}
+
+        path_params = {}
+        if 'application_id' in local_var_params:
+            path_params['application_id'] = local_var_params['application_id']  # noqa: E501
+
+        query_params = []
+        if 'configuration' in local_var_params and local_var_params['configuration'] is not None:  # noqa: E501
+            query_params.append(('configuration', local_var_params['configuration']))  # noqa: E501
+
+        header_params = {}
+
+        form_params = []
+        local_var_files = {}
+
+        body_params = None
+        # HTTP header `Accept`
+        header_params['Accept'] = self.api_client.select_header_accept(
+            ['application/json'])  # noqa: E501
+
+        # Authentication setting
+        auth_settings = []  # noqa: E501
+        
+        response_types_map = {
+            200: "str",
+            404: None,
+            500: "ErrorInfo",
+            525: "ErrorInfo",
+            539: "ErrorInfo",
+        }
+
+        return self.api_client.call_api(
+            '/applications/{application_id}/docker_composefile', 'GET',
+            path_params,
+            query_params,
+            header_params,
+            body=body_params,
+            post_params=form_params,
+            files=local_var_files,
+            response_types_map=response_types_map,
+            auth_settings=auth_settings,
+            async_req=local_var_params.get('async_req'),
+            _return_http_data_only=local_var_params.get('_return_http_data_only'),  # noqa: E501
+            _preload_content=local_var_params.get('_preload_content', True),
+            _request_timeout=local_var_params.get('_request_timeout'),
+            collection_formats=collection_formats,
+            _request_auth=local_var_params.get('_request_auth'))
+
     def application_getprivatekey(self, application_id, **kwargs):  # noqa: E501
         """Retrieves the path of the RSA private key  # noqa: E501
 

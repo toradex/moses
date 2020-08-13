@@ -811,6 +811,42 @@ def cmd_handler_application_sync(args) -> int:
     return 0
 
 
+def cmd_handler_application_cmdline(args) -> int:
+    """Returns docker command line for a specific application configuration
+
+    Arguments:
+        args {[type]} -- command line arguments
+
+    Returns:
+        int -- 0 for success
+    """
+    api = moses_client.ApplicationsApi()
+
+    cmdline = api.application_getdocker_commandline(
+        args.application_id, args.configuration
+    )
+    logging.info(cmdline)
+    return 0
+
+
+def cmd_handler_application_composefile(args) -> int:
+    """Returns docker command line for a specific application configuration
+
+    Arguments:
+        args {[type]} -- command line arguments
+
+    Returns:
+        int -- 0 for success
+    """
+    api = moses_client.ApplicationsApi()
+
+    composefile = api.application_getdocker_composefile(
+        args.application_id, args.configuration
+    )
+    logging.info(composefile)
+    return 0
+
+
 def cmd_handler_detect(args) -> int:
     """Detects a new serial or network device
 
@@ -1090,6 +1126,8 @@ def create_parser() -> argparse.ArgumentParser:
     application_key_parser = application_subparsers.add_parser("key")
     application_reseal_parser = application_subparsers.add_parser("reseal")
     application_sync_parser = application_subparsers.add_parser("sync")
+    application_cmdline_parser = application_subparsers.add_parser("cmdline")
+    application_composefile_parser = application_subparsers.add_parser("composefile")
 
     application_build_parser.add_argument(
         "configuration", help="Build/release or other app-specific configuration"
@@ -1153,6 +1191,14 @@ def create_parser() -> argparse.ArgumentParser:
         dest="source_is_sdk",
         action="store_true",
         default=False,
+    )
+
+    application_cmdline_parser.add_argument(
+        "configuration", help="Build/release or other app-specific configuration"
+    )
+
+    application_composefile_parser.add_argument(
+        "configuration", help="Build/release or other app-specific configuration"
     )
 
     # add command to create application
@@ -1224,7 +1270,7 @@ if __name__ == "__main__":
         if "body" in e.__dict__:
 
             try:
-                ex = json.loads(e.body)
+                ex = json.loads(e.__dict__["body"])
                 if "description" in ex:
                     logging.error(ex["description"])
                 if "message" in ex:
@@ -1233,9 +1279,9 @@ if __name__ == "__main__":
                     code = ex["code"]
             except:
                 pass
-            logging.error(e.body.strip('"\n'))
+            logging.error(e.__dict__["body"].strip('"\n'))
         elif "args" in e.__dict__:
-            logging.error(e.args)
+            logging.error(e.__dict__["args"])
         else:
             logging.error(e)
 

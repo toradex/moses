@@ -25,15 +25,123 @@ import rsync
 import pathlib
 import progresscookie
 import dockerapi
-from typing import Optional, Dict, Any, List
+from typing import Optional, Dict, Any, List, Callable, Tuple
+import yaml
 
 
-class RemoteImageNotFoundException(Exception):
-    pass
+def blkio_weight_device_cmdline_helper(devices: list) -> str:
+
+    cmdline = ""
+
+    for v in devices:
+        cmdline += "--blkio-weight-device " + v["Path"] + ":" + str(v["Weight"]) + " "
+
+    return cmdline
 
 
-class ContainerAlreadyRunning(Exception):
-    pass
+def device_read_bps_cmdline_helper(limits: list) -> str:
+    cmdline = ""
+
+    for v in limits:
+        cmdline += "--device-read-bps " + v["Path"] + ":" + str(v["Rate"]) + " "
+
+    return cmdline
+
+
+def device_write_bps_cmdline_helper(limits: list) -> str:
+    cmdline = ""
+
+    for v in limits:
+        cmdline += "--device-write-bps " + v["Path"] + ":" + str(v["Rate"]) + " "
+
+    return cmdline
+
+
+def device_read_iops_cmdline_helper(limits: list) -> str:
+    cmdline = ""
+
+    for v in limits:
+        cmdline += "--device-read-iops " + v["Path"] + ":" + str(v["Rate"]) + " "
+
+    return cmdline
+
+
+def device_write_iops_cmdline_helper(limits: list) -> str:
+    cmdline = ""
+
+    for v in limits:
+        cmdline += "--device-write-iops " + +v["Path"] + ":" + str(v["Rate"]) + " "
+
+    return cmdline
+
+
+def log_config_cmdline_helper(value: dict):
+    cmdline = "--log-driver " + value["type"]
+
+    for v in value["config"].items():
+        cmdline += " --log-opt " + v[0] + "=" + v[1] + " "
+
+    return cmdline
+
+
+def mounts_cmdline_helper(mounts: dict) -> str:
+
+    cmdline = ""
+
+    for m in mounts:
+        cmdline += "--mount "
+        cmdline += "type=" + m["type"]
+        cmdline += ",source=" + m["source"]
+        cmdline += ",target=" + m["target"]
+        cmdline += ",readonly=" + ("1" if m["read_only"] else "0") + " "
+
+    return cmdline
+
+
+def ports_cmdline_helper(ports: dict) -> str:
+    cmdline = ""
+
+    for p in ports.items():
+        cmdline += "--publish "
+        containerport = p[0]
+
+        if p[1] is None:
+            cmdline += containerport + " "
+        elif isinstance(p[1], int):
+            cmdline += str(p[1]) + ":" + containerport + " "
+        elif isinstance(p[1], tuple):
+            cmdline += p[1][0] + ":" + p[1][1] + ":" + containerport + " "
+
+    return cmdline
+
+
+def restart_policy_cmdline_helper(value: dict):
+    cmdline = ""
+
+    cmdline += "--restart-condition " + value["Name"] + " "
+    cmdline += "--restart-max-attempts" + value["MaximumRetryCount"] + " "
+
+    return cmdline
+
+
+def ulimits_cmdline_helper(ulimits: list):
+
+    cmdline = ""
+
+    for u in ulimits:
+        cmdline += "--ulimit " + u.name + "=" + str(u.soft) + ":" + str(u.hard) + " "
+
+    return cmdline
+
+
+def volumes_cmdline_helper(volumes: dict) -> str:
+
+    cmdline = ""
+
+    for v in volumes.items():
+        cmdline += " --volume " + v[0] + v[1]["bind"] + "," + v[1]["mode"]
+
+    return cmdline
 
 
 class ApplicationConfig(config.ConfigurableKeysObject):
@@ -49,11 +157,11 @@ class ApplicationConfig(config.ConfigurableKeysObject):
 
     def __init__(self, folder: Optional[pathlib.Path] = None):
         """Loads data from a configuration folder
-
         Arguments:
             folder {Path} -- Path of the folder used to store
                              target information
         """
+
         super().__init__(folder)
 
         self.props: Dict[str, Dict[str, str]] = {
@@ -1057,6 +1165,20 @@ class ApplicationConfig(config.ConfigurableKeysObject):
         imagename = imagename.replace("/", "_")
         return imagename + "_instance"
 
+    def _get_image_tag(self, configuration: str) -> str:
+        """Return unique image tag for this application
+
+        Args:
+            configuration (str): debug/release
+
+        Returns:
+            str: tag
+        """
+
+        assert self.id is not None
+
+        return self.platformid + "_" + self.id + "_" + configuration
+
     def _get_sdk_container_name(self, configuration: str) -> str:
         """Return the name of the SDK container for this application
 
@@ -1768,6 +1890,372 @@ class ApplicationConfig(config.ConfigurableKeysObject):
             self.logs[device.id][configuration] = log
 
         return utils.get_log_chunk(log)
+
+    boolean_parms: Dict[str, str] = {
+        "auto_remove": "--rm",
+        "detach": "--detach",
+        "init": "--init",
+        "network_disabled": "--network=none",
+        "oom_kill_disable": "--oom-kill-disable",
+        "privileged": "--privileged",
+        "publish_all_ports": "--publish-all",
+        "read_only": "--read-only",
+        "remove": "--rm",
+        "tty": "--tty",
+    }
+
+    str_parms: Dict[str, str] = {
+        "cgroup_parent": "--cgroup-parent",
+        "cpuset_cpus": "--cpuset-cpus",
+        "cpuset_mems": "--cpuset-mems",
+        "domainname": "--domainname",
+        "entrypoint": "--entrypoint",
+        "hostname": "--hostname",
+        "ipc_mode": "--ipc",
+        "isolation": "--isolation",
+        "kernel_memory": "--kernel-memory",
+        "mac_address": "--mac-address",
+        "mem_limit": "--memory",
+        "mem_reservation": "--memory-reservation",
+        "memswap_limit": "--memory-swap",
+        "name": "--name",
+        "network": "--network",
+        "network_mode": "--network",
+        "pid_mode": "--pid",
+        "pids_limit": "--pids-limit",
+        "platform": "--platform",
+        "runtime": "--runtime",
+        "shm_size": "--shm-size",
+        "stop_signal": "--stop-signal",
+        "user": "--user",
+        "userns_mode": "--userns",
+        "uts_mode": "--uts",
+        "volume_driver": "--volume-driver",
+        "working_dir": "--workdir",
+    }
+
+    int_parms: Dict[str, str] = {
+        "blkio_weight": "--blkio-weight",
+        "cpu_period": "--cpu-period",
+        "cpu_quota": "--cpu_quota",
+        "cpu_rt_period": "--cpu-rt-period",
+        "cpu_rt_runtime": "--cpu-rt-runtime",
+        "cpu_shares": "--cpu-shares",
+        "kernel_memory": "--kernel-memory",
+        "mem_limit": "--memory",
+        "mem_reservation": "--memory-reservation",
+        "mem_limit": "--memory",
+        "mem_swappiness": "--memory-swappiness",
+        "memswap_limit": "--memory-swap",
+        "oom_score_adj": "--oom-score-adj",
+        "pids_limit": "--pids-limit",
+        "shm_size": "--shm-size",
+        "user": "--user",
+    }
+
+    repeated_list_parms: Dict[str, str] = {
+        "cap_add": "--cap-add",
+        "cap_drop": "--cap-drop",
+        "device_cgroup_rules": "--device-cgroup-rule",
+        "devices": "--device",
+        "dns": "--dns",
+        "dns_opt": "--dns-option",
+        "dns_search": "--dns-search",
+        "domainname": "--domainname",
+        "environment": "--env",
+        "group_add": "--group-add",
+        "labels": "--label",
+        "security_opt": "--security-opt",
+        "volumes_from": "--volumes-from",
+    }
+
+    joined_list_parms: Dict[str, Tuple] = {"entrypoint": ("--entrypoint", " ")}
+
+    key_val_dict_parms: Dict[str, Tuple] = {
+        "environment": ("--env", "="),
+        "extra_hosts": ("--add-host", ":"),
+        "labels": ("--label", "="),
+        "links": ("--link", ":"),
+        "storage_opts": ("--storage-opt", "="),
+        "sysctls": ("--sysctl", "="),
+    }
+
+    special_parms: Dict[str, Callable[..., str]] = {
+        "blkio_weight_device": blkio_weight_device_cmdline_helper,
+        "device_read_bps": device_read_bps_cmdline_helper,
+        "device_write_bps": device_write_bps_cmdline_helper,
+        "device_read_iops": device_read_iops_cmdline_helper,
+        "device_write_iops": device_write_iops_cmdline_helper,
+        "log_config": log_config_cmdline_helper,
+        "mounts": mounts_cmdline_helper,
+        "ports": ports_cmdline_helper,
+        "restart_policy": restart_policy_cmdline_helper,
+        "ulimits": ulimits_cmdline_helper,
+        "volumes": volumes_cmdline_helper,
+    }
+
+    def get_docker_commandline(self, configuration: str) -> str:
+        """Returns a docker command line that can be used to run the application's container
+
+        Args:
+            configuration (str): debug/release
+
+        Returns:
+            str: command line for Linux target            
+        """
+
+        plat = platformconfig.PlatformConfigs().get_platform(self.platformid)
+
+        if plat is None:
+            return None
+
+        ports = self._merge_props(plat, configuration, "ports")
+        volumes = self._merge_props(plat, configuration, "volumes")
+        devices = self._append_props(plat, configuration, "devices")
+        extraparms = self._merge_props(plat, configuration, "extraparms")
+        networks = list(
+            dict.fromkeys(self._append_props(plat, configuration, "networks"))
+        )
+
+        cmdline = "docker run"
+
+        # parse extraparms
+        for parm in extraparms:
+            rawvalue = extraparms[parm]
+
+            rawvalue = utils.replace_tags(
+                rawvalue,
+                lambda obj, tag, args: self._get_value(obj, tag, args),
+                configuration,
+            )
+            value = yaml.full_load(rawvalue)
+
+            if parm in ApplicationConfig.boolean_parms:
+                if value:
+                    cmdline += " " + ApplicationConfig.boolean_parms[parm]
+                    continue
+
+            if isinstance(value, str):
+                if parm in ApplicationConfig.str_parms:
+                    cmdline += (
+                        " " + ApplicationConfig.str_parms[parm] + " '" + value + "'"
+                    )
+                    continue
+
+            if isinstance(value, int):
+                if parm in ApplicationConfig.int_parms:
+                    cmdline += (
+                        " " + ApplicationConfig.int_parms[parm] + " " + str(value)
+                    )
+                    continue
+
+            if isinstance(value, list):
+                if parm in ApplicationConfig.repeated_list_parms:
+                    for v in value:
+                        cmdline += (
+                            " "
+                            + ApplicationConfig.repeated_list_parms[parm]
+                            + " '"
+                            + v
+                            + "' "
+                        )
+                    continue
+
+                if parm in ApplicationConfig.joined_list_parms:
+                    cmdline += (
+                        " " + ApplicationConfig.repeated_list_parms[parm][0] + " '"
+                    )
+                    for v in value:
+                        cmdline += v + ApplicationConfig.repeated_list_parms[parm][1]
+                    continue
+                    cmdline += "'"
+
+            if isinstance(value, dict):
+                if parm in ApplicationConfig.key_val_dict_parms:
+                    for v in value.items():
+                        cmdline += (
+                            " "
+                            + ApplicationConfig.key_val_dict_parms[parm][0]
+                            + " "
+                            + v[0]
+                            + ApplicationConfig.key_val_dict_parms[parm][1]
+                            + v[1]
+                            + " "
+                        )
+                    continue
+
+            if parm in ApplicationConfig.special_parms:
+                cmdline += " " + ApplicationConfig.special_parms[parm](value)
+                continue
+
+            logging.warning(
+                "Parameter %s can't be converted into command line parameter", parm
+            )
+
+        # parse mountpoints
+        for v in volumes.items():
+            cmdline += " --volume " + v[0] + ":" + v[1]
+
+        # parse networks
+        for n in networks:
+            cmdline += " --network " + n
+
+        # parse devices
+        for d in devices:
+            cmdline += " --device " + d + ":" + d
+
+        # parse ports
+        for p in ports.items():
+            if p[1] is None:
+                cmdline += " --publish " + p[0]
+            else:
+                cmdline += " --publish " + str(p[1]) + ":" + p[0]
+
+        cmdline += " " + self._get_image_tag(configuration)
+
+        # check if there's a command specified in extra parms
+        if "command" in extraparms:
+            value = extraparms["command"]
+
+            if isinstance(value, list):
+                cmdline += " '" + (" ".join(value)) + "'"
+            else:
+                cmdline += " '" + str(value) + "'"
+
+        return cmdline
+
+    compose_parms: Dict[str, Optional[Callable]] = {
+        "cap_add": None,
+        "cap_drop": None,
+        "cgroup_parent": None,
+        "command": None,
+        "devices": None,
+        "domainname": None,
+        "dns": None,
+        "dns_search": None,
+        "entrypoint": None,
+        "environment": None,
+        "extra_hosts": lambda x: (
+            "extra_hosts",
+            map((lambda h: h[0] + ":" + h[1]), x.items()),
+        ),
+        "healtcheck": None,
+        "hostname": None,
+        "init": None,
+        "isolation": None,
+        "labels": None,
+        "log_config": None,
+        "name": lambda x: ("container_name", x),
+        "network_mode": None,
+        "pid_mode": lambda x: ("pid", x),
+        "ports": lambda x: (
+            "ports",
+            list(map(lambda y: str(y[0]) + ":" + str(y[1]), x[1].items())),
+        ),
+        "privileged": None,
+        "read_only": None,
+        "restart": None,
+        "shm_size": None,
+        "stdin_open": None,
+        "tty": None,
+        "user": None,
+        "volumes": (
+            lambda x: (
+                "volumes",
+                list(
+                    map(
+                        lambda y: str(y[0])
+                        + ":"
+                        + str(y[1]["bind"])
+                        + ","
+                        + str(y[1]["mode"]),
+                        x[1].items(),
+                    )
+                ),
+            )
+        ),
+        "working_dir": None,
+    }
+
+    def get_docker_composefile(self, configuration: str) -> str:
+        """Returns a docker-compose file that can be used to run app's container and its dependencies
+
+        Args:
+            configuration (str): debug/release
+
+        Returns:
+            str: content of the compose file (*nix line-endings)
+        """
+
+        plat = platformconfig.PlatformConfigs().get_platform(self.platformid)
+
+        if plat is None:
+            return None
+
+        ports = self._merge_props(plat, configuration, "ports")
+        volumes = self._merge_props(plat, configuration, "volumes")
+        devices = self._append_props(plat, configuration, "devices")
+        extraparms = self._merge_props(plat, configuration, "extraparms")
+        networks = list(
+            dict.fromkeys(self._append_props(plat, configuration, "networks"))
+        )
+
+        composefile = self.get_prop(configuration, "dockercomposefile")
+
+        if composefile is not None and len(composefile) > 0:
+            assert self.folder is not None
+
+            with open(os.path.join(self.folder, composefile), "r") as f:
+                composeyaml = yaml.load(f, Loader=yaml.FullLoader)
+        else:
+            composeyaml = yaml.load("services: {}", Loader=yaml.FullLoader)
+
+        # create and fill new service
+        service = dict()
+
+        # merge volumes, devices, ports into extraparms (we can't have multiple instances of the same parameter)
+        if not "ports" in extraparms:
+            extraparms["ports"] = dict()
+
+        if not "devices" in extraparms:
+            extraparms["devices"] = list()
+
+        if not "volumes" in extraparms:
+            extraparms["volumes"] = dict()
+
+        for p in ports.items():
+            if p[1] == "":
+                extraparms["ports"][p[0]] = None
+            else:
+                extraparms["ports"][p[0]] = p[1]
+
+        for v in volumes.items():
+            bind, mode = (v[1] + ",rw").split(",")
+            extraparms["volumes"][v[0]] = {"bind": bind, "mode": mode}
+
+        extraparms["devices"].extend(devices)
+
+        # process extraparms and add them to the dictionary
+        for ep in extraparms.keys():
+            if ep in ApplicationConfig.compose_parms:
+                if ApplicationConfig.compose_parms[ep] is None:
+                    service[ep] = extraparms[ep]
+                else:
+                    parm, value = ApplicationConfig.compose_parms[ep](
+                        (ep, extraparms[ep])
+                    )
+                    service[parm] = value
+
+        service["image"] = self._get_image_tag(configuration)
+
+        if self.get_prop(configuration, "depends_on") is not None:
+            service["depends_on"] = self.get_prop(configuration, "depends_on")
+        else:
+            service["depends_on"] = list(composeyaml["services"].keys())
+
+        composeyaml["services"][self._get_image_name(configuration)] = service
+
+        return yaml.dump(composeyaml)
 
 
 class ApplicationConfigs(Dict[str, ApplicationConfig], metaclass=singleton.Singleton):

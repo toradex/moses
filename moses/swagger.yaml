@@ -1352,11 +1352,69 @@ paths:
           description: when true reads the lock back from beginning
       responses:
         200:
-          description: Returns application container
+          description: Returns a chunk of logs
           schema:
             type: string
         204:
           description: No content
+        404:
+          description: Application not found
+        500:
+          $ref: "#/responses/InternalServerError_500"
+        525:
+          $ref: "#/responses/RemoteDockerError_525"
+        539:
+          $ref: "#/responses/SSHTunnelError_539"
+
+  /applications/{application_id}/docker_commandline:
+
+    get:
+      operationId: application_getdocker_commandline
+      tags:
+        - Applications
+      summary: Get docker command line used to run the container
+      description: returns full command line
+      parameters:
+        - $ref: "#/parameters/application_id"
+        - name: configuration
+          in: query
+          type: string
+          required: true
+          pattern: "(?:debug|release)"
+      responses:
+        200:
+          description: Returns command line
+          schema:
+            type: string
+        404:
+          description: Application not found
+        500:
+          $ref: "#/responses/InternalServerError_500"
+        525:
+          $ref: "#/responses/RemoteDockerError_525"
+        539:
+          $ref: "#/responses/SSHTunnelError_539"
+
+  /applications/{application_id}/docker_composefile:
+
+    get:
+      operationId: application_getdocker_composefile
+      tags:
+        - Applications
+      summary: Get docker compose file 
+      description: returns docker compose file that can be used to run the container and its dependencies
+      parameters:
+        - $ref: "#/parameters/application_id"
+        - name: configuration
+          in: query
+          type: string
+          required: true
+          pattern: "(?:debug|release)"
+      responses:
+        200:
+          description: Docker-compose file as string with *nix line ending
+          schema:
+            type: string
         404:
           description: Application not found
         500:

@@ -974,6 +974,38 @@ def applications_application_container_logs_get(
 
     return (line, 200)
 
+def applications_application_docker_commandline_get(application_id, configuration):
+    """Returns docker command line for the application's container
+
+    Args:
+        application_id {str} -- application
+        configuration {str}: debug/release
+    """
+    applications = applicationconfig.ApplicationConfigs()
+
+    if application_id not in applications:
+        return ("Application not found", 404)
+
+    app = applications.get(application_id)
+
+    return (app.get_docker_commandline(configuration),200)
+
+def applications_application_docker_composefile_get(application_id, configuration):
+    """Returns docker command line for the application's container
+
+    Args:
+        application_id {str} -- application
+        configuration {str}: debug/release
+    """
+    applications = applicationconfig.ApplicationConfigs()
+
+    if application_id not in applications:
+        return ("Application not found", 404)
+
+    app = applications.get(application_id)
+
+    return (app.get_docker_composefile(configuration),200)
+
 
 def applications_application_sdk_run_get(
     application_id: str, configuration: str, build: bool, progress_id: str = None
