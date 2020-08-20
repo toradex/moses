@@ -266,8 +266,9 @@ class PullImageError(MosesError):
     code = 542
     description = "Error pulling images from registry."
 
-    def __init__(self):
-        super().__init__("Error pulling some of the image from registry.")
+    def __init__(self, failed: list):
+        message = "Can't pull images: " + ",".join(failed)
+        super().__init__(message)
 
 
 class SDKRequiresConfiguration(MosesError):

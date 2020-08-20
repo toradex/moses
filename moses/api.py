@@ -78,7 +78,7 @@ def version_get() -> dict:
             }
 
 
-def version_docker_get() -> dict:
+def version_docker_get():
     """Returns docker version information
 
     Returns: Docker information
@@ -135,7 +135,7 @@ def devices_network_detect_get(hostname, username, password):
     return (dev, 200)
 
 
-def devices_device_get(device_id) -> targetdevice.TargetDevice:
+def devices_device_get(device_id):
     """Returns a device given its id
 
     Arguments:
@@ -149,7 +149,7 @@ def devices_device_get(device_id) -> targetdevice.TargetDevice:
     if device_id not in devices:
         return ("Device not found", 404)
 
-    return (devices[device_id], 200)
+    return devices[device_id]
 
 
 def devices_device_put(device_id, device):
@@ -940,8 +940,8 @@ def setup_pullcontainers_get():
         exceptions.PullImageError: error during image pull
     """
 
-    dockerclient = docker.from_env()
-    ex = False
+    dockerclient = docker.from_env()    
+    failed = []
 
     for p in platformconfig.PlatformConfigs():
 
@@ -955,7 +955,7 @@ def setup_pullcontainers_get():
                 except:
                     logging.exception(
                         "PULL - Pull operation failed for image %s:%s.", v[0], v[1])
-                    ex = True
+                    failed.append(str(v[0])+":"+str(v[1]))
 
         for k, v in plat.sdkbaseimage.items():
             if v is not None:
@@ -965,10 +965,10 @@ def setup_pullcontainers_get():
                 except:
                     logging.exception(
                         "PULL - Pull operation failed for image %s:%s.", v[0], v[1])
-                    ex = True
+                    failed.append(str(v[0])+":"+str(v[1]))
 
-    if ex:
-        raise exceptions.PullImageError()
+    if len(failed) != 0:
+        raise exceptions.PullImageError(failed)
 
 
 def init_api():
