@@ -126,11 +126,18 @@ namespace TorizonAppDeploymentAPI
             return true;
         }
 
-        public static async Task PullContainersAsync(Action operationCompleted=null)
+        public static async Task PullContainersAsync(Action<Exception> operationCompleted=null)
         {
-            TorizonRestAPI.Api.SetupApi api = new TorizonRestAPI.Api.SetupApi();
-            await api.SetupPullcontainersAsync();
-            operationCompleted?.Invoke();
+            try
+            {
+                TorizonRestAPI.Api.SetupApi api = new TorizonRestAPI.Api.SetupApi();
+                await api.SetupPullcontainersAsync();
+                operationCompleted?.Invoke(null);
+            }
+            catch (Exception e)
+            {
+                operationCompleted?.Invoke(e);
+            }
         }
 
     }
