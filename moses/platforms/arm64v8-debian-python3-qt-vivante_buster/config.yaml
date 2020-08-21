@@ -95,3 +95,4 @@ networks:
   release: []
 
 eulas: [ "nxp-la-opt-v5" ]
+disabled: true

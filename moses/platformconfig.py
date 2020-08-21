@@ -126,6 +126,7 @@ class PlatformConfig(config.ConfigurableObject):
 
         self.tags = []
         self.eulas = []
+        self.disabled = False
 
         if self.folder is not None:
             self.load()
@@ -343,6 +344,9 @@ class PlatformConfigs(dict, metaclass=singleton.Singleton):
         eulas = eula.EULAs()
 
         for plat in self.values():
+
+            if plat.disabled:
+                continue
 
             eulaaccepted = True
 
