@@ -255,7 +255,7 @@ class ApplicationConfig(config.ConfigurableKeysObject):
             if tag in platform.props["common"]:
                 return str(platform.props["common"][tag])
             if tag in platform.__dict__:
-                return str(platform.__dict_[tag])
+                return str(platform.__dict__[tag])
 
         return ""
 
@@ -526,8 +526,8 @@ class ApplicationConfig(config.ConfigurableKeysObject):
         merged.extend(self.__dict__[prop]["common"])
         merged.extend(self.__dict__[prop][configuration])
 
-        return map(lambda i: i if not isinstance(i, str) else utils.replace_tags(i, lambda obj, tag, args: self._get_value(
-            obj, tag, args), configuration), merged)
+        return list(map(lambda i: i if not isinstance(i, str) else utils.replace_tags(i, lambda obj, tag, args: self._get_value(
+            obj, tag, args), configuration), merged))
 
     def get_prop(self,
                  configuration: str,
@@ -976,7 +976,7 @@ class ApplicationConfig(config.ConfigurableKeysObject):
 
             dockerfile = self._get_work_folder() / ("Dockerfile_SDK." + configuration)
 
-            utils.apply_template(dockertemplatefull, dockerfile, lambda obj,
+            utils.apply_template(dockertemplatefull, str(dockerfile), lambda obj,
                                  tag, args: self._get_value(obj, tag, args), configuration)
 
             # copy contents of data subfolder to app path
@@ -1048,7 +1048,7 @@ class ApplicationConfig(config.ConfigurableKeysObject):
 
             try:
 
-                outputpath = self._get_work_folder() / "filesystem_"+configuration+".tar"
+                outputpath = self._get_work_folder() / ("filesystem_"+configuration+".tar")
 
                 if outputpath.exists():
                     os.remove(str(outputpath))
@@ -1072,7 +1072,7 @@ class ApplicationConfig(config.ConfigurableKeysObject):
             raise exceptions.LocalDockerError(e)
 
         # extract sysroot contents
-        destfolder = self._get_work_folder / ("sysroot_"+configuration)
+        destfolder = self._get_work_folder() / ("sysroot_"+configuration)
 
         if destfolder.exists():
             shutil.rmtree(str(destfolder))
@@ -1203,7 +1203,8 @@ class ApplicationConfig(config.ConfigurableKeysObject):
         if self.sdksshaddress is not None:
             ports = {"22/tcp": int(self.sdksshaddress["HostPort"])}
         else:
-            ports = {"22/tcp": None}
+            # None is a valid value when you want host-assigned port
+            ports = {"22/tcp": None} # type: ignore 
 
         self.sdksshaddress = None
 

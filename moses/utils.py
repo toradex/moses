@@ -1,5 +1,5 @@
 import re
-
+from typing import Optional
 
 def _replace_tag(match, tagfn, args) -> str:
     """Replaces a tag with the corresponding value
@@ -64,7 +64,7 @@ def apply_template(templatepath: str, outputpath: str, tagfn, args):
                 newline = replace_tags(line, tagfn, args)
                 out.write(newline)
 
-def get_log_chunk(log) -> str:
+def get_log_chunk(log) -> Optional[str]:
     """Returns a chunk from the log, avoiding single bytes (from interactive containers)
 
     Args:

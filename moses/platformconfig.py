@@ -192,24 +192,23 @@ class PlatformConfig(config.ConfigurableObject):
                 return False
 
             if fields["usesysroot"]:
-                if fields["sysroots"] is None:
-                    if type(fields["sysroots"]) is not dict:
+                if fields["sysroots"] is None or type(fields["sysroots"]) is not dict:
                         return False
 
-                    for k in fields["sysroots"].keys():
-                        if fields["sysroots"][k] is None or \
-                                len(fields["sysroots"][k]) == 0:
-                            fields["sysroots"][k] = ["/"]
-                        else:
-                            for r in fields["sysroots"][k]:
-                                if not r.startswith("/"):
-                                    logging.error(
-                                        "Platform sysroots must be absolute paths in plaform %s.", self.id)
-                                    return False
+                for k in fields["sysroots"].keys():
+                    if fields["sysroots"][k] is None or \
+                            len(fields["sysroots"][k]) == 0:
+                        fields["sysroots"][k] = ["/"]
+                    else:
+                        for r in fields["sysroots"][k]:
+                            if not r.startswith("/"):
+                                logging.error(
+                                    "Platform sysroots must be absolute paths in plaform %s.", self.id)
+                                return False
 
-                            fields["sysroots"][k] = list(map(
-                                lambda r: r[:-1] if r.endswith("/") else r,
-                                fields["sysroots"][k]))
+                    fields["sysroots"][k] = list(map(
+                        lambda r: r[:-1] if r.endswith("/") else r,
+                        fields["sysroots"][k]))
             else:
                 if fields["sdkcontainer"]["common"] is None and \
                         fields["sdkcontainer"]["release"] is None:
