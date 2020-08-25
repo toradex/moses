@@ -456,7 +456,7 @@ namespace TorizonRestAPI.Api
         /// <param name="configuration"></param>
         /// <param name="cancellationToken">Cancellation Token to cancel request (optional) </param>
         /// <returns>Task of ApiResponse</returns>
-        System.Threading.Tasks.Task<ApiResponse<Object>> ApplicationBuildAsyncWithHttpInfo (string applicationId, string configuration, CancellationToken cancellationToken = default(CancellationToken));
+        System.Threading.Tasks.Task<ApiResponse<Object>> ApplicationBuildWithHttpInfoAsync (string applicationId, string configuration, CancellationToken cancellationToken = default(CancellationToken));
         /// <summary>
         /// Remove an application and all the associated data and containers
         /// </summary>
@@ -479,7 +479,7 @@ namespace TorizonRestAPI.Api
         /// <param name="applicationId">Id of an application (uuid)</param>
         /// <param name="cancellationToken">Cancellation Token to cancel request (optional) </param>
         /// <returns>Task of ApiResponse</returns>
-        System.Threading.Tasks.Task<ApiResponse<Object>> ApplicationDeleteAsyncWithHttpInfo (string applicationId, CancellationToken cancellationToken = default(CancellationToken));
+        System.Threading.Tasks.Task<ApiResponse<Object>> ApplicationDeleteWithHttpInfoAsync (string applicationId, CancellationToken cancellationToken = default(CancellationToken));
         /// <summary>
         /// Deploys container image
         /// </summary>
@@ -506,7 +506,7 @@ namespace TorizonRestAPI.Api
         /// <param name="deviceid"></param>
         /// <param name="cancellationToken">Cancellation Token to cancel request (optional) </param>
         /// <returns>Task of ApiResponse</returns>
-        System.Threading.Tasks.Task<ApiResponse<Object>> ApplicationDeployAsyncWithHttpInfo (string applicationId, string configuration, string deviceid, CancellationToken cancellationToken = default(CancellationToken));
+        System.Threading.Tasks.Task<ApiResponse<Object>> ApplicationDeployWithHttpInfoAsync (string applicationId, string configuration, string deviceid, CancellationToken cancellationToken = default(CancellationToken));
         /// <summary>
         /// Get application
         /// </summary>
@@ -529,7 +529,7 @@ namespace TorizonRestAPI.Api
         /// <param name="applicationId">Id of an application (uuid)</param>
         /// <param name="cancellationToken">Cancellation Token to cancel request (optional) </param>
         /// <returns>Task of ApiResponse (Application)</returns>
-        System.Threading.Tasks.Task<ApiResponse<Application>> ApplicationGetAsyncWithHttpInfo (string applicationId, CancellationToken cancellationToken = default(CancellationToken));
+        System.Threading.Tasks.Task<ApiResponse<Application>> ApplicationGetWithHttpInfoAsync (string applicationId, CancellationToken cancellationToken = default(CancellationToken));
         /// <summary>
         /// Get container information
         /// </summary>
@@ -556,7 +556,7 @@ namespace TorizonRestAPI.Api
         /// <param name="deviceid"></param>
         /// <param name="cancellationToken">Cancellation Token to cancel request (optional) </param>
         /// <returns>Task of ApiResponse (DockerContainer)</returns>
-        System.Threading.Tasks.Task<ApiResponse<DockerContainer>> ApplicationGetcontainerAsyncWithHttpInfo (string applicationId, string configuration, string deviceid, CancellationToken cancellationToken = default(CancellationToken));
+        System.Threading.Tasks.Task<ApiResponse<DockerContainer>> ApplicationGetcontainerWithHttpInfoAsync (string applicationId, string configuration, string deviceid, CancellationToken cancellationToken = default(CancellationToken));
         /// <summary>
         /// Get container log, chunk by chunk
         /// </summary>
@@ -585,7 +585,7 @@ namespace TorizonRestAPI.Api
         /// <param name="restart">when true reads the lock back from beginning (optional, default to false)</param>
         /// <param name="cancellationToken">Cancellation Token to cancel request (optional) </param>
         /// <returns>Task of ApiResponse (string)</returns>
-        System.Threading.Tasks.Task<ApiResponse<string>> ApplicationGetcontainerLogsAsyncWithHttpInfo (string applicationId, string configuration, string deviceid, bool? restart = default(bool?), CancellationToken cancellationToken = default(CancellationToken));
+        System.Threading.Tasks.Task<ApiResponse<string>> ApplicationGetcontainerLogsWithHttpInfoAsync (string applicationId, string configuration, string deviceid, bool? restart = default(bool?), CancellationToken cancellationToken = default(CancellationToken));
         /// <summary>
         /// Retrieves the path of the RSA private key
         /// </summary>
@@ -608,7 +608,7 @@ namespace TorizonRestAPI.Api
         /// <param name="applicationId">Id of an application (uuid)</param>
         /// <param name="cancellationToken">Cancellation Token to cancel request (optional) </param>
         /// <returns>Task of ApiResponse (string)</returns>
-        System.Threading.Tasks.Task<ApiResponse<string>> ApplicationGetprivatekeyAsyncWithHttpInfo (string applicationId, CancellationToken cancellationToken = default(CancellationToken));
+        System.Threading.Tasks.Task<ApiResponse<string>> ApplicationGetprivatekeyWithHttpInfoAsync (string applicationId, CancellationToken cancellationToken = default(CancellationToken));
         /// <summary>
         /// Change application properties
         /// </summary>
@@ -633,7 +633,7 @@ namespace TorizonRestAPI.Api
         /// <param name="application"> (optional)</param>
         /// <param name="cancellationToken">Cancellation Token to cancel request (optional) </param>
         /// <returns>Task of ApiResponse (Application)</returns>
-        System.Threading.Tasks.Task<ApiResponse<Application>> ApplicationModifyAsyncWithHttpInfo (string applicationId, Application application = default(Application), CancellationToken cancellationToken = default(CancellationToken));
+        System.Threading.Tasks.Task<ApiResponse<Application>> ApplicationModifyWithHttpInfoAsync (string applicationId, Application application = default(Application), CancellationToken cancellationToken = default(CancellationToken));
         /// <summary>
         /// Cleans id and keys for git repo uploading
         /// </summary>
@@ -656,7 +656,7 @@ namespace TorizonRestAPI.Api
         /// <param name="applicationId">Id of an application (uuid)</param>
         /// <param name="cancellationToken">Cancellation Token to cancel request (optional) </param>
         /// <returns>Task of ApiResponse</returns>
-        System.Threading.Tasks.Task<ApiResponse<Object>> ApplicationResealAsyncWithHttpInfo (string applicationId, CancellationToken cancellationToken = default(CancellationToken));
+        System.Threading.Tasks.Task<ApiResponse<Object>> ApplicationResealWithHttpInfoAsync (string applicationId, CancellationToken cancellationToken = default(CancellationToken));
         /// <summary>
         /// Runs container image
         /// </summary>
@@ -683,7 +683,7 @@ namespace TorizonRestAPI.Api
         /// <param name="deviceid"></param>
         /// <param name="cancellationToken">Cancellation Token to cancel request (optional) </param>
         /// <returns>Task of ApiResponse (DockerContainer)</returns>
-        System.Threading.Tasks.Task<ApiResponse<DockerContainer>> ApplicationRunAsyncWithHttpInfo (string applicationId, string configuration, string deviceid, CancellationToken cancellationToken = default(CancellationToken));
+        System.Threading.Tasks.Task<ApiResponse<DockerContainer>> ApplicationRunWithHttpInfoAsync (string applicationId, string configuration, string deviceid, CancellationToken cancellationToken = default(CancellationToken));
         /// <summary>
         /// Runs SDK containers
         /// </summary>
@@ -710,7 +710,7 @@ namespace TorizonRestAPI.Api
         /// <param name="build"> (optional, default to true)</param>
         /// <param name="cancellationToken">Cancellation Token to cancel request (optional) </param>
         /// <returns>Task of ApiResponse (InlineResponse200)</returns>
-        System.Threading.Tasks.Task<ApiResponse<InlineResponse200>> ApplicationRunsdkAsyncWithHttpInfo (string applicationId, string configuration, bool? build = default(bool?), CancellationToken cancellationToken = default(CancellationToken));
+        System.Threading.Tasks.Task<ApiResponse<InlineResponse200>> ApplicationRunsdkWithHttpInfoAsync (string applicationId, string configuration, bool? build = default(bool?), CancellationToken cancellationToken = default(CancellationToken));
         /// <summary>
         /// Stops running container image
         /// </summary>
@@ -737,7 +737,7 @@ namespace TorizonRestAPI.Api
         /// <param name="deviceid"></param>
         /// <param name="cancellationToken">Cancellation Token to cancel request (optional) </param>
         /// <returns>Task of ApiResponse</returns>
-        System.Threading.Tasks.Task<ApiResponse<Object>> ApplicationStopAsyncWithHttpInfo (string applicationId, string configuration, string deviceid, CancellationToken cancellationToken = default(CancellationToken));
+        System.Threading.Tasks.Task<ApiResponse<Object>> ApplicationStopWithHttpInfoAsync (string applicationId, string configuration, string deviceid, CancellationToken cancellationToken = default(CancellationToken));
         /// <summary>
         /// synchronizes folders
         /// </summary>
@@ -770,7 +770,7 @@ namespace TorizonRestAPI.Api
         /// <param name="sourceIsSdk"> (optional)</param>
         /// <param name="cancellationToken">Cancellation Token to cancel request (optional) </param>
         /// <returns>Task of ApiResponse</returns>
-        System.Threading.Tasks.Task<ApiResponse<Object>> ApplicationSyncfoldersAsyncWithHttpInfo (string applicationId, string sourcefolder, string configuration, string deviceid, string destfolder, bool? sourceIsSdk = default(bool?), CancellationToken cancellationToken = default(CancellationToken));
+        System.Threading.Tasks.Task<ApiResponse<Object>> ApplicationSyncfoldersWithHttpInfoAsync (string applicationId, string sourcefolder, string configuration, string deviceid, string destfolder, bool? sourceIsSdk = default(bool?), CancellationToken cancellationToken = default(CancellationToken));
         /// <summary>
         /// Builds container image
         /// </summary>
@@ -795,7 +795,7 @@ namespace TorizonRestAPI.Api
         /// <param name="configuration"></param>
         /// <param name="cancellationToken">Cancellation Token to cancel request (optional) </param>
         /// <returns>Task of ApiResponse (bool)</returns>
-        System.Threading.Tasks.Task<ApiResponse<bool>> ApplicationUpdatedAsyncWithHttpInfo (string applicationId, string configuration, CancellationToken cancellationToken = default(CancellationToken));
+        System.Threading.Tasks.Task<ApiResponse<bool>> ApplicationUpdatedWithHttpInfoAsync (string applicationId, string configuration, CancellationToken cancellationToken = default(CancellationToken));
         /// <summary>
         /// Update SDK container
         /// </summary>
@@ -820,7 +820,7 @@ namespace TorizonRestAPI.Api
         /// <param name="configuration"></param>
         /// <param name="cancellationToken">Cancellation Token to cancel request (optional) </param>
         /// <returns>Task of ApiResponse</returns>
-        System.Threading.Tasks.Task<ApiResponse<Object>> ApplicationUpdatesdkAsyncWithHttpInfo (string applicationId, string configuration, CancellationToken cancellationToken = default(CancellationToken));
+        System.Threading.Tasks.Task<ApiResponse<Object>> ApplicationUpdatesdkWithHttpInfoAsync (string applicationId, string configuration, CancellationToken cancellationToken = default(CancellationToken));
         /// <summary>
         /// Loads an application configuration
         /// </summary>
@@ -847,7 +847,7 @@ namespace TorizonRestAPI.Api
         /// <param name="username"> (optional)</param>
         /// <param name="cancellationToken">Cancellation Token to cancel request (optional) </param>
         /// <returns>Task of ApiResponse (Application)</returns>
-        System.Threading.Tasks.Task<ApiResponse<Application>> ApplicationsCreateAsyncWithHttpInfo (string platformId, string path, string username = default(string), CancellationToken cancellationToken = default(CancellationToken));
+        System.Threading.Tasks.Task<ApiResponse<Application>> ApplicationsCreateWithHttpInfoAsync (string platformId, string path, string username = default(string), CancellationToken cancellationToken = default(CancellationToken));
         /// <summary>
         /// Loads an application configuration
         /// </summary>
@@ -870,7 +870,7 @@ namespace TorizonRestAPI.Api
         /// <param name="path"></param>
         /// <param name="cancellationToken">Cancellation Token to cancel request (optional) </param>
         /// <returns>Task of ApiResponse (Application)</returns>
-        System.Threading.Tasks.Task<ApiResponse<Application>> ApplicationsLoadAsyncWithHttpInfo (string path, CancellationToken cancellationToken = default(CancellationToken));
+        System.Threading.Tasks.Task<ApiResponse<Application>> ApplicationsLoadWithHttpInfoAsync (string path, CancellationToken cancellationToken = default(CancellationToken));
         #endregion Asynchronous Operations
     }
 
@@ -1063,7 +1063,7 @@ namespace TorizonRestAPI.Api
         /// <returns>Task of void</returns>
         public async System.Threading.Tasks.Task ApplicationBuildAsync (string applicationId, string configuration, CancellationToken cancellationToken = default(CancellationToken))
         {
-             await ApplicationBuildAsyncWithHttpInfo(applicationId, configuration, cancellationToken);
+             await ApplicationBuildWithHttpInfoAsync(applicationId, configuration, cancellationToken);
 
         }
 
@@ -1075,7 +1075,7 @@ namespace TorizonRestAPI.Api
         /// <param name="configuration"></param>
         /// <param name="cancellationToken">Cancellation Token to cancel request (optional) </param>
         /// <returns>Task of ApiResponse</returns>
-        public async System.Threading.Tasks.Task<ApiResponse<Object>> ApplicationBuildAsyncWithHttpInfo (string applicationId, string configuration, CancellationToken cancellationToken = default(CancellationToken))
+        public async System.Threading.Tasks.Task<ApiResponse<Object>> ApplicationBuildWithHttpInfoAsync (string applicationId, string configuration, CancellationToken cancellationToken = default(CancellationToken))
         {
             // verify the required parameter 'applicationId' is set
             if (applicationId == null)
@@ -1201,7 +1201,7 @@ namespace TorizonRestAPI.Api
         /// <returns>Task of void</returns>
         public async System.Threading.Tasks.Task ApplicationDeleteAsync (string applicationId, CancellationToken cancellationToken = default(CancellationToken))
         {
-             await ApplicationDeleteAsyncWithHttpInfo(applicationId, cancellationToken);
+             await ApplicationDeleteWithHttpInfoAsync(applicationId, cancellationToken);
 
         }
 
@@ -1212,7 +1212,7 @@ namespace TorizonRestAPI.Api
         /// <param name="applicationId">Id of an application (uuid)</param>
         /// <param name="cancellationToken">Cancellation Token to cancel request (optional) </param>
         /// <returns>Task of ApiResponse</returns>
-        public async System.Threading.Tasks.Task<ApiResponse<Object>> ApplicationDeleteAsyncWithHttpInfo (string applicationId, CancellationToken cancellationToken = default(CancellationToken))
+        public async System.Threading.Tasks.Task<ApiResponse<Object>> ApplicationDeleteWithHttpInfoAsync (string applicationId, CancellationToken cancellationToken = default(CancellationToken))
         {
             // verify the required parameter 'applicationId' is set
             if (applicationId == null)
@@ -1348,7 +1348,7 @@ namespace TorizonRestAPI.Api
         /// <returns>Task of void</returns>
         public async System.Threading.Tasks.Task ApplicationDeployAsync (string applicationId, string configuration, string deviceid, CancellationToken cancellationToken = default(CancellationToken))
         {
-             await ApplicationDeployAsyncWithHttpInfo(applicationId, configuration, deviceid, cancellationToken);
+             await ApplicationDeployWithHttpInfoAsync(applicationId, configuration, deviceid, cancellationToken);
 
         }
 
@@ -1361,7 +1361,7 @@ namespace TorizonRestAPI.Api
         /// <param name="deviceid"></param>
         /// <param name="cancellationToken">Cancellation Token to cancel request (optional) </param>
         /// <returns>Task of ApiResponse</returns>
-        public async System.Threading.Tasks.Task<ApiResponse<Object>> ApplicationDeployAsyncWithHttpInfo (string applicationId, string configuration, string deviceid, CancellationToken cancellationToken = default(CancellationToken))
+        public async System.Threading.Tasks.Task<ApiResponse<Object>> ApplicationDeployWithHttpInfoAsync (string applicationId, string configuration, string deviceid, CancellationToken cancellationToken = default(CancellationToken))
         {
             // verify the required parameter 'applicationId' is set
             if (applicationId == null)
@@ -1492,7 +1492,7 @@ namespace TorizonRestAPI.Api
         /// <returns>Task of Application</returns>
         public async System.Threading.Tasks.Task<Application> ApplicationGetAsync (string applicationId, CancellationToken cancellationToken = default(CancellationToken))
         {
-             ApiResponse<Application> localVarResponse = await ApplicationGetAsyncWithHttpInfo(applicationId, cancellationToken);
+             ApiResponse<Application> localVarResponse = await ApplicationGetWithHttpInfoAsync(applicationId, cancellationToken);
              return localVarResponse.Data;
 
         }
@@ -1504,7 +1504,7 @@ namespace TorizonRestAPI.Api
         /// <param name="applicationId">Id of an application (uuid)</param>
         /// <param name="cancellationToken">Cancellation Token to cancel request (optional) </param>
         /// <returns>Task of ApiResponse (Application)</returns>
-        public async System.Threading.Tasks.Task<ApiResponse<Application>> ApplicationGetAsyncWithHttpInfo (string applicationId, CancellationToken cancellationToken = default(CancellationToken))
+        public async System.Threading.Tasks.Task<ApiResponse<Application>> ApplicationGetWithHttpInfoAsync (string applicationId, CancellationToken cancellationToken = default(CancellationToken))
         {
             // verify the required parameter 'applicationId' is set
             if (applicationId == null)
@@ -1641,7 +1641,7 @@ namespace TorizonRestAPI.Api
         /// <returns>Task of DockerContainer</returns>
         public async System.Threading.Tasks.Task<DockerContainer> ApplicationGetcontainerAsync (string applicationId, string configuration, string deviceid, CancellationToken cancellationToken = default(CancellationToken))
         {
-             ApiResponse<DockerContainer> localVarResponse = await ApplicationGetcontainerAsyncWithHttpInfo(applicationId, configuration, deviceid, cancellationToken);
+             ApiResponse<DockerContainer> localVarResponse = await ApplicationGetcontainerWithHttpInfoAsync(applicationId, configuration, deviceid, cancellationToken);
              return localVarResponse.Data;
 
         }
@@ -1655,7 +1655,7 @@ namespace TorizonRestAPI.Api
         /// <param name="deviceid"></param>
         /// <param name="cancellationToken">Cancellation Token to cancel request (optional) </param>
         /// <returns>Task of ApiResponse (DockerContainer)</returns>
-        public async System.Threading.Tasks.Task<ApiResponse<DockerContainer>> ApplicationGetcontainerAsyncWithHttpInfo (string applicationId, string configuration, string deviceid, CancellationToken cancellationToken = default(CancellationToken))
+        public async System.Threading.Tasks.Task<ApiResponse<DockerContainer>> ApplicationGetcontainerWithHttpInfoAsync (string applicationId, string configuration, string deviceid, CancellationToken cancellationToken = default(CancellationToken))
         {
             // verify the required parameter 'applicationId' is set
             if (applicationId == null)
@@ -1804,7 +1804,7 @@ namespace TorizonRestAPI.Api
         /// <returns>Task of string</returns>
         public async System.Threading.Tasks.Task<string> ApplicationGetcontainerLogsAsync (string applicationId, string configuration, string deviceid, bool? restart = default(bool?), CancellationToken cancellationToken = default(CancellationToken))
         {
-             ApiResponse<string> localVarResponse = await ApplicationGetcontainerLogsAsyncWithHttpInfo(applicationId, configuration, deviceid, restart, cancellationToken);
+             ApiResponse<string> localVarResponse = await ApplicationGetcontainerLogsWithHttpInfoAsync(applicationId, configuration, deviceid, restart, cancellationToken);
              return localVarResponse.Data;
 
         }
@@ -1819,7 +1819,7 @@ namespace TorizonRestAPI.Api
         /// <param name="restart">when true reads the lock back from beginning (optional, default to false)</param>
         /// <param name="cancellationToken">Cancellation Token to cancel request (optional) </param>
         /// <returns>Task of ApiResponse (string)</returns>
-        public async System.Threading.Tasks.Task<ApiResponse<string>> ApplicationGetcontainerLogsAsyncWithHttpInfo (string applicationId, string configuration, string deviceid, bool? restart = default(bool?), CancellationToken cancellationToken = default(CancellationToken))
+        public async System.Threading.Tasks.Task<ApiResponse<string>> ApplicationGetcontainerLogsWithHttpInfoAsync (string applicationId, string configuration, string deviceid, bool? restart = default(bool?), CancellationToken cancellationToken = default(CancellationToken))
         {
             // verify the required parameter 'applicationId' is set
             if (applicationId == null)
@@ -1951,7 +1951,7 @@ namespace TorizonRestAPI.Api
         /// <returns>Task of string</returns>
         public async System.Threading.Tasks.Task<string> ApplicationGetprivatekeyAsync (string applicationId, CancellationToken cancellationToken = default(CancellationToken))
         {
-             ApiResponse<string> localVarResponse = await ApplicationGetprivatekeyAsyncWithHttpInfo(applicationId, cancellationToken);
+             ApiResponse<string> localVarResponse = await ApplicationGetprivatekeyWithHttpInfoAsync(applicationId, cancellationToken);
              return localVarResponse.Data;
 
         }
@@ -1963,7 +1963,7 @@ namespace TorizonRestAPI.Api
         /// <param name="applicationId">Id of an application (uuid)</param>
         /// <param name="cancellationToken">Cancellation Token to cancel request (optional) </param>
         /// <returns>Task of ApiResponse (string)</returns>
-        public async System.Threading.Tasks.Task<ApiResponse<string>> ApplicationGetprivatekeyAsyncWithHttpInfo (string applicationId, CancellationToken cancellationToken = default(CancellationToken))
+        public async System.Threading.Tasks.Task<ApiResponse<string>> ApplicationGetprivatekeyWithHttpInfoAsync (string applicationId, CancellationToken cancellationToken = default(CancellationToken))
         {
             // verify the required parameter 'applicationId' is set
             if (applicationId == null)
@@ -2098,7 +2098,7 @@ namespace TorizonRestAPI.Api
         /// <returns>Task of Application</returns>
         public async System.Threading.Tasks.Task<Application> ApplicationModifyAsync (string applicationId, Application application = default(Application), CancellationToken cancellationToken = default(CancellationToken))
         {
-             ApiResponse<Application> localVarResponse = await ApplicationModifyAsyncWithHttpInfo(applicationId, application, cancellationToken);
+             ApiResponse<Application> localVarResponse = await ApplicationModifyWithHttpInfoAsync(applicationId, application, cancellationToken);
              return localVarResponse.Data;
 
         }
@@ -2111,7 +2111,7 @@ namespace TorizonRestAPI.Api
         /// <param name="application"> (optional)</param>
         /// <param name="cancellationToken">Cancellation Token to cancel request (optional) </param>
         /// <returns>Task of ApiResponse (Application)</returns>
-        public async System.Threading.Tasks.Task<ApiResponse<Application>> ApplicationModifyAsyncWithHttpInfo (string applicationId, Application application = default(Application), CancellationToken cancellationToken = default(CancellationToken))
+        public async System.Threading.Tasks.Task<ApiResponse<Application>> ApplicationModifyWithHttpInfoAsync (string applicationId, Application application = default(Application), CancellationToken cancellationToken = default(CancellationToken))
         {
             // verify the required parameter 'applicationId' is set
             if (applicationId == null)
@@ -2241,7 +2241,7 @@ namespace TorizonRestAPI.Api
         /// <returns>Task of void</returns>
         public async System.Threading.Tasks.Task ApplicationResealAsync (string applicationId, CancellationToken cancellationToken = default(CancellationToken))
         {
-             await ApplicationResealAsyncWithHttpInfo(applicationId, cancellationToken);
+             await ApplicationResealWithHttpInfoAsync(applicationId, cancellationToken);
 
         }
 
@@ -2252,7 +2252,7 @@ namespace TorizonRestAPI.Api
         /// <param name="applicationId">Id of an application (uuid)</param>
         /// <param name="cancellationToken">Cancellation Token to cancel request (optional) </param>
         /// <returns>Task of ApiResponse</returns>
-        public async System.Threading.Tasks.Task<ApiResponse<Object>> ApplicationResealAsyncWithHttpInfo (string applicationId, CancellationToken cancellationToken = default(CancellationToken))
+        public async System.Threading.Tasks.Task<ApiResponse<Object>> ApplicationResealWithHttpInfoAsync (string applicationId, CancellationToken cancellationToken = default(CancellationToken))
         {
             // verify the required parameter 'applicationId' is set
             if (applicationId == null)
@@ -2388,7 +2388,7 @@ namespace TorizonRestAPI.Api
         /// <returns>Task of DockerContainer</returns>
         public async System.Threading.Tasks.Task<DockerContainer> ApplicationRunAsync (string applicationId, string configuration, string deviceid, CancellationToken cancellationToken = default(CancellationToken))
         {
-             ApiResponse<DockerContainer> localVarResponse = await ApplicationRunAsyncWithHttpInfo(applicationId, configuration, deviceid, cancellationToken);
+             ApiResponse<DockerContainer> localVarResponse = await ApplicationRunWithHttpInfoAsync(applicationId, configuration, deviceid, cancellationToken);
              return localVarResponse.Data;
 
         }
@@ -2402,7 +2402,7 @@ namespace TorizonRestAPI.Api
         /// <param name="deviceid"></param>
         /// <param name="cancellationToken">Cancellation Token to cancel request (optional) </param>
         /// <returns>Task of ApiResponse (DockerContainer)</returns>
-        public async System.Threading.Tasks.Task<ApiResponse<DockerContainer>> ApplicationRunAsyncWithHttpInfo (string applicationId, string configuration, string deviceid, CancellationToken cancellationToken = default(CancellationToken))
+        public async System.Threading.Tasks.Task<ApiResponse<DockerContainer>> ApplicationRunWithHttpInfoAsync (string applicationId, string configuration, string deviceid, CancellationToken cancellationToken = default(CancellationToken))
         {
             // verify the required parameter 'applicationId' is set
             if (applicationId == null)
@@ -2544,7 +2544,7 @@ namespace TorizonRestAPI.Api
         /// <returns>Task of InlineResponse200</returns>
         public async System.Threading.Tasks.Task<InlineResponse200> ApplicationRunsdkAsync (string applicationId, string configuration, bool? build = default(bool?), CancellationToken cancellationToken = default(CancellationToken))
         {
-             ApiResponse<InlineResponse200> localVarResponse = await ApplicationRunsdkAsyncWithHttpInfo(applicationId, configuration, build, cancellationToken);
+             ApiResponse<InlineResponse200> localVarResponse = await ApplicationRunsdkWithHttpInfoAsync(applicationId, configuration, build, cancellationToken);
              return localVarResponse.Data;
 
         }
@@ -2558,7 +2558,7 @@ namespace TorizonRestAPI.Api
         /// <param name="build"> (optional, default to true)</param>
         /// <param name="cancellationToken">Cancellation Token to cancel request (optional) </param>
         /// <returns>Task of ApiResponse (InlineResponse200)</returns>
-        public async System.Threading.Tasks.Task<ApiResponse<InlineResponse200>> ApplicationRunsdkAsyncWithHttpInfo (string applicationId, string configuration, bool? build = default(bool?), CancellationToken cancellationToken = default(CancellationToken))
+        public async System.Threading.Tasks.Task<ApiResponse<InlineResponse200>> ApplicationRunsdkWithHttpInfoAsync (string applicationId, string configuration, bool? build = default(bool?), CancellationToken cancellationToken = default(CancellationToken))
         {
             // verify the required parameter 'applicationId' is set
             if (applicationId == null)
@@ -2699,7 +2699,7 @@ namespace TorizonRestAPI.Api
         /// <returns>Task of void</returns>
         public async System.Threading.Tasks.Task ApplicationStopAsync (string applicationId, string configuration, string deviceid, CancellationToken cancellationToken = default(CancellationToken))
         {
-             await ApplicationStopAsyncWithHttpInfo(applicationId, configuration, deviceid, cancellationToken);
+             await ApplicationStopWithHttpInfoAsync(applicationId, configuration, deviceid, cancellationToken);
 
         }
 
@@ -2712,7 +2712,7 @@ namespace TorizonRestAPI.Api
         /// <param name="deviceid"></param>
         /// <param name="cancellationToken">Cancellation Token to cancel request (optional) </param>
         /// <returns>Task of ApiResponse</returns>
-        public async System.Threading.Tasks.Task<ApiResponse<Object>> ApplicationStopAsyncWithHttpInfo (string applicationId, string configuration, string deviceid, CancellationToken cancellationToken = default(CancellationToken))
+        public async System.Threading.Tasks.Task<ApiResponse<Object>> ApplicationStopWithHttpInfoAsync (string applicationId, string configuration, string deviceid, CancellationToken cancellationToken = default(CancellationToken))
         {
             // verify the required parameter 'applicationId' is set
             if (applicationId == null)
@@ -2874,7 +2874,7 @@ namespace TorizonRestAPI.Api
         /// <returns>Task of void</returns>
         public async System.Threading.Tasks.Task ApplicationSyncfoldersAsync (string applicationId, string sourcefolder, string configuration, string deviceid, string destfolder, bool? sourceIsSdk = default(bool?), CancellationToken cancellationToken = default(CancellationToken))
         {
-             await ApplicationSyncfoldersAsyncWithHttpInfo(applicationId, sourcefolder, configuration, deviceid, destfolder, sourceIsSdk, cancellationToken);
+             await ApplicationSyncfoldersWithHttpInfoAsync(applicationId, sourcefolder, configuration, deviceid, destfolder, sourceIsSdk, cancellationToken);
 
         }
 
@@ -2890,7 +2890,7 @@ namespace TorizonRestAPI.Api
         /// <param name="sourceIsSdk"> (optional)</param>
         /// <param name="cancellationToken">Cancellation Token to cancel request (optional) </param>
         /// <returns>Task of ApiResponse</returns>
-        public async System.Threading.Tasks.Task<ApiResponse<Object>> ApplicationSyncfoldersAsyncWithHttpInfo (string applicationId, string sourcefolder, string configuration, string deviceid, string destfolder, bool? sourceIsSdk = default(bool?), CancellationToken cancellationToken = default(CancellationToken))
+        public async System.Threading.Tasks.Task<ApiResponse<Object>> ApplicationSyncfoldersWithHttpInfoAsync (string applicationId, string sourcefolder, string configuration, string deviceid, string destfolder, bool? sourceIsSdk = default(bool?), CancellationToken cancellationToken = default(CancellationToken))
         {
             // verify the required parameter 'applicationId' is set
             if (applicationId == null)
@@ -3037,7 +3037,7 @@ namespace TorizonRestAPI.Api
         /// <returns>Task of bool</returns>
         public async System.Threading.Tasks.Task<bool> ApplicationUpdatedAsync (string applicationId, string configuration, CancellationToken cancellationToken = default(CancellationToken))
         {
-             ApiResponse<bool> localVarResponse = await ApplicationUpdatedAsyncWithHttpInfo(applicationId, configuration, cancellationToken);
+             ApiResponse<bool> localVarResponse = await ApplicationUpdatedWithHttpInfoAsync(applicationId, configuration, cancellationToken);
              return localVarResponse.Data;
 
         }
@@ -3050,7 +3050,7 @@ namespace TorizonRestAPI.Api
         /// <param name="configuration"></param>
         /// <param name="cancellationToken">Cancellation Token to cancel request (optional) </param>
         /// <returns>Task of ApiResponse (bool)</returns>
-        public async System.Threading.Tasks.Task<ApiResponse<bool>> ApplicationUpdatedAsyncWithHttpInfo (string applicationId, string configuration, CancellationToken cancellationToken = default(CancellationToken))
+        public async System.Threading.Tasks.Task<ApiResponse<bool>> ApplicationUpdatedWithHttpInfoAsync (string applicationId, string configuration, CancellationToken cancellationToken = default(CancellationToken))
         {
             // verify the required parameter 'applicationId' is set
             if (applicationId == null)
@@ -3183,7 +3183,7 @@ namespace TorizonRestAPI.Api
         /// <returns>Task of void</returns>
         public async System.Threading.Tasks.Task ApplicationUpdatesdkAsync (string applicationId, string configuration, CancellationToken cancellationToken = default(CancellationToken))
         {
-             await ApplicationUpdatesdkAsyncWithHttpInfo(applicationId, configuration, cancellationToken);
+             await ApplicationUpdatesdkWithHttpInfoAsync(applicationId, configuration, cancellationToken);
 
         }
 
@@ -3195,7 +3195,7 @@ namespace TorizonRestAPI.Api
         /// <param name="configuration"></param>
         /// <param name="cancellationToken">Cancellation Token to cancel request (optional) </param>
         /// <returns>Task of ApiResponse</returns>
-        public async System.Threading.Tasks.Task<ApiResponse<Object>> ApplicationUpdatesdkAsyncWithHttpInfo (string applicationId, string configuration, CancellationToken cancellationToken = default(CancellationToken))
+        public async System.Threading.Tasks.Task<ApiResponse<Object>> ApplicationUpdatesdkWithHttpInfoAsync (string applicationId, string configuration, CancellationToken cancellationToken = default(CancellationToken))
         {
             // verify the required parameter 'applicationId' is set
             if (applicationId == null)
@@ -3333,7 +3333,7 @@ namespace TorizonRestAPI.Api
         /// <returns>Task of Application</returns>
         public async System.Threading.Tasks.Task<Application> ApplicationsCreateAsync (string platformId, string path, string username = default(string), CancellationToken cancellationToken = default(CancellationToken))
         {
-             ApiResponse<Application> localVarResponse = await ApplicationsCreateAsyncWithHttpInfo(platformId, path, username, cancellationToken);
+             ApiResponse<Application> localVarResponse = await ApplicationsCreateWithHttpInfoAsync(platformId, path, username, cancellationToken);
              return localVarResponse.Data;
 
         }
@@ -3347,7 +3347,7 @@ namespace TorizonRestAPI.Api
         /// <param name="username"> (optional)</param>
         /// <param name="cancellationToken">Cancellation Token to cancel request (optional) </param>
         /// <returns>Task of ApiResponse (Application)</returns>
-        public async System.Threading.Tasks.Task<ApiResponse<Application>> ApplicationsCreateAsyncWithHttpInfo (string platformId, string path, string username = default(string), CancellationToken cancellationToken = default(CancellationToken))
+        public async System.Threading.Tasks.Task<ApiResponse<Application>> ApplicationsCreateWithHttpInfoAsync (string platformId, string path, string username = default(string), CancellationToken cancellationToken = default(CancellationToken))
         {
             // verify the required parameter 'platformId' is set
             if (platformId == null)
@@ -3475,7 +3475,7 @@ namespace TorizonRestAPI.Api
         /// <returns>Task of Application</returns>
         public async System.Threading.Tasks.Task<Application> ApplicationsLoadAsync (string path, CancellationToken cancellationToken = default(CancellationToken))
         {
-             ApiResponse<Application> localVarResponse = await ApplicationsLoadAsyncWithHttpInfo(path, cancellationToken);
+             ApiResponse<Application> localVarResponse = await ApplicationsLoadWithHttpInfoAsync(path, cancellationToken);
              return localVarResponse.Data;
 
         }
@@ -3487,7 +3487,7 @@ namespace TorizonRestAPI.Api
         /// <param name="path"></param>
         /// <param name="cancellationToken">Cancellation Token to cancel request (optional) </param>
         /// <returns>Task of ApiResponse (Application)</returns>
-        public async System.Threading.Tasks.Task<ApiResponse<Application>> ApplicationsLoadAsyncWithHttpInfo (string path, CancellationToken cancellationToken = default(CancellationToken))
+        public async System.Threading.Tasks.Task<ApiResponse<Application>> ApplicationsLoadWithHttpInfoAsync (string path, CancellationToken cancellationToken = default(CancellationToken))
         {
             // verify the required parameter 'path' is set
             if (path == null)

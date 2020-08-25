@@ -2,6 +2,7 @@ import time
 import serial
 import console
 import exceptions
+from typing import Optional
 
 """This module is used to communicate to the device over serial port
 """
@@ -10,28 +11,23 @@ import exceptions
 class SerialConsole(console.GenericConsole):
     """Class implementing console features on serial port
 
-    Arguments:
-        console {console.GenericConsole} -- base class
+        Arguments:
+            console {console.GenericConsole} -- base class
     """
 
-    def __init__(self, device):
+    def __init__(self, device: str):
         """Must be re-defined in subclasses
 
         Arguments:
             device {str} -- port name
         """
         try:
-            self.ser = serial.Serial(device,
-                                     115200,
-                                     8,
-                                     serial.PARITY_NONE,
-                                     1,
-                                     5)
+            self.ser = serial.Serial(device, 115200, 8, serial.PARITY_NONE, 1, 5)
         except serial.SerialException as e:
             raise exceptions.SerialError(e)
         self._prompt = ""
 
-    def set_prompt(self, prompt):
+    def set_prompt(self, prompt: str) -> None:
         """Configures what should be recognized as prompt
 
         Arguments:
@@ -40,7 +36,7 @@ class SerialConsole(console.GenericConsole):
         self._prompt = prompt
 
     # Methods of the base console class
-    def send_cmd(self, command, timeout=30) -> str:
+    def send_cmd(self, command: str, timeout: int = 30) -> str:
         """Sends a command to the device and returns its output
 
         Arguments:
@@ -71,13 +67,13 @@ class SerialConsole(console.GenericConsole):
                 except UnicodeDecodeError:
                     continue
 
-            return output[:len(output)-len(self._prompt)].strip()
+            return output[: len(output) - len(self._prompt)].strip()
         except serial.SerialException as e:
             raise exceptions.SerialError(e)
         except OSError as e:
             raise exceptions.OSError(e)
 
-    def wait_for_prompt(self, prompt=None, timeout=30):
+    def wait_for_prompt(self, prompt: Optional[str] = None, timeout: int = 30) -> None:
         """Wait until the specific string is received
 
         Keyword Arguments:
@@ -104,7 +100,7 @@ class SerialConsole(console.GenericConsole):
                 continue
         return
 
-    def login(self, username, password, timeout=60) -> bool:
+    def login(self, username: str, password: str, timeout: int = 60) -> None:
         """Tries to login user and configures prompt
 
         Arguments:
@@ -132,7 +128,7 @@ class SerialConsole(console.GenericConsole):
                     # just in case we are already at the shell prompt
                     self.ser.write("exit\n".encode("utf-8"))
 
-                count = count+1
+                count = count + 1
 
                 try:
                     # we need to figure out if we are at login prompt
@@ -162,7 +158,7 @@ class SerialConsole(console.GenericConsole):
             start = time.time()
 
             while self.ser.in_waiting == 0:
-                if (time.time() - start > timeout):
+                if time.time() - start > timeout:
                     raise exceptions.TimeoutError()
 
             time.sleep(10)

@@ -17,11 +17,14 @@ import argparse
 import requests
 import paramiko
 
-if getattr(sys, 'frozen', False):
-    options = {'swagger_path': os.path.dirname(sys.executable) + '/api/ui'}
+if getattr(sys, "frozen", False):
+    options = {"swagger_path": os.path.dirname(sys.executable) + "/api/ui"}
 else:
-    options = {'swagger_path': os.path.dirname(sys.executable) + '/../lib/python3.8/site-packages/swagger_ui_bundle/vendor/swagger-ui-3.24.2'}
-    
+    options = {
+        "swagger_path": os.path.dirname(sys.executable)
+        + "/../lib/python3.8/site-packages/swagger_ui_bundle/vendor/swagger-ui-3.24.2"
+    }
+
 
 app = connexion.App("moses", options=options)
 
@@ -38,15 +41,17 @@ def log_rest_out(response):
 
 
 # If we're running in stand alone mode, run the application
-if __name__ == '__main__':
-    parser = argparse.ArgumentParser(
-        description="backend for Toradex IDEs support")
-    parser.add_argument("--port", type=int, default=5000,
-                        choices=range(1, 65535), metavar="port used for REST server, range is 1..65535")
+if __name__ == "__main__":
+    parser = argparse.ArgumentParser(description="backend for Toradex IDEs support")
     parser.add_argument(
-        "--logfile", type=str, default=None)
-    parser.add_argument(
-        "--debug", action="store_true")
+        "--port",
+        type=int,
+        default=5000,
+        choices=range(1, 65535),
+        metavar="port used for REST server, range is 1..65535",
+    )
+    parser.add_argument("--logfile", type=str, default=None)
+    parser.add_argument("--debug", action="store_true")
 
     args = parser.parse_args()
 
@@ -59,7 +64,8 @@ if __name__ == '__main__':
 
     if args.logfile is not None:
         logging.getLogger().addHandler(
-            logging.handlers.RotatingFileHandler(args.logfile, "a", 1024*1024, 4))
+            logging.handlers.RotatingFileHandler(args.logfile, "a", 1024 * 1024, 4)
+        )
 
     try:
         proxies = {
@@ -67,37 +73,42 @@ if __name__ == '__main__':
             "https": None,
         }
 
-        r = requests.get("http://localhost:"+str(args.port) +
-                         "/api/version", proxies=proxies)
+        r = requests.get(
+            "http://localhost:" + str(args.port) + "/api/version", proxies=proxies
+        )
 
         if r.status_code != 200:
             logging.error(
-                "Port " + args.port + " already used by an incompatible REST server.")
+                "Port " + args.port + " already used by an incompatible REST server."
+            )
             sys.exit(-1)
 
         version = r.json()
 
-        if version["app_version"] != api.API_VERSION or version["api_version"] != api.API_VERSION:
+        if (
+            version["app_version"] != api.API_VERSION
+            or version["api_version"] != api.API_VERSION
+        ):
             logging.warning(
-                "Running version does not match current version, this may be an issue.")
+                "Running version does not match current version, this may be an issue."
+            )
         else:
-            logging.warning(
-                "back-end server already running.")
+            logging.warning("back-end server already running.")
 
         sys.exit(0)
 
     except requests.exceptions.ConnectionError as e:
         pass
     except Exception as e:
-        logging.exception()
+        logging.exception(e)
 
     with open("swagger.yaml", "r") as inp:
         schema = yaml.full_load(inp)
 
-    targetdevice.TargetDevice.parse_schema(
-        schema["definitions"]["TargetDevice"])
+    targetdevice.TargetDevice.parse_schema(schema["definitions"]["TargetDevice"])
     applicationconfig.ApplicationConfig.parse_schema(
-        schema["definitions"]["Application"])
+        schema["definitions"]["Application"]
+    )
 
     app.app.json_encoder = api.CustomJSONEncoder
     api.init_api()
@@ -107,4 +118,4 @@ if __name__ == '__main__':
 
     Draft4RequestValidator.VALIDATORS["readOnly"] = api.remove_readonly
 
-    waitress.serve(app, host='127.0.0.1', port=args.port)
+    waitress.serve(app, host="127.0.0.1", port=args.port)

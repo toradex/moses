@@ -7,4 +7,4 @@ import remotedocker
 
 logging.basicConfig(level=logging.DEBUG)
 
-config.init_config()
+cfg = config.ServerConfig()

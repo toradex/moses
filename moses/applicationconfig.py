@@ -21,6 +21,8 @@ import stat
 import time
 import socket
 import rsync
+import pathlib
+from typing import Optional, Dict, Any, List
 
 
 class RemoteImageNotFoundException(Exception):
@@ -36,13 +38,13 @@ class ApplicationConfig(config.ConfigurableKeysObject):
     """
 
     readonlyfields = config.ConfigurableKeysObject.readonlyfields.union(
-        {"images", "sdkimages"})
+        {"images", "sdkimages"}
+    )
 
-    non_nullable_properties = ["dockercomposefile",
-                               "startupscript", "shutdownscript"]
+    non_nullable_properties = ["dockercomposefile", "startupscript", "shutdownscript"]
     configurations = ["common", "debug", "release"]
 
-    def __init__(self, folder=None):
+    def __init__(self, folder: Optional[pathlib.Path] = None):
         """Loads data from a configuration folder
 
         Arguments:
@@ -51,9 +53,8 @@ class ApplicationConfig(config.ConfigurableKeysObject):
         """
         super().__init__(folder)
 
-        self.props = {
-            "common":
-            {
+        self.props: Dict[str, Dict[str, str]] = {
+            "common": {
                 "expose": "",
                 "arg": "",
                 "env": "",
@@ -66,101 +67,75 @@ class ApplicationConfig(config.ConfigurableKeysObject):
                 "targetcommands": "",
                 "command": "",
                 "sdkpreinstallcommands": "",
-                "sdkpostinstallcommands": ""
+                "sdkpostinstallcommands": "",
             },
-            "debug":
-            {
-                "arg": "ARG SSHUSERNAME="
-                "#%application.username%#\n"
-            },
-            "release":
-            {
-
-            }
+            "debug": {"arg": "ARG SSHUSERNAME=" "#%application.username%#\n"},
+            "release": {},
         }
 
-        self.ports = {
+        self.ports: Dict[str, Dict[str, str]] = {
             "common": {},
             "debug": {},
-            "release": {}
+            "release": {},
         }
-        self.volumes = {
+        self.volumes: Dict[str, Dict[str, str]] = {
             "common": {},
             "debug": {},
-            "release": {}
+            "release": {},
         }
-        self.devices = {
-            "common": [],
-            "debug": [],
-            "release": []
-        }
+        self.devices: Dict[str, List[str]] = {"common": [], "debug": [], "release": []}
 
-        self.images = {
-            "debug": "",
-            "release": ""
-        }
+        self.images: Dict[str, str] = {"debug": "", "release": ""}
 
-        self.sdkimages = {
-            "debug": "",
-            "release": ""
-        }
+        self.sdkimages: Dict[str, str] = {"debug": "", "release": ""}
 
-        self.platformid = None
-        self.publickey = None
-        self.privatekey = None
+        self.platformid = ""
+        self.publickey: Optional[str] = None
+        self.privatekey: Optional[str] = None
         self.modificationdate = datetime.datetime.utcnow().isoformat()
 
-        self.extraparms = {
+        self.extraparms: Dict[str, Dict[str, str]] = {
             "common": {},
             "debug": {},
-            "release": {}
+            "release": {},
         }
 
-        self.dockercomposefile = {
+        self.dockercomposefile: Dict[str, str] = {
             "common": "",
             "debug": "",
-            "release": ""
+            "release": "",
         }
 
-        self.startupscript = {
-            "common": "",
-            "debug": "",
-            "release": ""
-        }
+        self.startupscript: Dict[str, str] = {"common": "", "debug": "", "release": ""}
 
-        self.shutdownscript = {
-            "common": "",
-            "debug": "",
-            "release": ""
-        }
+        self.shutdownscript: Dict[str, str] = {"common": "", "debug": "", "release": ""}
 
-        self.networks = {
-            "common": [],
-            "debug": [],
-            "release": []
-        }
+        self.networks: Dict[str, List[str]] = {"common": [], "debug": [], "release": []}
 
-        self.sdksshaddress = None
+        self.sdksshaddress: Optional[Dict[str, Any]] = None
 
-        if self.folder is not None and\
-           self.folder.exists():
+        if self.folder is not None and self.folder.exists():
             self.load()
         else:
             self.id = str(uuid.uuid4())
 
-        self.logs = {}
+        self.logs: Dict[str, Any] = {}
 
-    def save(self):
+    def save(self) -> None:
+
+        if self.folder is None:
+            return
+
         # we got a folder, but it may not be an existing one
         if not self.folder.exists():
             self.folder.mkdir()
 
         super().save()
 
-    def load(self):
+    def load(self) -> None:
         super().load()
 
-        if (self.id == "00000000-0000-0000-0000-000000000000"):
+        if self.id == "00000000-0000-0000-0000-000000000000":
             self.id = str(uuid.uuid4())
             self.privatekey = None
             self.publickey = None
@@ -189,8 +164,11 @@ class ApplicationConfig(config.ConfigurableKeysObject):
             fields = self.__dict__
 
         if fields["platformid"] not in platformconfig.PlatformConfigs():
-            logging.error("Invalid platform id %s in application %s",
-                          fields["platformid"], self.folder)
+            logging.error(
+                "Invalid platform id %s in application %s",
+                fields["platformid"],
+                self.folder,
+            )
             return False
 
         # some properties can't be returned/set as null in the REST API
@@ -323,7 +301,10 @@ class ApplicationConfig(config.ConfigurableKeysObject):
             localdocker = docker.from_env()
 
             # we must remove the old image first
-            if self.images[configuration] is not None and self.images[configuration] != "":
+            if (
+                self.images[configuration] is not None
+                and self.images[configuration] != ""
+            ):
 
                 oldimg = None
 
@@ -333,18 +314,23 @@ class ApplicationConfig(config.ConfigurableKeysObject):
                     pass
 
                 if oldimg is not None:
-                    localdocker.images.remove(image=oldimg.id,
-                                              force=True,
-                                              noprune=False)
+                    localdocker.images.remove(
+                        image=oldimg.id, force=True, noprune=False
+                    )
 
             platform = platformconfig.PlatformConfigs().get_platform(self.platformid)
 
-            dockertemplatefull = (platform.folder /
-                                  platform.get_prop(configuration, "container"))
+            dockertemplatefull = platform.folder / platform.get_prop(
+                configuration, "container"
+            )
             dockerfile = self._get_work_folder() / ("Dockerfile." + configuration)
 
-            utils.apply_template(dockertemplatefull, dockerfile, lambda obj,
-                                 tag, args: self._get_value(obj, tag, args), configuration)
+            utils.apply_template(
+                dockertemplatefull,
+                dockerfile,
+                lambda obj, tag, args: self._get_value(obj, tag, args),
+                configuration,
+            )
 
             # copy contents of data subfolder to app path
             platformfilesfolder = platform.folder / "files"
@@ -356,14 +342,16 @@ class ApplicationConfig(config.ConfigurableKeysObject):
                 shutil.copytree(platformfilesfolder, filesfolder)
 
             # for some reasons also docker on windows wants / paths
-            dockerfilerelpath = str(os.path.relpath(
-                dockerfile, self.folder)).replace("\\", "/")
+            dockerfilerelpath = str(os.path.relpath(dockerfile, self.folder)).replace(
+                "\\", "/"
+            )
 
-            img = localdocker.images.build(path=str(self.folder),
-                                           dockerfile=dockerfilerelpath,
-                                           tag=self.platformid+"_"+self.id+"_"+configuration,
-                                           pull=False
-                                           )[0]
+            img = localdocker.images.build(
+                path=str(self.folder),
+                dockerfile=dockerfilerelpath,
+                tag=self.platformid + "_" + self.id + "_" + configuration,
+                pull=False,
+            )[0]
 
             tag = self.get_custom_prop(configuration, "tag")
 
@@ -398,7 +386,8 @@ class ApplicationConfig(config.ConfigurableKeysObject):
 
             if imgid is None or imgid == "":
                 logging.error(
-                    "Image has never been build for application %s.", self.folder)
+                    "Image has never been build for application %s.", self.folder
+                )
                 raise exceptions.ImageNotFoundError("")
 
             ld = docker.from_env()
@@ -407,14 +396,20 @@ class ApplicationConfig(config.ConfigurableKeysObject):
                 limg = ld.images.get(imgid)
             except docker.errors.ImageNotFound:
                 logging.error(
-                    "Image %s not found when deploying application %s.", imgid, self.folder)
+                    "Image %s not found when deploying application %s.",
+                    imgid,
+                    self.folder,
+                )
                 raise exceptions.ImageNotFoundError(imgid)
 
-            if (len(limg.tags) == 0):
+            if len(limg.tags) == 0:
                 self.images[configuration] = ""
                 self.save()
                 logging.error(
-                    "Image %s has no tags when deploying application %s.", imgid, self.folder)
+                    "Image %s has no tags when deploying application %s.",
+                    imgid,
+                    self.folder,
+                )
                 raise exceptions.ImageNotFoundError(imgid)
 
             plat = platformconfig.PlatformConfigs().get_platform(self.platformid)
@@ -422,7 +417,10 @@ class ApplicationConfig(config.ConfigurableKeysObject):
             if not plat.check_device_compatibility(device):
                 logging.error(
                     "Incompatible platform %s selected for device %s when deploying app %s",
-                    plat.name, device.id, self.folder)
+                    plat.name,
+                    device.id,
+                    self.folder,
+                )
                 raise exceptions.IncompatibleDeviceError(device.id)
 
             with remotedocker.RemoteDocker(device) as rd:
@@ -441,14 +439,14 @@ class ApplicationConfig(config.ConfigurableKeysObject):
                     logging.info("DEPLOY - Image on target is not up to date.")
 
                     # we need to stop active containers
-                    containers = rd.get_containers({
-                        "name": self.get_container_name(rimg)})
+                    containers = rd.get_containers(
+                        {"name": self.get_container_name(rimg)}
+                    )
 
                     if len(containers) > 0:
                         # it is safe to assume it's only one,
                         # since names must be unique
-                        logging.warning(
-                            "DEPLOY - terminating running instance.")
+                        logging.warning("DEPLOY - terminating running instance.")
                         containers[0].remove(force=True)
 
                     rd.delete_image(rimg["Id"], True)
@@ -456,8 +454,7 @@ class ApplicationConfig(config.ConfigurableKeysObject):
                     logging.info("DEPLOY - Image not found on target device.")
 
                 stream = limg.save()
-                outputpath = str(self._get_work_folder() /
-                                 (configuration+".tar"))
+                outputpath = str(self._get_work_folder() / (configuration + ".tar"))
 
                 with open(outputpath, "wb") as f:
                     for chunk in stream:
@@ -474,10 +471,9 @@ class ApplicationConfig(config.ConfigurableKeysObject):
         except docker.errors.DockerException as e:
             raise exceptions.LocalDockerError(e)
 
-    def _merge_props(self,
-                     plat: platformconfig.PlatformConfig,
-                     configuration: str,
-                     prop: str) -> dict:
+    def _merge_props(
+        self, plat: platformconfig.PlatformConfig, configuration: str, prop: str
+    ) -> dict:
         """merges values from multiple dictionaries
         The platform common one is taken first, then configuration
         is applied, then app common, then app configuration
@@ -497,17 +493,19 @@ class ApplicationConfig(config.ConfigurableKeysObject):
 
         for key, value in merged.items():
             if isinstance(value, str):
-                newvalue = utils.replace_tags(value, lambda obj, tag, args: self._get_value(
-                    obj, tag, args), configuration)
+                newvalue = utils.replace_tags(
+                    value,
+                    lambda obj, tag, args: self._get_value(obj, tag, args),
+                    configuration,
+                )
                 if newvalue != value:
                     merged[key] = value
 
         return merged
 
-    def _append_props(self,
-                      plat: platformconfig.PlatformConfig,
-                      configuration: str,
-                      prop: str) -> list:
+    def _append_props(
+        self, plat: platformconfig.PlatformConfig, configuration: str, prop: str
+    ) -> list:
         """append values from multiple lists
         The platform common one is taken first, then configuration
         is appended, then app common, then app configuration
@@ -526,12 +524,20 @@ class ApplicationConfig(config.ConfigurableKeysObject):
         merged.extend(self.__dict__[prop]["common"])
         merged.extend(self.__dict__[prop][configuration])
 
-        return list(map(lambda i: i if not isinstance(i, str) else utils.replace_tags(i, lambda obj, tag, args: self._get_value(
-            obj, tag, args), configuration), merged))
+        return list(
+            map(
+                lambda i: i
+                if not isinstance(i, str)
+                else utils.replace_tags(
+                    i,
+                    lambda obj, tag, args: self._get_value(obj, tag, args),
+                    configuration,
+                ),
+                merged,
+            )
+        )
 
-    def get_prop(self,
-                 configuration: str,
-                 prop: str):
+    def get_prop(self, configuration: str, prop: str):
         """Return a property by checking different layers
         application/configuration
         application/common
@@ -547,15 +553,27 @@ class ApplicationConfig(config.ConfigurableKeysObject):
         if not isinstance(self.__dict__[prop], dict):
             return None
 
-        if (self.__dict__[prop][configuration] is not None) and not (prop in ApplicationConfig.non_nullable_properties and len(self.__dict__[prop][configuration]) == 0):
+        if (self.__dict__[prop][configuration] is not None) and not (
+            prop in ApplicationConfig.non_nullable_properties
+            and len(self.__dict__[prop][configuration]) == 0
+        ):
             return self.__dict__[prop][configuration]
 
-        if (self.__dict__[prop]["common"] is not None) and not (prop in ApplicationConfig.non_nullable_properties and len(self.__dict__[prop]["common"]) == 0):
+        if (self.__dict__[prop]["common"] is not None) and not (
+            prop in ApplicationConfig.non_nullable_properties
+            and len(self.__dict__[prop]["common"]) == 0
+        ):
             return self.__dict__[prop]["common"]
 
         return None
 
-    def _runscript(self, configuration: str, plat: platformconfig.PlatformConfig, device: targetdevice.TargetDevice, scriptname: str):
+    def _runscript(
+        self,
+        configuration: str,
+        plat: platformconfig.PlatformConfig,
+        device: targetdevice.TargetDevice,
+        scriptname: str,
+    ):
         """Runs a script configured as "scriptname" property in platform and/or application
 
         Arguments:
@@ -565,13 +583,14 @@ class ApplicationConfig(config.ConfigurableKeysObject):
             scriptname {str} -- name of the property storing the script filename
         """
 
+        assert plat.folder is not None
+
         # check scripts for both application and platform, both are deployed
         # if app script exist, then it's the only one invoked (but still has a
         # chance to invoke platform one if needed since it has been deployed in
         # the same place)
         script = self.get_prop(configuration, scriptname)
-        platformscript = plat.get_prop(
-            configuration, scriptname)
+        platformscript = plat.get_prop(configuration, scriptname)
 
         if script == "":
             script = None
@@ -581,12 +600,11 @@ class ApplicationConfig(config.ConfigurableKeysObject):
 
         if script is not None or platformscript is not None:
 
-            logging.info("Running script:"+scriptname)
+            logging.info("Running script:" + scriptname)
 
             ssh = sharedssh.SharedSSHClient.get_connection(device)
 
-            with paramiko.SFTPClient.from_transport(ssh.get_transport())\
-                    as sftp:
+            with paramiko.SFTPClient.from_transport(ssh.get_transport()) as sftp:
 
                 sftp.chdir(device.homefolder)
 
@@ -599,25 +617,35 @@ class ApplicationConfig(config.ConfigurableKeysObject):
 
                 if script is not None:
                     fullscriptpath = self.folder / script
-                    targetscriptpath = self._get_work_folder() / (script+"."+configuration)
-                    utils.apply_template(fullscriptpath, targetscriptpath, lambda obj, tag, args: self._get_value(
-                        obj, tag, args), configuration)
+                    targetscriptpath = self._get_work_folder() / (
+                        script + "." + configuration
+                    )
+                    utils.apply_template(
+                        fullscriptpath,
+                        targetscriptpath,
+                        lambda obj, tag, args: self._get_value(obj, tag, args),
+                        configuration,
+                    )
                     sftp.put(targetscriptpath, script, confirm=True)
-                    sftp.chmod(script, stat.S_IXUSR |
-                               stat.S_IRUSR | stat.S_IWUSR)
+                    sftp.chmod(script, stat.S_IXUSR | stat.S_IRUSR | stat.S_IWUSR)
 
                 if platformscript is not None:
                     fullplatformscript = plat.folder / platformscript
-                    targetplatformscript = self._get_work_folder() / \
-                        (platformscript+"."+configuration)
-                    utils.apply_template(fullplatformscript, targetplatformscript,
-                                         lambda obj, tag, args: self._get_value(obj, tag, args), configuration)
-                    sftp.put(targetplatformscript,
-                             platformscript, confirm=True)
-                    sftp.chmod(platformscript, stat.S_IXUSR |
-                               stat.S_IRUSR | stat.S_IWUSR)
+                    targetplatformscript = self._get_work_folder() / (
+                        platformscript + "." + configuration
+                    )
+                    utils.apply_template(
+                        str(fullplatformscript),
+                        str(targetplatformscript),
+                        lambda obj, tag, args: self._get_value(obj, tag, args),
+                        configuration,
+                    )
+                    sftp.put(targetplatformscript, platformscript, confirm=True)
+                    sftp.chmod(
+                        platformscript, stat.S_IXUSR | stat.S_IRUSR | stat.S_IWUSR
+                    )
 
-            scriptpath = device.homefolder + "/" + self.id
+            scriptpath = device.homefolder + "/" + str(self.id)
 
             if script is not None:
                 scriptfile = script
@@ -626,20 +654,18 @@ class ApplicationConfig(config.ConfigurableKeysObject):
 
             with ssh.get_transport().open_session() as session:
 
-                session.exec_command(
-                    "cd " + scriptpath + "&&" + "./"+scriptfile)
+                session.exec_command("cd " + scriptpath + "&&" + "./" + scriptfile)
 
                 while not session.exit_status_ready():
                     while session.recv_ready():
                         logging.info(session.recv(1024).decode("UTF-8"))
                     while session.recv_stderr_ready():
-                        logging.warning(
-                            session.recv_stderr(1024).decode("UTF-8"))
+                        logging.warning(session.recv_stderr(1024).decode("UTF-8"))
 
                 if session.recv_exit_status() != 0:
-                    logging.error("Error executing "+scriptname+".")
+                    logging.error("Error executing " + scriptname + ".")
 
-            logging.info("Running script:"+scriptname+" done.")
+            logging.info("Running script:" + scriptname + " done.")
 
     def run(self, configuration: str, device: targetdevice.TargetDevice):
         """Runs application selected container on the specified device.
@@ -653,6 +679,8 @@ class ApplicationConfig(config.ConfigurableKeysObject):
             IncompatibleDeviceError -- Device can't run selected image
             ConnectionError -- Can't connect to device
         """
+
+        assert self.id is not None
 
         plat = platformconfig.PlatformConfigs().get_platform(self.platformid)
 
@@ -678,7 +706,9 @@ class ApplicationConfig(config.ConfigurableKeysObject):
             if container is not None:
                 self.stop(configuration, device)
 
-                if device.id is self.logs:
+                assert device.id is not None
+
+                if device.id in self.logs:
                     del self.logs[device.id][configuration]
 
             # check scripts for both application and platform, both are deployed
@@ -689,24 +719,20 @@ class ApplicationConfig(config.ConfigurableKeysObject):
 
             # for docker-compose only one file is deployed used, and application one takes precedence
             # over the platform one
-            dockercomposefile = self.get_prop(
-                configuration, "dockercomposefile")
+            dockercomposefile = self.get_prop(configuration, "dockercomposefile")
             dockercomposefilepath = None
 
             if dockercomposefile is not None and len(dockercomposefile) > 0:
                 dockercomposefilepath = self.folder / dockercomposefile
             else:
-                dockercomposefile = plat.get_prop(
-                    configuration, "dockercomposefile")
+                dockercomposefile = plat.get_prop(configuration, "dockercomposefile")
                 if dockercomposefile is not None and len(dockercomposefile) > 0:
                     dockercomposefilepath = plat.folder / dockercomposefile
 
             if dockercomposefilepath is not None:
-                ssh = sharedssh.SharedSSHClient.get_connection(
-                    device)
+                ssh = sharedssh.SharedSSHClient.get_connection(device)
 
-                with paramiko.SFTPClient.from_transport(ssh.get_transport())\
-                        as sftp:
+                with paramiko.SFTPClient.from_transport(ssh.get_transport()) as sftp:
 
                     sftp.chdir(device.homefolder)
 
@@ -717,23 +743,33 @@ class ApplicationConfig(config.ConfigurableKeysObject):
 
                     sftp.chdir(self.id)
 
-                    targetdockercomposepath = self._get_work_folder(
-                    ) / (dockercomposefile + "." + configuration)
-                    utils.apply_template(dockercomposefilepath, targetdockercomposepath,
-                                         lambda obj, tag, args: self._get_value(obj, tag, args), configuration)
+                    targetdockercomposepath = self._get_work_folder() / (
+                        dockercomposefile + "." + configuration
+                    )
+                    utils.apply_template(
+                        dockercomposefilepath,
+                        targetdockercomposepath,
+                        lambda obj, tag, args: self._get_value(obj, tag, args),
+                        configuration,
+                    )
                     sftp.put(targetdockercomposepath, "docker-compose.yml")
 
                     with ssh.get_transport().open_session() as session:
                         session.exec_command(
-                            "cd " + device.homefolder + "/" + self.id + " && docker-compose up -d")
+                            "cd "
+                            + device.homefolder
+                            + "/"
+                            + self.id
+                            + " && docker-compose up -d"
+                        )
 
                         while not session.exit_status_ready():
                             while session.recv_ready():
-                                logging.info(session.recv(
-                                    1024).decode("UTF-8"))
+                                logging.info(session.recv(1024).decode("UTF-8"))
                             while session.recv_stderr_ready():
                                 logging.warning(
-                                    session.recv_stderr(1024).decode("UTF-8"))
+                                    session.recv_stderr(1024).decode("UTF-8")
+                                )
 
                         if session.recv_exit_status() != 0:
                             logging.error("Error executing docker-compose.")
@@ -742,19 +778,22 @@ class ApplicationConfig(config.ConfigurableKeysObject):
             volumes = self._merge_props(plat, configuration, "volumes")
             devices = self._append_props(plat, configuration, "devices")
             extraparms = self._merge_props(plat, configuration, "extraparms")
-            networks = list(dict.fromkeys(
-                self._append_props(plat, configuration, "networks")))
+            networks = list(
+                dict.fromkeys(self._append_props(plat, configuration, "networks"))
+            )
 
-            return rd.run_image(limg,
-                                self.get_container_name(limg),
-                                ports,
-                                volumes,
-                                devices,
-                                plat.privileged,
-                                extraparms,
-                                networks).attrs
+            return rd.run_image(
+                limg,
+                self.get_container_name(limg),
+                ports,
+                volumes,
+                devices,
+                plat.privileged,
+                extraparms,
+                networks,
+            ).attrs
 
-    def stop(self, configuration: str,  device):
+    def stop(self, configuration: str, device):
         """Stops application container
 
         Arguments:
@@ -772,8 +811,9 @@ class ApplicationConfig(config.ConfigurableKeysObject):
             if container.status == "running" or container.status == "restarting":
 
                 # try to detach from network first
-                networks = list(dict.fromkeys(
-                    self._append_props(plat, configuration, "networks")))
+                networks = list(
+                    dict.fromkeys(self._append_props(plat, configuration, "networks"))
+                )
 
                 if len(networks) > 0:
 
@@ -795,32 +835,31 @@ class ApplicationConfig(config.ConfigurableKeysObject):
             raise exceptions.RemoteDockerError(device, str(e))
 
         # check if we need to run docker-compose down
-        dockercomposefile = self.get_prop(
-            configuration, "dockercomposefile")
+        dockercomposefile = self.get_prop(configuration, "dockercomposefile")
 
         if dockercomposefile is not None and len(dockercomposefile) > 0:
-            dockercomposefile = plat.get_prop(
-                configuration, "dockercomposefile")
+            dockercomposefile = plat.get_prop(configuration, "dockercomposefile")
 
         if dockercomposefile is not None and len(dockercomposefile) > 0:
 
-            ssh = sharedssh.SharedSSHClient.get_connection(
-                device)
+            ssh = sharedssh.SharedSSHClient.get_connection(device)
 
-            with paramiko.SFTPClient.from_transport(ssh.get_transport())\
-                    as sftp:
+            with paramiko.SFTPClient.from_transport(ssh.get_transport()) as sftp:
 
                 with ssh.get_transport().open_session() as session:
                     session.exec_command(
-                        "cd " + device.homefolder + "/" + self.id + " && docker-compose down")
+                        "cd "
+                        + device.homefolder
+                        + "/"
+                        + self.id
+                        + " && docker-compose down"
+                    )
 
                     while not session.exit_status_ready():
                         while session.recv_ready():
-                            logging.info(session.recv(
-                                1024).decode("UTF-8"))
+                            logging.info(session.recv(1024).decode("UTF-8"))
                         while session.recv_stderr_ready():
-                            logging.warning(
-                                session.recv_stderr(1024).decode("UTF-8"))
+                            logging.warning(session.recv_stderr(1024).decode("UTF-8"))
 
                     if session.recv_exit_status() != 0:
                         logging.error("Error executing docker-compose.")
@@ -828,7 +867,9 @@ class ApplicationConfig(config.ConfigurableKeysObject):
         # run shutdown scripts
         self._runscript(configuration, plat, device, "shutdownscript")
 
-    def get_container(self, configuration, device, only_running=True) -> docker.models.containers.Container:
+    def get_container(
+        self, configuration, device, only_running=True
+    ) -> docker.models.containers.Container:
         """Returns information about current container running on target
 
         Arguments:
@@ -850,7 +891,9 @@ class ApplicationConfig(config.ConfigurableKeysObject):
                 raise exceptions.ImageNotFoundError(imgid)
 
             with remotedocker.RemoteDocker(device) as rd:
-                if not only_running or rd.is_container_running(self.get_container_name(limg)):
+                if not only_running or rd.is_container_running(
+                    self.get_container_name(limg)
+                ):
                     return rd.get_container(self.get_container_name(limg))
         except docker.errors.DockerException as e:
             raise exceptions.LocalDockerError(e)
@@ -895,7 +938,12 @@ class ApplicationConfig(config.ConfigurableKeysObject):
         Returns:
             str -- container instance name
         """
+
+        assert self.id is not None
+
         platform = platformconfig.PlatformConfigs().get_platform(self.platformid)
+
+        assert platform.id is not None
 
         if not platform.usesdk:
             raise exceptions.PlatformDoesNotRequireSDKError(self.platformid)
@@ -920,7 +968,12 @@ class ApplicationConfig(config.ConfigurableKeysObject):
         Returns:
             str -- image name
         """
+
+        assert self.id is not None
+
         platform = platformconfig.PlatformConfigs().get_platform(self.platformid)
+
+        assert platform.id is not None
 
         if not platform.usesdk:
             raise exceptions.PlatformDoesNotRequireSDKError(self.platformid)
@@ -947,9 +1000,13 @@ class ApplicationConfig(config.ConfigurableKeysObject):
             exceptions.PlatformDoesNotRequireSDKError: [description]
         """
 
+        assert self.folder is not None
+
         containerwasrunning = False
 
         platform = platformconfig.PlatformConfigs().get_platform(self.platformid)
+
+        assert platform.folder is not None
 
         instance = self._get_sdk_container_name(configuration)
 
@@ -971,13 +1028,20 @@ class ApplicationConfig(config.ConfigurableKeysObject):
             except docker.errors.NotFound:
                 pass
 
-            dockertemplatefull = (platform.folder /
-                                  platform.get_prop(configuration, "sdkcontainer"))
+            sdkcontainername = platform.get_prop(configuration, "sdkcontainer")
+
+            assert sdkcontainername is not None
+
+            dockertemplatefull = platform.folder / sdkcontainername
 
             dockerfile = self._get_work_folder() / ("Dockerfile_SDK." + configuration)
 
-            utils.apply_template(dockertemplatefull, str(dockerfile), lambda obj,
-                                 tag, args: self._get_value(obj, tag, args), configuration)
+            utils.apply_template(
+                str(dockertemplatefull),
+                str(dockerfile),
+                lambda obj, tag, args: self._get_value(obj, tag, args),
+                configuration,
+            )
 
             # copy contents of data subfolder to app path
             platformfilesfolder = platform.folder / "sdkfiles"
@@ -989,15 +1053,16 @@ class ApplicationConfig(config.ConfigurableKeysObject):
                 shutil.copytree(platformfilesfolder, filesfolder)
 
             # for some reasons also docker on windows wants / paths
-            dockerfilerelpath = str(os.path.relpath(
-                dockerfile, self.folder)).replace("\\", "/")
+            dockerfilerelpath = str(os.path.relpath(dockerfile, self.folder)).replace(
+                "\\", "/"
+            )
 
-            sdkimage = localdocker.images.build(path=str(self.folder),
-                                                dockerfile=dockerfilerelpath,
-                                                tag=self._get_sdk_image_name(
-                                                    configuration),
-                                                pull=False
-                                                )[0]
+            sdkimage = localdocker.images.build(
+                path=str(self.folder),
+                dockerfile=dockerfilerelpath,
+                tag=self._get_sdk_image_name(configuration),
+                pull=False,
+            )[0]
 
             localdocker.containers.prune()
 
@@ -1025,6 +1090,8 @@ class ApplicationConfig(config.ConfigurableKeysObject):
             exceptions.SSHError: [description]
         """
 
+        assert self.folder is not None
+
         self.start_sdk_container(configuration, True)
 
         if self.sdksshaddress is None:
@@ -1048,13 +1115,14 @@ class ApplicationConfig(config.ConfigurableKeysObject):
 
             try:
 
-                outputpath = self._get_work_folder() / ("filesystem_"+configuration+".tar")
+                outputpath = self._get_work_folder() / (
+                    "filesystem_" + configuration + ".tar"
+                )
 
                 if outputpath.exists():
                     os.remove(str(outputpath))
 
-                with open(outputpath,
-                          "wb") as output:
+                with open(outputpath, "wb") as output:
                     for c in container.export():
                         output.write(c)
 
@@ -1072,7 +1140,7 @@ class ApplicationConfig(config.ConfigurableKeysObject):
             raise exceptions.LocalDockerError(e)
 
         # extract sysroot contents
-        destfolder = self._get_work_folder() / ("sysroot_"+configuration)
+        destfolder = self._get_work_folder() / ("sysroot_" + configuration)
 
         if destfolder.exists():
             shutil.rmtree(str(destfolder))
@@ -1080,10 +1148,9 @@ class ApplicationConfig(config.ConfigurableKeysObject):
         destfolder.mkdir()
 
         # strips begginning "/" from paths and adds terminating "/"
-        roots = [r if len(r) == 0 else r[1:]+"/" for r
-                 in plat.sysroots["lib"]] + \
-                [r if len(r) == 0 else r[1:]+"/" for r
-                 in plat.sysroots["include"]]
+        roots = [r if len(r) == 0 else r[1:] + "/" for r in plat.sysroots["lib"]] + [
+            r if len(r) == 0 else r[1:] + "/" for r in plat.sysroots["include"]
+        ]
 
         with tarfile.open(outputpath, "r:") as archive:
             members = archive.getmembers()
@@ -1091,8 +1158,7 @@ class ApplicationConfig(config.ConfigurableKeysObject):
             # checks files in selected folder
             for member in members:
 
-                if not any([member.name.startswith(r)
-                            for r in roots]):
+                if not any([member.name.startswith(r) for r in roots]):
                     continue
 
                 try:
@@ -1104,12 +1170,14 @@ class ApplicationConfig(config.ConfigurableKeysObject):
                         except RecursionError:
                             logging.warning(
                                 "SYNC - Invalid link %s in container filesystem.",
-                                member.name)
+                                member.name,
+                            )
                 except OSError as e:
                     logging.warning(
                         "SYNC - Error %d extracting %s from container filesystem.",
                         e.errno,
-                        member.name)
+                        member.name,
+                    )
 
         # we can copy sysroot to the SDK container via ssh
         try:
@@ -1117,20 +1185,20 @@ class ApplicationConfig(config.ConfigurableKeysObject):
                 ssh.load_system_host_keys()
                 ssh.set_missing_host_key_policy(paramiko.AutoAddPolicy())
 
-                ssh.connect("localhost",
-                            self.sdksshaddress["HostPort"],
-                            username=plat.sdkcontainerusername,
-                            password=plat.sdkcontainerpassword)
+                ssh.connect(
+                    "localhost",
+                    self.sdksshaddress["HostPort"],
+                    username=plat.sdkcontainerusername,
+                    password=plat.sdkcontainerpassword,
+                )
 
                 stdout = ssh.exec_command("rm -fR sysroot")[1]
                 status = stdout.channel.recv_exit_status()
 
                 if status != 0:
-                    raise exceptions.RemoteCommandError("rm -fR sysroot",
-                                                        status)
+                    raise exceptions.RemoteCommandError("rm -fR sysroot", status)
 
-                with paramiko.SFTPClient.from_transport(ssh.get_transport())\
-                        as sftp:
+                with paramiko.SFTPClient.from_transport(ssh.get_transport()) as sftp:
 
                     try:
                         sftp.stat(".ssh")
@@ -1143,30 +1211,31 @@ class ApplicationConfig(config.ConfigurableKeysObject):
                     except FileNotFoundError:
                         pass
 
-                    sftp.put(str(self.folder / "id_rsa"),
-                             ".ssh/id_rsa", confirm=True)
+                    sftp.put(str(self.folder / "id_rsa"), ".ssh/id_rsa", confirm=True)
                     sftp.chmod(".ssh/id_rsa", 0o600)
 
                     sftp.mkdir("sysroot")
 
                     for dirpath, dirs, files in os.walk(destfolder):
 
-                        remote = dirpath.replace(
-                            str(destfolder), "sysroot", 1)
+                        remote = dirpath.replace(str(destfolder), "sysroot", 1)
 
                         # convert win path separator to linux
                         remote = remote.replace("\\", "/")
 
                         for dir in dirs:
-                            logging.info("SYNC - Creating remote folder %s",
-                                         remote+"/"+dir)
-                            sftp.mkdir(remote+"/"+dir)
+                            logging.info(
+                                "SYNC - Creating remote folder %s", remote + "/" + dir
+                            )
+                            sftp.mkdir(remote + "/" + dir)
 
                         for file in files:
-                            logging.info("SYNC - Copying file %s",
-                                         remote+"/"+file)
-                            sftp.put(os.path.join(dirpath, file),
-                                     remote+"/"+file, confirm=True)
+                            logging.info("SYNC - Copying file %s", remote + "/" + file)
+                            sftp.put(
+                                os.path.join(dirpath, file),
+                                remote + "/" + file,
+                                confirm=True,
+                            )
 
         except paramiko.SSHException as e:
             raise exceptions.SSHError(e)
@@ -1204,7 +1273,7 @@ class ApplicationConfig(config.ConfigurableKeysObject):
             ports = {"22/tcp": int(self.sdksshaddress["HostPort"])}
         else:
             # None is a valid value when you want host-assigned port
-            ports = {"22/tcp": None} # type: ignore 
+            ports = {"22/tcp": None}  # type: ignore
 
         self.sdksshaddress = None
 
@@ -1229,20 +1298,23 @@ class ApplicationConfig(config.ConfigurableKeysObject):
         if container is None:
             if platform.usesdk and not platform.usesysroots:
                 try:
-                    _ = localdocker.images.get(
-                        self._get_sdk_image_name(configuration))
+                    _ = localdocker.images.get(self._get_sdk_image_name(configuration))
                 except docker.errors.NotFound:
                     if build:
                         logging.info("SDK - SDK image not found, building it.")
                         self._build_sdk_image(configuration)
                     else:
                         raise exceptions.ImageNotFoundError(
-                            self._get_sdk_image_name(configuration))
+                            self._get_sdk_image_name(configuration)
+                        )
 
             try:
                 container = localdocker.containers.run(
                     self._get_sdk_image_name(configuration),
-                    name=instance, detach=True, ports=ports)
+                    name=instance,
+                    detach=True,
+                    ports=ports,
+                )
             except Exception as e:
                 self.sdksshaddress = None
                 self.save()
@@ -1255,7 +1327,9 @@ class ApplicationConfig(config.ConfigurableKeysObject):
 
             try:
                 # check that ssh server is active
-                self.sdksshaddress = container.attrs["NetworkSettings"]["Ports"]["22/tcp"][0]
+                self.sdksshaddress = container.attrs["NetworkSettings"]["Ports"][
+                    "22/tcp"
+                ][0]
                 self.save()
 
                 port = int(self.sdksshaddress["HostPort"])
@@ -1268,19 +1342,26 @@ class ApplicationConfig(config.ConfigurableKeysObject):
 
                 ssh = paramiko.SSHClient()
 
-                ssh.connect("127.0.0.1", port=port, username=platform.sdkcontainerusername,
-                            password=platform.sdkcontainerpassword)
+                ssh.connect(
+                    "127.0.0.1",
+                    port=port,
+                    username=platform.sdkcontainerusername,
+                    password=platform.sdkcontainerpassword,
+                )
 
                 return
 
             except:
-                if time.time() > starttime+60:
+                if time.time() > starttime + 60:
                     raise exceptions.TimeoutError()
         else:
-            self.sdksshaddress = container.attrs["NetworkSettings"]["Ports"]["22/tcp"][0]
+            self.sdksshaddress = container.attrs["NetworkSettings"]["Ports"]["22/tcp"][
+                0
+            ]
 
-    def sync_folders(self, sourcefolder, configuration,
-                     deviceid, containerfolder, source_is_sdk):
+    def sync_folders(
+        self, sourcefolder, configuration, deviceid, containerfolder, source_is_sdk
+    ):
         """Sync folders from host/SDK container to the app container
 
         Arguments:
@@ -1323,13 +1404,14 @@ class ApplicationConfig(config.ConfigurableKeysObject):
                 ssh.load_system_host_keys()
                 ssh.set_missing_host_key_policy(paramiko.AutoAddPolicy())
 
-                ssh.connect("localhost",
-                            self.sdksshaddress["HostPort"],
-                            username=plat.sdkcontainerusername,
-                            password=plat.sdkcontainerpassword)
+                ssh.connect(
+                    "localhost",
+                    self.sdksshaddress["HostPort"],
+                    username=plat.sdkcontainerusername,
+                    password=plat.sdkcontainerpassword,
+                )
 
-                with paramiko.SFTPClient.from_transport(ssh.get_transport())\
-                        as sftp:
+                with paramiko.SFTPClient.from_transport(ssh.get_transport()) as sftp:
 
                     try:
                         sftp.stat(".ssh")
@@ -1342,19 +1424,24 @@ class ApplicationConfig(config.ConfigurableKeysObject):
                     except FileNotFoundError:
                         pass
 
-                    sftp.put(str(self.folder / "id_rsa"),
-                             ".ssh/id_rsa", confirm=True)
+                    sftp.put(str(self.folder / "id_rsa"), ".ssh/id_rsa", confirm=True)
                     sftp.chmod(".ssh/id_rsa", 0o600)
 
                 rsynccommand = "rsync -rzv "
-                rsynccommand += "-e \"ssh -p " + port\
-                    + " -o \\\"StrictHostKeyChecking no\\\"\" "
+                rsynccommand += (
+                    '-e "ssh -p ' + port + ' -o \\"StrictHostKeyChecking no\\"" '
+                )
                 # source
                 rsynccommand += sourcefolder + "/* "
 
                 # destination
-                rsynccommand += self.username + "@" + device.get_current_ip()\
-                    + ":" + containerfolder
+                rsynccommand += (
+                    self.username
+                    + "@"
+                    + device.get_current_ip()
+                    + ":"
+                    + containerfolder
+                )
 
                 _, stdout, stderr = ssh.exec_command(rsynccommand)
                 status = stdout.channel.recv_exit_status()
@@ -1369,11 +1456,11 @@ class ApplicationConfig(config.ConfigurableKeysObject):
                         logging.warning(output)
                     except:
                         pass
-                    raise exceptions.RemoteCommandError(rsynccommand,
-                                                        status)
+                    raise exceptions.RemoteCommandError(rsynccommand, status)
         else:
-            rsync.run_rsync(sourcefolder, deviceid,
-                            containerfolder, self.get_privatekeypath(), port)
+            rsync.run_rsync(
+                sourcefolder, deviceid, containerfolder, self.get_privatekeypath(), port
+            )
 
     def touch(self):
         """ Set modification date to current time
@@ -1390,23 +1477,28 @@ class ApplicationConfig(config.ConfigurableKeysObject):
 
             if self.images["debug"] is not None and self.images["debug"] != "":
                 if d.images.get(self.images["debug"]) is not None:
-                    d.images.remove(
-                        image=self.images["debug"], force=True, prune=True)
+                    d.images.remove(image=self.images["debug"], force=True, prune=True)
 
             if self.images["release"] is not None and self.images["release"] != "":
                 if d.images.get(self.images["release"]) is not None:
                     d.images.remove(
-                        image=self.images["release"], force=True, prune=True)
+                        image=self.images["release"], force=True, prune=True
+                    )
 
             if self.sdkimages["debug"] is not None and self.sdkimages["debug"] != "":
                 if d.images.get(self.sdkimages["debug"]) is not None:
                     d.images.remove(
-                        image=self.sdkimages["debug"], force=True, prune=True)
+                        image=self.sdkimages["debug"], force=True, prune=True
+                    )
 
-            if self.sdkimages["release"] is not None and self.sdkimages["release"] != "":
+            if (
+                self.sdkimages["release"] is not None
+                and self.sdkimages["release"] != ""
+            ):
                 if d.images.get(self.sdkimages["release"]) is not None:
                     d.images.remove(
-                        image=self.sdkimages["release"], force=True, prune=True)
+                        image=self.sdkimages["release"], force=True, prune=True
+                    )
             super().destroy()
         except:
             logging.exception("Exception destroying application object")
@@ -1444,8 +1536,7 @@ class ApplicationConfig(config.ConfigurableKeysObject):
 
         log = None
 
-        container = self.get_container(
-            configuration, device, only_running=False)
+        container = self.get_container(configuration, device, only_running=False)
 
         if container is None:
             return None
@@ -1461,7 +1552,8 @@ class ApplicationConfig(config.ConfigurableKeysObject):
 
         return utils.get_log_chunk(log)
 
-class ApplicationConfigs(dict, metaclass=singleton.Singleton):
+
+class ApplicationConfigs(Dict[str, ApplicationConfig], metaclass=singleton.Singleton):
     """Class used to manage the applications.
        It does not load all the objects at startup, apps are loaded on demand.
     """
@@ -1487,8 +1579,9 @@ class ApplicationConfigs(dict, metaclass=singleton.Singleton):
         self[app.id] = app
         return app
 
-    def create_new_application(self, rootfolder, platform, username)\
-            -> ApplicationConfig:
+    def create_new_application(
+        self, rootfolder, platform, username
+    ) -> ApplicationConfig:
         """static function used to create a new application
 
         Arguments:
@@ -1509,5 +1602,8 @@ class ApplicationConfigs(dict, metaclass=singleton.Singleton):
         app.platformid = platform.id
         app.username = username
         app.save()
+
+        assert app.id is not None
+
         self[app.id] = app
         return app

@@ -129,15 +129,15 @@ Class | Method | HTTP request | Description
 *DevicesApi* | [**devices_serialdetect**](docs/DevicesApi.md#devices_serialdetect) | **GET** /devices/serial_detect | Finds a device connected to serial port
 *DevicesApi* | [**images_deleteimage**](docs/DevicesApi.md#images_deleteimage) | **DELETE** /devices/{device_id}/images/{image_id} | delete an image
 *DevicesApi* | [**images_getimage**](docs/DevicesApi.md#images_getimage) | **GET** /devices/{device_id}/images/{image_id} | get image details
+*EulasApi* | [**eula_get**](docs/EulasApi.md#eula_get) | **GET** /eulas/{eula_id} | Get an eula
+*EulasApi* | [**eula_modify**](docs/EulasApi.md#eula_modify) | **PUT** /eulas/{eula_id} | Change eula properties
+*EulasApi* | [**eulas_get**](docs/EulasApi.md#eulas_get) | **GET** /eulas | Get all eulas
 *PlatformsApi* | [**platform_compatibledevices_get**](docs/PlatformsApi.md#platform_compatibledevices_get) | **GET** /platforms/{platform_id}/compatibledevices | get compatible devices
 *PlatformsApi* | [**platform_get**](docs/PlatformsApi.md#platform_get) | **GET** /platforms/{platform_id} | Get a platform
 *PlatformsApi* | [**platforms_get**](docs/PlatformsApi.md#platforms_get) | **GET** /platforms | Get all platforms
 *SetupApi* | [**setup_pullcontainers**](docs/SetupApi.md#setup_pullcontainers) | **GET** /setup/pullcontainers | pulls containers from docker repo
 *VersionApi* | [**version_docker**](docs/VersionApi.md#version_docker) | **GET** /version/docker | Docker version info
 *VersionApi* | [**version_get**](docs/VersionApi.md#version_get) | **GET** /version | APP/API version
-*EulasApi* | [**eula_get**](docs/EulasApi.md#eula_get) | **GET** /eulas/{eula_id} | Get an eula
-*EulasApi* | [**eula_modify**](docs/EulasApi.md#eula_modify) | **PUT** /eulas/{eula_id} | Change eula properties
-*EulasApi* | [**eulas_get**](docs/EulasApi.md#eulas_get) | **GET** /eulas | Get all eulas
 
 
 ## Documentation For Models

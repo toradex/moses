@@ -82,12 +82,12 @@ namespace TorizonRestAPI.Test
             // TODO unit test for the property 'Title'
         }
         /// <summary>
-        /// Test the property 'Description'
+        /// Test the property 'Question'
         /// </summary>
         [Test]
-        public void DescriptionTest()
+        public void QuestionTest()
         {
-            // TODO unit test for the property 'Description'
+            // TODO unit test for the property 'Question'
         }
         /// <summary>
         /// Test the property 'Filepath'

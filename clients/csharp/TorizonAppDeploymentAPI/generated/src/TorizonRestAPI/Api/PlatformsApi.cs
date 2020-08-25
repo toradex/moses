@@ -112,7 +112,7 @@ namespace TorizonRestAPI.Api
         /// <param name="platformId">Id of a platform formatted as name_version</param>
         /// <param name="cancellationToken">Cancellation Token to cancel request (optional) </param>
         /// <returns>Task of ApiResponse (List&lt;TargetDevice&gt;)</returns>
-        System.Threading.Tasks.Task<ApiResponse<List<TargetDevice>>> PlatformCompatibledevicesGetAsyncWithHttpInfo (string platformId, CancellationToken cancellationToken = default(CancellationToken));
+        System.Threading.Tasks.Task<ApiResponse<List<TargetDevice>>> PlatformCompatibledevicesGetWithHttpInfoAsync (string platformId, CancellationToken cancellationToken = default(CancellationToken));
         /// <summary>
         /// Get a platform
         /// </summary>
@@ -135,7 +135,7 @@ namespace TorizonRestAPI.Api
         /// <param name="platformId">Id of a platform formatted as name_version</param>
         /// <param name="cancellationToken">Cancellation Token to cancel request (optional) </param>
         /// <returns>Task of ApiResponse (Platform)</returns>
-        System.Threading.Tasks.Task<ApiResponse<Platform>> PlatformGetAsyncWithHttpInfo (string platformId, CancellationToken cancellationToken = default(CancellationToken));
+        System.Threading.Tasks.Task<ApiResponse<Platform>> PlatformGetWithHttpInfoAsync (string platformId, CancellationToken cancellationToken = default(CancellationToken));
         /// <summary>
         /// Get all platforms
         /// </summary>
@@ -158,7 +158,7 @@ namespace TorizonRestAPI.Api
         /// <param name="runtime"> (optional)</param>
         /// <param name="cancellationToken">Cancellation Token to cancel request (optional) </param>
         /// <returns>Task of ApiResponse (List&lt;Platform&gt;)</returns>
-        System.Threading.Tasks.Task<ApiResponse<List<Platform>>> PlatformsGetAsyncWithHttpInfo (string runtime = default(string), CancellationToken cancellationToken = default(CancellationToken));
+        System.Threading.Tasks.Task<ApiResponse<List<Platform>>> PlatformsGetWithHttpInfoAsync (string runtime = default(string), CancellationToken cancellationToken = default(CancellationToken));
         #endregion Asynchronous Operations
     }
 
@@ -345,7 +345,7 @@ namespace TorizonRestAPI.Api
         /// <returns>Task of List&lt;TargetDevice&gt;</returns>
         public async System.Threading.Tasks.Task<List<TargetDevice>> PlatformCompatibledevicesGetAsync (string platformId, CancellationToken cancellationToken = default(CancellationToken))
         {
-             ApiResponse<List<TargetDevice>> localVarResponse = await PlatformCompatibledevicesGetAsyncWithHttpInfo(platformId, cancellationToken);
+             ApiResponse<List<TargetDevice>> localVarResponse = await PlatformCompatibledevicesGetWithHttpInfoAsync(platformId, cancellationToken);
              return localVarResponse.Data;
 
         }
@@ -357,7 +357,7 @@ namespace TorizonRestAPI.Api
         /// <param name="platformId">Id of a platform formatted as name_version</param>
         /// <param name="cancellationToken">Cancellation Token to cancel request (optional) </param>
         /// <returns>Task of ApiResponse (List&lt;TargetDevice&gt;)</returns>
-        public async System.Threading.Tasks.Task<ApiResponse<List<TargetDevice>>> PlatformCompatibledevicesGetAsyncWithHttpInfo (string platformId, CancellationToken cancellationToken = default(CancellationToken))
+        public async System.Threading.Tasks.Task<ApiResponse<List<TargetDevice>>> PlatformCompatibledevicesGetWithHttpInfoAsync (string platformId, CancellationToken cancellationToken = default(CancellationToken))
         {
             // verify the required parameter 'platformId' is set
             if (platformId == null)
@@ -480,7 +480,7 @@ namespace TorizonRestAPI.Api
         /// <returns>Task of Platform</returns>
         public async System.Threading.Tasks.Task<Platform> PlatformGetAsync (string platformId, CancellationToken cancellationToken = default(CancellationToken))
         {
-             ApiResponse<Platform> localVarResponse = await PlatformGetAsyncWithHttpInfo(platformId, cancellationToken);
+             ApiResponse<Platform> localVarResponse = await PlatformGetWithHttpInfoAsync(platformId, cancellationToken);
              return localVarResponse.Data;
 
         }
@@ -492,7 +492,7 @@ namespace TorizonRestAPI.Api
         /// <param name="platformId">Id of a platform formatted as name_version</param>
         /// <param name="cancellationToken">Cancellation Token to cancel request (optional) </param>
         /// <returns>Task of ApiResponse (Platform)</returns>
-        public async System.Threading.Tasks.Task<ApiResponse<Platform>> PlatformGetAsyncWithHttpInfo (string platformId, CancellationToken cancellationToken = default(CancellationToken))
+        public async System.Threading.Tasks.Task<ApiResponse<Platform>> PlatformGetWithHttpInfoAsync (string platformId, CancellationToken cancellationToken = default(CancellationToken))
         {
             // verify the required parameter 'platformId' is set
             if (platformId == null)
@@ -612,7 +612,7 @@ namespace TorizonRestAPI.Api
         /// <returns>Task of List&lt;Platform&gt;</returns>
         public async System.Threading.Tasks.Task<List<Platform>> PlatformsGetAsync (string runtime = default(string), CancellationToken cancellationToken = default(CancellationToken))
         {
-             ApiResponse<List<Platform>> localVarResponse = await PlatformsGetAsyncWithHttpInfo(runtime, cancellationToken);
+             ApiResponse<List<Platform>> localVarResponse = await PlatformsGetWithHttpInfoAsync(runtime, cancellationToken);
              return localVarResponse.Data;
 
         }
@@ -624,7 +624,7 @@ namespace TorizonRestAPI.Api
         /// <param name="runtime"> (optional)</param>
         /// <param name="cancellationToken">Cancellation Token to cancel request (optional) </param>
         /// <returns>Task of ApiResponse (List&lt;Platform&gt;)</returns>
-        public async System.Threading.Tasks.Task<ApiResponse<List<Platform>>> PlatformsGetAsyncWithHttpInfo (string runtime = default(string), CancellationToken cancellationToken = default(CancellationToken))
+        public async System.Threading.Tasks.Task<ApiResponse<List<Platform>>> PlatformsGetWithHttpInfoAsync (string runtime = default(string), CancellationToken cancellationToken = default(CancellationToken))
         {
 
             var localVarPath = "/platforms";

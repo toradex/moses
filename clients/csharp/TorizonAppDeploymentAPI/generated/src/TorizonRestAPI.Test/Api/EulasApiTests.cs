@@ -83,8 +83,8 @@ namespace TorizonRestAPI.Test
         {
             // TODO uncomment below to test the method and replace null with proper value
             //string eulaId = null;
-            //Eula eula = null;
-            //var response = instance.EulaModify(eulaId, eula);
+            //Eula e = null;
+            //var response = instance.EulaModify(eulaId, e);
             //Assert.IsInstanceOf(typeof(Eula), response, "response is Eula");
         }
         

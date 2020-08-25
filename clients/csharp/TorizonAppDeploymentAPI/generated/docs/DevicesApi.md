@@ -2268,6 +2268,8 @@ No authorization required
 | **533** | SSH error. |  -  |
 | **534** | OS error. |  -  |
 | **535** | Invalid device id. |  -  |
+| **546** | Device information is not valid. |  -  |
+| **547** | Model id not recognized. |  -  |
 
 [[Back to top]](#)
 [[Back to API list]](../README.md#documentation-for-api-endpoints)
@@ -2356,6 +2358,8 @@ No authorization required
 | **536** | Serial port error. |  -  |
 | **537** | Command timeout. |  -  |
 | **538** | Login failed. |  -  |
+| **546** | Device information is not valid. |  -  |
+| **547** | Model id not recognized. |  -  |
 
 [[Back to top]](#)
 [[Back to API list]](../README.md#documentation-for-api-endpoints)

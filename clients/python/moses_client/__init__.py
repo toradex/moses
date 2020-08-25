@@ -19,10 +19,10 @@ __version__ = "1.0.0"
 # import apis into sdk package
 from moses_client.api.applications_api import ApplicationsApi
 from moses_client.api.devices_api import DevicesApi
+from moses_client.api.eulas_api import EulasApi
 from moses_client.api.platforms_api import PlatformsApi
 from moses_client.api.setup_api import SetupApi
 from moses_client.api.version_api import VersionApi
-from moses_client.api.eulas_api import EulasApi
 
 # import ApiClient
 from moses_client.api_client import ApiClient

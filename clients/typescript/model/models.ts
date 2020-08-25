@@ -39,7 +39,7 @@ export * from './platform';
 export * from './process';
 export * from './targetDevice';
 
-import localVarRequest = require('request');
+import localVarRequest from 'request';
 
 import { Application } from './application';
 import { DockerAddress } from './dockerAddress';

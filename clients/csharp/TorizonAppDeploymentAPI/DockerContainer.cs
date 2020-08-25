@@ -109,7 +109,7 @@ namespace TorizonAppDeploymentAPI
 
         public async Task<string> GetLogBlockAsync(bool restart)
         {
-            var response = await this.api.ContainerGetlogsAsyncWithHttpInfo(this.Device.Id, this.Id,restart);
+            var response = await this.api.ContainerGetlogsWithHttpInfoAsync(this.Device.Id, this.Id,restart);
 
             if (response.StatusCode==204)
             {

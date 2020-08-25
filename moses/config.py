@@ -10,12 +10,10 @@ import pathlib
 import exceptions
 import platform
 import subprocess
+import singleton
+from typing import Optional, Dict, Any
 
-APP_NAME = "moses"
-
-SERVER_CONFIG = {
-    "commandtimeout": 30
-}
+APP_NAME: str = "moses"
 
 
 class ConfigurableObject:
@@ -24,10 +22,10 @@ class ConfigurableObject:
         Those objects have a folder and a unique id.
     """
 
-    readonlyfields = {"folder"}
+    readonlyfields: set = {"folder"}
 
     @classmethod
-    def parse_schema(cls, schema):
+    def parse_schema(cls, schema: dict) -> None:
         """parses the yaml schema and sets read-only fields
 
         Arguments:
@@ -38,16 +36,15 @@ class ConfigurableObject:
                 if prop["readOnly"]:
                     cls.readonlyfields.add(key)
 
-    def __init__(self, folder):
+    def __init__(self, folder: Optional[pathlib.Path]):
 
         self.folder = folder
+        self.id: Optional[str] = None
 
-        if not self.folder:
-            self.id = None
-        else:
+        if self.folder is not None:
             self.id = self.folder.name
 
-    def load(self):
+    def load(self) -> None:
         """Loads object data
         """
         if self.folder is None:
@@ -71,7 +68,7 @@ class ConfigurableObject:
         """
         raise NotImplementedError()
 
-    def save(self):
+    def save(self) -> None:
         """Save object data
 
         Raises:
@@ -94,11 +91,11 @@ class ConfigurableObject:
         with open(self.folder / "config.yaml", "w") as out:
             yaml.dump(self.__getstate__(), out, indent=4, sort_keys=True)
 
-    def is_valid(self, fields=None) -> bool:
+    def is_valid(self, fields: dict = None) -> bool:
         """Validate fields of current object
 
         Arguments:
-            fields {dictionary} -- dictionary with values, if None then
+            fields {dict} -- dictionary with values, if None then
                                    self.__dict__ will be used
 
         Returns:
@@ -106,7 +103,7 @@ class ConfigurableObject:
         """
         pass
 
-    def destroy(self):
+    def destroy(self) -> None:
         """Removes permanently stored information about the device
         """
 
@@ -136,13 +133,14 @@ class ConfigurableObject:
             if key in self.readonlyfields:
                 if value != str(self.__dict__[key]):
                     logging.warning(
-                        "REST - Attempt to change value of property %s", key)
+                        "REST - Attempt to change value of property %s", key
+                    )
                 readonlyitems.append(key)
 
         [fields.pop(key) for key in readonlyitems]
         return fields
 
-    def import_data(self, fields: dict):
+    def import_data(self, fields: Dict[str, Any]) -> None:
         """Import data from a field list, checking read-only
         properties
 
@@ -153,20 +151,20 @@ class ConfigurableObject:
 
     # convert object to string
 
-    def __str__(self):
-        return self.id
+    def __str__(self) -> str:
+        return str(self.id)
 
     # support serialization
-    def __getstate__(self):
+    def __getstate__(self) -> Dict[str, Any]:
         fields = self.__dict__.copy()
         del fields["id"]
         del fields["folder"]
         return fields
 
-    def __setstate__(self, fields):
+    def __setstate__(self, fields) -> None:
         self.__dict__.update(fields)
 
-    def _to_json(self):
+    def _to_json(self) -> dict:
         fields = self.__getstate__()
         # we keep id in the info we return via REST
         fields["id"] = self.id
@@ -177,15 +175,15 @@ class ConfigurableKeysObject(ConfigurableObject):
     """Implements and object that manages ssh public/private keys
     """
 
-    def __init__(self, folder):
+    def __init__(self, folder: Optional[pathlib.Path]):
 
-        self.publickey = None
-        self.privatekey = None
-        self.username = None
+        self.publickey: Optional[str] = None
+        self.privatekey: Optional[str] = None
+        self.username: Optional[str] = None
 
         super().__init__(folder)
 
-    def save(self):
+    def save(self) -> None:
         """Save object data
         """
 
@@ -195,9 +193,13 @@ class ConfigurableKeysObject(ConfigurableObject):
             self._generate_keys()
             self.save()
 
-    def _generate_keys(self):
+    def _generate_keys(self) -> None:
         """Generates SSH keys used to connect with the device over SSH
         """
+
+        if self.folder is None:
+            return
+
         key = paramiko.RSAKey.generate(2048)
         keypath = self.folder / "id_rsa"
         with io.StringIO() as keystrio:
@@ -207,88 +209,90 @@ class ConfigurableKeysObject(ConfigurableObject):
             if self.folder is not None:
                 key.write_private_key_file(keypath)
 
-        self.publickey = "ssh-rsa "+key.get_base64()
+        self.publickey = "ssh-rsa " + key.get_base64()
 
         if platform.system() == "Windows":
+            subprocess.run(["icacls.exe", keypath, "/c", "/t", "/Inheritance:d"])
             subprocess.run(
-                ["icacls.exe", keypath, "/c", "/t", "/Inheritance:d"])
-            subprocess.run(["icacls.exe", keypath, "/c", "/t",
-                            "/Grant "+os.getlogin()+"F"])
-            subprocess.run(["icacls.exe", keypath, "/c", "/t", "/Remove", "Administrator",
-                            "BUILTIN\Administrators", "BUILTIN", "Everyone", "System", "Users"])
+                ["icacls.exe", keypath, "/c", "/t", "/Grant " + os.getlogin() + "F"]
+            )
+            subprocess.run(
+                [
+                    "icacls.exe",
+                    keypath,
+                    "/c",
+                    "/t",
+                    "/Remove",
+                    "Administrator",
+                    "BUILTIN\Administrators",
+                    "BUILTIN",
+                    "Everyone",
+                    "System",
+                    "Users",
+                ]
+            )
         else:
             os.chmod(keypath, 0o600)
 
     # support serialization
 
-    def _to_json(self):
+    def _to_json(self) -> dict:
         fields = super()._to_json()
         del fields["privatekey"]
         del fields["publickey"]
         return fields
 
-    def get_privatekeypath(self) -> str:
+    def get_privatekeypath(self) -> Optional[str]:
         """returns path for the private key file
 
         Returns:
             str -- path
         """
+        if self.folder is None:
+            return None
         return os.path.join(self.folder, "id_rsa")
 
 
-def _create_folders():
-    if not SERVER_CONFIG["datapath"].exists():
-        SERVER_CONFIG["datapath"].mkdir()
+class ServerConfig(metaclass=singleton.Singleton):
+    def _create_folders(self) -> None:
+        if not self.datapath.exists():
+            self.datapath.mkdir()
 
-    if not SERVER_CONFIG["devicespath"].exists():
-        SERVER_CONFIG["devicespath"].mkdir()
+        if not self.devicespath.exists():
+            self.devicespath.mkdir()
 
-    if not SERVER_CONFIG["platformspath"].exists():
-        SERVER_CONFIG["platformspath"].mkdir()
+        if not self.platformspath.exists():
+            self.platformspath.mkdir()
 
-    if not SERVER_CONFIG["standardplatformspath"].exists():
-        SERVER_CONFIG["standardplatformspath"].mkdir()
+        if not self.standardplatformspath.exists():
+            self.standardplatformspath.mkdir()
 
-    if not SERVER_CONFIG["standardeulaspath"].exists():
-        SERVER_CONFIG["standardeulaspath"].mkdir()
+        if not self.standardeulaspath.exists():
+            self.standardeulaspath.mkdir()
 
-    if not SERVER_CONFIG["eulaspath"].exists():
-        SERVER_CONFIG["eulaspath"].mkdir()
+        if not self.eulaspath.exists():
+            self.eulaspath.mkdir()
 
-def init_config():
-    """Initializes configuration
+    def __init__(self):
+        """Initializes configuration
 
-    Assigns default values to parameter, then loads configuration
-    from a json file passed as argument and creates required
-    folders
-    """
+        Assigns default values to parameter, then loads configuration
+        from a json file passed as argument and creates required
+        folders
+        """
 
-    SERVER_CONFIG["apppath"] = pathlib.Path(
-        os.path.dirname(os.path.abspath(__file__)))
-    SERVER_CONFIG["datapath"] = pathlib.Path.home() / ("."+APP_NAME)
+        self.commandtimeout: int = 30
+        self.apppath = pathlib.Path(os.path.dirname(os.path.abspath(__file__)))
+        self.datapath = pathlib.Path.home() / ("." + APP_NAME)
 
-    # TODO: parse command line args
-    # TODO: load configuration from file
-    # TODO: convert strings to paths
+        self.devicespath = self.datapath / "devices"
 
-    # derives additional settings if not present
-    if "devicespath" not in SERVER_CONFIG:
-        SERVER_CONFIG["devicespath"] = SERVER_CONFIG["datapath"] / "devices"
+        self.platformspath = self.datapath / "platforms"
 
-    if "platformspath" not in SERVER_CONFIG:
-        SERVER_CONFIG["platformspath"] = SERVER_CONFIG["datapath"] \
-            / "platforms"
+        self.standardplatformspath = self.apppath / "platforms"
 
-    if "standardplatformspath" not in SERVER_CONFIG:
-        SERVER_CONFIG["standardplatformspath"] = SERVER_CONFIG["apppath"] \
-            / "platforms"
+        self.standardeulaspath = self.apppath / "eulas"
 
-    if "standardeulaspath" not in SERVER_CONFIG:
-        SERVER_CONFIG["standardeulaspath"] = SERVER_CONFIG["apppath"] \
-            / "eulas"
+        self.eulaspath = self.datapath / "eulas"
 
-    if "eulaspath" not in SERVER_CONFIG:
-        SERVER_CONFIG["eulaspath"] = SERVER_CONFIG["datapath"] \
-            / "eulas"
-
-    _create_folders()
+        self._create_folders()

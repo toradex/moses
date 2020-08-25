@@ -66,7 +66,7 @@ namespace TorizonRestAPI.Api
         /// <exception cref="TorizonRestAPI.Client.ApiException">Thrown when fails to make API call</exception>
         /// <param name="cancellationToken">Cancellation Token to cancel request (optional) </param>
         /// <returns>Task of ApiResponse</returns>
-        System.Threading.Tasks.Task<ApiResponse<Object>> SetupPullcontainersAsyncWithHttpInfo (CancellationToken cancellationToken = default(CancellationToken));
+        System.Threading.Tasks.Task<ApiResponse<Object>> SetupPullcontainersWithHttpInfoAsync (CancellationToken cancellationToken = default(CancellationToken));
         #endregion Asynchronous Operations
     }
 
@@ -245,7 +245,7 @@ namespace TorizonRestAPI.Api
         /// <returns>Task of void</returns>
         public async System.Threading.Tasks.Task SetupPullcontainersAsync (CancellationToken cancellationToken = default(CancellationToken))
         {
-             await SetupPullcontainersAsyncWithHttpInfo(cancellationToken);
+             await SetupPullcontainersWithHttpInfoAsync(cancellationToken);
 
         }
 
@@ -255,7 +255,7 @@ namespace TorizonRestAPI.Api
         /// <exception cref="TorizonRestAPI.Client.ApiException">Thrown when fails to make API call</exception>
         /// <param name="cancellationToken">Cancellation Token to cancel request (optional) </param>
         /// <returns>Task of ApiResponse</returns>
-        public async System.Threading.Tasks.Task<ApiResponse<Object>> SetupPullcontainersAsyncWithHttpInfo (CancellationToken cancellationToken = default(CancellationToken))
+        public async System.Threading.Tasks.Task<ApiResponse<Object>> SetupPullcontainersWithHttpInfoAsync (CancellationToken cancellationToken = default(CancellationToken))
         {
 
             var localVarPath = "/setup/pullcontainers";

@@ -742,7 +742,7 @@ namespace TorizonRestAPI.Api
         /// <param name="restart">when true reads the lock back from beginning (optional, default to false)</param>
         /// <param name="cancellationToken">Cancellation Token to cancel request (optional) </param>
         /// <returns>Task of ApiResponse (string)</returns>
-        System.Threading.Tasks.Task<ApiResponse<string>> ContainerGetlogsAsyncWithHttpInfo (string deviceId, string containerId, bool? restart = default(bool?), CancellationToken cancellationToken = default(CancellationToken));
+        System.Threading.Tasks.Task<ApiResponse<string>> ContainerGetlogsWithHttpInfoAsync (string deviceId, string containerId, bool? restart = default(bool?), CancellationToken cancellationToken = default(CancellationToken));
         /// <summary>
         /// Return container memory information
         /// </summary>
@@ -767,7 +767,7 @@ namespace TorizonRestAPI.Api
         /// <param name="containerId">Id of a container</param>
         /// <param name="cancellationToken">Cancellation Token to cancel request (optional) </param>
         /// <returns>Task of ApiResponse (MemInfo)</returns>
-        System.Threading.Tasks.Task<ApiResponse<MemInfo>> ContainerGetmemoryAsyncWithHttpInfo (string deviceId, string containerId, CancellationToken cancellationToken = default(CancellationToken));
+        System.Threading.Tasks.Task<ApiResponse<MemInfo>> ContainerGetmemoryWithHttpInfoAsync (string deviceId, string containerId, CancellationToken cancellationToken = default(CancellationToken));
         /// <summary>
         /// return information about storage
         /// </summary>
@@ -792,7 +792,7 @@ namespace TorizonRestAPI.Api
         /// <param name="containerId">Id of a container</param>
         /// <param name="cancellationToken">Cancellation Token to cancel request (optional) </param>
         /// <returns>Task of ApiResponse (List&lt;MountPoint&gt;)</returns>
-        System.Threading.Tasks.Task<ApiResponse<List<MountPoint>>> ContainerGetmountpointsAsyncWithHttpInfo (string deviceId, string containerId, CancellationToken cancellationToken = default(CancellationToken));
+        System.Threading.Tasks.Task<ApiResponse<List<MountPoint>>> ContainerGetmountpointsWithHttpInfoAsync (string deviceId, string containerId, CancellationToken cancellationToken = default(CancellationToken));
         /// <summary>
         /// return processes running in container
         /// </summary>
@@ -817,7 +817,7 @@ namespace TorizonRestAPI.Api
         /// <param name="containerId">Id of a container</param>
         /// <param name="cancellationToken">Cancellation Token to cancel request (optional) </param>
         /// <returns>Task of ApiResponse (List&lt;Process&gt;)</returns>
-        System.Threading.Tasks.Task<ApiResponse<List<Process>>> ContainerGetprocessesAsyncWithHttpInfo (string deviceId, string containerId, CancellationToken cancellationToken = default(CancellationToken));
+        System.Threading.Tasks.Task<ApiResponse<List<Process>>> ContainerGetprocessesWithHttpInfoAsync (string deviceId, string containerId, CancellationToken cancellationToken = default(CancellationToken));
         /// <summary>
         /// starts container
         /// </summary>
@@ -842,7 +842,7 @@ namespace TorizonRestAPI.Api
         /// <param name="containerId">Id of a container</param>
         /// <param name="cancellationToken">Cancellation Token to cancel request (optional) </param>
         /// <returns>Task of ApiResponse (DockerContainer)</returns>
-        System.Threading.Tasks.Task<ApiResponse<DockerContainer>> ContainerStartAsyncWithHttpInfo (string deviceId, string containerId, CancellationToken cancellationToken = default(CancellationToken));
+        System.Threading.Tasks.Task<ApiResponse<DockerContainer>> ContainerStartWithHttpInfoAsync (string deviceId, string containerId, CancellationToken cancellationToken = default(CancellationToken));
         /// <summary>
         /// stops container
         /// </summary>
@@ -867,7 +867,7 @@ namespace TorizonRestAPI.Api
         /// <param name="containerId">Id of a container</param>
         /// <param name="cancellationToken">Cancellation Token to cancel request (optional) </param>
         /// <returns>Task of ApiResponse (DockerContainer)</returns>
-        System.Threading.Tasks.Task<ApiResponse<DockerContainer>> ContainerStopAsyncWithHttpInfo (string deviceId, string containerId, CancellationToken cancellationToken = default(CancellationToken));
+        System.Threading.Tasks.Task<ApiResponse<DockerContainer>> ContainerStopWithHttpInfoAsync (string deviceId, string containerId, CancellationToken cancellationToken = default(CancellationToken));
         /// <summary>
         /// delete a container
         /// </summary>
@@ -892,7 +892,7 @@ namespace TorizonRestAPI.Api
         /// <param name="containerId">Id of a container</param>
         /// <param name="cancellationToken">Cancellation Token to cancel request (optional) </param>
         /// <returns>Task of ApiResponse</returns>
-        System.Threading.Tasks.Task<ApiResponse<Object>> ContainersDeletecontainerAsyncWithHttpInfo (string deviceId, string containerId, CancellationToken cancellationToken = default(CancellationToken));
+        System.Threading.Tasks.Task<ApiResponse<Object>> ContainersDeletecontainerWithHttpInfoAsync (string deviceId, string containerId, CancellationToken cancellationToken = default(CancellationToken));
         /// <summary>
         /// get container details
         /// </summary>
@@ -917,7 +917,7 @@ namespace TorizonRestAPI.Api
         /// <param name="containerId">Id of a container</param>
         /// <param name="cancellationToken">Cancellation Token to cancel request (optional) </param>
         /// <returns>Task of ApiResponse (DockerContainer)</returns>
-        System.Threading.Tasks.Task<ApiResponse<DockerContainer>> ContainersGetcontainerAsyncWithHttpInfo (string deviceId, string containerId, CancellationToken cancellationToken = default(CancellationToken));
+        System.Threading.Tasks.Task<ApiResponse<DockerContainer>> ContainersGetcontainerWithHttpInfoAsync (string deviceId, string containerId, CancellationToken cancellationToken = default(CancellationToken));
         /// <summary>
         /// Disables remote docker
         /// </summary>
@@ -940,7 +940,7 @@ namespace TorizonRestAPI.Api
         /// <param name="deviceId">Target device serial number</param>
         /// <param name="cancellationToken">Cancellation Token to cancel request (optional) </param>
         /// <returns>Task of ApiResponse</returns>
-        System.Threading.Tasks.Task<ApiResponse<Object>> DeviceClosedockerAsyncWithHttpInfo (string deviceId, CancellationToken cancellationToken = default(CancellationToken));
+        System.Threading.Tasks.Task<ApiResponse<Object>> DeviceClosedockerWithHttpInfoAsync (string deviceId, CancellationToken cancellationToken = default(CancellationToken));
         /// <summary>
         /// Disables ssh tunneling
         /// </summary>
@@ -963,7 +963,7 @@ namespace TorizonRestAPI.Api
         /// <param name="deviceId">Target device serial number</param>
         /// <param name="cancellationToken">Cancellation Token to cancel request (optional) </param>
         /// <returns>Task of ApiResponse</returns>
-        System.Threading.Tasks.Task<ApiResponse<Object>> DeviceClosesshAsyncWithHttpInfo (string deviceId, CancellationToken cancellationToken = default(CancellationToken));
+        System.Threading.Tasks.Task<ApiResponse<Object>> DeviceClosesshWithHttpInfoAsync (string deviceId, CancellationToken cancellationToken = default(CancellationToken));
         /// <summary>
         /// returns current ip of the device
         /// </summary>
@@ -986,7 +986,7 @@ namespace TorizonRestAPI.Api
         /// <param name="deviceId">Target device serial number</param>
         /// <param name="cancellationToken">Cancellation Token to cancel request (optional) </param>
         /// <returns>Task of ApiResponse (string)</returns>
-        System.Threading.Tasks.Task<ApiResponse<string>> DeviceCurrentIpAsyncWithHttpInfo (string deviceId, CancellationToken cancellationToken = default(CancellationToken));
+        System.Threading.Tasks.Task<ApiResponse<string>> DeviceCurrentIpWithHttpInfoAsync (string deviceId, CancellationToken cancellationToken = default(CancellationToken));
         /// <summary>
         /// Remove a device
         /// </summary>
@@ -1009,7 +1009,7 @@ namespace TorizonRestAPI.Api
         /// <param name="deviceId">Target device serial number</param>
         /// <param name="cancellationToken">Cancellation Token to cancel request (optional) </param>
         /// <returns>Task of ApiResponse</returns>
-        System.Threading.Tasks.Task<ApiResponse<Object>> DeviceDeleteAsyncWithHttpInfo (string deviceId, CancellationToken cancellationToken = default(CancellationToken));
+        System.Threading.Tasks.Task<ApiResponse<Object>> DeviceDeleteWithHttpInfoAsync (string deviceId, CancellationToken cancellationToken = default(CancellationToken));
         /// <summary>
         /// Get device
         /// </summary>
@@ -1032,7 +1032,7 @@ namespace TorizonRestAPI.Api
         /// <param name="deviceId">Target device serial number</param>
         /// <param name="cancellationToken">Cancellation Token to cancel request (optional) </param>
         /// <returns>Task of ApiResponse (TargetDevice)</returns>
-        System.Threading.Tasks.Task<ApiResponse<TargetDevice>> DeviceGetAsyncWithHttpInfo (string deviceId, CancellationToken cancellationToken = default(CancellationToken));
+        System.Threading.Tasks.Task<ApiResponse<TargetDevice>> DeviceGetWithHttpInfoAsync (string deviceId, CancellationToken cancellationToken = default(CancellationToken));
         /// <summary>
         /// list containers
         /// </summary>
@@ -1055,7 +1055,7 @@ namespace TorizonRestAPI.Api
         /// <param name="deviceId">Target device serial number</param>
         /// <param name="cancellationToken">Cancellation Token to cancel request (optional) </param>
         /// <returns>Task of ApiResponse (List&lt;DockerContainer&gt;)</returns>
-        System.Threading.Tasks.Task<ApiResponse<List<DockerContainer>>> DeviceGetcontainersAsyncWithHttpInfo (string deviceId, CancellationToken cancellationToken = default(CancellationToken));
+        System.Threading.Tasks.Task<ApiResponse<List<DockerContainer>>> DeviceGetcontainersWithHttpInfoAsync (string deviceId, CancellationToken cancellationToken = default(CancellationToken));
         /// <summary>
         /// remote docker local port
         /// </summary>
@@ -1078,7 +1078,7 @@ namespace TorizonRestAPI.Api
         /// <param name="deviceId">Target device serial number</param>
         /// <param name="cancellationToken">Cancellation Token to cancel request (optional) </param>
         /// <returns>Task of ApiResponse (int)</returns>
-        System.Threading.Tasks.Task<ApiResponse<int>> DeviceGetdockerportAsyncWithHttpInfo (string deviceId, CancellationToken cancellationToken = default(CancellationToken));
+        System.Threading.Tasks.Task<ApiResponse<int>> DeviceGetdockerportWithHttpInfoAsync (string deviceId, CancellationToken cancellationToken = default(CancellationToken));
         /// <summary>
         /// list images
         /// </summary>
@@ -1101,7 +1101,7 @@ namespace TorizonRestAPI.Api
         /// <param name="deviceId">Target device serial number</param>
         /// <param name="cancellationToken">Cancellation Token to cancel request (optional) </param>
         /// <returns>Task of ApiResponse (List&lt;DockerImage&gt;)</returns>
-        System.Threading.Tasks.Task<ApiResponse<List<DockerImage>>> DeviceGetimagesAsyncWithHttpInfo (string deviceId, CancellationToken cancellationToken = default(CancellationToken));
+        System.Threading.Tasks.Task<ApiResponse<List<DockerImage>>> DeviceGetimagesWithHttpInfoAsync (string deviceId, CancellationToken cancellationToken = default(CancellationToken));
         /// <summary>
         /// Return memory information
         /// </summary>
@@ -1124,7 +1124,7 @@ namespace TorizonRestAPI.Api
         /// <param name="deviceId">Target device serial number</param>
         /// <param name="cancellationToken">Cancellation Token to cancel request (optional) </param>
         /// <returns>Task of ApiResponse (MemInfo)</returns>
-        System.Threading.Tasks.Task<ApiResponse<MemInfo>> DeviceGetmemoryAsyncWithHttpInfo (string deviceId, CancellationToken cancellationToken = default(CancellationToken));
+        System.Threading.Tasks.Task<ApiResponse<MemInfo>> DeviceGetmemoryWithHttpInfoAsync (string deviceId, CancellationToken cancellationToken = default(CancellationToken));
         /// <summary>
         /// return storage information for a device
         /// </summary>
@@ -1147,7 +1147,7 @@ namespace TorizonRestAPI.Api
         /// <param name="deviceId">Target device serial number</param>
         /// <param name="cancellationToken">Cancellation Token to cancel request (optional) </param>
         /// <returns>Task of ApiResponse (List&lt;MountPoint&gt;)</returns>
-        System.Threading.Tasks.Task<ApiResponse<List<MountPoint>>> DeviceGetmountpointsAsyncWithHttpInfo (string deviceId, CancellationToken cancellationToken = default(CancellationToken));
+        System.Threading.Tasks.Task<ApiResponse<List<MountPoint>>> DeviceGetmountpointsWithHttpInfoAsync (string deviceId, CancellationToken cancellationToken = default(CancellationToken));
         /// <summary>
         /// return the path of the device private key
         /// </summary>
@@ -1170,7 +1170,7 @@ namespace TorizonRestAPI.Api
         /// <param name="deviceId">Target device serial number</param>
         /// <param name="cancellationToken">Cancellation Token to cancel request (optional) </param>
         /// <returns>Task of ApiResponse (string)</returns>
-        System.Threading.Tasks.Task<ApiResponse<string>> DeviceGetprivatekeyAsyncWithHttpInfo (string deviceId, CancellationToken cancellationToken = default(CancellationToken));
+        System.Threading.Tasks.Task<ApiResponse<string>> DeviceGetprivatekeyWithHttpInfoAsync (string deviceId, CancellationToken cancellationToken = default(CancellationToken));
         /// <summary>
         /// list running processes on a device
         /// </summary>
@@ -1193,7 +1193,7 @@ namespace TorizonRestAPI.Api
         /// <param name="deviceId">Target device serial number</param>
         /// <param name="cancellationToken">Cancellation Token to cancel request (optional) </param>
         /// <returns>Task of ApiResponse (List&lt;Process&gt;)</returns>
-        System.Threading.Tasks.Task<ApiResponse<List<Process>>> DeviceGetprocessesAsyncWithHttpInfo (string deviceId, CancellationToken cancellationToken = default(CancellationToken));
+        System.Threading.Tasks.Task<ApiResponse<List<Process>>> DeviceGetprocessesWithHttpInfoAsync (string deviceId, CancellationToken cancellationToken = default(CancellationToken));
         /// <summary>
         /// remote ssh local port
         /// </summary>
@@ -1216,7 +1216,7 @@ namespace TorizonRestAPI.Api
         /// <param name="deviceId">Target device serial number</param>
         /// <param name="cancellationToken">Cancellation Token to cancel request (optional) </param>
         /// <returns>Task of ApiResponse (int)</returns>
-        System.Threading.Tasks.Task<ApiResponse<int>> DeviceGetsshportAsyncWithHttpInfo (string deviceId, CancellationToken cancellationToken = default(CancellationToken));
+        System.Threading.Tasks.Task<ApiResponse<int>> DeviceGetsshportWithHttpInfoAsync (string deviceId, CancellationToken cancellationToken = default(CancellationToken));
         /// <summary>
         /// Change device properties
         /// </summary>
@@ -1241,7 +1241,7 @@ namespace TorizonRestAPI.Api
         /// <param name="device"> (optional)</param>
         /// <param name="cancellationToken">Cancellation Token to cancel request (optional) </param>
         /// <returns>Task of ApiResponse (TargetDevice)</returns>
-        System.Threading.Tasks.Task<ApiResponse<TargetDevice>> DeviceModifyAsyncWithHttpInfo (string deviceId, TargetDevice device = default(TargetDevice), CancellationToken cancellationToken = default(CancellationToken));
+        System.Threading.Tasks.Task<ApiResponse<TargetDevice>> DeviceModifyWithHttpInfoAsync (string deviceId, TargetDevice device = default(TargetDevice), CancellationToken cancellationToken = default(CancellationToken));
         /// <summary>
         /// Expose remote docker
         /// </summary>
@@ -1266,7 +1266,7 @@ namespace TorizonRestAPI.Api
         /// <param name="port"> (optional)</param>
         /// <param name="cancellationToken">Cancellation Token to cancel request (optional) </param>
         /// <returns>Task of ApiResponse (int)</returns>
-        System.Threading.Tasks.Task<ApiResponse<int>> DeviceOpendockerAsyncWithHttpInfo (string deviceId, int? port = default(int?), CancellationToken cancellationToken = default(CancellationToken));
+        System.Threading.Tasks.Task<ApiResponse<int>> DeviceOpendockerWithHttpInfoAsync (string deviceId, int? port = default(int?), CancellationToken cancellationToken = default(CancellationToken));
         /// <summary>
         /// Expose remote ssh
         /// </summary>
@@ -1291,7 +1291,7 @@ namespace TorizonRestAPI.Api
         /// <param name="port"> (optional)</param>
         /// <param name="cancellationToken">Cancellation Token to cancel request (optional) </param>
         /// <returns>Task of ApiResponse (int)</returns>
-        System.Threading.Tasks.Task<ApiResponse<int>> DeviceOpensshAsyncWithHttpInfo (string deviceId, int? port = default(int?), CancellationToken cancellationToken = default(CancellationToken));
+        System.Threading.Tasks.Task<ApiResponse<int>> DeviceOpensshWithHttpInfoAsync (string deviceId, int? port = default(int?), CancellationToken cancellationToken = default(CancellationToken));
         /// <summary>
         /// synchronizes folders
         /// </summary>
@@ -1318,7 +1318,7 @@ namespace TorizonRestAPI.Api
         /// <param name="destfolder"></param>
         /// <param name="cancellationToken">Cancellation Token to cancel request (optional) </param>
         /// <returns>Task of ApiResponse</returns>
-        System.Threading.Tasks.Task<ApiResponse<Object>> DeviceSyncfoldersAsyncWithHttpInfo (string deviceId, string sourcefolder, string destfolder, CancellationToken cancellationToken = default(CancellationToken));
+        System.Threading.Tasks.Task<ApiResponse<Object>> DeviceSyncfoldersWithHttpInfoAsync (string deviceId, string sourcefolder, string destfolder, CancellationToken cancellationToken = default(CancellationToken));
         /// <summary>
         /// update information for a specific device
         /// </summary>
@@ -1341,7 +1341,7 @@ namespace TorizonRestAPI.Api
         /// <param name="deviceId">Target device serial number</param>
         /// <param name="cancellationToken">Cancellation Token to cancel request (optional) </param>
         /// <returns>Task of ApiResponse (TargetDevice)</returns>
-        System.Threading.Tasks.Task<ApiResponse<TargetDevice>> DeviceUpdateAsyncWithHttpInfo (string deviceId, CancellationToken cancellationToken = default(CancellationToken));
+        System.Threading.Tasks.Task<ApiResponse<TargetDevice>> DeviceUpdateWithHttpInfoAsync (string deviceId, CancellationToken cancellationToken = default(CancellationToken));
         /// <summary>
         /// Get all devices
         /// </summary>
@@ -1362,7 +1362,7 @@ namespace TorizonRestAPI.Api
         /// <exception cref="TorizonRestAPI.Client.ApiException">Thrown when fails to make API call</exception>
         /// <param name="cancellationToken">Cancellation Token to cancel request (optional) </param>
         /// <returns>Task of ApiResponse (List&lt;TargetDevice&gt;)</returns>
-        System.Threading.Tasks.Task<ApiResponse<List<TargetDevice>>> DevicesGetAsyncWithHttpInfo (CancellationToken cancellationToken = default(CancellationToken));
+        System.Threading.Tasks.Task<ApiResponse<List<TargetDevice>>> DevicesGetWithHttpInfoAsync (CancellationToken cancellationToken = default(CancellationToken));
         /// <summary>
         /// Finds a network device
         /// </summary>
@@ -1389,7 +1389,7 @@ namespace TorizonRestAPI.Api
         /// <param name="password"></param>
         /// <param name="cancellationToken">Cancellation Token to cancel request (optional) </param>
         /// <returns>Task of ApiResponse (TargetDevice)</returns>
-        System.Threading.Tasks.Task<ApiResponse<TargetDevice>> DevicesNetworkdetectAsyncWithHttpInfo (string hostname, string username, string password, CancellationToken cancellationToken = default(CancellationToken));
+        System.Threading.Tasks.Task<ApiResponse<TargetDevice>> DevicesNetworkdetectWithHttpInfoAsync (string hostname, string username, string password, CancellationToken cancellationToken = default(CancellationToken));
         /// <summary>
         /// Finds a device connected to serial port
         /// </summary>
@@ -1416,7 +1416,7 @@ namespace TorizonRestAPI.Api
         /// <param name="password"></param>
         /// <param name="cancellationToken">Cancellation Token to cancel request (optional) </param>
         /// <returns>Task of ApiResponse (TargetDevice)</returns>
-        System.Threading.Tasks.Task<ApiResponse<TargetDevice>> DevicesSerialdetectAsyncWithHttpInfo (string port, string username, string password, CancellationToken cancellationToken = default(CancellationToken));
+        System.Threading.Tasks.Task<ApiResponse<TargetDevice>> DevicesSerialdetectWithHttpInfoAsync (string port, string username, string password, CancellationToken cancellationToken = default(CancellationToken));
         /// <summary>
         /// delete an image
         /// </summary>
@@ -1441,7 +1441,7 @@ namespace TorizonRestAPI.Api
         /// <param name="imageId">Id of an image</param>
         /// <param name="cancellationToken">Cancellation Token to cancel request (optional) </param>
         /// <returns>Task of ApiResponse</returns>
-        System.Threading.Tasks.Task<ApiResponse<Object>> ImagesDeleteimageAsyncWithHttpInfo (string deviceId, string imageId, CancellationToken cancellationToken = default(CancellationToken));
+        System.Threading.Tasks.Task<ApiResponse<Object>> ImagesDeleteimageWithHttpInfoAsync (string deviceId, string imageId, CancellationToken cancellationToken = default(CancellationToken));
         /// <summary>
         /// get image details
         /// </summary>
@@ -1466,7 +1466,7 @@ namespace TorizonRestAPI.Api
         /// <param name="imageId">Id of an image</param>
         /// <param name="cancellationToken">Cancellation Token to cancel request (optional) </param>
         /// <returns>Task of ApiResponse (DockerImage)</returns>
-        System.Threading.Tasks.Task<ApiResponse<DockerImage>> ImagesGetimageAsyncWithHttpInfo (string deviceId, string imageId, CancellationToken cancellationToken = default(CancellationToken));
+        System.Threading.Tasks.Task<ApiResponse<DockerImage>> ImagesGetimageWithHttpInfoAsync (string deviceId, string imageId, CancellationToken cancellationToken = default(CancellationToken));
         #endregion Asynchronous Operations
     }
 
@@ -1664,7 +1664,7 @@ namespace TorizonRestAPI.Api
         /// <returns>Task of string</returns>
         public async System.Threading.Tasks.Task<string> ContainerGetlogsAsync (string deviceId, string containerId, bool? restart = default(bool?), CancellationToken cancellationToken = default(CancellationToken))
         {
-             ApiResponse<string> localVarResponse = await ContainerGetlogsAsyncWithHttpInfo(deviceId, containerId, restart, cancellationToken);
+             ApiResponse<string> localVarResponse = await ContainerGetlogsWithHttpInfoAsync(deviceId, containerId, restart, cancellationToken);
              return localVarResponse.Data;
 
         }
@@ -1678,7 +1678,7 @@ namespace TorizonRestAPI.Api
         /// <param name="restart">when true reads the lock back from beginning (optional, default to false)</param>
         /// <param name="cancellationToken">Cancellation Token to cancel request (optional) </param>
         /// <returns>Task of ApiResponse (string)</returns>
-        public async System.Threading.Tasks.Task<ApiResponse<string>> ContainerGetlogsAsyncWithHttpInfo (string deviceId, string containerId, bool? restart = default(bool?), CancellationToken cancellationToken = default(CancellationToken))
+        public async System.Threading.Tasks.Task<ApiResponse<string>> ContainerGetlogsWithHttpInfoAsync (string deviceId, string containerId, bool? restart = default(bool?), CancellationToken cancellationToken = default(CancellationToken))
         {
             // verify the required parameter 'deviceId' is set
             if (deviceId == null)
@@ -1813,7 +1813,7 @@ namespace TorizonRestAPI.Api
         /// <returns>Task of MemInfo</returns>
         public async System.Threading.Tasks.Task<MemInfo> ContainerGetmemoryAsync (string deviceId, string containerId, CancellationToken cancellationToken = default(CancellationToken))
         {
-             ApiResponse<MemInfo> localVarResponse = await ContainerGetmemoryAsyncWithHttpInfo(deviceId, containerId, cancellationToken);
+             ApiResponse<MemInfo> localVarResponse = await ContainerGetmemoryWithHttpInfoAsync(deviceId, containerId, cancellationToken);
              return localVarResponse.Data;
 
         }
@@ -1826,7 +1826,7 @@ namespace TorizonRestAPI.Api
         /// <param name="containerId">Id of a container</param>
         /// <param name="cancellationToken">Cancellation Token to cancel request (optional) </param>
         /// <returns>Task of ApiResponse (MemInfo)</returns>
-        public async System.Threading.Tasks.Task<ApiResponse<MemInfo>> ContainerGetmemoryAsyncWithHttpInfo (string deviceId, string containerId, CancellationToken cancellationToken = default(CancellationToken))
+        public async System.Threading.Tasks.Task<ApiResponse<MemInfo>> ContainerGetmemoryWithHttpInfoAsync (string deviceId, string containerId, CancellationToken cancellationToken = default(CancellationToken))
         {
             // verify the required parameter 'deviceId' is set
             if (deviceId == null)
@@ -1960,7 +1960,7 @@ namespace TorizonRestAPI.Api
         /// <returns>Task of List&lt;MountPoint&gt;</returns>
         public async System.Threading.Tasks.Task<List<MountPoint>> ContainerGetmountpointsAsync (string deviceId, string containerId, CancellationToken cancellationToken = default(CancellationToken))
         {
-             ApiResponse<List<MountPoint>> localVarResponse = await ContainerGetmountpointsAsyncWithHttpInfo(deviceId, containerId, cancellationToken);
+             ApiResponse<List<MountPoint>> localVarResponse = await ContainerGetmountpointsWithHttpInfoAsync(deviceId, containerId, cancellationToken);
              return localVarResponse.Data;
 
         }
@@ -1973,7 +1973,7 @@ namespace TorizonRestAPI.Api
         /// <param name="containerId">Id of a container</param>
         /// <param name="cancellationToken">Cancellation Token to cancel request (optional) </param>
         /// <returns>Task of ApiResponse (List&lt;MountPoint&gt;)</returns>
-        public async System.Threading.Tasks.Task<ApiResponse<List<MountPoint>>> ContainerGetmountpointsAsyncWithHttpInfo (string deviceId, string containerId, CancellationToken cancellationToken = default(CancellationToken))
+        public async System.Threading.Tasks.Task<ApiResponse<List<MountPoint>>> ContainerGetmountpointsWithHttpInfoAsync (string deviceId, string containerId, CancellationToken cancellationToken = default(CancellationToken))
         {
             // verify the required parameter 'deviceId' is set
             if (deviceId == null)
@@ -2107,7 +2107,7 @@ namespace TorizonRestAPI.Api
         /// <returns>Task of List&lt;Process&gt;</returns>
         public async System.Threading.Tasks.Task<List<Process>> ContainerGetprocessesAsync (string deviceId, string containerId, CancellationToken cancellationToken = default(CancellationToken))
         {
-             ApiResponse<List<Process>> localVarResponse = await ContainerGetprocessesAsyncWithHttpInfo(deviceId, containerId, cancellationToken);
+             ApiResponse<List<Process>> localVarResponse = await ContainerGetprocessesWithHttpInfoAsync(deviceId, containerId, cancellationToken);
              return localVarResponse.Data;
 
         }
@@ -2120,7 +2120,7 @@ namespace TorizonRestAPI.Api
         /// <param name="containerId">Id of a container</param>
         /// <param name="cancellationToken">Cancellation Token to cancel request (optional) </param>
         /// <returns>Task of ApiResponse (List&lt;Process&gt;)</returns>
-        public async System.Threading.Tasks.Task<ApiResponse<List<Process>>> ContainerGetprocessesAsyncWithHttpInfo (string deviceId, string containerId, CancellationToken cancellationToken = default(CancellationToken))
+        public async System.Threading.Tasks.Task<ApiResponse<List<Process>>> ContainerGetprocessesWithHttpInfoAsync (string deviceId, string containerId, CancellationToken cancellationToken = default(CancellationToken))
         {
             // verify the required parameter 'deviceId' is set
             if (deviceId == null)
@@ -2254,7 +2254,7 @@ namespace TorizonRestAPI.Api
         /// <returns>Task of DockerContainer</returns>
         public async System.Threading.Tasks.Task<DockerContainer> ContainerStartAsync (string deviceId, string containerId, CancellationToken cancellationToken = default(CancellationToken))
         {
-             ApiResponse<DockerContainer> localVarResponse = await ContainerStartAsyncWithHttpInfo(deviceId, containerId, cancellationToken);
+             ApiResponse<DockerContainer> localVarResponse = await ContainerStartWithHttpInfoAsync(deviceId, containerId, cancellationToken);
              return localVarResponse.Data;
 
         }
@@ -2267,7 +2267,7 @@ namespace TorizonRestAPI.Api
         /// <param name="containerId">Id of a container</param>
         /// <param name="cancellationToken">Cancellation Token to cancel request (optional) </param>
         /// <returns>Task of ApiResponse (DockerContainer)</returns>
-        public async System.Threading.Tasks.Task<ApiResponse<DockerContainer>> ContainerStartAsyncWithHttpInfo (string deviceId, string containerId, CancellationToken cancellationToken = default(CancellationToken))
+        public async System.Threading.Tasks.Task<ApiResponse<DockerContainer>> ContainerStartWithHttpInfoAsync (string deviceId, string containerId, CancellationToken cancellationToken = default(CancellationToken))
         {
             // verify the required parameter 'deviceId' is set
             if (deviceId == null)
@@ -2401,7 +2401,7 @@ namespace TorizonRestAPI.Api
         /// <returns>Task of DockerContainer</returns>
         public async System.Threading.Tasks.Task<DockerContainer> ContainerStopAsync (string deviceId, string containerId, CancellationToken cancellationToken = default(CancellationToken))
         {
-             ApiResponse<DockerContainer> localVarResponse = await ContainerStopAsyncWithHttpInfo(deviceId, containerId, cancellationToken);
+             ApiResponse<DockerContainer> localVarResponse = await ContainerStopWithHttpInfoAsync(deviceId, containerId, cancellationToken);
              return localVarResponse.Data;
 
         }
@@ -2414,7 +2414,7 @@ namespace TorizonRestAPI.Api
         /// <param name="containerId">Id of a container</param>
         /// <param name="cancellationToken">Cancellation Token to cancel request (optional) </param>
         /// <returns>Task of ApiResponse (DockerContainer)</returns>
-        public async System.Threading.Tasks.Task<ApiResponse<DockerContainer>> ContainerStopAsyncWithHttpInfo (string deviceId, string containerId, CancellationToken cancellationToken = default(CancellationToken))
+        public async System.Threading.Tasks.Task<ApiResponse<DockerContainer>> ContainerStopWithHttpInfoAsync (string deviceId, string containerId, CancellationToken cancellationToken = default(CancellationToken))
         {
             // verify the required parameter 'deviceId' is set
             if (deviceId == null)
@@ -2547,7 +2547,7 @@ namespace TorizonRestAPI.Api
         /// <returns>Task of void</returns>
         public async System.Threading.Tasks.Task ContainersDeletecontainerAsync (string deviceId, string containerId, CancellationToken cancellationToken = default(CancellationToken))
         {
-             await ContainersDeletecontainerAsyncWithHttpInfo(deviceId, containerId, cancellationToken);
+             await ContainersDeletecontainerWithHttpInfoAsync(deviceId, containerId, cancellationToken);
 
         }
 
@@ -2559,7 +2559,7 @@ namespace TorizonRestAPI.Api
         /// <param name="containerId">Id of a container</param>
         /// <param name="cancellationToken">Cancellation Token to cancel request (optional) </param>
         /// <returns>Task of ApiResponse</returns>
-        public async System.Threading.Tasks.Task<ApiResponse<Object>> ContainersDeletecontainerAsyncWithHttpInfo (string deviceId, string containerId, CancellationToken cancellationToken = default(CancellationToken))
+        public async System.Threading.Tasks.Task<ApiResponse<Object>> ContainersDeletecontainerWithHttpInfoAsync (string deviceId, string containerId, CancellationToken cancellationToken = default(CancellationToken))
         {
             // verify the required parameter 'deviceId' is set
             if (deviceId == null)
@@ -2693,7 +2693,7 @@ namespace TorizonRestAPI.Api
         /// <returns>Task of DockerContainer</returns>
         public async System.Threading.Tasks.Task<DockerContainer> ContainersGetcontainerAsync (string deviceId, string containerId, CancellationToken cancellationToken = default(CancellationToken))
         {
-             ApiResponse<DockerContainer> localVarResponse = await ContainersGetcontainerAsyncWithHttpInfo(deviceId, containerId, cancellationToken);
+             ApiResponse<DockerContainer> localVarResponse = await ContainersGetcontainerWithHttpInfoAsync(deviceId, containerId, cancellationToken);
              return localVarResponse.Data;
 
         }
@@ -2706,7 +2706,7 @@ namespace TorizonRestAPI.Api
         /// <param name="containerId">Id of a container</param>
         /// <param name="cancellationToken">Cancellation Token to cancel request (optional) </param>
         /// <returns>Task of ApiResponse (DockerContainer)</returns>
-        public async System.Threading.Tasks.Task<ApiResponse<DockerContainer>> ContainersGetcontainerAsyncWithHttpInfo (string deviceId, string containerId, CancellationToken cancellationToken = default(CancellationToken))
+        public async System.Threading.Tasks.Task<ApiResponse<DockerContainer>> ContainersGetcontainerWithHttpInfoAsync (string deviceId, string containerId, CancellationToken cancellationToken = default(CancellationToken))
         {
             // verify the required parameter 'deviceId' is set
             if (deviceId == null)
@@ -2832,7 +2832,7 @@ namespace TorizonRestAPI.Api
         /// <returns>Task of void</returns>
         public async System.Threading.Tasks.Task DeviceClosedockerAsync (string deviceId, CancellationToken cancellationToken = default(CancellationToken))
         {
-             await DeviceClosedockerAsyncWithHttpInfo(deviceId, cancellationToken);
+             await DeviceClosedockerWithHttpInfoAsync(deviceId, cancellationToken);
 
         }
 
@@ -2843,7 +2843,7 @@ namespace TorizonRestAPI.Api
         /// <param name="deviceId">Target device serial number</param>
         /// <param name="cancellationToken">Cancellation Token to cancel request (optional) </param>
         /// <returns>Task of ApiResponse</returns>
-        public async System.Threading.Tasks.Task<ApiResponse<Object>> DeviceClosedockerAsyncWithHttpInfo (string deviceId, CancellationToken cancellationToken = default(CancellationToken))
+        public async System.Threading.Tasks.Task<ApiResponse<Object>> DeviceClosedockerWithHttpInfoAsync (string deviceId, CancellationToken cancellationToken = default(CancellationToken))
         {
             // verify the required parameter 'deviceId' is set
             if (deviceId == null)
@@ -2965,7 +2965,7 @@ namespace TorizonRestAPI.Api
         /// <returns>Task of void</returns>
         public async System.Threading.Tasks.Task DeviceClosesshAsync (string deviceId, CancellationToken cancellationToken = default(CancellationToken))
         {
-             await DeviceClosesshAsyncWithHttpInfo(deviceId, cancellationToken);
+             await DeviceClosesshWithHttpInfoAsync(deviceId, cancellationToken);
 
         }
 
@@ -2976,7 +2976,7 @@ namespace TorizonRestAPI.Api
         /// <param name="deviceId">Target device serial number</param>
         /// <param name="cancellationToken">Cancellation Token to cancel request (optional) </param>
         /// <returns>Task of ApiResponse</returns>
-        public async System.Threading.Tasks.Task<ApiResponse<Object>> DeviceClosesshAsyncWithHttpInfo (string deviceId, CancellationToken cancellationToken = default(CancellationToken))
+        public async System.Threading.Tasks.Task<ApiResponse<Object>> DeviceClosesshWithHttpInfoAsync (string deviceId, CancellationToken cancellationToken = default(CancellationToken))
         {
             // verify the required parameter 'deviceId' is set
             if (deviceId == null)
@@ -3099,7 +3099,7 @@ namespace TorizonRestAPI.Api
         /// <returns>Task of string</returns>
         public async System.Threading.Tasks.Task<string> DeviceCurrentIpAsync (string deviceId, CancellationToken cancellationToken = default(CancellationToken))
         {
-             ApiResponse<string> localVarResponse = await DeviceCurrentIpAsyncWithHttpInfo(deviceId, cancellationToken);
+             ApiResponse<string> localVarResponse = await DeviceCurrentIpWithHttpInfoAsync(deviceId, cancellationToken);
              return localVarResponse.Data;
 
         }
@@ -3111,7 +3111,7 @@ namespace TorizonRestAPI.Api
         /// <param name="deviceId">Target device serial number</param>
         /// <param name="cancellationToken">Cancellation Token to cancel request (optional) </param>
         /// <returns>Task of ApiResponse (string)</returns>
-        public async System.Threading.Tasks.Task<ApiResponse<string>> DeviceCurrentIpAsyncWithHttpInfo (string deviceId, CancellationToken cancellationToken = default(CancellationToken))
+        public async System.Threading.Tasks.Task<ApiResponse<string>> DeviceCurrentIpWithHttpInfoAsync (string deviceId, CancellationToken cancellationToken = default(CancellationToken))
         {
             // verify the required parameter 'deviceId' is set
             if (deviceId == null)
@@ -3233,7 +3233,7 @@ namespace TorizonRestAPI.Api
         /// <returns>Task of void</returns>
         public async System.Threading.Tasks.Task DeviceDeleteAsync (string deviceId, CancellationToken cancellationToken = default(CancellationToken))
         {
-             await DeviceDeleteAsyncWithHttpInfo(deviceId, cancellationToken);
+             await DeviceDeleteWithHttpInfoAsync(deviceId, cancellationToken);
 
         }
 
@@ -3244,7 +3244,7 @@ namespace TorizonRestAPI.Api
         /// <param name="deviceId">Target device serial number</param>
         /// <param name="cancellationToken">Cancellation Token to cancel request (optional) </param>
         /// <returns>Task of ApiResponse</returns>
-        public async System.Threading.Tasks.Task<ApiResponse<Object>> DeviceDeleteAsyncWithHttpInfo (string deviceId, CancellationToken cancellationToken = default(CancellationToken))
+        public async System.Threading.Tasks.Task<ApiResponse<Object>> DeviceDeleteWithHttpInfoAsync (string deviceId, CancellationToken cancellationToken = default(CancellationToken))
         {
             // verify the required parameter 'deviceId' is set
             if (deviceId == null)
@@ -3367,7 +3367,7 @@ namespace TorizonRestAPI.Api
         /// <returns>Task of TargetDevice</returns>
         public async System.Threading.Tasks.Task<TargetDevice> DeviceGetAsync (string deviceId, CancellationToken cancellationToken = default(CancellationToken))
         {
-             ApiResponse<TargetDevice> localVarResponse = await DeviceGetAsyncWithHttpInfo(deviceId, cancellationToken);
+             ApiResponse<TargetDevice> localVarResponse = await DeviceGetWithHttpInfoAsync(deviceId, cancellationToken);
              return localVarResponse.Data;
 
         }
@@ -3379,7 +3379,7 @@ namespace TorizonRestAPI.Api
         /// <param name="deviceId">Target device serial number</param>
         /// <param name="cancellationToken">Cancellation Token to cancel request (optional) </param>
         /// <returns>Task of ApiResponse (TargetDevice)</returns>
-        public async System.Threading.Tasks.Task<ApiResponse<TargetDevice>> DeviceGetAsyncWithHttpInfo (string deviceId, CancellationToken cancellationToken = default(CancellationToken))
+        public async System.Threading.Tasks.Task<ApiResponse<TargetDevice>> DeviceGetWithHttpInfoAsync (string deviceId, CancellationToken cancellationToken = default(CancellationToken))
         {
             // verify the required parameter 'deviceId' is set
             if (deviceId == null)
@@ -3502,7 +3502,7 @@ namespace TorizonRestAPI.Api
         /// <returns>Task of List&lt;DockerContainer&gt;</returns>
         public async System.Threading.Tasks.Task<List<DockerContainer>> DeviceGetcontainersAsync (string deviceId, CancellationToken cancellationToken = default(CancellationToken))
         {
-             ApiResponse<List<DockerContainer>> localVarResponse = await DeviceGetcontainersAsyncWithHttpInfo(deviceId, cancellationToken);
+             ApiResponse<List<DockerContainer>> localVarResponse = await DeviceGetcontainersWithHttpInfoAsync(deviceId, cancellationToken);
              return localVarResponse.Data;
 
         }
@@ -3514,7 +3514,7 @@ namespace TorizonRestAPI.Api
         /// <param name="deviceId">Target device serial number</param>
         /// <param name="cancellationToken">Cancellation Token to cancel request (optional) </param>
         /// <returns>Task of ApiResponse (List&lt;DockerContainer&gt;)</returns>
-        public async System.Threading.Tasks.Task<ApiResponse<List<DockerContainer>>> DeviceGetcontainersAsyncWithHttpInfo (string deviceId, CancellationToken cancellationToken = default(CancellationToken))
+        public async System.Threading.Tasks.Task<ApiResponse<List<DockerContainer>>> DeviceGetcontainersWithHttpInfoAsync (string deviceId, CancellationToken cancellationToken = default(CancellationToken))
         {
             // verify the required parameter 'deviceId' is set
             if (deviceId == null)
@@ -3637,7 +3637,7 @@ namespace TorizonRestAPI.Api
         /// <returns>Task of int</returns>
         public async System.Threading.Tasks.Task<int> DeviceGetdockerportAsync (string deviceId, CancellationToken cancellationToken = default(CancellationToken))
         {
-             ApiResponse<int> localVarResponse = await DeviceGetdockerportAsyncWithHttpInfo(deviceId, cancellationToken);
+             ApiResponse<int> localVarResponse = await DeviceGetdockerportWithHttpInfoAsync(deviceId, cancellationToken);
              return localVarResponse.Data;
 
         }
@@ -3649,7 +3649,7 @@ namespace TorizonRestAPI.Api
         /// <param name="deviceId">Target device serial number</param>
         /// <param name="cancellationToken">Cancellation Token to cancel request (optional) </param>
         /// <returns>Task of ApiResponse (int)</returns>
-        public async System.Threading.Tasks.Task<ApiResponse<int>> DeviceGetdockerportAsyncWithHttpInfo (string deviceId, CancellationToken cancellationToken = default(CancellationToken))
+        public async System.Threading.Tasks.Task<ApiResponse<int>> DeviceGetdockerportWithHttpInfoAsync (string deviceId, CancellationToken cancellationToken = default(CancellationToken))
         {
             // verify the required parameter 'deviceId' is set
             if (deviceId == null)
@@ -3772,7 +3772,7 @@ namespace TorizonRestAPI.Api
         /// <returns>Task of List&lt;DockerImage&gt;</returns>
         public async System.Threading.Tasks.Task<List<DockerImage>> DeviceGetimagesAsync (string deviceId, CancellationToken cancellationToken = default(CancellationToken))
         {
-             ApiResponse<List<DockerImage>> localVarResponse = await DeviceGetimagesAsyncWithHttpInfo(deviceId, cancellationToken);
+             ApiResponse<List<DockerImage>> localVarResponse = await DeviceGetimagesWithHttpInfoAsync(deviceId, cancellationToken);
              return localVarResponse.Data;
 
         }
@@ -3784,7 +3784,7 @@ namespace TorizonRestAPI.Api
         /// <param name="deviceId">Target device serial number</param>
         /// <param name="cancellationToken">Cancellation Token to cancel request (optional) </param>
         /// <returns>Task of ApiResponse (List&lt;DockerImage&gt;)</returns>
-        public async System.Threading.Tasks.Task<ApiResponse<List<DockerImage>>> DeviceGetimagesAsyncWithHttpInfo (string deviceId, CancellationToken cancellationToken = default(CancellationToken))
+        public async System.Threading.Tasks.Task<ApiResponse<List<DockerImage>>> DeviceGetimagesWithHttpInfoAsync (string deviceId, CancellationToken cancellationToken = default(CancellationToken))
         {
             // verify the required parameter 'deviceId' is set
             if (deviceId == null)
@@ -3907,7 +3907,7 @@ namespace TorizonRestAPI.Api
         /// <returns>Task of MemInfo</returns>
         public async System.Threading.Tasks.Task<MemInfo> DeviceGetmemoryAsync (string deviceId, CancellationToken cancellationToken = default(CancellationToken))
         {
-             ApiResponse<MemInfo> localVarResponse = await DeviceGetmemoryAsyncWithHttpInfo(deviceId, cancellationToken);
+             ApiResponse<MemInfo> localVarResponse = await DeviceGetmemoryWithHttpInfoAsync(deviceId, cancellationToken);
              return localVarResponse.Data;
 
         }
@@ -3919,7 +3919,7 @@ namespace TorizonRestAPI.Api
         /// <param name="deviceId">Target device serial number</param>
         /// <param name="cancellationToken">Cancellation Token to cancel request (optional) </param>
         /// <returns>Task of ApiResponse (MemInfo)</returns>
-        public async System.Threading.Tasks.Task<ApiResponse<MemInfo>> DeviceGetmemoryAsyncWithHttpInfo (string deviceId, CancellationToken cancellationToken = default(CancellationToken))
+        public async System.Threading.Tasks.Task<ApiResponse<MemInfo>> DeviceGetmemoryWithHttpInfoAsync (string deviceId, CancellationToken cancellationToken = default(CancellationToken))
         {
             // verify the required parameter 'deviceId' is set
             if (deviceId == null)
@@ -4042,7 +4042,7 @@ namespace TorizonRestAPI.Api
         /// <returns>Task of List&lt;MountPoint&gt;</returns>
         public async System.Threading.Tasks.Task<List<MountPoint>> DeviceGetmountpointsAsync (string deviceId, CancellationToken cancellationToken = default(CancellationToken))
         {
-             ApiResponse<List<MountPoint>> localVarResponse = await DeviceGetmountpointsAsyncWithHttpInfo(deviceId, cancellationToken);
+             ApiResponse<List<MountPoint>> localVarResponse = await DeviceGetmountpointsWithHttpInfoAsync(deviceId, cancellationToken);
              return localVarResponse.Data;
 
         }
@@ -4054,7 +4054,7 @@ namespace TorizonRestAPI.Api
         /// <param name="deviceId">Target device serial number</param>
         /// <param name="cancellationToken">Cancellation Token to cancel request (optional) </param>
         /// <returns>Task of ApiResponse (List&lt;MountPoint&gt;)</returns>
-        public async System.Threading.Tasks.Task<ApiResponse<List<MountPoint>>> DeviceGetmountpointsAsyncWithHttpInfo (string deviceId, CancellationToken cancellationToken = default(CancellationToken))
+        public async System.Threading.Tasks.Task<ApiResponse<List<MountPoint>>> DeviceGetmountpointsWithHttpInfoAsync (string deviceId, CancellationToken cancellationToken = default(CancellationToken))
         {
             // verify the required parameter 'deviceId' is set
             if (deviceId == null)
@@ -4177,7 +4177,7 @@ namespace TorizonRestAPI.Api
         /// <returns>Task of string</returns>
         public async System.Threading.Tasks.Task<string> DeviceGetprivatekeyAsync (string deviceId, CancellationToken cancellationToken = default(CancellationToken))
         {
-             ApiResponse<string> localVarResponse = await DeviceGetprivatekeyAsyncWithHttpInfo(deviceId, cancellationToken);
+             ApiResponse<string> localVarResponse = await DeviceGetprivatekeyWithHttpInfoAsync(deviceId, cancellationToken);
              return localVarResponse.Data;
 
         }
@@ -4189,7 +4189,7 @@ namespace TorizonRestAPI.Api
         /// <param name="deviceId">Target device serial number</param>
         /// <param name="cancellationToken">Cancellation Token to cancel request (optional) </param>
         /// <returns>Task of ApiResponse (string)</returns>
-        public async System.Threading.Tasks.Task<ApiResponse<string>> DeviceGetprivatekeyAsyncWithHttpInfo (string deviceId, CancellationToken cancellationToken = default(CancellationToken))
+        public async System.Threading.Tasks.Task<ApiResponse<string>> DeviceGetprivatekeyWithHttpInfoAsync (string deviceId, CancellationToken cancellationToken = default(CancellationToken))
         {
             // verify the required parameter 'deviceId' is set
             if (deviceId == null)
@@ -4312,7 +4312,7 @@ namespace TorizonRestAPI.Api
         /// <returns>Task of List&lt;Process&gt;</returns>
         public async System.Threading.Tasks.Task<List<Process>> DeviceGetprocessesAsync (string deviceId, CancellationToken cancellationToken = default(CancellationToken))
         {
-             ApiResponse<List<Process>> localVarResponse = await DeviceGetprocessesAsyncWithHttpInfo(deviceId, cancellationToken);
+             ApiResponse<List<Process>> localVarResponse = await DeviceGetprocessesWithHttpInfoAsync(deviceId, cancellationToken);
              return localVarResponse.Data;
 
         }
@@ -4324,7 +4324,7 @@ namespace TorizonRestAPI.Api
         /// <param name="deviceId">Target device serial number</param>
         /// <param name="cancellationToken">Cancellation Token to cancel request (optional) </param>
         /// <returns>Task of ApiResponse (List&lt;Process&gt;)</returns>
-        public async System.Threading.Tasks.Task<ApiResponse<List<Process>>> DeviceGetprocessesAsyncWithHttpInfo (string deviceId, CancellationToken cancellationToken = default(CancellationToken))
+        public async System.Threading.Tasks.Task<ApiResponse<List<Process>>> DeviceGetprocessesWithHttpInfoAsync (string deviceId, CancellationToken cancellationToken = default(CancellationToken))
         {
             // verify the required parameter 'deviceId' is set
             if (deviceId == null)
@@ -4447,7 +4447,7 @@ namespace TorizonRestAPI.Api
         /// <returns>Task of int</returns>
         public async System.Threading.Tasks.Task<int> DeviceGetsshportAsync (string deviceId, CancellationToken cancellationToken = default(CancellationToken))
         {
-             ApiResponse<int> localVarResponse = await DeviceGetsshportAsyncWithHttpInfo(deviceId, cancellationToken);
+             ApiResponse<int> localVarResponse = await DeviceGetsshportWithHttpInfoAsync(deviceId, cancellationToken);
              return localVarResponse.Data;
 
         }
@@ -4459,7 +4459,7 @@ namespace TorizonRestAPI.Api
         /// <param name="deviceId">Target device serial number</param>
         /// <param name="cancellationToken">Cancellation Token to cancel request (optional) </param>
         /// <returns>Task of ApiResponse (int)</returns>
-        public async System.Threading.Tasks.Task<ApiResponse<int>> DeviceGetsshportAsyncWithHttpInfo (string deviceId, CancellationToken cancellationToken = default(CancellationToken))
+        public async System.Threading.Tasks.Task<ApiResponse<int>> DeviceGetsshportWithHttpInfoAsync (string deviceId, CancellationToken cancellationToken = default(CancellationToken))
         {
             // verify the required parameter 'deviceId' is set
             if (deviceId == null)
@@ -4594,7 +4594,7 @@ namespace TorizonRestAPI.Api
         /// <returns>Task of TargetDevice</returns>
         public async System.Threading.Tasks.Task<TargetDevice> DeviceModifyAsync (string deviceId, TargetDevice device = default(TargetDevice), CancellationToken cancellationToken = default(CancellationToken))
         {
-             ApiResponse<TargetDevice> localVarResponse = await DeviceModifyAsyncWithHttpInfo(deviceId, device, cancellationToken);
+             ApiResponse<TargetDevice> localVarResponse = await DeviceModifyWithHttpInfoAsync(deviceId, device, cancellationToken);
              return localVarResponse.Data;
 
         }
@@ -4607,7 +4607,7 @@ namespace TorizonRestAPI.Api
         /// <param name="device"> (optional)</param>
         /// <param name="cancellationToken">Cancellation Token to cancel request (optional) </param>
         /// <returns>Task of ApiResponse (TargetDevice)</returns>
-        public async System.Threading.Tasks.Task<ApiResponse<TargetDevice>> DeviceModifyAsyncWithHttpInfo (string deviceId, TargetDevice device = default(TargetDevice), CancellationToken cancellationToken = default(CancellationToken))
+        public async System.Threading.Tasks.Task<ApiResponse<TargetDevice>> DeviceModifyWithHttpInfoAsync (string deviceId, TargetDevice device = default(TargetDevice), CancellationToken cancellationToken = default(CancellationToken))
         {
             // verify the required parameter 'deviceId' is set
             if (deviceId == null)
@@ -4743,7 +4743,7 @@ namespace TorizonRestAPI.Api
         /// <returns>Task of int</returns>
         public async System.Threading.Tasks.Task<int> DeviceOpendockerAsync (string deviceId, int? port = default(int?), CancellationToken cancellationToken = default(CancellationToken))
         {
-             ApiResponse<int> localVarResponse = await DeviceOpendockerAsyncWithHttpInfo(deviceId, port, cancellationToken);
+             ApiResponse<int> localVarResponse = await DeviceOpendockerWithHttpInfoAsync(deviceId, port, cancellationToken);
              return localVarResponse.Data;
 
         }
@@ -4756,7 +4756,7 @@ namespace TorizonRestAPI.Api
         /// <param name="port"> (optional)</param>
         /// <param name="cancellationToken">Cancellation Token to cancel request (optional) </param>
         /// <returns>Task of ApiResponse (int)</returns>
-        public async System.Threading.Tasks.Task<ApiResponse<int>> DeviceOpendockerAsyncWithHttpInfo (string deviceId, int? port = default(int?), CancellationToken cancellationToken = default(CancellationToken))
+        public async System.Threading.Tasks.Task<ApiResponse<int>> DeviceOpendockerWithHttpInfoAsync (string deviceId, int? port = default(int?), CancellationToken cancellationToken = default(CancellationToken))
         {
             // verify the required parameter 'deviceId' is set
             if (deviceId == null)
@@ -4884,7 +4884,7 @@ namespace TorizonRestAPI.Api
         /// <returns>Task of int</returns>
         public async System.Threading.Tasks.Task<int> DeviceOpensshAsync (string deviceId, int? port = default(int?), CancellationToken cancellationToken = default(CancellationToken))
         {
-             ApiResponse<int> localVarResponse = await DeviceOpensshAsyncWithHttpInfo(deviceId, port, cancellationToken);
+             ApiResponse<int> localVarResponse = await DeviceOpensshWithHttpInfoAsync(deviceId, port, cancellationToken);
              return localVarResponse.Data;
 
         }
@@ -4897,7 +4897,7 @@ namespace TorizonRestAPI.Api
         /// <param name="port"> (optional)</param>
         /// <param name="cancellationToken">Cancellation Token to cancel request (optional) </param>
         /// <returns>Task of ApiResponse (int)</returns>
-        public async System.Threading.Tasks.Task<ApiResponse<int>> DeviceOpensshAsyncWithHttpInfo (string deviceId, int? port = default(int?), CancellationToken cancellationToken = default(CancellationToken))
+        public async System.Threading.Tasks.Task<ApiResponse<int>> DeviceOpensshWithHttpInfoAsync (string deviceId, int? port = default(int?), CancellationToken cancellationToken = default(CancellationToken))
         {
             // verify the required parameter 'deviceId' is set
             if (deviceId == null)
@@ -5034,7 +5034,7 @@ namespace TorizonRestAPI.Api
         /// <returns>Task of void</returns>
         public async System.Threading.Tasks.Task DeviceSyncfoldersAsync (string deviceId, string sourcefolder, string destfolder, CancellationToken cancellationToken = default(CancellationToken))
         {
-             await DeviceSyncfoldersAsyncWithHttpInfo(deviceId, sourcefolder, destfolder, cancellationToken);
+             await DeviceSyncfoldersWithHttpInfoAsync(deviceId, sourcefolder, destfolder, cancellationToken);
 
         }
 
@@ -5047,7 +5047,7 @@ namespace TorizonRestAPI.Api
         /// <param name="destfolder"></param>
         /// <param name="cancellationToken">Cancellation Token to cancel request (optional) </param>
         /// <returns>Task of ApiResponse</returns>
-        public async System.Threading.Tasks.Task<ApiResponse<Object>> DeviceSyncfoldersAsyncWithHttpInfo (string deviceId, string sourcefolder, string destfolder, CancellationToken cancellationToken = default(CancellationToken))
+        public async System.Threading.Tasks.Task<ApiResponse<Object>> DeviceSyncfoldersWithHttpInfoAsync (string deviceId, string sourcefolder, string destfolder, CancellationToken cancellationToken = default(CancellationToken))
         {
             // verify the required parameter 'deviceId' is set
             if (deviceId == null)
@@ -5178,7 +5178,7 @@ namespace TorizonRestAPI.Api
         /// <returns>Task of TargetDevice</returns>
         public async System.Threading.Tasks.Task<TargetDevice> DeviceUpdateAsync (string deviceId, CancellationToken cancellationToken = default(CancellationToken))
         {
-             ApiResponse<TargetDevice> localVarResponse = await DeviceUpdateAsyncWithHttpInfo(deviceId, cancellationToken);
+             ApiResponse<TargetDevice> localVarResponse = await DeviceUpdateWithHttpInfoAsync(deviceId, cancellationToken);
              return localVarResponse.Data;
 
         }
@@ -5190,7 +5190,7 @@ namespace TorizonRestAPI.Api
         /// <param name="deviceId">Target device serial number</param>
         /// <param name="cancellationToken">Cancellation Token to cancel request (optional) </param>
         /// <returns>Task of ApiResponse (TargetDevice)</returns>
-        public async System.Threading.Tasks.Task<ApiResponse<TargetDevice>> DeviceUpdateAsyncWithHttpInfo (string deviceId, CancellationToken cancellationToken = default(CancellationToken))
+        public async System.Threading.Tasks.Task<ApiResponse<TargetDevice>> DeviceUpdateWithHttpInfoAsync (string deviceId, CancellationToken cancellationToken = default(CancellationToken))
         {
             // verify the required parameter 'deviceId' is set
             if (deviceId == null)
@@ -5306,7 +5306,7 @@ namespace TorizonRestAPI.Api
         /// <returns>Task of List&lt;TargetDevice&gt;</returns>
         public async System.Threading.Tasks.Task<List<TargetDevice>> DevicesGetAsync (CancellationToken cancellationToken = default(CancellationToken))
         {
-             ApiResponse<List<TargetDevice>> localVarResponse = await DevicesGetAsyncWithHttpInfo(cancellationToken);
+             ApiResponse<List<TargetDevice>> localVarResponse = await DevicesGetWithHttpInfoAsync(cancellationToken);
              return localVarResponse.Data;
 
         }
@@ -5317,7 +5317,7 @@ namespace TorizonRestAPI.Api
         /// <exception cref="TorizonRestAPI.Client.ApiException">Thrown when fails to make API call</exception>
         /// <param name="cancellationToken">Cancellation Token to cancel request (optional) </param>
         /// <returns>Task of ApiResponse (List&lt;TargetDevice&gt;)</returns>
-        public async System.Threading.Tasks.Task<ApiResponse<List<TargetDevice>>> DevicesGetAsyncWithHttpInfo (CancellationToken cancellationToken = default(CancellationToken))
+        public async System.Threading.Tasks.Task<ApiResponse<List<TargetDevice>>> DevicesGetWithHttpInfoAsync (CancellationToken cancellationToken = default(CancellationToken))
         {
 
             var localVarPath = "/devices";
@@ -5450,7 +5450,7 @@ namespace TorizonRestAPI.Api
         /// <returns>Task of TargetDevice</returns>
         public async System.Threading.Tasks.Task<TargetDevice> DevicesNetworkdetectAsync (string hostname, string username, string password, CancellationToken cancellationToken = default(CancellationToken))
         {
-             ApiResponse<TargetDevice> localVarResponse = await DevicesNetworkdetectAsyncWithHttpInfo(hostname, username, password, cancellationToken);
+             ApiResponse<TargetDevice> localVarResponse = await DevicesNetworkdetectWithHttpInfoAsync(hostname, username, password, cancellationToken);
              return localVarResponse.Data;
 
         }
@@ -5464,7 +5464,7 @@ namespace TorizonRestAPI.Api
         /// <param name="password"></param>
         /// <param name="cancellationToken">Cancellation Token to cancel request (optional) </param>
         /// <returns>Task of ApiResponse (TargetDevice)</returns>
-        public async System.Threading.Tasks.Task<ApiResponse<TargetDevice>> DevicesNetworkdetectAsyncWithHttpInfo (string hostname, string username, string password, CancellationToken cancellationToken = default(CancellationToken))
+        public async System.Threading.Tasks.Task<ApiResponse<TargetDevice>> DevicesNetworkdetectWithHttpInfoAsync (string hostname, string username, string password, CancellationToken cancellationToken = default(CancellationToken))
         {
             // verify the required parameter 'hostname' is set
             if (hostname == null)
@@ -5609,7 +5609,7 @@ namespace TorizonRestAPI.Api
         /// <returns>Task of TargetDevice</returns>
         public async System.Threading.Tasks.Task<TargetDevice> DevicesSerialdetectAsync (string port, string username, string password, CancellationToken cancellationToken = default(CancellationToken))
         {
-             ApiResponse<TargetDevice> localVarResponse = await DevicesSerialdetectAsyncWithHttpInfo(port, username, password, cancellationToken);
+             ApiResponse<TargetDevice> localVarResponse = await DevicesSerialdetectWithHttpInfoAsync(port, username, password, cancellationToken);
              return localVarResponse.Data;
 
         }
@@ -5623,7 +5623,7 @@ namespace TorizonRestAPI.Api
         /// <param name="password"></param>
         /// <param name="cancellationToken">Cancellation Token to cancel request (optional) </param>
         /// <returns>Task of ApiResponse (TargetDevice)</returns>
-        public async System.Threading.Tasks.Task<ApiResponse<TargetDevice>> DevicesSerialdetectAsyncWithHttpInfo (string port, string username, string password, CancellationToken cancellationToken = default(CancellationToken))
+        public async System.Threading.Tasks.Task<ApiResponse<TargetDevice>> DevicesSerialdetectWithHttpInfoAsync (string port, string username, string password, CancellationToken cancellationToken = default(CancellationToken))
         {
             // verify the required parameter 'port' is set
             if (port == null)
@@ -5760,7 +5760,7 @@ namespace TorizonRestAPI.Api
         /// <returns>Task of void</returns>
         public async System.Threading.Tasks.Task ImagesDeleteimageAsync (string deviceId, string imageId, CancellationToken cancellationToken = default(CancellationToken))
         {
-             await ImagesDeleteimageAsyncWithHttpInfo(deviceId, imageId, cancellationToken);
+             await ImagesDeleteimageWithHttpInfoAsync(deviceId, imageId, cancellationToken);
 
         }
 
@@ -5772,7 +5772,7 @@ namespace TorizonRestAPI.Api
         /// <param name="imageId">Id of an image</param>
         /// <param name="cancellationToken">Cancellation Token to cancel request (optional) </param>
         /// <returns>Task of ApiResponse</returns>
-        public async System.Threading.Tasks.Task<ApiResponse<Object>> ImagesDeleteimageAsyncWithHttpInfo (string deviceId, string imageId, CancellationToken cancellationToken = default(CancellationToken))
+        public async System.Threading.Tasks.Task<ApiResponse<Object>> ImagesDeleteimageWithHttpInfoAsync (string deviceId, string imageId, CancellationToken cancellationToken = default(CancellationToken))
         {
             // verify the required parameter 'deviceId' is set
             if (deviceId == null)
@@ -5906,7 +5906,7 @@ namespace TorizonRestAPI.Api
         /// <returns>Task of DockerImage</returns>
         public async System.Threading.Tasks.Task<DockerImage> ImagesGetimageAsync (string deviceId, string imageId, CancellationToken cancellationToken = default(CancellationToken))
         {
-             ApiResponse<DockerImage> localVarResponse = await ImagesGetimageAsyncWithHttpInfo(deviceId, imageId, cancellationToken);
+             ApiResponse<DockerImage> localVarResponse = await ImagesGetimageWithHttpInfoAsync(deviceId, imageId, cancellationToken);
              return localVarResponse.Data;
 
         }
@@ -5919,7 +5919,7 @@ namespace TorizonRestAPI.Api
         /// <param name="imageId">Id of an image</param>
         /// <param name="cancellationToken">Cancellation Token to cancel request (optional) </param>
         /// <returns>Task of ApiResponse (DockerImage)</returns>
-        public async System.Threading.Tasks.Task<ApiResponse<DockerImage>> ImagesGetimageAsyncWithHttpInfo (string deviceId, string imageId, CancellationToken cancellationToken = default(CancellationToken))
+        public async System.Threading.Tasks.Task<ApiResponse<DockerImage>> ImagesGetimageWithHttpInfoAsync (string deviceId, string imageId, CancellationToken cancellationToken = default(CancellationToken))
         {
             // verify the required parameter 'deviceId' is set
             if (deviceId == null)

@@ -56,11 +56,6 @@ namespace TorizonAppDeploymentAPI
         /// </summary>
         private TorizonRestAPI.Api.EulasApi api;
 
-        /// <summary>
-        /// Runtime value (C/C++ etc.) used to filter the platforms
-        /// </summary>
-        private string runtime;
-
         public Eulas() : this(new EulaInstantiator())
         {
         }

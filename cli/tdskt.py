@@ -31,22 +31,25 @@ def generate_prop_list(obj) -> list:
             for v in value:
                 try:
                     if getattr(value, "attribute_map") is not None:
-                        v = tabulate.tabulate(generate_prop_list(
-                            value), tablefmt="plain")
+                        v = tabulate.tabulate(
+                            generate_prop_list(value), tablefmt="plain"
+                        )
                 except:
                     pass
 
-                newvalue += str(v)+"\n"
+                newvalue += str(v) + "\n"
 
             value = newvalue
         elif isinstance(value, dict):
             value = tabulate.tabulate(
-                [[k, v] for k, v in value.items()], tablefmt="plain")
+                [[k, v] for k, v in value.items()], tablefmt="plain"
+            )
         else:
             try:
                 if getattr(value, "attribute_map") is not None:
-                    value = tabulate.tabulate(generate_prop_list(
-                        value), tablefmt="plain")
+                    value = tabulate.tabulate(
+                        generate_prop_list(value), tablefmt="plain"
+                    )
             except:
                 pass
 
@@ -87,6 +90,7 @@ def cmd_handler_eulas(args) -> int:
     eulalist = map(generate_eula_list_item, eulas)
     logging.info(tabulate.tabulate(eulalist, headers="keys", tablefmt="plain"))
     return 0
+
 
 def generate_platform_list_item(p: moses_client.models.Platform) -> dict:
     """Convert platform into dump table row
@@ -133,8 +137,13 @@ def cmd_handler_platform_info(args) -> int:
     """
     api = moses_client.PlatformsApi()
     platform = api.platform_get(args.platform_id)
-    logging.info(tabulate.tabulate(generate_prop_list(
-        platform), headers=["Property", "Value"], tablefmt="plain"))
+    logging.info(
+        tabulate.tabulate(
+            generate_prop_list(platform),
+            headers=["Property", "Value"],
+            tablefmt="plain",
+        )
+    )
     return 0
 
 
@@ -150,8 +159,7 @@ def cmd_handler_platform_compatible(args) -> int:
     api = moses_client.PlatformsApi()
     devices = api.platform_compatibledevices_get(args.platform_id)
     deviceslist = map(generate_device_list_item, devices)
-    logging.info(tabulate.tabulate(
-        deviceslist, headers="keys", tablefmt="plain"))
+    logging.info(tabulate.tabulate(deviceslist, headers="keys", tablefmt="plain"))
     return 0
 
 
@@ -185,8 +193,7 @@ def cmd_handler_devices(args) -> int:
     api = moses_client.DevicesApi()
     devices = api.devices_get()
     deviceslist = map(generate_device_list_item, devices)
-    logging.info(tabulate.tabulate(
-        deviceslist, headers="keys", tablefmt="plain"))
+    logging.info(tabulate.tabulate(deviceslist, headers="keys", tablefmt="plain"))
     return 0
 
 
@@ -201,8 +208,11 @@ def cmd_handler_device_info(args) -> int:
     """
     api = moses_client.DevicesApi()
     device = api.device_get(args.device_id)
-    logging.info(tabulate.tabulate(generate_prop_list(
-        device), headers=["Property", "Value"], tablefmt="plain"))
+    logging.info(
+        tabulate.tabulate(
+            generate_prop_list(device), headers=["Property", "Value"], tablefmt="plain"
+        )
+    )
     return 0
 
 
@@ -232,8 +242,11 @@ def cmd_handler_device_mem(args) -> int:
     """
     api = moses_client.DevicesApi()
     meminfo = api.device_getmemory(args.device_id)
-    logging.info(tabulate.tabulate(generate_prop_list(
-        meminfo), headers=["Property", "Value"], tablefmt="plain"))
+    logging.info(
+        tabulate.tabulate(
+            generate_prop_list(meminfo), headers=["Property", "Value"], tablefmt="plain"
+        )
+    )
     return 0
 
 
@@ -267,8 +280,7 @@ def cmd_handler_device_storage(args) -> int:
     api = moses_client.DevicesApi()
     mountpoints = api.device_getmountpoints(args.device_id)
     mountpointslist = map(generate_mountpoint_list_item, mountpoints)
-    logging.info(tabulate.tabulate(
-        mountpointslist, headers="keys", tablefmt="plain"))
+    logging.info(tabulate.tabulate(mountpointslist, headers="keys", tablefmt="plain"))
     return 0
 
 
@@ -305,8 +317,7 @@ def cmd_handler_device_ps(args) -> int:
     api = moses_client.DevicesApi()
     processes = api.device_getprocesses(args.device_id)
     processeslist = map(generate_process_list_item, processes)
-    logging.info(tabulate.tabulate(
-        processeslist, headers="keys", tablefmt="plain"))
+    logging.info(tabulate.tabulate(processeslist, headers="keys", tablefmt="plain"))
     return 0
 
 
@@ -339,8 +350,7 @@ def cmd_handler_device_images(args) -> int:
     api = moses_client.DevicesApi()
     images = api.device_getimages(args.device_id)
     imageslist = map(generate_image_list_item, images)
-    logging.info(tabulate.tabulate(
-        imageslist, headers="keys", tablefmt="plain"))
+    logging.info(tabulate.tabulate(imageslist, headers="keys", tablefmt="plain"))
     return 0
 
 
@@ -355,8 +365,11 @@ def cmd_handler_device_image_info(args) -> int:
     """
     api = moses_client.DevicesApi()
     image = api.images_getimage(args.device_id, args.image_id)
-    logging.info(tabulate.tabulate(generate_prop_list(
-        image), headers=["Property", "Value"], tablefmt="plain"))
+    logging.info(
+        tabulate.tabulate(
+            generate_prop_list(image), headers=["Property", "Value"], tablefmt="plain"
+        )
+    )
     return 0
 
 
@@ -399,8 +412,7 @@ def cmd_handler_device_containers(args) -> int:
     api = moses_client.DevicesApi()
     containers = api.device_getcontainers(args.device_id)
     containerslist = map(generate_container_list_item, containers)
-    logging.info(tabulate.tabulate(containerslist,
-                                   headers="keys", tablefmt="plain"))
+    logging.info(tabulate.tabulate(containerslist, headers="keys", tablefmt="plain"))
     return 0
 
 
@@ -415,8 +427,13 @@ def cmd_handler_device_container_info(args) -> int:
     """
     api = moses_client.DevicesApi()
     container = api.containers_getcontainer(args.device_id, args.container_id)
-    logging.info(tabulate.tabulate(generate_prop_list(
-        container), headers=["Property", "Value"], tablefmt="plain"))
+    logging.info(
+        tabulate.tabulate(
+            generate_prop_list(container),
+            headers=["Property", "Value"],
+            tablefmt="plain",
+        )
+    )
     return 0
 
 
@@ -431,8 +448,7 @@ def cmd_handler_device_container_delete(args) -> int:
     """
     api = moses_client.DevicesApi()
     api.containers_deletecontainer(args.device_id, args.container_id)
-    logging.info("Container %s has been successfully deleted.",
-                 args.container_id)
+    logging.info("Container %s has been successfully deleted.", args.container_id)
     return 0
 
 
@@ -447,8 +463,7 @@ def cmd_handler_device_container_start(args) -> int:
     """
     api = moses_client.DevicesApi()
     api.container_start(args.device_id, args.container_id)
-    logging.info("Container %s has been successfully started.",
-                 args.container_id)
+    logging.info("Container %s has been successfully started.", args.container_id)
     return 0
 
 
@@ -463,8 +478,7 @@ def cmd_handler_device_container_stop(args) -> int:
     """
     api = moses_client.DevicesApi()
     api.container_stop(args.device_id, args.container_id)
-    logging.info("Container %s has been successfully started.",
-                 args.container_id)
+    logging.info("Container %s has been successfully started.", args.container_id)
     return 0
 
 
@@ -479,8 +493,11 @@ def cmd_handler_device_container_mem(args) -> int:
     """
     api = moses_client.DevicesApi()
     meminfo = api.container_getmemory(args.device_id, args.container_id)
-    logging.info(tabulate.tabulate(generate_prop_list(
-        meminfo), headers=["Property", "Value"], tablefmt="plain"))
+    logging.info(
+        tabulate.tabulate(
+            generate_prop_list(meminfo), headers=["Property", "Value"], tablefmt="plain"
+        )
+    )
     return 0
 
 
@@ -494,11 +511,9 @@ def cmd_handler_device_container_storage(args) -> int:
         int -- 0 for success
     """
     api = moses_client.DevicesApi()
-    mountpoints = api.container_getmountpoints(
-        args.device_id, args.container_id)
+    mountpoints = api.container_getmountpoints(args.device_id, args.container_id)
     mountpointslist = map(generate_mountpoint_list_item, mountpoints)
-    logging.info(tabulate.tabulate(
-        mountpointslist, headers="keys", tablefmt="plain"))
+    logging.info(tabulate.tabulate(mountpointslist, headers="keys", tablefmt="plain"))
     return 0
 
 
@@ -514,8 +529,7 @@ def cmd_handler_device_container_ps(args) -> int:
     api = moses_client.DevicesApi()
     processes = api.container_getprocesses(args.device_id, args.container_id)
     processeslist = map(generate_process_list_item, processes)
-    logging.info(tabulate.tabulate(
-        processeslist, headers="keys", tablefmt="plain"))
+    logging.info(tabulate.tabulate(processeslist, headers="keys", tablefmt="plain"))
     return 0
 
 
@@ -533,8 +547,7 @@ def cmd_handler_device_container_logs(args) -> int:
     restart = True
 
     while True:
-        line = api.container_getlogs(
-            args.device_id, args.container_id, restart=restart)
+        line = api.container_getlogs(args.device_id, args.container_id, restart=restart)
         restart = False
         logging.info(line)
 
@@ -566,9 +579,9 @@ def cmd_handler_device_sync(args) -> int:
         int -- 0 for success
     """
     api = moses_client.DevicesApi()
-    device = api.device_syncfolders(args.device_id,
-                                    os.path.abspath(args.source_folder),
-                                    args.destination_folder)
+    device = api.device_syncfolders(
+        args.device_id, os.path.abspath(args.source_folder), args.destination_folder
+    )
     return 0
 
 
@@ -599,8 +612,13 @@ def cmd_handler_application_info(args) -> int:
     api = moses_client.ApplicationsApi()
 
     application = api.application_get(args.application_id)
-    logging.info(tabulate.tabulate(generate_prop_list(
-        application), headers=["Property", "Value"], tablefmt="plain"))
+    logging.info(
+        tabulate.tabulate(
+            generate_prop_list(application),
+            headers=["Property", "Value"],
+            tablefmt="plain",
+        )
+    )
     return 0
 
 
@@ -634,8 +652,7 @@ def cmd_handler_application_deploy(args) -> int:
     api = moses_client.ApplicationsApi()
 
     logging.info("Deploying application, this may take a few minutes...")
-    api.application_deploy(args.application_id,
-                           args.configuration, args.device_id)
+    api.application_deploy(args.application_id, args.configuration, args.device_id)
     logging.info("Application %s successfully deployed.", args.application_id)
     return 0
 
@@ -653,8 +670,9 @@ def cmd_handler_application_run(args) -> int:
     api = moses_client.ApplicationsApi()
 
     logging.info("Starting application...")
-    container = api.application_run(args.application_id,
-                                    args.configuration, args.device_id)
+    container = api.application_run(
+        args.application_id, args.configuration, args.device_id
+    )
     logging.info("Started container %s", container.id)
     return 0
 
@@ -671,8 +689,9 @@ def cmd_handler_application_stop(args) -> int:
     """
     api = moses_client.ApplicationsApi()
 
-    container = api.application_stop(args.application_id,
-                                     args.configuration, args.device_id)
+    container = api.application_stop(
+        args.application_id, args.configuration, args.device_id
+    )
     return 0
 
 
@@ -705,7 +724,8 @@ def cmd_handler_application_reseal(args) -> int:
 
     api.application_reseal(args.application_id)
     logging.warning(
-        "Application has been resealed. It should not be used for any further operation, otherwise keys will be regenerated.")
+        "Application has been resealed. It should not be used for any further operation, otherwise keys will be regenerated."
+    )
     return 0
 
 
@@ -724,26 +744,29 @@ def cmd_handler_detect(args) -> int:
 
     if args.network:
         logging.info(
-            "Attepting to detect network device, this may take a couple of minutes.")
+            "Attepting to detect network device, this may take a couple of minutes."
+        )
         logging.info(
-            "Check that your device is turned on and connected to the network.")
-        logging.info(
-            "At the end of detection your device will reboot.")
-        device = api.devices_networkdetect(
-            args.target, args.username, args.password)
+            "Check that your device is turned on and connected to the network."
+        )
+        logging.info("At the end of detection your device will reboot.")
+        device = api.devices_networkdetect(args.target, args.username, args.password)
     else:
         logging.info(
-            "Attepting to detect serial device, this may take a couple of minutes, after detection the device will reboot.")
+            "Attepting to detect serial device, this may take a couple of minutes, after detection the device will reboot."
+        )
         logging.info(
-            "Check that your device is powered on an connected to your PC via serial/USB cable.")
-        logging.info(
-            "At the end of detection your device will reboot.")
-        device = api.devices_serialdetect(
-            args.target, args.username, args.password)
+            "Check that your device is powered on an connected to your PC via serial/USB cable."
+        )
+        logging.info("At the end of detection your device will reboot.")
+        device = api.devices_serialdetect(args.target, args.username, args.password)
 
     logging.info("Device successfully detected.")
-    logging.info(tabulate.tabulate(generate_prop_list(
-        device), headers=["Property", "Value"], tablefmt="plain"))
+    logging.info(
+        tabulate.tabulate(
+            generate_prop_list(device), headers=["Property", "Value"], tablefmt="plain"
+        )
+    )
 
     return 0
 
@@ -763,7 +786,8 @@ def cmd_handler_create(args) -> int:
     path = os.path.abspath(args.path)
 
     application = api.applications_create(
-        args.platform_id, path, username=args.username)
+        args.platform_id, path, username=args.username
+    )
 
     logging.info("%s", application.id)
     return 0
@@ -800,10 +824,8 @@ def cmd_handler_application_updatesdk(args) -> int:
     api = moses_client.ApplicationsApi()
 
     logging.info("Updating SDK, this may require a few minutes...")
-    api.application_updatesdk(
-        args.application_id, args.configuration)
-    logging.info("SDK for application %s successfully updated.",
-                 args.application_id)
+    api.application_updatesdk(args.application_id, args.configuration)
+    logging.info("SDK for application %s successfully updated.", args.application_id)
 
 
 def cmd_handler_application_runsdk(args) -> int:
@@ -817,11 +839,15 @@ def cmd_handler_application_runsdk(args) -> int:
     """
     api = moses_client.ApplicationsApi()
 
-    sdkaddress = api.application_runsdk(args.application_id,
-                                        args.configuration)
+    sdkaddress = api.application_runsdk(args.application_id, args.configuration)
 
-    logging.info(tabulate.tabulate(generate_prop_list(
-        sdkaddress), headers=["Property", "Value"], tablefmt="plain"))
+    logging.info(
+        tabulate.tabulate(
+            generate_prop_list(sdkaddress),
+            headers=["Property", "Value"],
+            tablefmt="plain",
+        )
+    )
 
 
 def create_parser() -> argparse.ArgumentParser:
@@ -840,8 +866,10 @@ def create_parser() -> argparse.ArgumentParser:
         each with its own set of arguments
     """
 
-    parser = argparse.ArgumentParser(prog=os.path.basename(
-        sys.argv[0]), description="Torizon Developer Swiss Knife Tool")
+    parser = argparse.ArgumentParser(
+        prog=os.path.basename(sys.argv[0]),
+        description="Torizon Developer Swiss Knife Tool",
+    )
 
     subparsers = parser.add_subparsers(dest="command")
 
@@ -857,7 +885,8 @@ def create_parser() -> argparse.ArgumentParser:
     load_parser = subparsers.add_parser("load")
 
     device_parser.add_argument(
-        "device_id", help="Device serial number", metavar="device-id")
+        "device_id", help="Device serial number", metavar="device-id"
+    )
 
     # add sub-commands for device
     device_subparsers = device_parser.add_subparsers(dest="subcommand")
@@ -876,18 +905,20 @@ def create_parser() -> argparse.ArgumentParser:
 
     # add sub-commands for device image
     device_image_parser.add_argument(
-        "image_id", help="Image SHA-id", metavar="image-id")
-    device_image_subparsers = device_image_parser.add_subparsers(
-        dest="subsubcommand")
+        "image_id", help="Image SHA-id", metavar="image-id"
+    )
+    device_image_subparsers = device_image_parser.add_subparsers(dest="subsubcommand")
 
     device_image_subparsers.add_parser("info")
     device_image_subparsers.add_parser("delete")
 
     # add commands for device container
     device_container_parser.add_argument(
-        "container_id", help="Container SHA-id", metavar="container-id")
+        "container_id", help="Container SHA-id", metavar="container-id"
+    )
     device_container_subparsers = device_container_parser.add_subparsers(
-        dest="subsubcommand")
+        dest="subsubcommand"
+    )
 
     device_container_subparsers.add_parser("info")
     device_container_subparsers.add_parser("start")
@@ -898,95 +929,120 @@ def create_parser() -> argparse.ArgumentParser:
     device_container_subparsers.add_parser("logs")
 
     device_sync_parser.add_argument(
-        "source_folder", help="Source folder (host PC)", metavar="source-folder")
+        "source_folder", help="Source folder (host PC)", metavar="source-folder"
+    )
     device_sync_parser.add_argument(
-        "destination_folder", help="Destination folder (target device)", metavar="destination-folder")
+        "destination_folder",
+        help="Destination folder (target device)",
+        metavar="destination-folder",
+    )
 
     detect_parser.add_argument(
-        "target", type=str, help="serial port or ip address/hostname")
+        "target", type=str, help="serial port or ip address/hostname"
+    )
     detect_parser.add_argument(
-        "username", type=str, help="username to be used for login")
+        "username", type=str, help="username to be used for login"
+    )
+    detect_parser.add_argument("password", type=str, help="password")
     detect_parser.add_argument(
-        "password", type=str, help="password")
+        "--network", dest="network", action="store_true", default=False
+    )
     detect_parser.add_argument(
-        "--network", dest="network", action='store_true', default=False)
-    detect_parser.add_argument(
-        "--uart", dest="network", action='store_false', default=False)
+        "--uart", dest="network", action="store_false", default=False
+    )
     detect_parser.set_defaults(network=False)
 
     # add commands for platform
     platform_parser.add_argument(
-        "platform_id", help="Platform unique identifier", metavar="platform-id")
+        "platform_id", help="Platform unique identifier", metavar="platform-id"
+    )
     platform_subparsers = platform_parser.add_subparsers(dest="subcommand")
 
     platform_subparsers.add_parser("info")
     platform_subparsers.add_parser("compatible")
 
     application_parser.add_argument(
-        "application_id", help="Application unique identifier", metavar="application-id")
-    application_subparsers = application_parser.add_subparsers(
-        dest="subcommand")
+        "application_id", help="Application unique identifier", metavar="application-id"
+    )
+    application_subparsers = application_parser.add_subparsers(dest="subcommand")
 
     application_subparsers.add_parser("info")
     application_build_parser = application_subparsers.add_parser("build")
     application_deploy_parser = application_subparsers.add_parser("deploy")
     application_run_parser = application_subparsers.add_parser("run")
     application_stop_parser = application_subparsers.add_parser("stop")
-    application_container_parser = application_subparsers.add_parser(
-        "container")
-    application_updatesdk_parser = application_subparsers.add_parser(
-        "updatesdk")
+    application_container_parser = application_subparsers.add_parser("container")
+    application_updatesdk_parser = application_subparsers.add_parser("updatesdk")
     application_runsdk_parser = application_subparsers.add_parser("runsdk")
     application_key_parser = application_subparsers.add_parser("key")
     application_reseal_parser = application_subparsers.add_parser("reseal")
 
     application_build_parser.add_argument(
-        "configuration", help="Build/release or other app-specific configuration")
+        "configuration", help="Build/release or other app-specific configuration"
+    )
 
     application_deploy_parser.add_argument(
-        "configuration", help="Build/release or other app-specific configuration")
+        "configuration", help="Build/release or other app-specific configuration"
+    )
     application_deploy_parser.add_argument(
-        "device_id", help="Device serial number", metavar="device-id")
+        "device_id", help="Device serial number", metavar="device-id"
+    )
 
     application_run_parser.add_argument(
-        "configuration", help="Build/release or other app-specific configuration")
+        "configuration", help="Build/release or other app-specific configuration"
+    )
     application_run_parser.add_argument(
-        "device_id", help="Device serial number", metavar="device-id")
+        "device_id", help="Device serial number", metavar="device-id"
+    )
 
     application_stop_parser.add_argument(
-        "configuration", help="Build/release or other app-specific configuration")
+        "configuration", help="Build/release or other app-specific configuration"
+    )
     application_stop_parser.add_argument(
-        "device_id", help="Device serial number", metavar="device-id")
+        "device_id", help="Device serial number", metavar="device-id"
+    )
 
     application_container_parser.add_argument(
-        "configuration", help="Build/release or other app-specific configuration")
+        "configuration", help="Build/release or other app-specific configuration"
+    )
     application_container_parser.add_argument(
-        "device_id", help="Device serial number", metavar="device-id")
+        "device_id", help="Device serial number", metavar="device-id"
+    )
 
     application_updatesdk_parser.add_argument(
-        "configuration", help="Build/release or other app-specific configuration")
+        "configuration", help="Build/release or other app-specific configuration"
+    )
 
     application_runsdk_parser.add_argument(
-        "configuration", help="Build/release or other app-specific configuration")
+        "configuration", help="Build/release or other app-specific configuration"
+    )
 
     # add command to create application
     create_parser.add_argument(
-        "platform_id", help="Platform unique identifier", metavar="platform-id")
+        "platform_id", help="Platform unique identifier", metavar="platform-id"
+    )
     create_parser.add_argument(
-        "path", help="Folder where application sub-folder will be created", metavar="path")
+        "path",
+        help="Folder where application sub-folder will be created",
+        metavar="path",
+    )
     create_parser.add_argument(
         "username",
         help="Username that should be used to run the application inside the container",
-        nargs="?", default="torizon", metavar="username")
+        nargs="?",
+        default="torizon",
+        metavar="username",
+    )
 
     load_parser.add_argument(
-        "path", help="Folder from where application should be loaded", metavar="path")
+        "path", help="Folder from where application should be loaded", metavar="path"
+    )
 
     return parser
 
 
 # If we're running in stand alone mode, run the application
-if __name__ == '__main__':
+if __name__ == "__main__":
 
     # configures logging: errors and warnings on stderr, regular messages on stdout
     logger = logging.getLogger()
@@ -1018,10 +1074,10 @@ if __name__ == '__main__':
         function_name += args.command
 
     if "subcommand" in args:
-        function_name += "_"+args.subcommand
+        function_name += "_" + args.subcommand
 
     if "subsubcommand" in args:
-        function_name += "_"+args.subsubcommand
+        function_name += "_" + args.subsubcommand
 
     try:
         sys.exit(getattr(sys.modules[__name__], function_name)(args))

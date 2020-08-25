@@ -112,7 +112,7 @@ namespace TorizonRestAPI.Api
         /// <param name="eulaId">Id of an eula</param>
         /// <param name="cancellationToken">Cancellation Token to cancel request (optional) </param>
         /// <returns>Task of ApiResponse (Eula)</returns>
-        System.Threading.Tasks.Task<ApiResponse<Eula>> EulaGetAsyncWithHttpInfo (string eulaId, CancellationToken cancellationToken = default(CancellationToken));
+        System.Threading.Tasks.Task<ApiResponse<Eula>> EulaGetWithHttpInfoAsync (string eulaId, CancellationToken cancellationToken = default(CancellationToken));
         /// <summary>
         /// Change eula properties
         /// </summary>
@@ -137,7 +137,7 @@ namespace TorizonRestAPI.Api
         /// <param name="e"> (optional)</param>
         /// <param name="cancellationToken">Cancellation Token to cancel request (optional) </param>
         /// <returns>Task of ApiResponse (Eula)</returns>
-        System.Threading.Tasks.Task<ApiResponse<Eula>> EulaModifyAsyncWithHttpInfo (string eulaId, Eula e = default(Eula), CancellationToken cancellationToken = default(CancellationToken));
+        System.Threading.Tasks.Task<ApiResponse<Eula>> EulaModifyWithHttpInfoAsync (string eulaId, Eula e = default(Eula), CancellationToken cancellationToken = default(CancellationToken));
         /// <summary>
         /// Get all eulas
         /// </summary>
@@ -158,7 +158,7 @@ namespace TorizonRestAPI.Api
         /// <exception cref="TorizonRestAPI.Client.ApiException">Thrown when fails to make API call</exception>
         /// <param name="cancellationToken">Cancellation Token to cancel request (optional) </param>
         /// <returns>Task of ApiResponse (List&lt;Eula&gt;)</returns>
-        System.Threading.Tasks.Task<ApiResponse<List<Eula>>> EulasGetAsyncWithHttpInfo (CancellationToken cancellationToken = default(CancellationToken));
+        System.Threading.Tasks.Task<ApiResponse<List<Eula>>> EulasGetWithHttpInfoAsync (CancellationToken cancellationToken = default(CancellationToken));
         #endregion Asynchronous Operations
     }
 
@@ -345,7 +345,7 @@ namespace TorizonRestAPI.Api
         /// <returns>Task of Eula</returns>
         public async System.Threading.Tasks.Task<Eula> EulaGetAsync (string eulaId, CancellationToken cancellationToken = default(CancellationToken))
         {
-             ApiResponse<Eula> localVarResponse = await EulaGetAsyncWithHttpInfo(eulaId, cancellationToken);
+             ApiResponse<Eula> localVarResponse = await EulaGetWithHttpInfoAsync(eulaId, cancellationToken);
              return localVarResponse.Data;
 
         }
@@ -357,7 +357,7 @@ namespace TorizonRestAPI.Api
         /// <param name="eulaId">Id of an eula</param>
         /// <param name="cancellationToken">Cancellation Token to cancel request (optional) </param>
         /// <returns>Task of ApiResponse (Eula)</returns>
-        public async System.Threading.Tasks.Task<ApiResponse<Eula>> EulaGetAsyncWithHttpInfo (string eulaId, CancellationToken cancellationToken = default(CancellationToken))
+        public async System.Threading.Tasks.Task<ApiResponse<Eula>> EulaGetWithHttpInfoAsync (string eulaId, CancellationToken cancellationToken = default(CancellationToken))
         {
             // verify the required parameter 'eulaId' is set
             if (eulaId == null)
@@ -492,7 +492,7 @@ namespace TorizonRestAPI.Api
         /// <returns>Task of Eula</returns>
         public async System.Threading.Tasks.Task<Eula> EulaModifyAsync (string eulaId, Eula e = default(Eula), CancellationToken cancellationToken = default(CancellationToken))
         {
-             ApiResponse<Eula> localVarResponse = await EulaModifyAsyncWithHttpInfo(eulaId, e, cancellationToken);
+             ApiResponse<Eula> localVarResponse = await EulaModifyWithHttpInfoAsync(eulaId, e, cancellationToken);
              return localVarResponse.Data;
 
         }
@@ -505,7 +505,7 @@ namespace TorizonRestAPI.Api
         /// <param name="e"> (optional)</param>
         /// <param name="cancellationToken">Cancellation Token to cancel request (optional) </param>
         /// <returns>Task of ApiResponse (Eula)</returns>
-        public async System.Threading.Tasks.Task<ApiResponse<Eula>> EulaModifyAsyncWithHttpInfo (string eulaId, Eula e = default(Eula), CancellationToken cancellationToken = default(CancellationToken))
+        public async System.Threading.Tasks.Task<ApiResponse<Eula>> EulaModifyWithHttpInfoAsync (string eulaId, Eula e = default(Eula), CancellationToken cancellationToken = default(CancellationToken))
         {
             // verify the required parameter 'eulaId' is set
             if (eulaId == null)
@@ -630,7 +630,7 @@ namespace TorizonRestAPI.Api
         /// <returns>Task of List&lt;Eula&gt;</returns>
         public async System.Threading.Tasks.Task<List<Eula>> EulasGetAsync (CancellationToken cancellationToken = default(CancellationToken))
         {
-             ApiResponse<List<Eula>> localVarResponse = await EulasGetAsyncWithHttpInfo(cancellationToken);
+             ApiResponse<List<Eula>> localVarResponse = await EulasGetWithHttpInfoAsync(cancellationToken);
              return localVarResponse.Data;
 
         }
@@ -641,7 +641,7 @@ namespace TorizonRestAPI.Api
         /// <exception cref="TorizonRestAPI.Client.ApiException">Thrown when fails to make API call</exception>
         /// <param name="cancellationToken">Cancellation Token to cancel request (optional) </param>
         /// <returns>Task of ApiResponse (List&lt;Eula&gt;)</returns>
-        public async System.Threading.Tasks.Task<ApiResponse<List<Eula>>> EulasGetAsyncWithHttpInfo (CancellationToken cancellationToken = default(CancellationToken))
+        public async System.Threading.Tasks.Task<ApiResponse<List<Eula>>> EulasGetWithHttpInfoAsync (CancellationToken cancellationToken = default(CancellationToken))
         {
 
             var localVarPath = "/eulas";

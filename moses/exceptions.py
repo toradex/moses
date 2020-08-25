@@ -38,8 +38,7 @@ class InternalServerError(MosesError):
     description = "Unexpected exception."
 
     def __init__(self, e):
-        super().__init__("Exception: " +
-                         str(e))
+        super().__init__("Exception: " + str(e) if e is not None else "unknown")
 
 
 class ImageNotFoundError(MosesError):
@@ -48,9 +47,7 @@ class ImageNotFoundError(MosesError):
     description = "Container image not found on local host."
 
     def __init__(self, image):
-        super().__init__("Image " +
-                         str(image) +
-                         " is not available.")
+        super().__init__("Image " + str(image) + " is not available.")
 
 
 class IncompatibleDeviceError(MosesError):
@@ -59,9 +56,9 @@ class IncompatibleDeviceError(MosesError):
     description = "Device is not compatible with selected platform."
 
     def __init__(self, device):
-        super().__init__("Device " +
-                         str(device) +
-                         " is not compatible with selected platform.")
+        super().__init__(
+            "Device " + str(device) + " is not compatible with selected platform."
+        )
 
 
 class ConnectionError(MosesError):
@@ -70,10 +67,9 @@ class ConnectionError(MosesError):
     description = "Error communicating with device."
 
     def __init__(self, device, e):
-        super().__init__("Error communicating with device " +
-                         str(device) +
-                         " exception: " +
-                         str(e))
+        super().__init__(
+            "Error communicating with device " + str(device) + " exception: " + str(e)
+        )
 
 
 class ContainerNotRunningError(MosesError):
@@ -82,10 +78,12 @@ class ContainerNotRunningError(MosesError):
     description = "Container is not running."
 
     def __init__(self, device, applicationid):
-        super().__init__("Container for app " +
-                         str(applicationid) +
-                         " is not running on device " +
-                         str(device))
+        super().__init__(
+            "Container for app "
+            + str(applicationid)
+            + " is not running on device "
+            + str(device)
+        )
 
 
 class SudoError(MosesError):
@@ -94,9 +92,9 @@ class SudoError(MosesError):
     description = "User is not enabled to execute commands as root."
 
     def __init__(self, username):
-        super().__init__("User " +
-                         str(username) +
-                         " is not enabled to execute commands as root.")
+        super().__init__(
+            "User " + str(username) + " is not enabled to execute commands as root."
+        )
 
 
 class RemoteDockerError(MosesError):
@@ -105,9 +103,9 @@ class RemoteDockerError(MosesError):
     description = "Remote docker exception."
 
     def __init__(self, device, e):
-        super().__init__("Docker error on device " +
-                         str(device) +
-                         ":" + str(e), exception=e)
+        super().__init__(
+            "Docker error on device " + str(device) + ":" + str(e), exception=e
+        )
 
 
 class RemoteImageNotFoundError(MosesError):
@@ -116,9 +114,7 @@ class RemoteImageNotFoundError(MosesError):
     description = "Image not found on remote device."
 
     def __init__(self, image):
-        super().__init__("Image " +
-                         str(image) +
-                         " is not available.")
+        super().__init__("Image " + str(image) + " is not available.")
 
 
 class PlatformDoesNotRequireSDKError(MosesError):
@@ -127,9 +123,9 @@ class PlatformDoesNotRequireSDKError(MosesError):
     description = "Image not found on remote device."
 
     def __init__(self, platform_id):
-        super().__init__("Platform " +
-                         str(platform_id) +
-                         " does not require an SDK container.")
+        super().__init__(
+            "Platform " + str(platform_id) + " does not require an SDK container."
+        )
 
 
 class PlatformDoesNotExistError(MosesError):
@@ -138,9 +134,7 @@ class PlatformDoesNotExistError(MosesError):
     description = "Platform does not exist."
 
     def __init__(self, platform_id):
-        super().__init__("Platform " +
-                         str(platform_id) +
-                         " does not exist.")
+        super().__init__("Platform " + str(platform_id) + " does not exist.")
 
 
 class RemoteCommandError(MosesError):
@@ -149,10 +143,9 @@ class RemoteCommandError(MosesError):
     description = "Remote command execution failed."
 
     def __init__(self, command, errorcode):
-        super().__init__("Remote command " +
-                         str(command) +
-                         " returned error " +
-                         str(errorcode))
+        super().__init__(
+            "Remote command " + str(command) + " returned error " + str(errorcode)
+        )
 
 
 class LocalDockerError(MosesError):
@@ -165,8 +158,8 @@ class LocalDockerError(MosesError):
 
         if isinstance(e, docker.errors.BuildError):
             for line in e.build_log:
-                if 'stream' in line:
-                    message += os.linesep + line['stream'].strip()
+                if "stream" in line:
+                    message += os.linesep + line["stream"].strip()
         super().__init__(message, exception=e)
 
 
@@ -185,7 +178,7 @@ class InvalidObjectStateError(MosesError):
     description = "Object cannot be saved because it's in an invalid state."
 
     def __init__(self, objid):
-        super().__init__("Object "+str(objid)+" is in an invalid state.")
+        super().__init__("Object " + str(objid) + " is in an invalid state.")
 
 
 class SSHError(MosesError):
@@ -193,7 +186,7 @@ class SSHError(MosesError):
     description = "SSH error."
 
     def __init__(self, e):
-        super().__init__("SSH error: "+str(e), exception=e)
+        super().__init__("SSH error: " + str(e), exception=e)
 
 
 class OSError(MosesError):
@@ -201,7 +194,7 @@ class OSError(MosesError):
     description = "OS error."
 
     def __init__(self, e):
-        super().__init__("OS error: "+str(e), exception=e)
+        super().__init__("OS error: " + str(e), exception=e)
 
 
 class InvalidDeviceIdError(MosesError):
@@ -217,7 +210,7 @@ class SerialError(MosesError):
     description = "Serial port error."
 
     def __init__(self, e):
-        super().__init__("Serial port error: "+str(e), exception=e)
+        super().__init__("Serial port error: " + str(e), exception=e)
 
 
 class TimeoutError(MosesError):
@@ -241,7 +234,7 @@ class SSHTunnelError(MosesError):
     description = "SSH tunnel error."
 
     def __init__(self, e):
-        super().__init__("SSH tunnel error: "+str(e), exception=e)
+        super().__init__("SSH tunnel error: " + str(e), exception=e)
 
 
 class InvalidPathError(MosesError):
@@ -249,7 +242,7 @@ class InvalidPathError(MosesError):
     description = "Invalid path."
 
     def __init__(self, path):
-        super().__init__("Invalid path: "+str(path))
+        super().__init__("Invalid path: " + str(path))
 
 
 class SDKContainerNotRunningError(MosesError):
@@ -257,9 +250,9 @@ class SDKContainerNotRunningError(MosesError):
     description = "SDK container is not running."
 
     def __init__(self, applicationid):
-        super().__init__("SDK container for app "
-                         + str(applicationid)
-                         + " is not running.")
+        super().__init__(
+            "SDK container for app " + str(applicationid) + " is not running."
+        )
 
 
 class PullImageError(MosesError):
@@ -273,10 +266,14 @@ class PullImageError(MosesError):
 
 class SDKRequiresConfiguration(MosesError):
     code = 543
-    description = "Platform requires that a configuration is specified for SDK generation."
+    description = (
+        "Platform requires that a configuration is specified for SDK generation."
+    )
 
     def __init__(self):
-        super().__init__("Platform requires debug/release configuration for SDK generation.")
+        super().__init__(
+            "Platform requires debug/release configuration for SDK generation."
+        )
 
 
 class LocalCommandError(MosesError):
@@ -285,8 +282,12 @@ class LocalCommandError(MosesError):
     description = "Local command execution failed."
 
     def __init__(self, result):
-        message = "Local command " + \
-            str(result.args) + " returned error " + str(result.returncode)
+        message = (
+            "Local command "
+            + str(result.args)
+            + " returned error "
+            + str(result.returncode)
+        )
 
         if result.stderr is not None:
             message = result.stderr.decode("utf-8")
@@ -299,16 +300,28 @@ class DNSError(MosesError):
     description = "Error resolving device hostname."
 
     def __init__(self, hostname):
-        super().__init__("Can't find a valid IP for "+hostname)
+        super().__init__("Can't find a valid IP for " + hostname)
+
+
+class InvalidDeviceError(MosesError):
+    code = 546
+    description = "Device information is not valid."
+
+    def __init__(self, device):
+        super().__init__("Device information is not valid " + repr(device))
+
+
+class InvalidModelError(MosesError):
+    code = 547
+    description = "Model id not recognized."
+
+    def __init__(self, model):
+        super().__init__("Model id not recognized " + model)
 
 
 def encode_error(e: MosesError):
 
-    fields = {
-        "code": (e).code,
-        "description": (e).description,
-        "message": str(e)
-    }
+    fields = {"code": (e).code, "description": (e).description, "message": str(e)}
 
     logging.error("Error: %d %s %s", (e).code, (e).description, str(e))
 
@@ -317,54 +330,17 @@ def encode_error(e: MosesError):
         logging.error(e.exception)
 
     return flask.Response(
-        response=json.dumps(fields),
-        status=(e).code,
-        mimetype="application/json")
+        response=json.dumps(fields), status=(e).code, mimetype="application/json"
+    )
 
 
 def encode_exception(e):
 
-    fields = {
-        "code": 500,
-        "description": "Internal server error",
-        "message": str(e)
-    }
+    fields = {"code": 500, "description": "Internal server error", "message": str(e)}
 
     logging.error(e, exc_info=True)
 
     return flask.Response(
-        response=json.dumps(fields),
-        status=500,
-        mimetype="application/json")
+        response=json.dumps(fields), status=500, mimetype="application/json"
+    )
 
-
-# If we're running in stand alone mode, export the exceptions as yaml
-# definitions that can be pasted in swagger.yaml
-if __name__ == '__main__':
-
-    print("responses:")
-
-    classes = inspect.getmembers(sys.modules[__name__], inspect.isclass)
-    sortedclasses = []
-
-    for c in classes:
-        if MosesError not in c[1].__bases__:
-            continue
-
-        sortedclasses.append(c[1])
-
-    sortedclasses.sort(key=lambda c: c.code)
-
-    p = 0
-
-    for c in sortedclasses:
-
-        if p == c.code:
-            print("Invalid duplicated code: "+str(p))
-            exit()
-
-        p = c
-        print("  "+c.__name__+"_"+str(c.code)+":")
-        print("    description: "+c.description)
-        print("    schema:")
-        print("      $ref: \"#/definitions/ErrorInfo\"")

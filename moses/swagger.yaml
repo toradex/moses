@@ -104,6 +104,10 @@ paths:
           $ref: "#/responses/OSError_534"
         535:
           $ref: "#/responses/InvalidDeviceIdError_535"
+        546:
+          $ref: "#/responses/InvalidDeviceError_546"
+        547:
+          $ref: "#/responses/InvalidModelError_547"          
 
   /devices/serial_detect:
     get:
@@ -149,6 +153,10 @@ paths:
           $ref: "#/responses/TimeoutError_537"
         538:
           $ref: "#/responses/LoginFailedError_538"
+        546:
+          $ref: "#/responses/InvalidDeviceError_546"
+        547:
+          $ref: "#/responses/InvalidModelError_547"
 
   /devices/{device_id}:
 
@@ -863,7 +871,7 @@ paths:
     get:
       operationId: eulas_get
       tags:
-        - EULAs
+        - Eulas
       summary: Get all eulas
       description: Returns all eulas
       responses:
@@ -880,7 +888,7 @@ paths:
     get:
       operationId: eula_get
       tags:
-        - EULAs
+        - Eulas
       summary: Get an eula
       description: Returns data about a specific eula
       parameters:
@@ -898,7 +906,7 @@ paths:
     put:
       operationId: eula_modify
       tags:
-        - EULAs
+        - Eulas
       summary: Change eula properties
       description: Set eula as visualized and/or accepted
       parameters:
@@ -3275,5 +3283,13 @@ responses:
       $ref: "#/definitions/ErrorInfo"
   DNSError_545:
     description: Can't resolve hostname.
+    schema:
+      $ref: "#/definitions/ErrorInfo"
+  InvalidDeviceError_546:
+    description: Device information is not valid.
+    schema:
+      $ref: "#/definitions/ErrorInfo"
+  InvalidModelError_547:
+    description: Model id not recognized.
     schema:
       $ref: "#/definitions/ErrorInfo"

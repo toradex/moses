@@ -7,13 +7,15 @@ import select
 import time
 import dns.resolver
 import socket
+import targetdevice
+from typing import Tuple, Dict, Optional
 
 resolver = dns.resolver.Resolver()
 resolver.nameservers = ["224.0.0.251"]
 resolver.port = 5353
 
 
-def resolve_hostname(hostname: str) -> (str, bool):
+def resolve_hostname(hostname: str) -> Tuple[str, bool]:
     """
     Convert a hostname to ip using dns first and then mdnsself.
     If it does not resolve it, returns the original value (in
@@ -52,12 +54,14 @@ def resolve_hostname(hostname: str) -> (str, bool):
 
 class SharedSSHDockerTunnel(sshtunnel.SSHTunnelForwarder):
 
-    __tunnels = {}
+    __tunnels: Dict[str, "SharedSSHDockerTunnel"] = {}
     __lock = threading.RLock()
     sshtunnel.SSHTunnelForwarder.skip_tunnel_checkup = False
 
     @classmethod
-    def get_tunnel(cls, device):
+    def get_tunnel(
+        cls, device: "targetdevice.TargetDevice"
+    ) -> Optional["SharedSSHDockerTunnel"]:
         """
         Returns an SharedSSHDockerTunnel object,
         allocating it if it's required
@@ -87,24 +91,23 @@ class SharedSSHDockerTunnel(sshtunnel.SSHTunnelForwarder):
 
             timeout = 100
 
-            while (not (tunnel.is_active and tunnel.is_alive)):
+            while not (tunnel.is_active and tunnel.is_alive):
                 time.sleep(0.1)
-                timeout = timeout-1
-                if (timeout == 0):
+                timeout = timeout - 1
+                if timeout == 0:
                     return None
 
-            cls.__tunnels[device.id] = tunnel
+            cls.__tunnels[str(device.id)] = tunnel
             return tunnel
 
-    def __init__(self, device):
+    def __init__(self, device: "targetdevice.TargetDevice"):
 
-        logging.info("SSH - Creating tunnel to " + device.id)
+        logging.info("SSH - Creating tunnel to " + str(device.id))
 
         self.device = device.id
         self.__objlock = threading.RLock()
 
-        k = paramiko.RSAKey.from_private_key(
-            io.StringIO(device.privatekey))
+        k = paramiko.RSAKey.from_private_key(io.StringIO(device.privatekey))
 
         ip, mdns = resolve_hostname(device.hostname)
 
@@ -113,11 +116,12 @@ class SharedSSHDockerTunnel(sshtunnel.SSHTunnelForwarder):
             ssh_username=device.username,
             ssh_pkey=k,
             remote_bind_address=("127.0.0.1", 2375),
-            allow_agent=False)
+            allow_agent=False,
+        )
 
         # otherwise first connection always fails
         self.start()
-        logging.info("SSH - Tunnel to " + device.id + " activated")
+        logging.info("SSH - Tunnel to " + str(device.id) + " activated")
 
     def __enter__(self):
         self.__objlock.acquire()
@@ -153,11 +157,11 @@ class IgnorePolicy(paramiko.MissingHostKeyPolicy):
 
 class SharedSSHClient(paramiko.SSHClient):
 
-    __connections = {}
+    __connections: Dict[str, "SharedSSHClient"] = {}
     __lock = threading.RLock()
 
     @classmethod
-    def get_connection(cls, device):
+    def get_connection(cls, device: "targetdevice.TargetDevice") -> "SharedSSHClient":
         """
         Returns an SSH connection object,
         allocating it if it's required
@@ -179,8 +183,7 @@ class SharedSSHClient(paramiko.SSHClient):
                 except:
                     pass
 
-            k = paramiko.RSAKey.from_private_key(
-                io.StringIO(device.privatekey))
+            k = paramiko.RSAKey.from_private_key(io.StringIO(device.privatekey))
 
             ssh = cls(device.id)
 
@@ -189,15 +192,11 @@ class SharedSSHClient(paramiko.SSHClient):
 
             ip, mdns = resolve_hostname(device.hostname)
 
-            ssh.connect(ip,
-                        22,
-                        username=device.username,
-                        pkey=k,
-                        allow_agent=False)
+            ssh.connect(ip, 22, username=device.username, pkey=k, allow_agent=False)
 
-            logging.info("SSH - Connected to device " + device.id)
+            logging.info("SSH - Connected to device " + str(device.id))
 
-            cls.__connections[device.id] = ssh
+            cls.__connections[str(device.id)] = ssh
             return ssh
 
     def __init__(self, device):
@@ -236,19 +235,16 @@ class SSHForwarder(threading.Thread):
     def run(self):
 
         try:
-            k = paramiko.RSAKey.from_private_key(
-                io.StringIO(self.device.privatekey))
+            k = paramiko.RSAKey.from_private_key(io.StringIO(self.device.privatekey))
 
             self.ssh = paramiko.SSHClient()
             self.ssh.set_missing_host_key_policy(IgnorePolicy())
 
             ip, mdns = resolve_hostname(self.device.hostname)
 
-            self.ssh.connect(ip,
-                             22,
-                             username=self.device.username,
-                             pkey=k,
-                             allow_agent=False)
+            self.ssh.connect(
+                ip, 22, username=self.device.username, pkey=k, allow_agent=False
+            )
 
             channel = self.ssh.invoke_shell()
 
@@ -293,7 +289,6 @@ class SSHForwarder(threading.Thread):
 
 
 class SSHListenThread(threading.Thread):
-
     def __init__(self, port, device):
         super().__init__()
 
@@ -316,9 +311,7 @@ class SSHListenThread(threading.Thread):
 
         while True:
             client = self.socket.accept()[0]
-            forwarder = SSHForwarder(self,
-                                     client,
-                                     self.device)
+            forwarder = SSHForwarder(self, client, self.device)
             self.clients.append(forwarder)
             forwarder.start()
 

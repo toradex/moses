@@ -9,6 +9,7 @@ import singleton
 import targetdevice
 import exceptions
 import eula
+from typing import Optional, List, Dict
 
 
 class PlatformConfig(config.ConfigurableObject):
@@ -28,101 +29,43 @@ class PlatformConfig(config.ConfigurableObject):
         super().__init__(folder)
 
         self.standard = standard
-        self.version = None
-        self.name = None
-        self.description = None
+        self.version = ""
+        self.name = ""
+        self.description = ""
         self.usesysroots = False
-        self.sysroots = None
-        self.sdkcontainer = None
+        self.sysroots: Dict[str, List[str]] = None
+        self.sdkcontainer: Optional[str] = None
         self.usesdk = False
         self.supportedmodels = ["*"]
         self.unsupportedmodels = []
-        self.container = {
-            "common": None,
-            "debug": None,
-            "release": None
-        }
+        self.container = {"common": None, "debug": None, "release": None}
 
-        self.baseimage = {
-            "common": None,
-            "debug": None,
-            "release": None
-        }
+        self.baseimage = {"common": None, "debug": None, "release": None}
 
-        self.sdkcontainer = {
-            "common": None,
-            "debug": None,
-            "release": None
-        }
+        self.sdkcontainer = {"common": None, "debug": None, "release": None}
 
-        self.sdkbaseimage = {
-            "common": None,
-            "debug": None,
-            "release": None
-        }
+        self.sdkbaseimage = {"common": None, "debug": None, "release": None}
         self.sdkcontainerusername = "build"
         self.sdkcontainerpassword = "build"
 
         self.privileged = False
-        self.ports = {
-            "common": {},
-            "debug": {},
-            "release": {}
-        }
-        self.volumes = {
-            "common": {},
-            "debug": {},
-            "release": {}
-        }
-        self.devices = {
-            "common": [],
-            "debug": [],
-            "release": []
-        }
+        self.ports = {"common": {}, "debug": {}, "release": {}}
+        self.volumes = {"common": {}, "debug": {}, "release": {}}
+        self.devices = {"common": [], "debug": [], "release": []}
 
-        self.extraparms = {
-            "common": {},
-            "debug": {},
-            "release": {}
-        }
+        self.extraparms = {"common": {}, "debug": {}, "release": {}}
 
-        self.dockercompose = {
-            "common": None,
-            "debug": None,
-            "release": None
-        }
+        self.dockercompose = {"common": None, "debug": None, "release": None}
 
-        self.startupscript = {
-            "common": None,
-            "debug": None,
-            "release": None
-        }
+        self.startupscript = {"common": None, "debug": None, "release": None}
 
-        self.shutdownscript = {
-            "common": None,
-            "debug": None,
-            "release": None
-        }
+        self.shutdownscript = {"common": None, "debug": None, "release": None}
 
-        self.props = {
-            "common":
-            {
-            },
-            "debug":
-            {
-            },
-            "release":
-            {
-            }
-        }
+        self.props = {"common": {}, "debug": {}, "release": {}}
 
         self.runtimes = []
 
-        self.networks = {
-            "common": [],
-            "debug": [],
-            "release": []
-        }
+        self.networks = {"common": [], "debug": [], "release": []}
 
         self.tags = []
         self.eulas = []
@@ -133,9 +76,9 @@ class PlatformConfig(config.ConfigurableObject):
 
     def _build_folder_path(self) -> Path:
         if not self.standard:
-            return config.SERVER_CONFIG["platformspath"] / self.id
+            return config.ServerConfig().platformspath / self.id
         else:
-            return config.SERVER_CONFIG["standardplatformspath"] / self.id
+            return config.ServerConfig().standardplatformspath / self.id
 
     def destroy(self):
         if self.standard:
@@ -151,7 +94,7 @@ class PlatformConfig(config.ConfigurableObject):
 
         super().save()
 
-    def is_valid(self, fields=None) -> bool:
+    def is_valid(self, fields: dict = None) -> bool:
         """Validate fields of current object
 
         Arguments:
@@ -165,66 +108,84 @@ class PlatformConfig(config.ConfigurableObject):
         if fields is None:
             fields = self.__dict__
 
-        if fields["container"]["common"] is None and \
-           fields["container"]["release"] is None:
-            logging.error(
-                "Release container not defined in plaform %s.", self.id)
+        if (
+            fields["container"]["common"] is None
+            and fields["container"]["release"] is None
+        ):
+            logging.error("Release container not defined in plaform %s.", self.id)
             return False
 
-        if fields["container"]["common"] is None and \
-           fields["container"]["debug"] is None:
-            logging.error(
-                "Debug container not defined in plaform %s.", self.id)
+        if (
+            fields["container"]["common"] is None
+            and fields["container"]["debug"] is None
+        ):
+            logging.error("Debug container not defined in plaform %s.", self.id)
             return False
 
         if fields["usesdk"]:
 
-            if fields["sdkbaseimage"]["common"] is None and \
-                    fields["sdkbaseimage"]["release"] is None:
+            if (
+                fields["sdkbaseimage"]["common"] is None
+                and fields["sdkbaseimage"]["release"] is None
+            ):
                 logging.error(
-                    "Release sdk base image not defined in plaform %s.", self.id)
+                    "Release sdk base image not defined in plaform %s.", self.id
+                )
                 return False
 
-            if fields["sdkbaseimage"]["common"] is None and \
-                    fields["sdkbaseimage"]["debug"] is None:
+            if (
+                fields["sdkbaseimage"]["common"] is None
+                and fields["sdkbaseimage"]["debug"] is None
+            ):
                 logging.error(
-                    "Debug sdk base image not defined in plaform %s.", self.id)
+                    "Debug sdk base image not defined in plaform %s.", self.id
+                )
                 return False
 
             if fields["usesysroot"]:
                 if fields["sysroots"] is None or type(fields["sysroots"]) is not dict:
-                        return False
+                    return False
 
                 for k in fields["sysroots"].keys():
-                    if fields["sysroots"][k] is None or \
-                            len(fields["sysroots"][k]) == 0:
+                    if fields["sysroots"][k] is None or len(fields["sysroots"][k]) == 0:
                         fields["sysroots"][k] = ["/"]
                     else:
                         for r in fields["sysroots"][k]:
                             if not r.startswith("/"):
                                 logging.error(
-                                    "Platform sysroots must be absolute paths in plaform %s.", self.id)
+                                    "Platform sysroots must be absolute paths in plaform %s.",
+                                    self.id,
+                                )
                                 return False
 
-                    fields["sysroots"][k] = list(map(
-                        lambda r: r[:-1] if r.endswith("/") else r,
-                        fields["sysroots"][k]))
+                    fields["sysroots"][k] = list(
+                        map(
+                            lambda r: r[:-1] if r.endswith("/") else r,
+                            fields["sysroots"][k],
+                        )
+                    )
             else:
-                if fields["sdkcontainer"]["common"] is None and \
-                        fields["sdkcontainer"]["release"] is None:
+                if (
+                    fields["sdkcontainer"]["common"] is None
+                    and fields["sdkcontainer"]["release"] is None
+                ):
                     logging.error(
-                        "Release sdk container not defined in plaform %s.", self.id)
+                        "Release sdk container not defined in plaform %s.", self.id
+                    )
                     return False
 
-                if fields["sdkcontainer"]["common"] is None and \
-                        fields["sdkcontainer"]["debug"] is None:
+                if (
+                    fields["sdkcontainer"]["common"] is None
+                    and fields["sdkcontainer"]["debug"] is None
+                ):
                     logging.error(
-                        "Debug sdk container not defined in plaform %s.", self.id)
+                        "Debug sdk container not defined in plaform %s.", self.id
+                    )
                     return False
 
         return True
 
-    def supports_model(self, model) -> bool:
+    def supports_model(self, model: str) -> bool:
         """Checks if this platform support a specific HW model
 
         Arguments:
@@ -241,7 +202,7 @@ class PlatformConfig(config.ConfigurableObject):
 
         return model in self.supportedmodels
 
-    def get_prop(self, configuration: str, prop: str):
+    def get_prop(self, configuration: str, prop: str) -> Optional[str]:
         """Return configuration-specific property or common one
         if the specific one is not available
 
@@ -255,11 +216,11 @@ class PlatformConfig(config.ConfigurableObject):
             return self.__dict__[prop]["common"]
         return None
 
-    def check_device_compatibility(self, device) -> bool:
+    def check_device_compatibility(self, device: targetdevice.TargetDevice) -> bool:
         """Checks if a device is compatible with this platform
 
         Arguments:
-            device {TargetDevice} -- device
+            device {targetdevice.TargetDevice} -- device
 
         Returns:
             bool -- true is device is compatible
@@ -276,23 +237,27 @@ class PlatformConfig(config.ConfigurableObject):
 
         return False
 
-    def get_compatible_devices(self) -> list:
+    def get_compatible_devices(self) -> List[targetdevice.TargetDevice]:
         """Returns a list of devices that are compabile with the platform
 
         Returns:
             list -- list of targetdevice.TargetDevice objects
         """
-        return [d for d in targetdevice.TargetDevices().values() if self.check_device_compatibility(d)]
+        return [
+            d
+            for d in targetdevice.TargetDevices().values()
+            if self.check_device_compatibility(d)
+        ]
 
 
-class PlatformConfigs(dict, metaclass=singleton.Singleton):
+class PlatformConfigs(Dict[str, PlatformConfig], metaclass=singleton.Singleton):
     """Class used to manage the collection of platforms
     """
 
     def __init__(self):
         """ Iterates on all platforms in standard and custom folders
         """
-        path = config.SERVER_CONFIG["standardplatformspath"]
+        path = config.ServerConfig().standardplatformspath
 
         subfolders = [dir for dir in path.iterdir() if dir.is_dir()]
 
@@ -301,11 +266,13 @@ class PlatformConfigs(dict, metaclass=singleton.Singleton):
                 plat = PlatformConfig(dir, True)
                 self[plat.id] = plat
             except Exception as e:
-                logging.exception("Can't create platform from folder %s."
-                                  "Error: %s",
-                                  str(dir), str(e))
+                logging.exception(
+                    "Can't create platform from folder %s." "Error: %s",
+                    str(dir),
+                    str(e),
+                )
 
-        path = config.SERVER_CONFIG["platformspath"]
+        path = config.ServerConfig().platformspath
 
         subfolders = [dir for dir in path.iterdir() if dir.is_dir()]
 
@@ -314,10 +281,14 @@ class PlatformConfigs(dict, metaclass=singleton.Singleton):
                 plat = PlatformConfig(dir, False)
                 self[plat.id] = plat
             except:
-                logging.exception("Can't create platform from folder %s.",
-                                  str(dir))
+                logging.exception("Can't create platform from folder %s.", str(dir))
 
-    def __delitem__(self, key):
+    def __delitem__(self, key: str):
+        """Removes a platform given its id
+
+        Args:
+            key (str): id
+        """
         if key not in self:
             return
 
@@ -325,12 +296,23 @@ class PlatformConfigs(dict, metaclass=singleton.Singleton):
         dict.__delitem__(self, key)
 
     def get_platform(self, platformid: str) -> PlatformConfig:
+        """Returns a platform give its id
+
+        Args:
+            platformid (str): id
+
+        Raises:
+            exceptions.PlatformDoesNotExistError: [description]
+
+        Returns:
+            PlatformConfig: [description]
+        """
         if platformid not in self:
             raise exceptions.PlatformDoesNotExistError(platformid)
 
         return self[platformid]
 
-    def get_platforms(self, runtime: str) -> list:
+    def get_platforms(self, runtime: Optional[str]) -> List[PlatformConfig]:
         """Return a list of plaforms supporting a specific runtime
 
         Arguments:
@@ -352,7 +334,11 @@ class PlatformConfigs(dict, metaclass=singleton.Singleton):
             for e in plat.eulas:
                 if e in eulas:
                     if not eulas[e].accepted:
-                        logging.warning("Platform %s can't be used because EULA %s has not been accepted.", plat.id, e)
+                        logging.warning(
+                            "Platform %s can't be used because EULA %s has not been accepted.",
+                            plat.id,
+                            e,
+                        )
                         eulaaccepted = False
                         break
 

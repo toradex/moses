@@ -10,13 +10,15 @@ import logging
 import io
 import exceptions
 import sharedssh
+import targetdevice
+from typing import Optional
 
 
 class SSHConsole(console.GenericConsole):
     """SSH console
     """
 
-    def __init__(self, device):
+    def __init__(self, device: str):
         """Must be re-defined in subclasses
         Arguments:
             device {str} -- hostname
@@ -28,10 +30,10 @@ class SSHConsole(console.GenericConsole):
             self.hostname = device
             self.port = 22
 
-        self.ssh = None
-        self.channel = None
+        self.ssh: paramiko.SSHClient = None
+        self.channel: paramiko.Channel = None
 
-    def send_cmd(self, command, timeout=30) -> str:
+    def send_cmd(self, command: str, timeout: int = 30) -> str:
         """Sends a command to the device and returns its output
 
         Arguments:
@@ -48,8 +50,7 @@ class SSHConsole(console.GenericConsole):
         output = error = ""
 
         try:
-            _, stdout, stderr = self.ssh.exec_command(command,
-                                                      timeout=5)
+            _, stdout, stderr = self.ssh.exec_command(command, timeout=5)
 
             output = stdout.read().decode("utf-8")
             error = stderr.read().decode("utf-8")
@@ -59,9 +60,11 @@ class SSHConsole(console.GenericConsole):
         except socket.timeout:
             pass
 
-        return (output+error).strip()
+        return (output + error).strip()
 
-    def wait_for_prompt(self, channel, prompt=None, timeout=30):
+    def wait_for_prompt(
+        self, channel: paramiko.Channel, prompt: str, timeout: int = 30
+    ) -> None:
         """Wait until the specific string is received
 
         Keyword Arguments:
@@ -70,9 +73,6 @@ class SSHConsole(console.GenericConsole):
             timeout {int} -- timeout in seconds (default: {30})
         """
         output = ""
-
-        if prompt is None:
-            prompt = self._prompt
 
         channel.send("\n".encode("utf-8"))
 
@@ -88,7 +88,7 @@ class SSHConsole(console.GenericConsole):
                 continue
         return
 
-    def login(self, username, password, timeout=60):
+    def login(self, username: str, password: str, timeout: int = 60) -> None:
         """Tries to login user and configures prompt
 
         Arguments:
@@ -113,11 +113,13 @@ class SSHConsole(console.GenericConsole):
 
         try:
 
-            self.ssh.connect(self.hostname,
-                             port=self.port,
-                             username=username,
-                             password=password,
-                             allow_agent=False)
+            self.ssh.connect(
+                self.hostname,
+                port=self.port,
+                username=username,
+                password=password,
+                allow_agent=False,
+            )
 
             channel = self.ssh.invoke_shell()
 
@@ -125,7 +127,7 @@ class SSHConsole(console.GenericConsole):
 
             while not channel.recv_ready():
                 time.sleep(1)
-                if time.time() > start+timeout:
+                if time.time() > start + timeout:
                     raise exceptions.TimeoutError()
 
             prompt = channel.recv(4096).decode("utf-8")
@@ -140,15 +142,18 @@ class SSHConsole(console.GenericConsole):
                 channel.send("thispasswordwontlast".encode("utf-8"))
 
                 self.wait_for_prompt(
-                    channel, "passwd: password updated successfully\r\n")
+                    channel, "passwd: password updated successfully\r\n"
+                )
 
                 self.ssh.close()
 
-                self.ssh.connect(self.hostname,
-                                 port=self.port,
-                                 username=username,
-                                 password="thispasswordwontlast",
-                                 allow_agent=False)
+                self.ssh.connect(
+                    self.hostname,
+                    port=self.port,
+                    username=username,
+                    password="thispasswordwontlast",
+                    allow_agent=False,
+                )
 
                 channel = self.ssh.invoke_shell()
                 channel.send("passwd".encode("utf-8"))
@@ -159,22 +164,25 @@ class SSHConsole(console.GenericConsole):
                 self.wait_for_prompt(channel, "Retype new password: ")
                 channel.send(password.encode("utf-8"))
                 self.wait_for_prompt(
-                    channel, "passwd: password updated successfully\r\n")
+                    channel, "passwd: password updated successfully\r\n"
+                )
 
                 self.ssh.close()
 
-                self.ssh.connect(self.hostname,
-                                 port=self.port,
-                                 username=username,
-                                 password=password,
-                                 allow_agent=False)
+                self.ssh.connect(
+                    self.hostname,
+                    port=self.port,
+                    username=username,
+                    password=password,
+                    allow_agent=False,
+                )
 
         except paramiko.SSHException as e:
             raise exceptions.SSHError(e)
         except OSError as e:
             raise exceptions.OSError(e)
 
-    def connect(self, username, key):
+    def connect(self, username: str, key: str) -> None:
         """Connects to device using keys
 
         Arguments:
@@ -186,11 +194,13 @@ class SSHConsole(console.GenericConsole):
             self.ssh = paramiko.SSHClient()
             self.ssh.set_missing_host_key_policy(paramiko.AutoAddPolicy())
 
-            self.ssh.connect(self.hostname,
-                             port=self.port,
-                             username=username,
-                             pkey=k,
-                             allow_agent=False)
+            self.ssh.connect(
+                self.hostname,
+                port=self.port,
+                username=username,
+                pkey=k,
+                allow_agent=False,
+            )
 
         except paramiko.SSHException as e:
             raise exceptions.SSHError(e)

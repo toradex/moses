@@ -13,16 +13,22 @@ import platformconfig
 import config
 import exceptions
 import flask
+from typing import Any, Optional, Dict
 
 APP_VERSION = "1.0"
 API_VERSION = "1.0"
 
 
+# validation of readonly fields is done internally
 def remove_readonly(validator, ro, instance, schema):
     return
 
 
 class CustomJSONEncoder(connexion.apps.flask_app.FlaskJSONEncoder):
+    """Used to encode internal objects to json, this will allow the
+    objects to return only specific fields, keep implementation fields 
+    hidden
+    """
 
     def default(self, obj):  # pylint: disable=E0202
         to_json = getattr(obj, "_to_json", None)
@@ -32,6 +38,11 @@ class CustomJSONEncoder(connexion.apps.flask_app.FlaskJSONEncoder):
 
 
 class ApiResolver(connexion.Resolver):
+    """Resolves url to a function inside this module
+
+    Args:
+        connexion ([type]): [description]
+    """
 
     def resolve(self, operation):
         """Generates a function name from an operation path
@@ -60,25 +71,23 @@ class ApiResolver(connexion.Resolver):
 
             function += item
 
-        function += "_"+operation.method
+        function += "_" + operation.method
         return connexion.Resolution(
-            connexion.utils.get_function_from_name(function),
-            function)
+            connexion.utils.get_function_from_name(function), function
+        )
 
 
-def version_get() -> dict:
+def version_get() -> Any:
     """Returns version information
 
     Returns:
         dict -- app_version and api_version as strings
     """
 
-    return {"app_version": APP_VERSION,
-            "api_version": API_VERSION
-            }
+    return {"app_version": APP_VERSION, "api_version": API_VERSION}
 
 
-def version_docker_get():
+def version_docker_get() -> Any:
     """Returns docker version information
 
     Returns: Docker information
@@ -92,11 +101,11 @@ def version_docker_get():
         return ("Docker not responding", 500)
 
 
-def devices_get():
+def devices_get() -> Any:
     """Returns the list of devices
 
     Returns:
-        dict -- devices
+        list -- devices
     """
     deviceslist = []
 
@@ -107,7 +116,7 @@ def devices_get():
     return deviceslist
 
 
-def devices_serial_detect_get(port, username, password):
+def devices_serial_detect_get(port: str, username: str, password: str) -> Any:
     """Detects a serial device on the specified port
 
     Arguments:
@@ -121,7 +130,7 @@ def devices_serial_detect_get(port, username, password):
     return (dev, 200)
 
 
-def devices_network_detect_get(hostname, username, password):
+def devices_network_detect_get(hostname: str, username: str, password: str) -> Any:
     """Detects a network device
 
     Arguments:
@@ -135,7 +144,7 @@ def devices_network_detect_get(hostname, username, password):
     return (dev, 200)
 
 
-def devices_device_get(device_id):
+def devices_device_get(device_id: str) -> Any:
     """Returns a device given its id
 
     Arguments:
@@ -152,7 +161,7 @@ def devices_device_get(device_id):
     return devices[device_id]
 
 
-def devices_device_put(device_id, device):
+def devices_device_put(device_id: str, device: Dict[str, Any]) -> Any:
     """Changes device properties
 
     Arguments:
@@ -171,7 +180,7 @@ def devices_device_put(device_id, device):
     return dev
 
 
-def devices_device_delete(device_id):
+def devices_device_delete(device_id: str) -> Any:
     """Removes a device given its id
 
     Arguments:
@@ -189,7 +198,7 @@ def devices_device_delete(device_id):
     return (connexion.NoContent, 204)
 
 
-def devices_device_update_get(device_id):
+def devices_device_update_get(device_id: str) -> Any:
     """Retrieves updated device information from network
     """
     devices = targetdevice.TargetDevices()
@@ -201,73 +210,73 @@ def devices_device_update_get(device_id):
     return (devices[device_id], 200)
 
 
-def devices_device_docker_open_get(device_id, port=0):
+def devices_device_docker_open_get(device_id: str, port: int = 0) -> Any:
     devices = targetdevice.TargetDevices()
 
     if device_id not in devices:
         return ("Device not found", 404)
 
-    device = devices.get(device_id)
-    port = device.expose_docker(port)
-    return (port, 200)
+    device = devices[device_id]
+    hostport = device.expose_docker(port)
+    return (hostport, 200)
 
 
-def devices_device_docker_close_get(device_id):
+def devices_device_docker_close_get(device_id: str) -> Any:
     devices = targetdevice.TargetDevices()
 
     if device_id not in devices:
         return ("Device not found", 404)
 
-    device = devices.get(device_id)
+    device = devices[device_id]
     device.stop_exposing_docker()
     return (connexion.NoContent, 200)
 
 
-def devices_device_docker_port_get(device_id):
+def devices_device_docker_port_get(device_id: str) -> Any:
     devices = targetdevice.TargetDevices()
 
     if device_id not in devices:
         return ("Device not found", 404)
 
-    device = devices.get(device_id)
+    device = devices[device_id]
     port = device.get_docker_port()
     return (port, 200)
 
 
-def devices_device_ssh_open_get(device_id, port=0):
+def devices_device_ssh_open_get(device_id: str, port: int = 0) -> Any:
     devices = targetdevice.TargetDevices()
 
     if device_id not in devices:
         return ("Device not found", 404)
 
-    device = devices.get(device_id)
+    device = devices[device_id]
     port = device.expose_ssh(port)
     return (port, 200)
 
 
-def devices_device_ssh_close_get(device_id):
+def devices_device_ssh_close_get(device_id: str) -> Any:
     devices = targetdevice.TargetDevices()
 
     if device_id not in devices:
         return ("Device not found", 404)
 
-    device = devices.get(device_id)
+    device = devices[device_id]
     device.stop_exposing_ssh()
     return (connexion.NoContent, 200)
 
 
-def devices_device_ssh_port_get(device_id):
+def devices_device_ssh_port_get(device_id: str) -> Any:
     devices = targetdevice.TargetDevices()
 
     if device_id not in devices:
         return ("Device not found", 404)
 
-    device = devices.get(device_id)
+    device = devices[device_id]
     port = device.get_ssh_port()
     return (port, 200)
 
 
-def devices_device_processes_get(device_id):
+def devices_device_processes_get(device_id: str) -> Any:
     devices = targetdevice.TargetDevices()
 
     if device_id not in devices:
@@ -278,7 +287,7 @@ def devices_device_processes_get(device_id):
     return (processes, 200)
 
 
-def devices_device_memory_get(device_id):
+def devices_device_memory_get(device_id: str) -> Any:
     devices = targetdevice.TargetDevices()
 
     if device_id not in devices:
@@ -287,7 +296,7 @@ def devices_device_memory_get(device_id):
     return (devices[device_id].get_memoryinfo(), 200)
 
 
-def devices_device_storage_get(device_id):
+def devices_device_storage_get(device_id: str) -> Any:
     devices = targetdevice.TargetDevices()
 
     if device_id not in devices:
@@ -298,7 +307,7 @@ def devices_device_storage_get(device_id):
     return (mountpoints, 200)
 
 
-def devices_device_images_get(device_id):
+def devices_device_images_get(device_id: str) -> Any:
     """Returns a list of the containers running on a specific device
 
     Arguments:
@@ -310,12 +319,15 @@ def devices_device_images_get(device_id):
         return ("Device not found", 404)
 
     images = devices[device_id].get_images()
-    images.sort(key=lambda x: x["RepoTags"][0] if (
-        "RepoTags" in x.keys() and len(x["RepoTags"]) > 0) else "~"+x["Id"])
+    images.sort(
+        key=lambda x: x["RepoTags"][0]
+        if ("RepoTags" in x.keys() and len(x["RepoTags"]) > 0)
+        else "~" + x["Id"]
+    )
     return (images, 200)
 
 
-def devices_device_images_image_get(device_id, image_id):
+def devices_device_images_image_get(device_id: str, image_id: str) -> Any:
     devices = targetdevice.TargetDevices()
 
     if device_id not in devices:
@@ -328,18 +340,18 @@ def devices_device_images_image_get(device_id, image_id):
     return (image.attrs, 200)
 
 
-def devices_device_images_image_delete(device_id, image_id):
+def devices_device_images_image_delete(device_id: str, image_id: str) -> Any:
     devices = targetdevice.TargetDevices()
 
     if device_id not in devices:
         return ("Device not found", 404)
 
-    device = devices.get(device_id)
+    device = devices[device_id]
     device.remove_image(image_id)
     return (connexion.NoContent, 204)
 
 
-def devices_device_containers_get(device_id):
+def devices_device_containers_get(device_id: str) -> Any:
     """Returns a list of the containers running on a specific device
 
     Arguments:
@@ -351,12 +363,15 @@ def devices_device_containers_get(device_id):
         return ("Device not found", 404)
 
     containers = devices[device_id].get_containers()
-    containers.sort(key=lambda x: x["Name"]
-                    if ("Name" in x.keys() and x["Name"] is not None) else "~"+x["Id"])
+    containers.sort(
+        key=lambda x: x["Name"]
+        if ("Name" in x.keys() and x["Name"] is not None)
+        else "~" + x["Id"]
+    )
     return (containers, 200)
 
 
-def devices_device_containers_container_get(device_id, container_id):
+def devices_device_containers_container_get(device_id: str, container_id: str) -> Any:
     devices = targetdevice.TargetDevices()
 
     if device_id not in devices:
@@ -369,40 +384,48 @@ def devices_device_containers_container_get(device_id, container_id):
     return (container.attrs, 200)
 
 
-def devices_device_containers_container_delete(device_id, container_id):
+def devices_device_containers_container_delete(
+    device_id: str, container_id: str
+) -> Any:
     devices = targetdevice.TargetDevices()
 
     if device_id not in devices:
         return ("Device not found", 404)
 
-    device = devices.get(device_id)
+    device = devices[device_id]
     device.remove_container(container_id)
     return (connexion.NoContent, 204)
 
 
-def devices_device_containers_container_start_get(device_id, container_id):
+def devices_device_containers_container_start_get(
+    device_id: str, container_id: str
+) -> Any:
     devices = targetdevice.TargetDevices()
 
     if device_id not in devices:
         return ("Device not found", 404)
 
-    device = devices.get(device_id)
+    device = devices[device_id]
     container = device.start_container(container_id)
     return (container.attrs, 200)
 
 
-def devices_device_containers_container_stop_get(device_id, container_id):
+def devices_device_containers_container_stop_get(
+    device_id: str, container_id: str
+) -> Any:
     devices = targetdevice.TargetDevices()
 
     if device_id not in devices:
         return ("Device not found", 404)
 
-    device = devices.get(device_id)
+    device = devices[device_id]
     container = device.stop_container(container_id)
     return (container.attrs, 200)
 
 
-def devices_device_containers_container_processes_get(device_id, container_id):
+def devices_device_containers_container_processes_get(
+    device_id: str, container_id: str
+) -> Any:
     devices = targetdevice.TargetDevices()
 
     if device_id not in devices:
@@ -413,7 +436,9 @@ def devices_device_containers_container_processes_get(device_id, container_id):
     return (processes, 200)
 
 
-def devices_device_containers_container_memory_get(device_id, container_id):
+def devices_device_containers_container_memory_get(
+    device_id: str, container_id: str
+) -> Any:
     devices = targetdevice.TargetDevices()
 
     if device_id not in devices:
@@ -422,7 +447,9 @@ def devices_device_containers_container_memory_get(device_id, container_id):
     return (devices[device_id].get_container_memoryinfo(container_id), 200)
 
 
-def devices_device_containers_container_storage_get(device_id, container_id):
+def devices_device_containers_container_storage_get(
+    device_id: str, container_id: str
+) -> Any:
     devices = targetdevice.TargetDevices()
 
     if device_id not in devices:
@@ -433,7 +460,9 @@ def devices_device_containers_container_storage_get(device_id, container_id):
     return (mountpoints, 200)
 
 
-def devices_device_containers_container_logs_get(device_id, container_id, restart):
+def devices_device_containers_container_logs_get(
+    device_id: str, container_id: str, restart: bool
+) -> Any:
     devices = targetdevice.TargetDevices()
 
     if device_id not in devices:
@@ -448,7 +477,7 @@ def devices_device_containers_container_logs_get(device_id, container_id, restar
     return (line, 200)
 
 
-def devices_device_privatekey_get(device_id):
+def devices_device_privatekey_get(device_id: str) -> Any:
     devices = targetdevice.TargetDevices()
 
     if device_id not in devices:
@@ -457,7 +486,9 @@ def devices_device_privatekey_get(device_id):
     return (devices[device_id].get_privatekeypath(), 200)
 
 
-def devices_device_syncfolders_get(device_id, sourcefolder, destfolder):
+def devices_device_syncfolders_get(
+    device_id: str, sourcefolder: str, destfolder: str
+) -> Any:
     """Syncs a folder on the host with one on the target device
 
     Arguments:
@@ -474,7 +505,7 @@ def devices_device_syncfolders_get(device_id, sourcefolder, destfolder):
     return (connexion.NoContent, 200)
 
 
-def devices_device_current_ip_get(device_id):
+def devices_device_current_ip_get(device_id: str) -> Any:
     """Syncs a folder on the host with one on the target device
 
     Arguments:
@@ -487,21 +518,23 @@ def devices_device_current_ip_get(device_id):
 
     return (devices[device_id].get_current_ip(), 200)
 
-def eulas_get():
+
+def eulas_get() -> Any:
     """Returns a list of eulas
 
     Returns:
         [list] -- eulas
     """
 
-    eulas=eula.EULAs()
+    eulas = eula.EULAs()
 
-    eulalist=list(eulas.values())
+    eulalist = list(eulas.values())
     eulalist.sort(key=lambda x: x.title)
 
     return eulalist
 
-def eulas_eula_get(eula_id):
+
+def eulas_eula_get(eula_id: str) -> Any:
     """Returns an eula given its id
 
     Arguments:
@@ -519,7 +552,8 @@ def eulas_eula_get(eula_id):
     e = eulas.get(eula_id)
     return e
 
-def eulas_eula_put(eula_id, e):
+
+def eulas_eula_put(eula_id: str, e: Dict[str, Any]) -> Any:
     """Changes device properties
 
     Arguments:
@@ -537,12 +571,12 @@ def eulas_eula_put(eula_id, e):
     eulaupdated.save()
     return eulaupdated
 
-def platforms_get(runtime=None):
+
+def platforms_get(runtime: Optional[str] = None) -> Any:
     """Returns a list of platforms
 
     Arguments:
-        standard {bool} -- standard, if specified can be used to
-                           select only standard/non-standard platforms
+        runtime {str} -- return only platform that support the specified runtime
 
     Returns:
         [list] -- platforms
@@ -556,7 +590,7 @@ def platforms_get(runtime=None):
     return platformslist
 
 
-def platforms_platform_get(platform_id):
+def platforms_platform_get(platform_id: str) -> Any:
     """Returns a platform given its id
 
     Arguments:
@@ -571,11 +605,10 @@ def platforms_platform_get(platform_id):
     if platform_id not in platforms:
         return ("Platform not found", 404)
 
-    platform = platforms.get(platform_id)
-    return platform
+    return platforms[platform_id]
 
 
-def platforms_platform_compatibledevices_get(platform_id):
+def platforms_platform_compatibledevices_get(platform_id: str) -> Any:
     """Returns a list of devices that are compatible with the selected platform
 
     Arguments:
@@ -589,13 +622,13 @@ def platforms_platform_compatibledevices_get(platform_id):
     if platform_id not in platforms:
         return ("Platform not found", 404)
 
-    platform = platforms.get(platform_id)
+    platform = platforms[platform_id]
     deviceslist = platform.get_compatible_devices()
     deviceslist.sort(key=lambda x: x.name)
     return deviceslist
 
 
-def applications_create_get(platform_id, path, username):
+def applications_create_get(platform_id: str, path: str, username: str) -> Any:
     """Creates a new application
 
     Arguments:
@@ -608,13 +641,13 @@ def applications_create_get(platform_id, path, username):
     if platform_id not in platforms:
         return ("Platform not found", 404)
 
-    app = applications.create_new_application(pathlib.Path(path),
-                                              platforms[platform_id],
-                                              username)
+    app = applications.create_new_application(
+        pathlib.Path(path), platforms[platform_id], username
+    )
     return (app, 200)
 
 
-def applications_load_get(path):
+def applications_load_get(path: str) -> Any:
     """Loads an existing application
 
     Arguments:
@@ -623,11 +656,10 @@ def applications_load_get(path):
     """
     applications = applicationconfig.ApplicationConfigs()
 
-    return (applications.load_application(pathlib.Path(path)),
-            200)
+    return (applications.load_application(pathlib.Path(path)), 200)
 
 
-def applications_application_get(application_id):
+def applications_application_get(application_id: str) -> Any:
     """Returns an application given its id
 
     Arguments:
@@ -645,7 +677,9 @@ def applications_application_get(application_id):
     return (applications[application_id], 200)
 
 
-def applications_application_put(application_id, application):
+def applications_application_put(
+    application_id: str, application: Dict[str, Any]
+) -> Any:
     """Changes application properties
 
     Arguments:
@@ -665,7 +699,7 @@ def applications_application_put(application_id, application):
     return app
 
 
-def applications_application_delete(application_id):
+def applications_application_delete(application_id: str) -> Any:
     """Changes application properties
 
     Arguments:
@@ -682,7 +716,9 @@ def applications_application_delete(application_id):
     return (connexion.NoContent, 204)
 
 
-def applications_application_updated_get(application_id, configuration):
+def applications_application_updated_get(
+    application_id: str, configuration: str
+) -> Any:
     """check if container is up to date
 
     Arguments:
@@ -699,7 +735,7 @@ def applications_application_updated_get(application_id, configuration):
     return (False, 200)
 
 
-def applications_application_build_get(application_id, configuration):
+def applications_application_build_get(application_id: str, configuration: str) -> Any:
     """builds the application container
 
     Arguments:
@@ -715,7 +751,9 @@ def applications_application_build_get(application_id, configuration):
     return (connexion.NoContent, 200)
 
 
-def applications_application_deploy_get(application_id, configuration, deviceid):
+def applications_application_deploy_get(
+    application_id: str, configuration: str, deviceid: str
+) -> Any:
     """deploys the application container
 
     Arguments:
@@ -728,7 +766,7 @@ def applications_application_deploy_get(application_id, configuration, deviceid)
     if application_id not in applications:
         return ("Application not found", 404)
 
-    app = applications.get(application_id)
+    app = applications[application_id]
 
     devices = targetdevice.TargetDevices()
 
@@ -740,7 +778,9 @@ def applications_application_deploy_get(application_id, configuration, deviceid)
     return (connexion.NoContent, 200)
 
 
-def applications_application_run_get(application_id, configuration, deviceid):
+def applications_application_run_get(
+    application_id: str, configuration: str, deviceid: str
+) -> Any:
     """runs the application container
 
     Arguments:
@@ -753,7 +793,7 @@ def applications_application_run_get(application_id, configuration, deviceid):
     if application_id not in applications:
         return ("Application not found", 404)
 
-    app = applications.get(application_id)
+    app = applications[application_id]
 
     devices = targetdevice.TargetDevices()
 
@@ -764,7 +804,9 @@ def applications_application_run_get(application_id, configuration, deviceid):
     return (container, 200)
 
 
-def applications_application_stop_get(application_id, configuration, deviceid):
+def applications_application_stop_get(
+    application_id: str, configuration: str, deviceid: str
+) -> Any:
     """stops the application container
 
     Arguments:
@@ -777,7 +819,7 @@ def applications_application_stop_get(application_id, configuration, deviceid):
     if application_id not in applications:
         return ("Application not found", 404)
 
-    app = applications.get(application_id)
+    app = applications[application_id]
 
     devices = targetdevice.TargetDevices()
 
@@ -789,7 +831,8 @@ def applications_application_stop_get(application_id, configuration, deviceid):
 
 
 def applications_application_container_get(
-        application_id, configuration, deviceid):
+    application_id: str, configuration: str, deviceid: str
+) -> Any:
     """Returns app currently running container
 
     Arguments:
@@ -802,18 +845,20 @@ def applications_application_container_get(
     if application_id not in applications:
         return ("Application not found", 404)
 
-    app = applications.get(application_id)
+    app = applications[application_id]
 
     devices = targetdevice.TargetDevices()
 
     if deviceid not in devices:
         return ("Device not found", 404)
 
-    configuration = app.get_container(configuration, devices[deviceid])
-    return (configuration.attrs, 200)
+    cfg = app.get_container(configuration, devices[deviceid])
+    return (cfg.attrs, 200)
 
 
-def applications_application_container_logs_get(application_id, configuration, deviceid, restart):
+def applications_application_container_logs_get(
+    application_id: str, configuration: str, deviceid: str, restart: bool
+) -> Any:
     """Returns app currently running container
 
     Arguments:
@@ -827,15 +872,14 @@ def applications_application_container_logs_get(application_id, configuration, d
     if application_id not in applications:
         return ("Application not found", 404)
 
-    app = applications.get(application_id)
+    app = applications[application_id]
 
     devices = targetdevice.TargetDevices()
 
     if deviceid not in devices:
         return ("Device not found", 404)
 
-    line = app.get_container_logs(
-        configuration, devices[deviceid], restart)
+    line = app.get_container_logs(configuration, devices[deviceid], restart)
 
     if line is None:
         return (connexion.NoContent, 204)
@@ -843,11 +887,15 @@ def applications_application_container_logs_get(application_id, configuration, d
     return (line, 200)
 
 
-def applications_application_sdk_run_get(application_id, configuration, build):
+def applications_application_sdk_run_get(
+    application_id: str, configuration: str, build: bool
+) -> Any:
     """Runs the SDK container and returns SSH address for connection
 
     Arguments:
         application_id {str} -- application
+        configuration {str} -- debug/release
+        build {bool} - build image if it does not exists
 
     Returns:
         url -- address of the SSH port on the container
@@ -857,7 +905,7 @@ def applications_application_sdk_run_get(application_id, configuration, build):
     if application_id not in applications:
         return ("Application not found", 404)
 
-    app = applications.get(application_id)
+    app = applications[application_id]
 
     if build is None:
         build = True
@@ -867,7 +915,9 @@ def applications_application_sdk_run_get(application_id, configuration, build):
     return (app.sdksshaddress, 200)
 
 
-def applications_application_sdk_update_get(application_id, configuration):
+def applications_application_sdk_update_get(
+    application_id: str, configuration: str
+) -> Any:
     """Updates the SDK for an application
 
     Arguments:
@@ -879,13 +929,19 @@ def applications_application_sdk_update_get(application_id, configuration):
     if application_id not in applications:
         return ("Application not found", 404)
 
-    app = applications.get(application_id)
+    app = applications[application_id]
     app.update_sdk(configuration)
     return (connexion.NoContent, 200)
 
 
-def applications_application_syncfolders_get(application_id, sourcefolder,
-                                             configuration, deviceid, destfolder, source_is_sdk):
+def applications_application_syncfolders_get(
+    application_id: str,
+    sourcefolder: str,
+    configuration: str,
+    deviceid: str,
+    destfolder: str,
+    source_is_sdk: bool,
+) -> Any:
     """Sincronizes a folder between the SDK container and the target
 
     Arguments:
@@ -902,45 +958,44 @@ def applications_application_syncfolders_get(application_id, sourcefolder,
     if application_id not in applications:
         return ("Application not found", 404)
 
-    app = applications.get(application_id)
+    app = applications[application_id]
 
     if source_is_sdk is None:
         source_is_sdk = True
 
-    app.sync_folders(sourcefolder, configuration,
-                     deviceid, destfolder, source_is_sdk)
+    app.sync_folders(sourcefolder, configuration, deviceid, destfolder, source_is_sdk)
     return (connexion.NoContent, 200)
 
 
-def applications_application_privatekey_get(application_id):
+def applications_application_privatekey_get(application_id: str) -> Any:
     applications = applicationconfig.ApplicationConfigs()
 
     if application_id not in applications:
         return ("Application not found", 404)
 
-    app = applications.get(application_id)
+    app = applications[application_id]
     return (app.get_privatekeypath(), 200)
 
 
-def applications_application_reseal_get(application_id):
+def applications_application_reseal_get(application_id: str) -> Any:
     applications = applicationconfig.ApplicationConfigs()
 
     if application_id not in applications:
         return ("Application not found", 404)
 
-    app = applications.get(application_id)
+    app = applications[application_id]
     app.reseal()
     return (connexion.NoContent, 200)
 
 
-def setup_pullcontainers_get():
+def setup_pullcontainers_get() -> Any:
     """Pulls all base containers needed for the different applications
 
     Raises:
         exceptions.PullImageError: error during image pull
     """
 
-    dockerclient = docker.from_env()    
+    dockerclient = docker.from_env()
     failed = []
 
     for p in platformconfig.PlatformConfigs():
@@ -954,8 +1009,9 @@ def setup_pullcontainers_get():
                     dockerclient.images.pull(v[0], v[1])
                 except:
                     logging.exception(
-                        "PULL - Pull operation failed for image %s:%s.", v[0], v[1])
-                    failed.append(str(v[0])+":"+str(v[1]))
+                        "PULL - Pull operation failed for image %s:%s.", v[0], v[1]
+                    )
+                    failed.append(str(v[0]) + ":" + str(v[1]))
 
         for k, v in plat.sdkbaseimage.items():
             if v is not None:
@@ -964,8 +1020,9 @@ def setup_pullcontainers_get():
                     dockerclient.images.pull(v[0], v[1])
                 except:
                     logging.exception(
-                        "PULL - Pull operation failed for image %s:%s.", v[0], v[1])
-                    failed.append(str(v[0])+":"+str(v[1]))
+                        "PULL - Pull operation failed for image %s:%s.", v[0], v[1]
+                    )
+                    failed.append(str(v[0]) + ":" + str(v[1]))
 
     if len(failed) != 0:
         raise exceptions.PullImageError(failed)
@@ -975,4 +1032,4 @@ def init_api():
     """Initializes the api and allocates all required objects
     """
 
-    config.init_config()
+    config.ServerConfig()

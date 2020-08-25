@@ -7,13 +7,13 @@ class GenericConsole:
     """Base features supported on both kind of consoles
     """
 
-    def __init__(self, device):
+    def __init__(self, device: str):
         """Must be re-defined in subclasses
         Arguments:
             device {str} -- port, ip depending on subclass
         """
 
-    def send_cmd(self, command, timeout=30) -> str:
+    def send_cmd(self, command: str, timeout: int = 30) -> str:
         """Sends a command to the device and returns its output
 
         Arguments:
@@ -27,7 +27,7 @@ class GenericConsole:
         """
         pass
 
-    def login(self, username, password, timeout=60):
+    def login(self, username: str, password: str, timeout: int = 60) -> None:
         """Tries to login user and configures prompt
 
         Arguments:

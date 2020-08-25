@@ -1,7 +1,10 @@
 import re
-from typing import Optional
+from typing import Optional, Any, Callable
 
-def _replace_tag(match, tagfn, args) -> str:
+
+def _replace_tag(
+    match: re.Match, tagfn: Callable[[str, str, Any], str], args: Any
+) -> str:
     """Replaces a tag with the corresponding value
 
     Arguments:
@@ -15,8 +18,8 @@ def _replace_tag(match, tagfn, args) -> str:
     """
     tagstr = str(match.group(0))[2:-2]
 
-    if '.' in tagstr:
-        obj, tag = tagstr.split('.')
+    if "." in tagstr:
+        obj, tag = tagstr.split(".")
 
         if tag is None or obj is None:
             return tagstr
@@ -32,22 +35,31 @@ def _replace_tag(match, tagfn, args) -> str:
 tag = re.compile("#%.*?%#")
 
 
-def replace_tags(text: str, tagfn, args) -> str:
+def replace_tags(text: str, tagfn: Callable[[str, str, Any], str], args: Any) -> str:
+    """Replaces tags marked with #%<tag>%# in the source string
+
+    Args:
+        text (str): source string
+        tagfn (Callable[[str,str,Any],str]): callback used to resolve tags
+        args (Any): arguments passed to the callback
+
+    Returns:
+        str: string with tags replaced
+    """
 
     global tag
 
     newtext = text
 
     while "#%" and "%#" in newtext:
-        newtext = re.sub(tag,
-                         lambda m:
-                         _replace_tag(m, tagfn, args),
-                         newtext)
+        newtext = re.sub(tag, lambda m: _replace_tag(m, tagfn, args), newtext)
 
     return newtext
 
 
-def apply_template(templatepath: str, outputpath: str, tagfn, args):
+def apply_template(
+    templatepath: str, outputpath: str, tagfn: Callable[[str, str, Any], str], args: Any
+) -> None:
     """Replaces tags in the template file to generate output file
 
     Arguments:
@@ -63,6 +75,7 @@ def apply_template(templatepath: str, outputpath: str, tagfn, args):
             for _, line in enumerate(inp):
                 newline = replace_tags(line, tagfn, args)
                 out.write(newline)
+
 
 def get_log_chunk(log) -> Optional[str]:
     """Returns a chunk from the log, avoiding single bytes (from interactive containers)
