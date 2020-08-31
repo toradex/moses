@@ -143,8 +143,8 @@ class DevicesApi(object):
                                                         local_var_params['container_id'] is None):  # noqa: E501
             raise ApiValueError("Missing the required parameter `container_id` when calling `container_getlogs`")  # noqa: E501
 
-        if self.api_client.client_side_validation and 'device_id' in local_var_params and not re.search(r'^[0-9]{8}$', local_var_params['device_id']):  # noqa: E501
-            raise ApiValueError("Invalid value for parameter `device_id` when calling `container_getlogs`, must conform to the pattern `/^[0-9]{8}$/`")  # noqa: E501
+        if self.api_client.client_side_validation and 'device_id' in local_var_params and not re.search(r'^[-0-9a-zA-Z.]*$', local_var_params['device_id']):  # noqa: E501
+            raise ApiValueError("Invalid value for parameter `device_id` when calling `container_getlogs`, must conform to the pattern `/^[-0-9a-zA-Z.]*$/`")  # noqa: E501
         if self.api_client.client_side_validation and 'container_id' in local_var_params and not re.search(r'^[0-9,a-f,A-F]{64}$', local_var_params['container_id']):  # noqa: E501
             raise ApiValueError("Invalid value for parameter `container_id` when calling `container_getlogs`, must conform to the pattern `/^[0-9,a-f,A-F]{64}$/`")  # noqa: E501
         collection_formats = {}
@@ -291,8 +291,8 @@ class DevicesApi(object):
                                                         local_var_params['container_id'] is None):  # noqa: E501
             raise ApiValueError("Missing the required parameter `container_id` when calling `container_getmemory`")  # noqa: E501
 
-        if self.api_client.client_side_validation and 'device_id' in local_var_params and not re.search(r'^[0-9]{8}$', local_var_params['device_id']):  # noqa: E501
-            raise ApiValueError("Invalid value for parameter `device_id` when calling `container_getmemory`, must conform to the pattern `/^[0-9]{8}$/`")  # noqa: E501
+        if self.api_client.client_side_validation and 'device_id' in local_var_params and not re.search(r'^[-0-9a-zA-Z.]*$', local_var_params['device_id']):  # noqa: E501
+            raise ApiValueError("Invalid value for parameter `device_id` when calling `container_getmemory`, must conform to the pattern `/^[-0-9a-zA-Z.]*$/`")  # noqa: E501
         if self.api_client.client_side_validation and 'container_id' in local_var_params and not re.search(r'^[0-9,a-f,A-F]{64}$', local_var_params['container_id']):  # noqa: E501
             raise ApiValueError("Invalid value for parameter `container_id` when calling `container_getmemory`, must conform to the pattern `/^[0-9,a-f,A-F]{64}$/`")  # noqa: E501
         collection_formats = {}
@@ -437,8 +437,8 @@ class DevicesApi(object):
                                                         local_var_params['container_id'] is None):  # noqa: E501
             raise ApiValueError("Missing the required parameter `container_id` when calling `container_getmountpoints`")  # noqa: E501
 
-        if self.api_client.client_side_validation and 'device_id' in local_var_params and not re.search(r'^[0-9]{8}$', local_var_params['device_id']):  # noqa: E501
-            raise ApiValueError("Invalid value for parameter `device_id` when calling `container_getmountpoints`, must conform to the pattern `/^[0-9]{8}$/`")  # noqa: E501
+        if self.api_client.client_side_validation and 'device_id' in local_var_params and not re.search(r'^[-0-9a-zA-Z.]*$', local_var_params['device_id']):  # noqa: E501
+            raise ApiValueError("Invalid value for parameter `device_id` when calling `container_getmountpoints`, must conform to the pattern `/^[-0-9a-zA-Z.]*$/`")  # noqa: E501
         if self.api_client.client_side_validation and 'container_id' in local_var_params and not re.search(r'^[0-9,a-f,A-F]{64}$', local_var_params['container_id']):  # noqa: E501
             raise ApiValueError("Invalid value for parameter `container_id` when calling `container_getmountpoints`, must conform to the pattern `/^[0-9,a-f,A-F]{64}$/`")  # noqa: E501
         collection_formats = {}
@@ -583,8 +583,8 @@ class DevicesApi(object):
                                                         local_var_params['container_id'] is None):  # noqa: E501
             raise ApiValueError("Missing the required parameter `container_id` when calling `container_getprocesses`")  # noqa: E501
 
-        if self.api_client.client_side_validation and 'device_id' in local_var_params and not re.search(r'^[0-9]{8}$', local_var_params['device_id']):  # noqa: E501
-            raise ApiValueError("Invalid value for parameter `device_id` when calling `container_getprocesses`, must conform to the pattern `/^[0-9]{8}$/`")  # noqa: E501
+        if self.api_client.client_side_validation and 'device_id' in local_var_params and not re.search(r'^[-0-9a-zA-Z.]*$', local_var_params['device_id']):  # noqa: E501
+            raise ApiValueError("Invalid value for parameter `device_id` when calling `container_getprocesses`, must conform to the pattern `/^[-0-9a-zA-Z.]*$/`")  # noqa: E501
         if self.api_client.client_side_validation and 'container_id' in local_var_params and not re.search(r'^[0-9,a-f,A-F]{64}$', local_var_params['container_id']):  # noqa: E501
             raise ApiValueError("Invalid value for parameter `container_id` when calling `container_getprocesses`, must conform to the pattern `/^[0-9,a-f,A-F]{64}$/`")  # noqa: E501
         collection_formats = {}
@@ -729,8 +729,8 @@ class DevicesApi(object):
                                                         local_var_params['container_id'] is None):  # noqa: E501
             raise ApiValueError("Missing the required parameter `container_id` when calling `container_start`")  # noqa: E501
 
-        if self.api_client.client_side_validation and 'device_id' in local_var_params and not re.search(r'^[0-9]{8}$', local_var_params['device_id']):  # noqa: E501
-            raise ApiValueError("Invalid value for parameter `device_id` when calling `container_start`, must conform to the pattern `/^[0-9]{8}$/`")  # noqa: E501
+        if self.api_client.client_side_validation and 'device_id' in local_var_params and not re.search(r'^[-0-9a-zA-Z.]*$', local_var_params['device_id']):  # noqa: E501
+            raise ApiValueError("Invalid value for parameter `device_id` when calling `container_start`, must conform to the pattern `/^[-0-9a-zA-Z.]*$/`")  # noqa: E501
         if self.api_client.client_side_validation and 'container_id' in local_var_params and not re.search(r'^[0-9,a-f,A-F]{64}$', local_var_params['container_id']):  # noqa: E501
             raise ApiValueError("Invalid value for parameter `container_id` when calling `container_start`, must conform to the pattern `/^[0-9,a-f,A-F]{64}$/`")  # noqa: E501
         collection_formats = {}
@@ -875,8 +875,8 @@ class DevicesApi(object):
                                                         local_var_params['container_id'] is None):  # noqa: E501
             raise ApiValueError("Missing the required parameter `container_id` when calling `container_stop`")  # noqa: E501
 
-        if self.api_client.client_side_validation and 'device_id' in local_var_params and not re.search(r'^[0-9]{8}$', local_var_params['device_id']):  # noqa: E501
-            raise ApiValueError("Invalid value for parameter `device_id` when calling `container_stop`, must conform to the pattern `/^[0-9]{8}$/`")  # noqa: E501
+        if self.api_client.client_side_validation and 'device_id' in local_var_params and not re.search(r'^[-0-9a-zA-Z.]*$', local_var_params['device_id']):  # noqa: E501
+            raise ApiValueError("Invalid value for parameter `device_id` when calling `container_stop`, must conform to the pattern `/^[-0-9a-zA-Z.]*$/`")  # noqa: E501
         if self.api_client.client_side_validation and 'container_id' in local_var_params and not re.search(r'^[0-9,a-f,A-F]{64}$', local_var_params['container_id']):  # noqa: E501
             raise ApiValueError("Invalid value for parameter `container_id` when calling `container_stop`, must conform to the pattern `/^[0-9,a-f,A-F]{64}$/`")  # noqa: E501
         collection_formats = {}
@@ -1021,8 +1021,8 @@ class DevicesApi(object):
                                                         local_var_params['container_id'] is None):  # noqa: E501
             raise ApiValueError("Missing the required parameter `container_id` when calling `containers_deletecontainer`")  # noqa: E501
 
-        if self.api_client.client_side_validation and 'device_id' in local_var_params and not re.search(r'^[0-9]{8}$', local_var_params['device_id']):  # noqa: E501
-            raise ApiValueError("Invalid value for parameter `device_id` when calling `containers_deletecontainer`, must conform to the pattern `/^[0-9]{8}$/`")  # noqa: E501
+        if self.api_client.client_side_validation and 'device_id' in local_var_params and not re.search(r'^[-0-9a-zA-Z.]*$', local_var_params['device_id']):  # noqa: E501
+            raise ApiValueError("Invalid value for parameter `device_id` when calling `containers_deletecontainer`, must conform to the pattern `/^[-0-9a-zA-Z.]*$/`")  # noqa: E501
         if self.api_client.client_side_validation and 'container_id' in local_var_params and not re.search(r'^[0-9,a-f,A-F]{64}$', local_var_params['container_id']):  # noqa: E501
             raise ApiValueError("Invalid value for parameter `container_id` when calling `containers_deletecontainer`, must conform to the pattern `/^[0-9,a-f,A-F]{64}$/`")  # noqa: E501
         collection_formats = {}
@@ -1167,8 +1167,8 @@ class DevicesApi(object):
                                                         local_var_params['container_id'] is None):  # noqa: E501
             raise ApiValueError("Missing the required parameter `container_id` when calling `containers_getcontainer`")  # noqa: E501
 
-        if self.api_client.client_side_validation and 'device_id' in local_var_params and not re.search(r'^[0-9]{8}$', local_var_params['device_id']):  # noqa: E501
-            raise ApiValueError("Invalid value for parameter `device_id` when calling `containers_getcontainer`, must conform to the pattern `/^[0-9]{8}$/`")  # noqa: E501
+        if self.api_client.client_side_validation and 'device_id' in local_var_params and not re.search(r'^[-0-9a-zA-Z.]*$', local_var_params['device_id']):  # noqa: E501
+            raise ApiValueError("Invalid value for parameter `device_id` when calling `containers_getcontainer`, must conform to the pattern `/^[-0-9a-zA-Z.]*$/`")  # noqa: E501
         if self.api_client.client_side_validation and 'container_id' in local_var_params and not re.search(r'^[0-9,a-f,A-F]{64}$', local_var_params['container_id']):  # noqa: E501
             raise ApiValueError("Invalid value for parameter `container_id` when calling `containers_getcontainer`, must conform to the pattern `/^[0-9,a-f,A-F]{64}$/`")  # noqa: E501
         collection_formats = {}
@@ -1304,8 +1304,8 @@ class DevicesApi(object):
                                                         local_var_params['device_id'] is None):  # noqa: E501
             raise ApiValueError("Missing the required parameter `device_id` when calling `device_closedocker`")  # noqa: E501
 
-        if self.api_client.client_side_validation and 'device_id' in local_var_params and not re.search(r'^[0-9]{8}$', local_var_params['device_id']):  # noqa: E501
-            raise ApiValueError("Invalid value for parameter `device_id` when calling `device_closedocker`, must conform to the pattern `/^[0-9]{8}$/`")  # noqa: E501
+        if self.api_client.client_side_validation and 'device_id' in local_var_params and not re.search(r'^[-0-9a-zA-Z.]*$', local_var_params['device_id']):  # noqa: E501
+            raise ApiValueError("Invalid value for parameter `device_id` when calling `device_closedocker`, must conform to the pattern `/^[-0-9a-zA-Z.]*$/`")  # noqa: E501
         collection_formats = {}
 
         path_params = {}
@@ -1437,8 +1437,8 @@ class DevicesApi(object):
                                                         local_var_params['device_id'] is None):  # noqa: E501
             raise ApiValueError("Missing the required parameter `device_id` when calling `device_closessh`")  # noqa: E501
 
-        if self.api_client.client_side_validation and 'device_id' in local_var_params and not re.search(r'^[0-9]{8}$', local_var_params['device_id']):  # noqa: E501
-            raise ApiValueError("Invalid value for parameter `device_id` when calling `device_closessh`, must conform to the pattern `/^[0-9]{8}$/`")  # noqa: E501
+        if self.api_client.client_side_validation and 'device_id' in local_var_params and not re.search(r'^[-0-9a-zA-Z.]*$', local_var_params['device_id']):  # noqa: E501
+            raise ApiValueError("Invalid value for parameter `device_id` when calling `device_closessh`, must conform to the pattern `/^[-0-9a-zA-Z.]*$/`")  # noqa: E501
         collection_formats = {}
 
         path_params = {}
@@ -1570,8 +1570,8 @@ class DevicesApi(object):
                                                         local_var_params['device_id'] is None):  # noqa: E501
             raise ApiValueError("Missing the required parameter `device_id` when calling `device_current_ip`")  # noqa: E501
 
-        if self.api_client.client_side_validation and 'device_id' in local_var_params and not re.search(r'^[0-9]{8}$', local_var_params['device_id']):  # noqa: E501
-            raise ApiValueError("Invalid value for parameter `device_id` when calling `device_current_ip`, must conform to the pattern `/^[0-9]{8}$/`")  # noqa: E501
+        if self.api_client.client_side_validation and 'device_id' in local_var_params and not re.search(r'^[-0-9a-zA-Z.]*$', local_var_params['device_id']):  # noqa: E501
+            raise ApiValueError("Invalid value for parameter `device_id` when calling `device_current_ip`, must conform to the pattern `/^[-0-9a-zA-Z.]*$/`")  # noqa: E501
         collection_formats = {}
 
         path_params = {}
@@ -1701,8 +1701,8 @@ class DevicesApi(object):
                                                         local_var_params['device_id'] is None):  # noqa: E501
             raise ApiValueError("Missing the required parameter `device_id` when calling `device_delete`")  # noqa: E501
 
-        if self.api_client.client_side_validation and 'device_id' in local_var_params and not re.search(r'^[0-9]{8}$', local_var_params['device_id']):  # noqa: E501
-            raise ApiValueError("Invalid value for parameter `device_id` when calling `device_delete`, must conform to the pattern `/^[0-9]{8}$/`")  # noqa: E501
+        if self.api_client.client_side_validation and 'device_id' in local_var_params and not re.search(r'^[-0-9a-zA-Z.]*$', local_var_params['device_id']):  # noqa: E501
+            raise ApiValueError("Invalid value for parameter `device_id` when calling `device_delete`, must conform to the pattern `/^[-0-9a-zA-Z.]*$/`")  # noqa: E501
         collection_formats = {}
 
         path_params = {}
@@ -1834,8 +1834,8 @@ class DevicesApi(object):
                                                         local_var_params['device_id'] is None):  # noqa: E501
             raise ApiValueError("Missing the required parameter `device_id` when calling `device_get`")  # noqa: E501
 
-        if self.api_client.client_side_validation and 'device_id' in local_var_params and not re.search(r'^[0-9]{8}$', local_var_params['device_id']):  # noqa: E501
-            raise ApiValueError("Invalid value for parameter `device_id` when calling `device_get`, must conform to the pattern `/^[0-9]{8}$/`")  # noqa: E501
+        if self.api_client.client_side_validation and 'device_id' in local_var_params and not re.search(r'^[-0-9a-zA-Z.]*$', local_var_params['device_id']):  # noqa: E501
+            raise ApiValueError("Invalid value for parameter `device_id` when calling `device_get`, must conform to the pattern `/^[-0-9a-zA-Z.]*$/`")  # noqa: E501
         collection_formats = {}
 
         path_params = {}
@@ -1967,8 +1967,8 @@ class DevicesApi(object):
                                                         local_var_params['device_id'] is None):  # noqa: E501
             raise ApiValueError("Missing the required parameter `device_id` when calling `device_getcontainers`")  # noqa: E501
 
-        if self.api_client.client_side_validation and 'device_id' in local_var_params and not re.search(r'^[0-9]{8}$', local_var_params['device_id']):  # noqa: E501
-            raise ApiValueError("Invalid value for parameter `device_id` when calling `device_getcontainers`, must conform to the pattern `/^[0-9]{8}$/`")  # noqa: E501
+        if self.api_client.client_side_validation and 'device_id' in local_var_params and not re.search(r'^[-0-9a-zA-Z.]*$', local_var_params['device_id']):  # noqa: E501
+            raise ApiValueError("Invalid value for parameter `device_id` when calling `device_getcontainers`, must conform to the pattern `/^[-0-9a-zA-Z.]*$/`")  # noqa: E501
         collection_formats = {}
 
         path_params = {}
@@ -2100,8 +2100,8 @@ class DevicesApi(object):
                                                         local_var_params['device_id'] is None):  # noqa: E501
             raise ApiValueError("Missing the required parameter `device_id` when calling `device_getdockerport`")  # noqa: E501
 
-        if self.api_client.client_side_validation and 'device_id' in local_var_params and not re.search(r'^[0-9]{8}$', local_var_params['device_id']):  # noqa: E501
-            raise ApiValueError("Invalid value for parameter `device_id` when calling `device_getdockerport`, must conform to the pattern `/^[0-9]{8}$/`")  # noqa: E501
+        if self.api_client.client_side_validation and 'device_id' in local_var_params and not re.search(r'^[-0-9a-zA-Z.]*$', local_var_params['device_id']):  # noqa: E501
+            raise ApiValueError("Invalid value for parameter `device_id` when calling `device_getdockerport`, must conform to the pattern `/^[-0-9a-zA-Z.]*$/`")  # noqa: E501
         collection_formats = {}
 
         path_params = {}
@@ -2233,8 +2233,8 @@ class DevicesApi(object):
                                                         local_var_params['device_id'] is None):  # noqa: E501
             raise ApiValueError("Missing the required parameter `device_id` when calling `device_getimages`")  # noqa: E501
 
-        if self.api_client.client_side_validation and 'device_id' in local_var_params and not re.search(r'^[0-9]{8}$', local_var_params['device_id']):  # noqa: E501
-            raise ApiValueError("Invalid value for parameter `device_id` when calling `device_getimages`, must conform to the pattern `/^[0-9]{8}$/`")  # noqa: E501
+        if self.api_client.client_side_validation and 'device_id' in local_var_params and not re.search(r'^[-0-9a-zA-Z.]*$', local_var_params['device_id']):  # noqa: E501
+            raise ApiValueError("Invalid value for parameter `device_id` when calling `device_getimages`, must conform to the pattern `/^[-0-9a-zA-Z.]*$/`")  # noqa: E501
         collection_formats = {}
 
         path_params = {}
@@ -2366,8 +2366,8 @@ class DevicesApi(object):
                                                         local_var_params['device_id'] is None):  # noqa: E501
             raise ApiValueError("Missing the required parameter `device_id` when calling `device_getmemory`")  # noqa: E501
 
-        if self.api_client.client_side_validation and 'device_id' in local_var_params and not re.search(r'^[0-9]{8}$', local_var_params['device_id']):  # noqa: E501
-            raise ApiValueError("Invalid value for parameter `device_id` when calling `device_getmemory`, must conform to the pattern `/^[0-9]{8}$/`")  # noqa: E501
+        if self.api_client.client_side_validation and 'device_id' in local_var_params and not re.search(r'^[-0-9a-zA-Z.]*$', local_var_params['device_id']):  # noqa: E501
+            raise ApiValueError("Invalid value for parameter `device_id` when calling `device_getmemory`, must conform to the pattern `/^[-0-9a-zA-Z.]*$/`")  # noqa: E501
         collection_formats = {}
 
         path_params = {}
@@ -2499,8 +2499,8 @@ class DevicesApi(object):
                                                         local_var_params['device_id'] is None):  # noqa: E501
             raise ApiValueError("Missing the required parameter `device_id` when calling `device_getmountpoints`")  # noqa: E501
 
-        if self.api_client.client_side_validation and 'device_id' in local_var_params and not re.search(r'^[0-9]{8}$', local_var_params['device_id']):  # noqa: E501
-            raise ApiValueError("Invalid value for parameter `device_id` when calling `device_getmountpoints`, must conform to the pattern `/^[0-9]{8}$/`")  # noqa: E501
+        if self.api_client.client_side_validation and 'device_id' in local_var_params and not re.search(r'^[-0-9a-zA-Z.]*$', local_var_params['device_id']):  # noqa: E501
+            raise ApiValueError("Invalid value for parameter `device_id` when calling `device_getmountpoints`, must conform to the pattern `/^[-0-9a-zA-Z.]*$/`")  # noqa: E501
         collection_formats = {}
 
         path_params = {}
@@ -2632,8 +2632,8 @@ class DevicesApi(object):
                                                         local_var_params['device_id'] is None):  # noqa: E501
             raise ApiValueError("Missing the required parameter `device_id` when calling `device_getprivatekey`")  # noqa: E501
 
-        if self.api_client.client_side_validation and 'device_id' in local_var_params and not re.search(r'^[0-9]{8}$', local_var_params['device_id']):  # noqa: E501
-            raise ApiValueError("Invalid value for parameter `device_id` when calling `device_getprivatekey`, must conform to the pattern `/^[0-9]{8}$/`")  # noqa: E501
+        if self.api_client.client_side_validation and 'device_id' in local_var_params and not re.search(r'^[-0-9a-zA-Z.]*$', local_var_params['device_id']):  # noqa: E501
+            raise ApiValueError("Invalid value for parameter `device_id` when calling `device_getprivatekey`, must conform to the pattern `/^[-0-9a-zA-Z.]*$/`")  # noqa: E501
         collection_formats = {}
 
         path_params = {}
@@ -2765,8 +2765,8 @@ class DevicesApi(object):
                                                         local_var_params['device_id'] is None):  # noqa: E501
             raise ApiValueError("Missing the required parameter `device_id` when calling `device_getprocesses`")  # noqa: E501
 
-        if self.api_client.client_side_validation and 'device_id' in local_var_params and not re.search(r'^[0-9]{8}$', local_var_params['device_id']):  # noqa: E501
-            raise ApiValueError("Invalid value for parameter `device_id` when calling `device_getprocesses`, must conform to the pattern `/^[0-9]{8}$/`")  # noqa: E501
+        if self.api_client.client_side_validation and 'device_id' in local_var_params and not re.search(r'^[-0-9a-zA-Z.]*$', local_var_params['device_id']):  # noqa: E501
+            raise ApiValueError("Invalid value for parameter `device_id` when calling `device_getprocesses`, must conform to the pattern `/^[-0-9a-zA-Z.]*$/`")  # noqa: E501
         collection_formats = {}
 
         path_params = {}
@@ -2898,8 +2898,8 @@ class DevicesApi(object):
                                                         local_var_params['device_id'] is None):  # noqa: E501
             raise ApiValueError("Missing the required parameter `device_id` when calling `device_getsshport`")  # noqa: E501
 
-        if self.api_client.client_side_validation and 'device_id' in local_var_params and not re.search(r'^[0-9]{8}$', local_var_params['device_id']):  # noqa: E501
-            raise ApiValueError("Invalid value for parameter `device_id` when calling `device_getsshport`, must conform to the pattern `/^[0-9]{8}$/`")  # noqa: E501
+        if self.api_client.client_side_validation and 'device_id' in local_var_params and not re.search(r'^[-0-9a-zA-Z.]*$', local_var_params['device_id']):  # noqa: E501
+            raise ApiValueError("Invalid value for parameter `device_id` when calling `device_getsshport`, must conform to the pattern `/^[-0-9a-zA-Z.]*$/`")  # noqa: E501
         collection_formats = {}
 
         path_params = {}
@@ -3036,8 +3036,8 @@ class DevicesApi(object):
                                                         local_var_params['device_id'] is None):  # noqa: E501
             raise ApiValueError("Missing the required parameter `device_id` when calling `device_modify`")  # noqa: E501
 
-        if self.api_client.client_side_validation and 'device_id' in local_var_params and not re.search(r'^[0-9]{8}$', local_var_params['device_id']):  # noqa: E501
-            raise ApiValueError("Invalid value for parameter `device_id` when calling `device_modify`, must conform to the pattern `/^[0-9]{8}$/`")  # noqa: E501
+        if self.api_client.client_side_validation and 'device_id' in local_var_params and not re.search(r'^[-0-9a-zA-Z.]*$', local_var_params['device_id']):  # noqa: E501
+            raise ApiValueError("Invalid value for parameter `device_id` when calling `device_modify`, must conform to the pattern `/^[-0-9a-zA-Z.]*$/`")  # noqa: E501
         collection_formats = {}
 
         path_params = {}
@@ -3180,8 +3180,8 @@ class DevicesApi(object):
                                                         local_var_params['device_id'] is None):  # noqa: E501
             raise ApiValueError("Missing the required parameter `device_id` when calling `device_opendocker`")  # noqa: E501
 
-        if self.api_client.client_side_validation and 'device_id' in local_var_params and not re.search(r'^[0-9]{8}$', local_var_params['device_id']):  # noqa: E501
-            raise ApiValueError("Invalid value for parameter `device_id` when calling `device_opendocker`, must conform to the pattern `/^[0-9]{8}$/`")  # noqa: E501
+        if self.api_client.client_side_validation and 'device_id' in local_var_params and not re.search(r'^[-0-9a-zA-Z.]*$', local_var_params['device_id']):  # noqa: E501
+            raise ApiValueError("Invalid value for parameter `device_id` when calling `device_opendocker`, must conform to the pattern `/^[-0-9a-zA-Z.]*$/`")  # noqa: E501
         collection_formats = {}
 
         path_params = {}
@@ -3320,8 +3320,8 @@ class DevicesApi(object):
                                                         local_var_params['device_id'] is None):  # noqa: E501
             raise ApiValueError("Missing the required parameter `device_id` when calling `device_openssh`")  # noqa: E501
 
-        if self.api_client.client_side_validation and 'device_id' in local_var_params and not re.search(r'^[0-9]{8}$', local_var_params['device_id']):  # noqa: E501
-            raise ApiValueError("Invalid value for parameter `device_id` when calling `device_openssh`, must conform to the pattern `/^[0-9]{8}$/`")  # noqa: E501
+        if self.api_client.client_side_validation and 'device_id' in local_var_params and not re.search(r'^[-0-9a-zA-Z.]*$', local_var_params['device_id']):  # noqa: E501
+            raise ApiValueError("Invalid value for parameter `device_id` when calling `device_openssh`, must conform to the pattern `/^[-0-9a-zA-Z.]*$/`")  # noqa: E501
         collection_formats = {}
 
         path_params = {}
@@ -3473,8 +3473,8 @@ class DevicesApi(object):
                                                         local_var_params['destfolder'] is None):  # noqa: E501
             raise ApiValueError("Missing the required parameter `destfolder` when calling `device_syncfolders`")  # noqa: E501
 
-        if self.api_client.client_side_validation and 'device_id' in local_var_params and not re.search(r'^[0-9]{8}$', local_var_params['device_id']):  # noqa: E501
-            raise ApiValueError("Invalid value for parameter `device_id` when calling `device_syncfolders`, must conform to the pattern `/^[0-9]{8}$/`")  # noqa: E501
+        if self.api_client.client_side_validation and 'device_id' in local_var_params and not re.search(r'^[-0-9a-zA-Z.]*$', local_var_params['device_id']):  # noqa: E501
+            raise ApiValueError("Invalid value for parameter `device_id` when calling `device_syncfolders`, must conform to the pattern `/^[-0-9a-zA-Z.]*$/`")  # noqa: E501
         collection_formats = {}
 
         path_params = {}
@@ -3610,8 +3610,8 @@ class DevicesApi(object):
                                                         local_var_params['device_id'] is None):  # noqa: E501
             raise ApiValueError("Missing the required parameter `device_id` when calling `device_update`")  # noqa: E501
 
-        if self.api_client.client_side_validation and 'device_id' in local_var_params and not re.search(r'^[0-9]{8}$', local_var_params['device_id']):  # noqa: E501
-            raise ApiValueError("Invalid value for parameter `device_id` when calling `device_update`, must conform to the pattern `/^[0-9]{8}$/`")  # noqa: E501
+        if self.api_client.client_side_validation and 'device_id' in local_var_params and not re.search(r'^[-0-9a-zA-Z.]*$', local_var_params['device_id']):  # noqa: E501
+            raise ApiValueError("Invalid value for parameter `device_id` when calling `device_update`, must conform to the pattern `/^[-0-9a-zA-Z.]*$/`")  # noqa: E501
         collection_formats = {}
 
         path_params = {}
@@ -4178,8 +4178,8 @@ class DevicesApi(object):
                                                         local_var_params['image_id'] is None):  # noqa: E501
             raise ApiValueError("Missing the required parameter `image_id` when calling `images_deleteimage`")  # noqa: E501
 
-        if self.api_client.client_side_validation and 'device_id' in local_var_params and not re.search(r'^[0-9]{8}$', local_var_params['device_id']):  # noqa: E501
-            raise ApiValueError("Invalid value for parameter `device_id` when calling `images_deleteimage`, must conform to the pattern `/^[0-9]{8}$/`")  # noqa: E501
+        if self.api_client.client_side_validation and 'device_id' in local_var_params and not re.search(r'^[-0-9a-zA-Z.]*$', local_var_params['device_id']):  # noqa: E501
+            raise ApiValueError("Invalid value for parameter `device_id` when calling `images_deleteimage`, must conform to the pattern `/^[-0-9a-zA-Z.]*$/`")  # noqa: E501
         if self.api_client.client_side_validation and 'image_id' in local_var_params and not re.search(r'^sha256:[0-9,a-f,A-F]{64}$', local_var_params['image_id']):  # noqa: E501
             raise ApiValueError("Invalid value for parameter `image_id` when calling `images_deleteimage`, must conform to the pattern `/^sha256:[0-9,a-f,A-F]{64}$/`")  # noqa: E501
         collection_formats = {}
@@ -4324,8 +4324,8 @@ class DevicesApi(object):
                                                         local_var_params['image_id'] is None):  # noqa: E501
             raise ApiValueError("Missing the required parameter `image_id` when calling `images_getimage`")  # noqa: E501
 
-        if self.api_client.client_side_validation and 'device_id' in local_var_params and not re.search(r'^[0-9]{8}$', local_var_params['device_id']):  # noqa: E501
-            raise ApiValueError("Invalid value for parameter `device_id` when calling `images_getimage`, must conform to the pattern `/^[0-9]{8}$/`")  # noqa: E501
+        if self.api_client.client_side_validation and 'device_id' in local_var_params and not re.search(r'^[-0-9a-zA-Z.]*$', local_var_params['device_id']):  # noqa: E501
+            raise ApiValueError("Invalid value for parameter `device_id` when calling `images_getimage`, must conform to the pattern `/^[-0-9a-zA-Z.]*$/`")  # noqa: E501
         if self.api_client.client_side_validation and 'image_id' in local_var_params and not re.search(r'^sha256:[0-9,a-f,A-F]{64}$', local_var_params['image_id']):  # noqa: E501
             raise ApiValueError("Invalid value for parameter `image_id` when calling `images_getimage`, must conform to the pattern `/^sha256:[0-9,a-f,A-F]{64}$/`")  # noqa: E501
         collection_formats = {}

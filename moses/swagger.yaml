@@ -1189,7 +1189,7 @@ paths:
           in: query
           type: string
           required: true
-          pattern: "^[0-9]{8}$"
+          pattern: "^[-0-9a-zA-Z.]*$"
       responses:
         200:
           description: Successful build
@@ -1227,7 +1227,7 @@ paths:
           in: query
           type: string
           required: true
-          pattern: "^[0-9]{8}$"
+          pattern: "^[-0-9a-zA-Z.]*$"
       responses:
         200:
           description: Returns application container
@@ -1267,7 +1267,7 @@ paths:
           in: query
           type: string
           required: true
-          pattern: "^[0-9]{8}$"
+          pattern: "^[-0-9a-zA-Z.]*$"
       responses:
         200:
           description: Application stopped (returned also if not running)
@@ -1299,7 +1299,7 @@ paths:
           in: query
           type: string
           required: true
-          pattern: "^[0-9]{8}$"
+          pattern: "^[-0-9a-zA-Z.]*$"
       responses:
         200:
           description: Returns application container
@@ -1339,7 +1339,7 @@ paths:
           in: query
           type: string
           required: true
-          pattern: "^[0-9]{8}$"
+          pattern: "^[-0-9a-zA-Z.]*$"
         - name: restart
           type: boolean
           in: query
@@ -1490,7 +1490,7 @@ paths:
           in: query
           type: string
           required: true
-          pattern: "^[0-9]{8}$"
+          pattern: "^[-0-9a-zA-Z.]*$"
         - name: destfolder
           in: query
           type: string
@@ -1584,7 +1584,7 @@ parameters:
     in: path
     type: string
     required: true
-    pattern: "^[0-9]{8}$"
+    pattern: "^[-0-9a-zA-Z.]*$"
 
   eula_id:
     name: eula_id

@@ -428,8 +428,8 @@ class ApplicationsApi(object):
             raise ApiValueError("Invalid value for parameter `application_id` when calling `application_deploy`, must conform to the pattern `/^[0-9,a-f,A-F]{8}-[0-9,a-f,A-F]{4}-[0-9,a-f,A-F]{4}-[0-9,a-f,A-F]{4}-[0-9,a-f,A-F]{12}$/`")  # noqa: E501
         if self.api_client.client_side_validation and 'configuration' in local_var_params and not re.search(r'(?:debug|release)', local_var_params['configuration']):  # noqa: E501
             raise ApiValueError("Invalid value for parameter `configuration` when calling `application_deploy`, must conform to the pattern `/(?:debug|release)/`")  # noqa: E501
-        if self.api_client.client_side_validation and 'deviceid' in local_var_params and not re.search(r'^[0-9]{8}$', local_var_params['deviceid']):  # noqa: E501
-            raise ApiValueError("Invalid value for parameter `deviceid` when calling `application_deploy`, must conform to the pattern `/^[0-9]{8}$/`")  # noqa: E501
+        if self.api_client.client_side_validation and 'deviceid' in local_var_params and not re.search(r'^[-0-9a-zA-Z.]*$', local_var_params['deviceid']):  # noqa: E501
+            raise ApiValueError("Invalid value for parameter `deviceid` when calling `application_deploy`, must conform to the pattern `/^[-0-9a-zA-Z.]*$/`")  # noqa: E501
         collection_formats = {}
 
         path_params = {}
@@ -720,8 +720,8 @@ class ApplicationsApi(object):
             raise ApiValueError("Invalid value for parameter `application_id` when calling `application_getcontainer`, must conform to the pattern `/^[0-9,a-f,A-F]{8}-[0-9,a-f,A-F]{4}-[0-9,a-f,A-F]{4}-[0-9,a-f,A-F]{4}-[0-9,a-f,A-F]{12}$/`")  # noqa: E501
         if self.api_client.client_side_validation and 'configuration' in local_var_params and not re.search(r'(?:debug|release)', local_var_params['configuration']):  # noqa: E501
             raise ApiValueError("Invalid value for parameter `configuration` when calling `application_getcontainer`, must conform to the pattern `/(?:debug|release)/`")  # noqa: E501
-        if self.api_client.client_side_validation and 'deviceid' in local_var_params and not re.search(r'^[0-9]{8}$', local_var_params['deviceid']):  # noqa: E501
-            raise ApiValueError("Invalid value for parameter `deviceid` when calling `application_getcontainer`, must conform to the pattern `/^[0-9]{8}$/`")  # noqa: E501
+        if self.api_client.client_side_validation and 'deviceid' in local_var_params and not re.search(r'^[-0-9a-zA-Z.]*$', local_var_params['deviceid']):  # noqa: E501
+            raise ApiValueError("Invalid value for parameter `deviceid` when calling `application_getcontainer`, must conform to the pattern `/^[-0-9a-zA-Z.]*$/`")  # noqa: E501
         collection_formats = {}
 
         path_params = {}
@@ -884,8 +884,8 @@ class ApplicationsApi(object):
             raise ApiValueError("Invalid value for parameter `application_id` when calling `application_getcontainer_logs`, must conform to the pattern `/^[0-9,a-f,A-F]{8}-[0-9,a-f,A-F]{4}-[0-9,a-f,A-F]{4}-[0-9,a-f,A-F]{4}-[0-9,a-f,A-F]{12}$/`")  # noqa: E501
         if self.api_client.client_side_validation and 'configuration' in local_var_params and not re.search(r'(?:debug|release)', local_var_params['configuration']):  # noqa: E501
             raise ApiValueError("Invalid value for parameter `configuration` when calling `application_getcontainer_logs`, must conform to the pattern `/(?:debug|release)/`")  # noqa: E501
-        if self.api_client.client_side_validation and 'deviceid' in local_var_params and not re.search(r'^[0-9]{8}$', local_var_params['deviceid']):  # noqa: E501
-            raise ApiValueError("Invalid value for parameter `deviceid` when calling `application_getcontainer_logs`, must conform to the pattern `/^[0-9]{8}$/`")  # noqa: E501
+        if self.api_client.client_side_validation and 'deviceid' in local_var_params and not re.search(r'^[-0-9a-zA-Z.]*$', local_var_params['deviceid']):  # noqa: E501
+            raise ApiValueError("Invalid value for parameter `deviceid` when calling `application_getcontainer_logs`, must conform to the pattern `/^[-0-9a-zA-Z.]*$/`")  # noqa: E501
         collection_formats = {}
 
         path_params = {}
@@ -1451,8 +1451,8 @@ class ApplicationsApi(object):
             raise ApiValueError("Invalid value for parameter `application_id` when calling `application_run`, must conform to the pattern `/^[0-9,a-f,A-F]{8}-[0-9,a-f,A-F]{4}-[0-9,a-f,A-F]{4}-[0-9,a-f,A-F]{4}-[0-9,a-f,A-F]{12}$/`")  # noqa: E501
         if self.api_client.client_side_validation and 'configuration' in local_var_params and not re.search(r'(?:debug|release)', local_var_params['configuration']):  # noqa: E501
             raise ApiValueError("Invalid value for parameter `configuration` when calling `application_run`, must conform to the pattern `/(?:debug|release)/`")  # noqa: E501
-        if self.api_client.client_side_validation and 'deviceid' in local_var_params and not re.search(r'^[0-9]{8}$', local_var_params['deviceid']):  # noqa: E501
-            raise ApiValueError("Invalid value for parameter `deviceid` when calling `application_run`, must conform to the pattern `/^[0-9]{8}$/`")  # noqa: E501
+        if self.api_client.client_side_validation and 'deviceid' in local_var_params and not re.search(r'^[-0-9a-zA-Z.]*$', local_var_params['deviceid']):  # noqa: E501
+            raise ApiValueError("Invalid value for parameter `deviceid` when calling `application_run`, must conform to the pattern `/^[-0-9a-zA-Z.]*$/`")  # noqa: E501
         collection_formats = {}
 
         path_params = {}
@@ -1909,8 +1909,8 @@ class ApplicationsApi(object):
             raise ApiValueError("Invalid value for parameter `application_id` when calling `application_stop`, must conform to the pattern `/^[0-9,a-f,A-F]{8}-[0-9,a-f,A-F]{4}-[0-9,a-f,A-F]{4}-[0-9,a-f,A-F]{4}-[0-9,a-f,A-F]{12}$/`")  # noqa: E501
         if self.api_client.client_side_validation and 'configuration' in local_var_params and not re.search(r'(?:debug|release)', local_var_params['configuration']):  # noqa: E501
             raise ApiValueError("Invalid value for parameter `configuration` when calling `application_stop`, must conform to the pattern `/(?:debug|release)/`")  # noqa: E501
-        if self.api_client.client_side_validation and 'deviceid' in local_var_params and not re.search(r'^[0-9]{8}$', local_var_params['deviceid']):  # noqa: E501
-            raise ApiValueError("Invalid value for parameter `deviceid` when calling `application_stop`, must conform to the pattern `/^[0-9]{8}$/`")  # noqa: E501
+        if self.api_client.client_side_validation and 'deviceid' in local_var_params and not re.search(r'^[-0-9a-zA-Z.]*$', local_var_params['deviceid']):  # noqa: E501
+            raise ApiValueError("Invalid value for parameter `deviceid` when calling `application_stop`, must conform to the pattern `/^[-0-9a-zA-Z.]*$/`")  # noqa: E501
         collection_formats = {}
 
         path_params = {}
@@ -2091,8 +2091,8 @@ class ApplicationsApi(object):
             raise ApiValueError("Invalid value for parameter `application_id` when calling `application_syncfolders`, must conform to the pattern `/^[0-9,a-f,A-F]{8}-[0-9,a-f,A-F]{4}-[0-9,a-f,A-F]{4}-[0-9,a-f,A-F]{4}-[0-9,a-f,A-F]{12}$/`")  # noqa: E501
         if self.api_client.client_side_validation and 'configuration' in local_var_params and not re.search(r'(?:debug|release)', local_var_params['configuration']):  # noqa: E501
             raise ApiValueError("Invalid value for parameter `configuration` when calling `application_syncfolders`, must conform to the pattern `/(?:debug|release)/`")  # noqa: E501
-        if self.api_client.client_side_validation and 'deviceid' in local_var_params and not re.search(r'^[0-9]{8}$', local_var_params['deviceid']):  # noqa: E501
-            raise ApiValueError("Invalid value for parameter `deviceid` when calling `application_syncfolders`, must conform to the pattern `/^[0-9]{8}$/`")  # noqa: E501
+        if self.api_client.client_side_validation and 'deviceid' in local_var_params and not re.search(r'^[-0-9a-zA-Z.]*$', local_var_params['deviceid']):  # noqa: E501
+            raise ApiValueError("Invalid value for parameter `deviceid` when calling `application_syncfolders`, must conform to the pattern `/^[-0-9a-zA-Z.]*$/`")  # noqa: E501
         collection_formats = {}
 
         path_params = {}
