@@ -23,6 +23,7 @@ import sharedssh
 import yaml
 import rsync
 import utils
+import re
 from typing import Optional, List, Dict, Any, Iterable
 
 
@@ -63,6 +64,7 @@ class TargetDevice(config.ConfigurableKeysObject):
         self.dockertunnel: Optional[sshtunnel.SSHTunnelForwarder] = None
         self.sshforwarder: Optional[sharedssh.SSHListenThread] = None
         self.homefolder = ""
+        self.community = False
 
         if self.folder is not None:
             self.load()
@@ -86,11 +88,9 @@ class TargetDevice(config.ConfigurableKeysObject):
         if fields is None:
             fields = self.__dict__
 
-            if len(fields["id"]) != 8:
-                return False
-
-        if len(fields["model"]) != 4:
-            return False
+            # replace not in filter chars
+            if fields["id"] is not None and len(fields["id"]) > 0:
+                fields["id"] = re.sub(r'[^-0-9a-zA-Z.]', '', fields["id"])
 
         if (
             fields["name"] is None
@@ -727,17 +727,21 @@ class TargetDevices(Dict[str, TargetDevice], metaclass=singleton.Singleton):
             "cat /proc/device-tree/toradex,board-rev", timeout
         ).rstrip("\x00")
 
+        # Community device
+        if "No such file or directory" in dev.hwrev:
+            dev.hwrev = "v?.?"
+
         dev.kernelrelease = console.send_cmd("uname -r", timeout).rstrip("\x00\n")
 
         dev.kernelversion = console.send_cmd("uname -v", timeout).rstrip("\x00\n")
 
         dev.torizonversion = (
-            console.send_cmd("cat /usr/lib/os-release | grep VERSION=", timeout)
+            console.send_cmd("cat /usr/lib/os-release | grep PRETTY_NAME=", timeout)
             .rstrip("\x00")
             .strip()
         )
 
-        dev.torizonversion = dev.torizonversion.lstrip("VERSION=")
+        dev.torizonversion = dev.torizonversion.lstrip("PRETTY_NAME=")
         dev.torizonversion = dev.torizonversion.strip('"')
 
     def _create_device_from_console(self, console, timeout) -> TargetDevice:
@@ -764,20 +768,54 @@ class TargetDevices(Dict[str, TargetDevice], metaclass=singleton.Singleton):
             "cat /proc/device-tree/serial-number", timeout
         ).rstrip("\x00")
 
-        if len(str(dev.id)) != 8:
-            logging.warning("DETECT - Invalid device id %s", dev.id)
-            raise exceptions.InvalidDeviceIdError()
-
-        dev.model = console.send_cmd(
+        # Toradex Devices has product Id
+        productId = console.send_cmd(
             "cat /proc/device-tree/toradex,product-id", timeout
         ).rstrip("\x00")
+        
+        if "No such file or directory" not in productId:
+            logging.info("DETECT - Toradex device id %s", dev.id)
+            dev.model = productId
+            dev.hostname = self.get_hostname_from_model(dev.model)
+        elif len(str(dev.id)) > 0:
+            logging.info("DETECT - Community device id %s", dev.id)
+            dev.community = True
 
-        if self.get_hostname_from_model(dev.model) is None:
-            logging.warning("DETECT - Unknown device type %s.", dev.model)
+            # Check if the distro have docker
+            dockerCheck = console.send_cmd(
+                "ls /var/run/docker.sock", timeout
+            ).rstrip("\x00")
+
+            if "No such file or directory" in dockerCheck:
+                logging.info("Docker socket not present, make sure you have " \
+                                + "Docker installed and running on your board.")
+                raise exceptions.InvalidDeviceError()
+
+            # Check if the board in running arm or arm64
+            archCheck = console.send_cmd(
+                "arch", timeout
+            ).rstrip("\x00")
+
+            if "arm" not in archCheck:
+                logging.info("Unsupported architecture %s", archCheck)
+                raise exceptions.InvalidDeviceError()
+
+            # Community Devices has Model name
+            dev.model = console.send_cmd(
+                "cat /proc/device-tree/model", timeout
+            ).rstrip("\x00")
+
+            dev.hostname = console.send_cmd(
+                "cat /etc/hostname", timeout
+            ).rstrip("\x00")
         else:
-            logging.info(
-                "DETECT - %s detected", self.get_hostname_from_model(dev.model)
-            )
+            raise exceptions.InvalidDeviceIdError()
+
+        logging.info(
+            "DETECT - %s detected :: Model %s",
+            dev.hostname,
+            dev.model
+        )
 
         dev.name = (
             console.send_cmd("cat /proc/device-tree/model", timeout).rstrip("\x00")
@@ -797,28 +835,6 @@ class TargetDevices(Dict[str, TargetDevice], metaclass=singleton.Singleton):
             logging.warning(repr(dev))
             raise exceptions.InvalidDeviceError(dev)
         return dev
-
-    def _set_hostname(self, console, dev, timeout, password):
-        """
-        If the device has the standard hostname, changes it to a
-        unique one
-
-        Arguments:
-            console {Console} -- console
-            dev {TargetDevice} -- device
-            timeout {int} -- command timeout
-        """
-
-        if dev.hostname == self.get_hostname_from_model(dev.model):
-            dev.hostname += "_" + dev.id
-            console.send_cmd(
-                "echo "
-                + password
-                + " | sudo -S sh -c 'echo "
-                + dev.hostname
-                + " > /etc/hostname'",
-                timeout,
-            )
 
     def _reboot_device(self, console, password):
         """
@@ -882,7 +898,6 @@ class TargetDevices(Dict[str, TargetDevice], metaclass=singleton.Singleton):
             device.privatekey = self[device.id].privatekey
 
         self._enable_sudo(console, username, password)
-        self._set_hostname(console, device, timeout, password)
 
         device.save()
 
