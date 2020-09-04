@@ -1730,7 +1730,7 @@ definitions:
           additionalProperties:
               type: string
         description: ports to be exposed from the container
-        example: { 8080/tcp:8080 22/tcp:null }
+        example: { 8080/tcp:8080 2222/tcp:null }
       volumes:
         type: object
         additionalProperties:
@@ -1831,7 +1831,7 @@ definitions:
           additionalProperties:
               type: string
         description: ports to be exposed from the container
-        example: { 8080/tcp:8080 22/tcp:null }
+        example: { 8080/tcp:8080 2222/tcp:null }
       volumes:
         type: object
         additionalProperties:

@@ -1390,8 +1390,11 @@ class ApplicationConfig(config.ConfigurableKeysObject):
         if container.status != "running":
             raise exceptions.ContainerNotRunningError(device, self.id)
 
-        ports = container.attrs["NetworkSettings"]["Ports"]["22/tcp"]
-        port = ports[0]["HostPort"]
+        if "host" in container.attrs["NetworkSettings"]["Networks"]:
+            port = "2222"
+        else:
+            ports = container.attrs["NetworkSettings"]["Ports"]["2222/tcp"]
+            port = ports[0]["HostPort"]
 
         if source_is_sdk:
             self.start_sdk_container(configuration, True)

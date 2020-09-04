@@ -27,7 +27,7 @@ tags: []
 # information about how containers should run
 ports:
   common: {}
-  debug: { "22/tcp": null }
+  debug: { "2222/tcp": null }
   release: {}
 volumes:
   common: {}

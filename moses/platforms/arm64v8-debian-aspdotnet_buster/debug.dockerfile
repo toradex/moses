@@ -1,7 +1,7 @@
 FROM torizon/arm64v8-debian-aspdotnet-debug:buster
 
 # SSH
-EXPOSE 22
+EXPOSE 2222
 # application
 EXPOSE 5000
 EXPOSE 5001
@@ -42,6 +42,7 @@ RUN mkdir /var/run/sshd \
     && if test $SSHUSERNAME != root ; then mkdir -p /home/$SSHUSERNAME/.ssh ; else mkdir -p /root/.ssh ; fi \
     && if test $SSHUSERNAME != root ; then cp /id_rsa.pub /home/$SSHUSERNAME/.ssh/authorized_keys ; else cp /id_rsa.pub /root/.ssh/authorized_keys ; fi \
     && echo "PermitUserEnvironment yes" >> /etc/ssh/sshd_config \
+    && echo "Port 2222" >> /etc/ssh/sshd_config \
     && su -c "env" $SSHUSERNAME > /etc/environment
 
 RUN rm -r /etc/ssh/ssh*key \
