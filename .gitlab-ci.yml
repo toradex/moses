@@ -73,3 +73,6 @@ build-typescript-client:
   artifacts:
     paths:
       - clients/typescript/torizonrestapi-$API_VERSION.tgz
+
+  tags:
+    - docker
