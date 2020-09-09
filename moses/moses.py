@@ -22,7 +22,7 @@ if getattr(sys, "frozen", False):
 else:
     options = {
         "swagger_path": os.path.dirname(sys.executable)
-        + "/../lib/python3.8/site-packages/swagger_ui_bundle/vendor/swagger-ui-3.24.2"
+        + "/../lib/python3.8/site-packages/swagger_ui_bundle/vendor/swagger-ui-3.30.0"
     }
 
 
