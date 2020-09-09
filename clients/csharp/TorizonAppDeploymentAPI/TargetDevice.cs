@@ -54,7 +54,7 @@ namespace TorizonAppDeploymentAPI
         {
             Utils.CopyProperties<TorizonRestAPI.Model.TargetDevice>(model, this, PropertyChanged);
 
-            api= TorizonAPIManager.GetDevicesApi();
+            api = TorizonAPIManager.GetDevicesApi();
 
             this.images = new DockerImages(this);
             this.containers = new DockerContainers(this);
@@ -108,7 +108,7 @@ namespace TorizonAppDeploymentAPI
             }
             catch (Exception e)
             {
-                if ((State != ConnectionState.Disconnected) || (ErrorMessage!=e.Message))
+                if ((State != ConnectionState.Disconnected) || (ErrorMessage != e.Message))
                 {
                     State = ConnectionState.Disconnected;
                     ErrorMessage = e.Message;
@@ -121,7 +121,7 @@ namespace TorizonAppDeploymentAPI
 
         public async Task CommitAsync(Action OnCommitCompleted)
         {
-            TorizonRestAPI.Model.TargetDevice model = Utils.ObjectOrException<TorizonRestAPI.Model.TargetDevice>(await api.DeviceModifyAsync(this.Id,this));
+            TorizonRestAPI.Model.TargetDevice model = Utils.ObjectOrException<TorizonRestAPI.Model.TargetDevice>(await api.DeviceModifyAsync(this.Id, this));
             Utils.CopyProperties<TorizonRestAPI.Model.TargetDevice>(model, this, PropertyChanged, true);
             OnCommitCompleted?.Invoke();
         }
@@ -144,7 +144,7 @@ namespace TorizonAppDeploymentAPI
 
         public async Task<string> GetCurrentIp()
         {
-            string ip=Utils.ObjectOrException<string>(await api.DeviceCurrentIpAsync(this.Id));
+            string ip = Utils.ObjectOrException<string>(await api.DeviceCurrentIpAsync(this.Id));
             char[] trim = { '\n', '\"' };
 
             return ip.Trim(trim);
@@ -171,11 +171,11 @@ namespace TorizonAppDeploymentAPI
         // Public constructor using default instantiator
         public TargetDevices() : this(new TargetDeviceInstantiator())
         {
-        }      
+        }
 
         protected TargetDevices(IObjectsCollectionInstantiator<TargetDevice, TorizonRestAPI.Model.TargetDevice> instantiator) : base("Id", instantiator)
         {
-            api= TorizonAPIManager.GetDevicesApi();
+            api = TorizonAPIManager.GetDevicesApi();
         }
 
         public async Task RefreshAsync(Action OnRefreshCompleted, bool full)
