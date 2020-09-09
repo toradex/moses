@@ -256,7 +256,7 @@ class ApplicationConfig(config.ConfigurableKeysObject):
 
         return workfolder
 
-    def check_image(self, configuration):
+    def check_image(self, configuration: str):
         """ Checks if the image is up to date
 
         Arguments:
@@ -289,13 +289,33 @@ class ApplicationConfig(config.ConfigurableKeysObject):
         except docker.errors.DockerException as e:
             raise exceptions.LocalDockerError(e)
 
-    def build_image(self, configuration):
+    def _get_image_name(self, configuration: str):
+        """ Return image name
+
+        Arguments:
+            configuration {str} - debug/release
+        """
+        assert self.id is not None
+
+        appname = self.get_custom_prop(configuration, "appname")
+
+        if appname is None:
+            imagename = ""
+        else:
+            imagename = appname.lower() + "_"
+
+        imagename += self.platformid + "_" + configuration + "_" + self.id
+        return imagename
+
+    def build_image(self, configuration: str):
         """Generate complete dockerfile from template and
         builds the image
 
         Arguments:
             configuration {str} - debug/release
         """
+
+        assert self.folder is not None
 
         try:
             localdocker = docker.from_env()
@@ -320,14 +340,17 @@ class ApplicationConfig(config.ConfigurableKeysObject):
 
             platform = platformconfig.PlatformConfigs().get_platform(self.platformid)
 
-            dockertemplatefull = platform.folder / platform.get_prop(
-                configuration, "container"
+            assert platform is not None
+            assert platform.folder is not None
+
+            dockertemplatefull = platform.folder / str(
+                platform.get_prop(configuration, "container")
             )
             dockerfile = self._get_work_folder() / ("Dockerfile." + configuration)
 
             utils.apply_template(
-                dockertemplatefull,
-                dockerfile,
+                str(dockertemplatefull),
+                str(dockerfile),
                 lambda obj, tag, args: self._get_value(obj, tag, args),
                 configuration,
             )
@@ -349,7 +372,7 @@ class ApplicationConfig(config.ConfigurableKeysObject):
             img = localdocker.images.build(
                 path=str(self.folder),
                 dockerfile=dockerfilerelpath,
-                tag=self.platformid + "_" + self.id + "_" + configuration,
+                tag=self._get_image_name(configuration),
                 pull=False,
             )[0]
 
@@ -371,7 +394,7 @@ class ApplicationConfig(config.ConfigurableKeysObject):
         except docker.errors.DockerException as e:
             raise exceptions.LocalDockerError(e)
 
-    def deploy_image(self, configuration, device):
+    def deploy_image(self, configuration: str, device: targetdevice.TargetDevice):
         """
         Checks if container needs to be deployed to remote and then
         transfers the actual file and loads it in the images collection
@@ -428,10 +451,6 @@ class ApplicationConfig(config.ConfigurableKeysObject):
                 rimg = rd.get_image_by_tag(limg.tags[0])
 
                 if rimg is not None:
-                    # TODO string comparison works, but better to use datetime
-                    # unfortunately dateutil 2.7 can't parse more than 9
-                    # decimal digits for seconds, will be fixed in 2.8
-
                     # image is up to date
                     if limg.attrs["Created"] == rimg["Created"]:
                         return
@@ -948,11 +967,18 @@ class ApplicationConfig(config.ConfigurableKeysObject):
         if not platform.usesdk:
             raise exceptions.PlatformDoesNotRequireSDKError(self.platformid)
 
-        instance = platform.id
-        instance += "_"
-        instance += self.id
+        appname = self.get_custom_prop(configuration, "appname")
+
+        if appname is None:
+            instance = ""
+        else:
+            instance = appname.lower() + "_"
+
+        instance += platform.id
         instance += "_"
         instance += configuration
+        instance += "_"
+        instance += self.id
         instance += "_sdk"
 
         instance = instance.replace(":", "_")
@@ -978,11 +1004,18 @@ class ApplicationConfig(config.ConfigurableKeysObject):
         if not platform.usesdk:
             raise exceptions.PlatformDoesNotRequireSDKError(self.platformid)
 
-        imagename = platform.id
-        imagename += "_"
-        imagename += self.id
+        appname = self.get_custom_prop(configuration, "appname")
+
+        if appname is None:
+            imagename = ""
+        else:
+            imagename = appname.lower() + "_"
+
+        imagename += platform.id
         imagename += "_"
         imagename += configuration
+        imagename += "_"
+        imagename += self.id
         imagename += "_sdk_image"
 
         imagename = imagename.replace(":", "_")
