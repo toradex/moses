@@ -144,7 +144,10 @@ namespace TorizonAppDeploymentAPI
 
         public async Task<string> GetCurrentIp()
         {
-            return await api.DeviceCurrentIpAsync(this.Id);
+            string ip=Utils.ObjectOrException<string>(await api.DeviceCurrentIpAsync(this.Id));
+            char[] trim = { '\n', '\"' };
+
+            return ip.Trim(trim);
         }
     }
     public class TargetDeviceInstantiator : IObjectsCollectionInstantiator<TargetDevice, TorizonRestAPI.Model.TargetDevice>
