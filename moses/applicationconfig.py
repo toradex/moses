@@ -728,7 +728,8 @@ class ApplicationConfig(config.ConfigurableKeysObject):
                 assert device.id is not None
 
                 if device.id in self.logs:
-                    del self.logs[device.id][configuration]
+                    if configuration in self.logs[device.id]:
+                        del self.logs[device.id][configuration]
 
             # check scripts for both application and platform, both are deployed
             # if app script exist, then it's the only one invoked (but still has a
