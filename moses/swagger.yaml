@@ -1,7 +1,7 @@
 swagger: "2.0"
 info:
   description: Toradex API to build and deploy applications running as containers on Torizon
-  version: 1.0.7
+  version: 1.0.8
   title: Torizon IDE-backend API
 consumes:
   - application/json
@@ -1423,6 +1423,39 @@ paths:
       responses:
         200:
           description: SDK updated
+        404:
+          description: Application not found
+        500:
+          $ref: "#/responses/InternalServerError_500"
+        520:
+          $ref: "#/responses/ImageNotFoundError_520"
+        530:
+          $ref: "#/responses/LocalDockerError_530"
+        533:
+          $ref: "#/responses/SSHError_533"
+  
+  /applications/{application_id}/sdk/container:
+
+    get:
+      operationId: application_sdk_container
+      tags:
+        - Applications
+      summary: Get SDK container
+      description: Get SDK container for check if it is running
+      parameters:
+        - $ref: "#/parameters/application_id"
+        - name: configuration
+          in: query
+          type: string
+          required: true
+          pattern: "(?:debug|release)"
+      responses:
+        200:
+          description: Returns application container
+          schema:
+            $ref: "#/definitions/Docker_Container"
+        204:
+          description: No content
         404:
           description: Application not found
         500:
@@ -3291,5 +3324,9 @@ responses:
       $ref: "#/definitions/ErrorInfo"
   InvalidModelError_547:
     description: Model id not recognized.
+    schema:
+      $ref: "#/definitions/ErrorInfo"
+  SDKContainerNotFoundError_548:
+    description: SDK container not found.
     schema:
       $ref: "#/definitions/ErrorInfo"

@@ -78,6 +78,17 @@ namespace TorizonAppDeploymentAPI
             return new ApplicationSDKContainerAddress(resp.HostIp, resp.HostPort);
         }
 
+        public DockerContainer GetSDKContainer(string configuration)
+        {
+            TorizonRestAPI.Model.DockerContainer model =
+                Utils.ObjectOrException<TorizonRestAPI.Model.DockerContainer>(
+                    api.ApplicationSdkContainer(this.Id, configuration)
+                );
+
+            DockerContainer container = new DockerContainer(model, null);
+            return container;
+        }
+
         public async Task<bool> IsContainerUpToDateAsync(string configuration, Action<bool> CheckCompleted)
         {
             bool updated = Utils.ObjectOrException<bool>(await api.ApplicationUpdatedAsync(this.Id, configuration));

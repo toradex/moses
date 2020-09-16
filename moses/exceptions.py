@@ -319,6 +319,14 @@ class InvalidModelError(MosesError):
         super().__init__("Model id not recognized " + model)
 
 
+class SDKContainerNotFoundError(MosesError):
+    code = 548
+    description = "SDK container not found."
+
+    def __init__(self, e):
+        super().__init__("SDK Container not found: " + str(e), exception=e)
+
+
 def encode_error(e: MosesError):
 
     fields = {"code": (e).code, "description": (e).description, "message": str(e)}

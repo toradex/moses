@@ -855,6 +855,28 @@ def applications_application_container_get(
     cfg = app.get_container(configuration, devices[deviceid])
     return (cfg.attrs, 200)
 
+def applications_application_sdk_container_get(
+    application_id: str, configuration: str
+) -> Any:
+    """Returns app currently running container
+
+    Arguments:
+        application_id {str} -- application
+        configuration {str} -- debug/release
+    """
+
+    applications = applicationconfig.ApplicationConfigs()
+
+    if application_id not in applications:
+        return ("Application not found", 404)
+
+    app = applications[application_id]
+    cfg = app.get_sdk_container(configuration)
+    
+    if cfg is None:
+        return (connexion.NoContent, 204)
+
+    return (cfg.attrs, 200)
 
 def applications_application_container_logs_get(
     application_id: str, configuration: str, deviceid: str, restart: bool

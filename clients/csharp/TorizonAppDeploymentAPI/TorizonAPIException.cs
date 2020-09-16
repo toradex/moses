@@ -38,7 +38,8 @@ namespace TorizonAppDeploymentAPI
             LoginFailedError=538,
             SSHTunnelError=539,
             InvalidPathError=540,
-            SDKContainerNotRunningError=541
+            SDKContainerNotRunningError=541,
+            SDKContainerNotFoundError=548
         }
 
         /// <summary>

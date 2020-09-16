@@ -920,6 +920,27 @@ class ApplicationConfig(config.ConfigurableKeysObject):
 
         return None
 
+    def get_sdk_container(
+        self, configuration: str
+    ) -> docker.models.containers.Container:
+        """Returns information about current SDK container
+
+        Arguments:
+            configuration {str} -- debug/release
+        """
+
+        instance = self._get_sdk_container_name(configuration)
+
+        try:
+            localdocker = docker.from_env()
+            cnt = localdocker.containers.get(instance)
+
+            return cnt
+        except docker.errors.DockerException as e:
+            raise exceptions.SDKContainerNotFoundError(e)
+
+        return None
+
     def get_container_name(self, img) -> str:
         """Builds up container name from an image
 
