@@ -15,6 +15,7 @@ Method | HTTP request | Description
 [**application_reseal**](ApplicationsApi.md#application_reseal) | **GET** /applications/{application_id}/reseal | Cleans id and keys for git repo uploading
 [**application_run**](ApplicationsApi.md#application_run) | **GET** /applications/{application_id}/run | Runs container image
 [**application_runsdk**](ApplicationsApi.md#application_runsdk) | **GET** /applications/{application_id}/sdk/run | Runs SDK containers
+[**application_sdk_container**](ApplicationsApi.md#application_sdk_container) | **GET** /applications/{application_id}/sdk/container | Get SDK container
 [**application_stop**](ApplicationsApi.md#application_stop) | **GET** /applications/{application_id}/stop | Stops running container image
 [**application_syncfolders**](ApplicationsApi.md#application_syncfolders) | **GET** /applications/{application_id}/syncfolders | synchronizes folders
 [**application_updated**](ApplicationsApi.md#application_updated) | **GET** /applications/{application_id}/updated | Builds container image
@@ -767,6 +768,76 @@ No authorization required
 **500** | Unexpected exception. |  -  |
 **520** | Container image not found on local host. |  -  |
 **530** | Local docker exception. |  -  |
+
+[[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
+
+# **application_sdk_container**
+> DockerContainer application_sdk_container(application_id, configuration)
+
+Get SDK container
+
+Get SDK container for check if it is running
+
+### Example
+
+```python
+from __future__ import print_function
+import time
+import moses_client
+from moses_client.rest import ApiException
+from pprint import pprint
+# Defining the host is optional and defaults to http://localhost:5000/api
+# See configuration.py for a list of all supported configuration parameters.
+configuration = moses_client.Configuration(
+    host = "http://localhost:5000/api"
+)
+
+
+# Enter a context with an instance of the API client
+with moses_client.ApiClient() as api_client:
+    # Create an instance of the API class
+    api_instance = moses_client.ApplicationsApi(api_client)
+    application_id = 'application_id_example' # str | Id of an application (uuid)
+configuration = 'configuration_example' # str | 
+
+    try:
+        # Get SDK container
+        api_response = api_instance.application_sdk_container(application_id, configuration)
+        pprint(api_response)
+    except ApiException as e:
+        print("Exception when calling ApplicationsApi->application_sdk_container: %s\n" % e)
+```
+
+### Parameters
+
+Name | Type | Description  | Notes
+------------- | ------------- | ------------- | -------------
+ **application_id** | **str**| Id of an application (uuid) | 
+ **configuration** | **str**|  | 
+
+### Return type
+
+[**DockerContainer**](DockerContainer.md)
+
+### Authorization
+
+No authorization required
+
+### HTTP request headers
+
+ - **Content-Type**: Not defined
+ - **Accept**: application/json
+
+### HTTP response details
+| Status code | Description | Response headers |
+|-------------|-------------|------------------|
+**200** | Returns application container |  -  |
+**204** | No content |  -  |
+**404** | Application not found |  -  |
+**500** | Unexpected exception. |  -  |
+**520** | Container image not found on local host. |  -  |
+**530** | Local docker exception. |  -  |
+**533** | SSH error. |  -  |
 
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
 
