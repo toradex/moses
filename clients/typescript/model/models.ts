@@ -1,3 +1,5 @@
+import localVarRequest from 'request';
+
 export * from './application';
 export * from './dockerAddress';
 export * from './dockerContainer';
@@ -39,7 +41,18 @@ export * from './platform';
 export * from './process';
 export * from './targetDevice';
 
-import localVarRequest from 'request';
+import * as fs from 'fs';
+
+export interface RequestDetailedFile {
+    value: Buffer;
+    options?: {
+        filename?: string;
+        contentType?: string;
+    }
+}
+
+export type RequestFile = string | Buffer | fs.ReadStream | RequestDetailedFile;
+
 
 import { Application } from './application';
 import { DockerAddress } from './dockerAddress';
