@@ -15,6 +15,7 @@ Method | HTTP request | Description
 [**ApplicationReseal**](ApplicationsApi.md#applicationreseal) | **GET** /applications/{application_id}/reseal | Cleans id and keys for git repo uploading
 [**ApplicationRun**](ApplicationsApi.md#applicationrun) | **GET** /applications/{application_id}/run | Runs container image
 [**ApplicationRunsdk**](ApplicationsApi.md#applicationrunsdk) | **GET** /applications/{application_id}/sdk/run | Runs SDK containers
+[**ApplicationSdkContainer**](ApplicationsApi.md#applicationsdkcontainer) | **GET** /applications/{application_id}/sdk/container | Get SDK container
 [**ApplicationStop**](ApplicationsApi.md#applicationstop) | **GET** /applications/{application_id}/stop | Stops running container image
 [**ApplicationSyncfolders**](ApplicationsApi.md#applicationsyncfolders) | **GET** /applications/{application_id}/syncfolders | synchronizes folders
 [**ApplicationUpdated**](ApplicationsApi.md#applicationupdated) | **GET** /applications/{application_id}/updated | Builds container image
@@ -907,6 +908,89 @@ No authorization required
 | **500** | Unexpected exception. |  -  |
 | **520** | Container image not found on local host. |  -  |
 | **530** | Local docker exception. |  -  |
+
+[[Back to top]](#)
+[[Back to API list]](../README.md#documentation-for-api-endpoints)
+[[Back to Model list]](../README.md#documentation-for-models)
+[[Back to README]](../README.md)
+
+
+## ApplicationSdkContainer
+
+> DockerContainer ApplicationSdkContainer (string applicationId, string configuration)
+
+Get SDK container
+
+Get SDK container for check if it is running
+
+### Example
+
+```csharp
+using System.Collections.Generic;
+using System.Diagnostics;
+using TorizonRestAPI.Api;
+using TorizonRestAPI.Client;
+using TorizonRestAPI.Model;
+
+namespace Example
+{
+    public class ApplicationSdkContainerExample
+    {
+        public static void Main()
+        {
+            Configuration.Default.BasePath = "http://localhost:5000/api";
+            var apiInstance = new ApplicationsApi(Configuration.Default);
+            var applicationId = applicationId_example;  // string | Id of an application (uuid)
+            var configuration = configuration_example;  // string | 
+
+            try
+            {
+                // Get SDK container
+                DockerContainer result = apiInstance.ApplicationSdkContainer(applicationId, configuration);
+                Debug.WriteLine(result);
+            }
+            catch (ApiException e)
+            {
+                Debug.Print("Exception when calling ApplicationsApi.ApplicationSdkContainer: " + e.Message );
+                Debug.Print("Status Code: "+ e.ErrorCode);
+                Debug.Print(e.StackTrace);
+            }
+        }
+    }
+}
+```
+
+### Parameters
+
+
+Name | Type | Description  | Notes
+------------- | ------------- | ------------- | -------------
+ **applicationId** | **string**| Id of an application (uuid) | 
+ **configuration** | **string**|  | 
+
+### Return type
+
+[**DockerContainer**](DockerContainer.md)
+
+### Authorization
+
+No authorization required
+
+### HTTP request headers
+
+- **Content-Type**: Not defined
+- **Accept**: application/json
+
+### HTTP response details
+| Status code | Description | Response headers |
+|-------------|-------------|------------------|
+| **200** | Returns application container |  -  |
+| **204** | No content |  -  |
+| **404** | Application not found |  -  |
+| **500** | Unexpected exception. |  -  |
+| **520** | Container image not found on local host. |  -  |
+| **530** | Local docker exception. |  -  |
+| **533** | SSH error. |  -  |
 
 [[Back to top]](#)
 [[Back to API list]](../README.md#documentation-for-api-endpoints)
