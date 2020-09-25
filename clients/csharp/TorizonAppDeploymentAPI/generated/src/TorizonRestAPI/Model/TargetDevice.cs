@@ -37,12 +37,14 @@ namespace TorizonRestAPI.Model
         /// <param name="hostname">Device host name.</param>
         /// <param name="username">User account used to connect to device via ssh.</param>
         /// <param name="homefolder">Home folder of ssh user (used to deploy files and apps, can be different from actual home).</param>
-        public TargetDevice(string name = default(string), string hostname = default(string), string username = default(string), string homefolder = default(string))
+        /// <param name="runningtorizon">True for a target device that is a community device, false for default Toradex devices.</param>
+        public TargetDevice(string name = default(string), string hostname = default(string), string username = default(string), string homefolder = default(string), bool runningtorizon = default(bool))
         {
             this.Name = name;
             this.Hostname = hostname;
             this.Username = username;
             this.Homefolder = homefolder;
+            this.Runningtorizon = runningtorizon;
         }
         
         /// <summary>
@@ -116,6 +118,13 @@ namespace TorizonRestAPI.Model
         public string Homefolder { get; set; }
 
         /// <summary>
+        /// True for a target device that is a community device, false for default Toradex devices
+        /// </summary>
+        /// <value>True for a target device that is a community device, false for default Toradex devices</value>
+        [DataMember(Name="runningtorizon", EmitDefaultValue=false)]
+        public bool Runningtorizon { get; set; }
+
+        /// <summary>
         /// Returns the string presentation of the object
         /// </summary>
         /// <returns>String presentation of the object</returns>
@@ -133,6 +142,7 @@ namespace TorizonRestAPI.Model
             sb.Append("  Hostname: ").Append(Hostname).Append("\n");
             sb.Append("  Username: ").Append(Username).Append("\n");
             sb.Append("  Homefolder: ").Append(Homefolder).Append("\n");
+            sb.Append("  Runningtorizon: ").Append(Runningtorizon).Append("\n");
             sb.Append("}\n");
             return sb.ToString();
         }
@@ -216,6 +226,11 @@ namespace TorizonRestAPI.Model
                     this.Homefolder == input.Homefolder ||
                     (this.Homefolder != null &&
                     this.Homefolder.Equals(input.Homefolder))
+                ) && 
+                (
+                    this.Runningtorizon == input.Runningtorizon ||
+                    (this.Runningtorizon != null &&
+                    this.Runningtorizon.Equals(input.Runningtorizon))
                 );
         }
 
@@ -248,6 +263,8 @@ namespace TorizonRestAPI.Model
                     hashCode = hashCode * 59 + this.Username.GetHashCode();
                 if (this.Homefolder != null)
                     hashCode = hashCode * 59 + this.Homefolder.GetHashCode();
+                if (this.Runningtorizon != null)
+                    hashCode = hashCode * 59 + this.Runningtorizon.GetHashCode();
                 return hashCode;
             }
         }

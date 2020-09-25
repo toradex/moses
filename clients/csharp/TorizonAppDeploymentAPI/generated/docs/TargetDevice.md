@@ -15,6 +15,7 @@ Name | Type | Description | Notes
 **Hostname** | **string** | Device host name | [optional] 
 **Username** | **string** | User account used to connect to device via ssh | [optional] 
 **Homefolder** | **string** | Home folder of ssh user (used to deploy files and apps, can be different from actual home) | [optional] 
+**Runningtorizon** | **bool** | True for a target device that is a community device, false for default Toradex devices | [optional] 
 
 [[Back to Model list]](../README.md#documentation-for-models)
 [[Back to API list]](../README.md#documentation-for-api-endpoints)

@@ -64,7 +64,7 @@ class TargetDevice(config.ConfigurableKeysObject):
         self.dockertunnel: Optional[sshtunnel.SSHTunnelForwarder] = None
         self.sshforwarder: Optional[sharedssh.SSHListenThread] = None
         self.homefolder = ""
-        self.community = False
+        self.runningtorizon = True
 
         if self.folder is not None:
             self.load()
@@ -779,7 +779,7 @@ class TargetDevices(Dict[str, TargetDevice], metaclass=singleton.Singleton):
             dev.hostname = self.get_hostname_from_model(dev.model)
         elif len(str(dev.id)) > 0:
             logging.info("DETECT - Community device id %s", dev.id)
-            dev.community = True
+            dev.runningtorizon = False
 
             # Check if the distro have docker
             dockerCheck = console.send_cmd(

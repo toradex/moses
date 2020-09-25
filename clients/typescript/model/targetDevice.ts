@@ -53,6 +53,10 @@ export class TargetDevice {
     * Home folder of ssh user (used to deploy files and apps, can be different from actual home)
     */
     'homefolder'?: string;
+    /**
+    * True for a target device that is a community device, false for default Toradex devices
+    */
+    'runningtorizon'?: boolean;
 
     static discriminator: string | undefined = undefined;
 
@@ -106,6 +110,11 @@ export class TargetDevice {
             "name": "homefolder",
             "baseName": "homefolder",
             "type": "string"
+        },
+        {
+            "name": "runningtorizon",
+            "baseName": "runningtorizon",
+            "type": "boolean"
         }    ];
 
     static getAttributeTypeMap() {

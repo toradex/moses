@@ -1677,6 +1677,10 @@ definitions:
         type: string
         description: Home folder of ssh user (used to deploy files and apps, can be different from actual home)
         example: /home/torizon
+      runningtorizon:
+        type: boolean
+        description: True for a target device that is a community device, false for default Toradex devices
+        example: false
 
   Eula:
     type: object

@@ -42,7 +42,8 @@ class TargetDevice(object):
         'torizonversion': 'str',
         'hostname': 'str',
         'username': 'str',
-        'homefolder': 'str'
+        'homefolder': 'str',
+        'runningtorizon': 'bool'
     }
 
     attribute_map = {
@@ -55,10 +56,11 @@ class TargetDevice(object):
         'torizonversion': 'torizonversion',
         'hostname': 'hostname',
         'username': 'username',
-        'homefolder': 'homefolder'
+        'homefolder': 'homefolder',
+        'runningtorizon': 'runningtorizon'
     }
 
-    def __init__(self, id=None, name=None, model=None, hwrev=None, kernelversion=None, kernelrelease=None, torizonversion=None, hostname=None, username=None, homefolder=None, local_vars_configuration=None):  # noqa: E501
+    def __init__(self, id=None, name=None, model=None, hwrev=None, kernelversion=None, kernelrelease=None, torizonversion=None, hostname=None, username=None, homefolder=None, runningtorizon=None, local_vars_configuration=None):  # noqa: E501
         """TargetDevice - a model defined in OpenAPI"""  # noqa: E501
         if local_vars_configuration is None:
             local_vars_configuration = Configuration()
@@ -74,6 +76,7 @@ class TargetDevice(object):
         self._hostname = None
         self._username = None
         self._homefolder = None
+        self._runningtorizon = None
         self.discriminator = None
 
         if id is not None:
@@ -96,6 +99,8 @@ class TargetDevice(object):
             self.username = username
         if homefolder is not None:
             self.homefolder = homefolder
+        if runningtorizon is not None:
+            self.runningtorizon = runningtorizon
 
     @property
     def id(self):
@@ -326,6 +331,29 @@ class TargetDevice(object):
         """
 
         self._homefolder = homefolder
+
+    @property
+    def runningtorizon(self):
+        """Gets the runningtorizon of this TargetDevice.  # noqa: E501
+
+        True for a target device that is a community device, false for default Toradex devices  # noqa: E501
+
+        :return: The runningtorizon of this TargetDevice.  # noqa: E501
+        :rtype: bool
+        """
+        return self._runningtorizon
+
+    @runningtorizon.setter
+    def runningtorizon(self, runningtorizon):
+        """Sets the runningtorizon of this TargetDevice.
+
+        True for a target device that is a community device, false for default Toradex devices  # noqa: E501
+
+        :param runningtorizon: The runningtorizon of this TargetDevice.  # noqa: E501
+        :type runningtorizon: bool
+        """
+
+        self._runningtorizon = runningtorizon
 
     def to_dict(self):
         """Returns the model properties as a dict"""
