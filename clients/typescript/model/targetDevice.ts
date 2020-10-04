@@ -40,7 +40,7 @@ export class TargetDevice {
     /**
     * Torizon version (date)
     */
-    'torizonversion'?: string;
+    'distroversion'?: string;
     /**
     * Device host name
     */
@@ -92,8 +92,8 @@ export class TargetDevice {
             "type": "string"
         },
         {
-            "name": "torizonversion",
-            "baseName": "torizonversion",
+            "name": "distroversion",
+            "baseName": "distroversion",
             "type": "string"
         },
         {

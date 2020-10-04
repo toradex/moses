@@ -79,7 +79,7 @@ namespace TorizonAppDeploymentAPI
         public ConnectionState State { get; set; }
         public string ErrorMessage { get; private set; }
 
-        public string[] ReadOnlyProperties { get { return new string[] { "Id", "Model", "Hwrev", "Kernelversion", "Kernelrelease", "Torizonversion" }; } }
+        public string[] ReadOnlyProperties { get { return new string[] { "Id", "Model", "Hwrev", "Kernelversion", "Kernelrelease", "Distroversion" }; } }
 
         public async Task RefreshAsync(Action OnRefreshCompleted, bool full)
         {

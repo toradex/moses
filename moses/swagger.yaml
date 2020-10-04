@@ -1660,7 +1660,7 @@ definitions:
         description: Kernel release
         example: 4.18.1
         readOnly: true
-      torizonversion:
+      distroversion:
         type: string
         description: Torizon version (date)
         example: 20180824141405

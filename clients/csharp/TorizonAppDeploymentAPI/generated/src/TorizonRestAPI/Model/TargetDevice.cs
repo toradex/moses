@@ -93,8 +93,8 @@ namespace TorizonRestAPI.Model
         /// Torizon version (date)
         /// </summary>
         /// <value>Torizon version (date)</value>
-        [DataMember(Name="torizonversion", EmitDefaultValue=false)]
-        public string Torizonversion { get; private set; }
+        [DataMember(Name="distroversion", EmitDefaultValue=false)]
+        public string Distroversion { get; private set; }
 
         /// <summary>
         /// Device host name
@@ -138,7 +138,7 @@ namespace TorizonRestAPI.Model
             sb.Append("  Hwrev: ").Append(Hwrev).Append("\n");
             sb.Append("  Kernelversion: ").Append(Kernelversion).Append("\n");
             sb.Append("  Kernelrelease: ").Append(Kernelrelease).Append("\n");
-            sb.Append("  Torizonversion: ").Append(Torizonversion).Append("\n");
+            sb.Append("  Distroversion: ").Append(Distroversion).Append("\n");
             sb.Append("  Hostname: ").Append(Hostname).Append("\n");
             sb.Append("  Username: ").Append(Username).Append("\n");
             sb.Append("  Homefolder: ").Append(Homefolder).Append("\n");
@@ -208,9 +208,9 @@ namespace TorizonRestAPI.Model
                     this.Kernelrelease.Equals(input.Kernelrelease))
                 ) && 
                 (
-                    this.Torizonversion == input.Torizonversion ||
-                    (this.Torizonversion != null &&
-                    this.Torizonversion.Equals(input.Torizonversion))
+                    this.Distroversion == input.Distroversion ||
+                    (this.Distroversion != null &&
+                    this.Distroversion.Equals(input.Distroversion))
                 ) && 
                 (
                     this.Hostname == input.Hostname ||
@@ -255,8 +255,8 @@ namespace TorizonRestAPI.Model
                     hashCode = hashCode * 59 + this.Kernelversion.GetHashCode();
                 if (this.Kernelrelease != null)
                     hashCode = hashCode * 59 + this.Kernelrelease.GetHashCode();
-                if (this.Torizonversion != null)
-                    hashCode = hashCode * 59 + this.Torizonversion.GetHashCode();
+                if (this.Distroversion != null)
+                    hashCode = hashCode * 59 + this.Distroversion.GetHashCode();
                 if (this.Hostname != null)
                     hashCode = hashCode * 59 + this.Hostname.GetHashCode();
                 if (this.Username != null)

@@ -39,7 +39,7 @@ class TargetDevice(object):
         'hwrev': 'str',
         'kernelversion': 'str',
         'kernelrelease': 'str',
-        'torizonversion': 'str',
+        'distroversion': 'str',
         'hostname': 'str',
         'username': 'str',
         'homefolder': 'str',
@@ -53,14 +53,14 @@ class TargetDevice(object):
         'hwrev': 'hwrev',
         'kernelversion': 'kernelversion',
         'kernelrelease': 'kernelrelease',
-        'torizonversion': 'torizonversion',
+        'distroversion': 'distroversion',
         'hostname': 'hostname',
         'username': 'username',
         'homefolder': 'homefolder',
         'runningtorizon': 'runningtorizon'
     }
 
-    def __init__(self, id=None, name=None, model=None, hwrev=None, kernelversion=None, kernelrelease=None, torizonversion=None, hostname=None, username=None, homefolder=None, runningtorizon=None, local_vars_configuration=None):  # noqa: E501
+    def __init__(self, id=None, name=None, model=None, hwrev=None, kernelversion=None, kernelrelease=None, distroversion=None, hostname=None, username=None, homefolder=None, runningtorizon=None, local_vars_configuration=None):  # noqa: E501
         """TargetDevice - a model defined in OpenAPI"""  # noqa: E501
         if local_vars_configuration is None:
             local_vars_configuration = Configuration()
@@ -72,7 +72,7 @@ class TargetDevice(object):
         self._hwrev = None
         self._kernelversion = None
         self._kernelrelease = None
-        self._torizonversion = None
+        self._distroversion = None
         self._hostname = None
         self._username = None
         self._homefolder = None
@@ -91,8 +91,8 @@ class TargetDevice(object):
             self.kernelversion = kernelversion
         if kernelrelease is not None:
             self.kernelrelease = kernelrelease
-        if torizonversion is not None:
-            self.torizonversion = torizonversion
+        if distroversion is not None:
+            self.distroversion = distroversion
         if hostname is not None:
             self.hostname = hostname
         if username is not None:
@@ -241,27 +241,27 @@ class TargetDevice(object):
         self._kernelrelease = kernelrelease
 
     @property
-    def torizonversion(self):
-        """Gets the torizonversion of this TargetDevice.  # noqa: E501
+    def distroversion(self):
+        """Gets the distroversion of this TargetDevice.  # noqa: E501
 
         Torizon version (date)  # noqa: E501
 
-        :return: The torizonversion of this TargetDevice.  # noqa: E501
+        :return: The distroversion of this TargetDevice.  # noqa: E501
         :rtype: str
         """
-        return self._torizonversion
+        return self._distroversion
 
-    @torizonversion.setter
-    def torizonversion(self, torizonversion):
-        """Sets the torizonversion of this TargetDevice.
+    @distroversion.setter
+    def distroversion(self, distroversion):
+        """Sets the distroversion of this TargetDevice.
 
         Torizon version (date)  # noqa: E501
 
-        :param torizonversion: The torizonversion of this TargetDevice.  # noqa: E501
-        :type torizonversion: str
+        :param distroversion: The distroversion of this TargetDevice.  # noqa: E501
+        :type distroversion: str
         """
 
-        self._torizonversion = torizonversion
+        self._distroversion = distroversion
 
     @property
     def hostname(self):

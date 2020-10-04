@@ -9,7 +9,7 @@ Name | Type | Description | Notes
 **hwrev** | **str** | Device hardware revision | [optional] [readonly] 
 **kernelversion** | **str** | Kernel name | [optional] [readonly] 
 **kernelrelease** | **str** | Kernel release | [optional] [readonly] 
-**torizonversion** | **str** | Torizon version (date) | [optional] [readonly] 
+**distroversion** | **str** | Torizon version (date) | [optional] [readonly] 
 **hostname** | **str** | Device host name | [optional] 
 **username** | **str** | User account used to connect to device via ssh | [optional] 
 **homefolder** | **str** | Home folder of ssh user (used to deploy files and apps, can be different from actual home) | [optional] 

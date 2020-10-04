@@ -59,7 +59,7 @@ class TargetDevice(config.ConfigurableKeysObject):
         self.hwrev = ""
         self.kernelrelease = ""
         self.kernelversion = ""
-        self.torizonversion = ""
+        self.distroversion = ""
         self.hostname = ""
         self.dockertunnel: Optional[sshtunnel.SSHTunnelForwarder] = None
         self.sshforwarder: Optional[sharedssh.SSHListenThread] = None
@@ -121,8 +121,8 @@ class TargetDevice(config.ConfigurableKeysObject):
             + "kernelversion : "
             + self.kernelversion
             + os.linesep
-            + "torizonversion : "
-            + self.torizonversion
+            + "distroversion : "
+            + self.distroversion
             + os.linesep
             + "hostname : "
             + self.hostname
@@ -735,14 +735,14 @@ class TargetDevices(Dict[str, TargetDevice], metaclass=singleton.Singleton):
 
         dev.kernelversion = console.send_cmd("uname -v", timeout).rstrip("\x00\n")
 
-        dev.torizonversion = (
+        dev.distroversion = (
             console.send_cmd("cat /usr/lib/os-release | grep PRETTY_NAME=", timeout)
             .rstrip("\x00")
             .strip()
         )
 
-        dev.torizonversion = dev.torizonversion.lstrip("PRETTY_NAME=")
-        dev.torizonversion = dev.torizonversion.strip('"')
+        dev.distroversion = dev.distroversion.lstrip("PRETTY_NAME=")
+        dev.distroversion = dev.distroversion.strip('"')
 
     def _create_device_from_console(self, console, timeout) -> TargetDevice:
         """Create a new device collecting its information from the console
