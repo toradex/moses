@@ -11,6 +11,8 @@ import exceptions
 import sshtunnel
 import sharedssh
 import targetdevice
+import progresscookie
+import dockerapi
 from typing import Optional, List, Dict, Any
 
 
@@ -67,7 +69,12 @@ class RemoteDocker:
         except docker.errors.DockerException as e:
             raise exceptions.RemoteDockerError(self.dev, str(e))
 
-    def load_image(self, limg: docker.models.images.Image, localpath: str) -> None:
+    def load_image(
+        self,
+        limg: docker.models.images.Image,
+        localpath: str,
+        progress: Optional[progresscookie.ProgressCookie],
+    ) -> None:
         """Loads an image on the target device
 
         Arguments:
@@ -76,10 +83,14 @@ class RemoteDocker:
         """
         try:
 
-            with open(localpath, "rb", buffering=1024 * 1024) as inp:
-                rimg = self.remotedocker.images.load(inp)
+            rimg = dockerapi.load_image(
+                self.remotedocker, localpath, self.dev, progress
+            )
 
-            rimg[0].tag(limg.tags[0])
+            if rimg is None:
+                raise exceptions.ImageNotFoundError(localpath)
+
+            rimg.tag(limg.tags[0])
 
         except docker.errors.DockerException as e:
             raise exceptions.RemoteDockerError(self.dev, str(e))

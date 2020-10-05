@@ -8,6 +8,50 @@ import moses_client
 import moses_client.models
 import tabulate
 import json
+import threading
+
+from typing import Optional
+
+
+def progress_function(api, progress_id):
+
+    while True:
+        progress = api.progress_status(progress_id=progress_id)
+
+        for msg in progress.messages:
+            print(msg)
+
+        if progress.progress != -1:
+            print(f"{progress.progress}%")
+
+        if progress.pending == False:
+            break
+
+    if progress.result.code >= 200 and progress.result.code <= 299:
+        print("operation completed successfully")
+    else:
+        if not progress.result.message is None:
+            print(progress.result.message)
+
+        if not progress.result.description is None:
+            print(progress.result.description)
+
+    api.progress_delete(progress_id=progress_id)
+
+
+def handle_progress(args) -> Optional[str]:
+
+    if not args.progress:
+        return ""
+
+    api = moses_client.ProgressApi()
+    progress = api.progress_create()
+
+    thread = threading.Thread(target=progress_function, args=(api, progress.id))
+
+    thread.start()
+
+    return progress.id
 
 
 def generate_prop_list(obj) -> list:
@@ -390,7 +434,6 @@ def cmd_handler_device_image_delete(args) -> int:
 
 def generate_container_list_item(c: moses_client.models.DockerContainer) -> dict:
     """Convert image into dump table row
-applications_application_reseal
     """
     item = dict()
 
@@ -579,8 +622,14 @@ def cmd_handler_device_sync(args) -> int:
         int -- 0 for success
     """
     api = moses_client.DevicesApi()
+
+    progress_id = handle_progress(args)
+
     device = api.device_syncfolders(
-        args.device_id, os.path.abspath(args.source_folder), args.destination_folder
+        args.device_id,
+        os.path.abspath(args.source_folder),
+        args.destination_folder,
+        progress_id=progress_id,
     )
     return 0
 
@@ -633,8 +682,12 @@ def cmd_handler_application_build(args) -> int:
     """
     api = moses_client.ApplicationsApi()
 
+    progress_id = handle_progress(args)
+
     logging.info("Building application, this may take a few minutes...")
-    api.application_build(args.application_id, args.configuration)
+    api.application_build(
+        args.application_id, args.configuration, progress_id=progress_id
+    )
     logging.info("Application %s successfully built.", args.application_id)
     return 0
 
@@ -650,9 +703,12 @@ def cmd_handler_application_deploy(args) -> int:
         int -- 0 for success
     """
     api = moses_client.ApplicationsApi()
+    progress_id = handle_progress(args)
 
     logging.info("Deploying application, this may take a few minutes...")
-    api.application_deploy(args.application_id, args.configuration, args.device_id)
+    api.application_deploy(
+        args.application_id, args.configuration, args.device_id, progress_id=progress_id
+    )
     logging.info("Application %s successfully deployed.", args.application_id)
     return 0
 
@@ -712,7 +768,7 @@ def cmd_handler_application_key(args) -> int:
 
 
 def cmd_handler_application_reseal(args) -> int:
-    """prints path of private key file
+    """removes keys and ids from configuration
 
     Arguments:
         args {[type]} -- command line arguments
@@ -725,6 +781,31 @@ def cmd_handler_application_reseal(args) -> int:
     api.application_reseal(args.application_id)
     logging.warning(
         "Application has been resealed. It should not be used for any further operation, otherwise keys will be regenerated."
+    )
+    return 0
+
+
+def cmd_handler_application_sync(args) -> int:
+    """transfer files into the application container
+
+    Arguments:
+        args {[type]} -- command line arguments
+
+    Returns:
+        int -- 0 for success
+    """
+    api = moses_client.ApplicationsApi()
+
+    progress_id = handle_progress(args)
+
+    api.application_syncfolders(
+        args.application_id,
+        args.source_folder,
+        args.configuration,
+        args.device_id,
+        args.destination_folder,
+        source_is_sdk=args.source_is_sdk,
+        progress_id=progress_id,
     )
     return 0
 
@@ -823,9 +904,14 @@ def cmd_handler_application_updatesdk(args) -> int:
     """
     api = moses_client.ApplicationsApi()
 
+    progress_id = handle_progress(args)
+
     logging.info("Updating SDK, this may require a few minutes...")
-    api.application_updatesdk(args.application_id, args.configuration)
+    api.application_updatesdk(
+        args.application_id, args.configuration, progress_id=progress_id
+    )
     logging.info("SDK for application %s successfully updated.", args.application_id)
+    return 0
 
 
 def cmd_handler_application_runsdk(args) -> int:
@@ -839,7 +925,11 @@ def cmd_handler_application_runsdk(args) -> int:
     """
     api = moses_client.ApplicationsApi()
 
-    sdkaddress = api.application_runsdk(args.application_id, args.configuration)
+    progress_id = handle_progress(args)
+
+    sdkaddress = api.application_runsdk(
+        args.application_id, args.configuration, progress_id=progress_id
+    )
 
     logging.info(
         tabulate.tabulate(
@@ -848,6 +938,23 @@ def cmd_handler_application_runsdk(args) -> int:
             tablefmt="plain",
         )
     )
+    return 0
+
+
+def cmd_handler_pull(args) -> int:
+    """Download base containers
+
+    Arguments:
+        args {[type]} -- command line arguments
+
+    Returns:
+        int -- 0 for success
+    """
+    api = moses_client.SetupApi()
+
+    progress_id = handle_progress(args)
+    api.setup_pullcontainers(progress_id=progress_id)
+    return 0
 
 
 def create_parser() -> argparse.ArgumentParser:
@@ -871,6 +978,10 @@ def create_parser() -> argparse.ArgumentParser:
         description="Torizon Developer Swiss Knife Tool",
     )
 
+    parser.add_argument(
+        "-p", "--progress", action="store_true", dest="progress", default=False
+    )
+
     subparsers = parser.add_subparsers(dest="command")
 
     # add first level commands
@@ -883,6 +994,7 @@ def create_parser() -> argparse.ArgumentParser:
     detect_parser = subparsers.add_parser("detect")
     create_parser = subparsers.add_parser("create")
     load_parser = subparsers.add_parser("load")
+    pullcontainers_parser = subparsers.add_parser("pull")
 
     device_parser.add_argument(
         "device_id", help="Device serial number", metavar="device-id"
@@ -976,6 +1088,7 @@ def create_parser() -> argparse.ArgumentParser:
     application_runsdk_parser = application_subparsers.add_parser("runsdk")
     application_key_parser = application_subparsers.add_parser("key")
     application_reseal_parser = application_subparsers.add_parser("reseal")
+    application_sync_parser = application_subparsers.add_parser("sync")
 
     application_build_parser.add_argument(
         "configuration", help="Build/release or other app-specific configuration"
@@ -1015,6 +1128,30 @@ def create_parser() -> argparse.ArgumentParser:
 
     application_runsdk_parser.add_argument(
         "configuration", help="Build/release or other app-specific configuration"
+    )
+
+    application_sync_parser.add_argument(
+        "source_folder", help="Source folder (host PC)", metavar="source-folder"
+    )
+
+    application_sync_parser.add_argument(
+        "configuration", help="Build/release or other app-specific configuration"
+    )
+    application_sync_parser.add_argument(
+        "device_id", help="Device serial number", metavar="device-id"
+    )
+
+    application_sync_parser.add_argument(
+        "destination_folder",
+        help="Destination folder (target device)",
+        metavar="destination-folder",
+    )
+    application_sync_parser.add_argument(
+        "--sdk",
+        help="source folder is relative to sdk container",
+        dest="source_is_sdk",
+        action="store_true",
+        default=False,
     )
 
     # add command to create application

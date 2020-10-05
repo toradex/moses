@@ -1,7 +1,7 @@
 swagger: "2.0"
 info:
   description: Toradex API to build and deploy applications running as containers on Torizon
-  version: 1.0.8
+  version: 1.0.9
   title: Torizon IDE-backend API
 consumes:
   - application/json
@@ -827,6 +827,7 @@ paths:
           in: query
           type: string
           required: true
+        - $ref: "#/parameters/progress_id"
 
       responses:
         200:
@@ -1160,6 +1161,7 @@ paths:
           type: string
           required: true
           pattern: "(?:debug|release)"
+        - $ref: "#/parameters/progress_id"
       responses:
         200:
           description: Successful build
@@ -1190,6 +1192,7 @@ paths:
           type: string
           required: true
           pattern: "^[-0-9a-zA-Z.]*$"
+        - $ref: "#/parameters/progress_id"
       responses:
         200:
           description: Successful build
@@ -1383,6 +1386,7 @@ paths:
           type: boolean
           required: false
           default: true
+        - $ref: "#/parameters/progress_id"
       responses:
         200:
           description: Container started
@@ -1420,6 +1424,7 @@ paths:
           type: string
           required: true
           pattern: "(?:debug|release)"
+        - $ref: "#/parameters/progress_id"
       responses:
         200:
           description: SDK updated
@@ -1499,7 +1504,7 @@ paths:
           in: query
           type: boolean
           required: false
-
+        - $ref: "#/parameters/progress_id"
       responses:
         200:
           description: Sysroot updated
@@ -1521,6 +1526,8 @@ paths:
           $ref: "#/responses/SSHError_533"
         541:
           $ref: "#/responses/SDKContainerNotRunningError_541"
+        548:
+          $ref: "#/responses/ContainerDoesNotSupportSSH_548"
 
   /applications/{application_id}/privatekey:
 
@@ -1561,6 +1568,8 @@ paths:
   /setup/pullcontainers:
     get:
       operationId: setup_pullcontainers
+      parameters:
+        - $ref: "#/parameters/progress_id"
       tags:
         - Setup
       summary: pulls containers from docker repo
@@ -1575,6 +1584,49 @@ paths:
         542:
           $ref: "#/responses/PullImageError_542"
 
+  /progress/create:
+    get:
+      operationId: progress_create
+      tags:
+        - Progress
+      responses:
+        200:
+          description: returns new empty object
+          schema:
+            $ref: "#definitions/Progress"
+        500:
+          $ref: "#/responses/InternalServerError_500"
+
+  /progress/status:
+    get:
+      operationId: progress_status
+      tags:
+        - Progress
+      parameters:
+        - $ref: "#/parameters/progress_id"
+      responses:
+        200:
+          description: return object with up to date information
+          schema:
+            $ref: "#definitions/Progress"
+        404:
+          description: Object not found
+        500:
+          $ref: "#/responses/InternalServerError_500"
+
+
+  /progress/delete:
+    get:
+      operationId: progress_delete
+      tags:
+        - Progress
+      parameters:
+        - $ref: "#/parameters/progress_id"
+      responses:
+        200:
+          description: OK
+        500:
+          $ref: "#/responses/InternalServerError_500"
 
 parameters:
 
@@ -1625,6 +1677,15 @@ parameters:
     type: string
     required: true
     pattern: "^sha256:[0-9,a-f,A-F]{64}$"
+
+  progress_id:
+    name: progress_id
+    description: Id of a progress cookie (uuid)
+    in: query
+    type: string
+    required: false
+    pattern: "^$|[0-9,a-f,A-F]{8}-[0-9,a-f,A-F]{4}-[0-9,a-f,A-F]{4}-[0-9,a-f,A-F]{4}-[0-9,a-f,A-F]{12}$"
+
 
 definitions:
 
@@ -3191,7 +3252,6 @@ definitions:
             Details:
               type: "object"
               x-nullable: true
-
       Version:
         type: "string"
       ApiVersion:
@@ -3212,6 +3272,31 @@ definitions:
         type: "boolean"
       BuildTime:
         type: "string"
+
+  Progress:
+    type: object
+    properties: 
+      id:
+        type: string
+        description: "cookie"
+        readOnly: true
+      progress:
+        type: integer
+        description: 0%-100%
+        readOnly: true
+      messages:
+        type: array
+        items: 
+          type: string
+          description: output message
+        readOnly: true
+      pending:
+        type: boolean
+        description: true as long as operation is pending
+      result:
+        $ref: "#/definitions/ErrorInfo"
+
+        readOnly: true
 
 responses:
   InternalServerError_500:
@@ -3334,3 +3419,8 @@ responses:
     description: SDK container not found.
     schema:
       $ref: "#/definitions/ErrorInfo"
+  ContainerDoesNotSupportSSH_548:
+    description: Container does not support SSH
+    schema:
+      $ref: "#/definitions/ErrorInfo"
+

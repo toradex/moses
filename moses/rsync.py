@@ -6,6 +6,7 @@ import targetdevice
 import logging
 import socket
 import sharedssh
+import progresscookie
 from typing import Optional, List
 
 should_translate_path: bool = False
@@ -91,6 +92,7 @@ def run_rsync(
     targetfolder: str,
     keypath: Optional[str] = None,
     port: int = None,
+    progress: Optional[progresscookie.ProgressCookie] = None,
 ) -> None:
     """Syncs a folder from the host PC to target
 
@@ -123,43 +125,59 @@ def run_rsync(
     if port is None:
         port = 22
 
-    if should_translate_path:
-        keypath = translate_path(keypath)
+    try:
 
-    if should_create_tmp_key:
-        keypath = create_tmp_key(keypath)
+        if should_translate_path:
+            keypath = translate_path(keypath)
 
-    if not sourcefolder.endswith("/"):
-        sourcefolder += "/"
+        if should_create_tmp_key:
+            keypath = create_tmp_key(keypath)
 
-    if not targetfolder.endswith("/"):
-        targetfolder += "/"
+        if not sourcefolder.endswith("/"):
+            sourcefolder += "/"
 
-    assert device.username is not None
+        if not targetfolder.endswith("/"):
+            targetfolder += "/"
 
-    rsync_args = rsync_cmd + [
-        "-r",
-        "-z",
-        "-l",
-        "-p",
-        "-g",
-        "-o",
-        "-t",
-        "-q",
-        "-e",
-        "ssh -p "
-        + str(port)
-        + " -q -i '"
-        + keypath
-        + "' -o 'StrictHostKeyChecking no' -o 'UserKnownHostsFile /dev/null'",
-        sourcefolder,
-        device.username + "@" + ip + ":" + targetfolder,
-    ]
+        assert device.username is not None
 
-    result = subprocess.run(rsync_args, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+        rsync_args = rsync_cmd + [
+            "-r",
+            "-z",
+            "-l",
+            "-p",
+            "-g",
+            "-o",
+            "-t",
+            "-q" if progress is None else "-v",
+            "-e",
+            "ssh -p "
+            + str(port)
+            + " -q -i '"
+            + keypath
+            + "' -o 'StrictHostKeyChecking no' -o 'UserKnownHostsFile /dev/null'",
+            sourcefolder,
+            device.username + "@" + ip + ":" + targetfolder,
+        ]
 
-    if should_create_tmp_key:
-        remove_tmp_key(keypath)
+        process = subprocess.Popen(
+            rsync_args, stdout=subprocess.PIPE, stderr=subprocess.STDOUT
+        )
 
-    if result.returncode != 0:
-        raise exceptions.LocalCommandError(result)
+        if progress is not None:
+
+            assert process.stdout is not None
+
+            while process.poll() is None:
+                progress.append_message(process.stdout.readline().decode("utf-8"))
+        else:
+            process.wait()
+
+        if process.returncode != 0:
+            raise exceptions.LocalCommandError(process.returncode)
+
+    finally:
+
+        if should_create_tmp_key:
+            remove_tmp_key(keypath)
+

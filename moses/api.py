@@ -12,7 +12,9 @@ import eula
 import platformconfig
 import config
 import exceptions
+import progresscookie
 import flask
+import os
 from typing import Any, Optional, Dict
 
 APP_VERSION = "1.0"
@@ -487,7 +489,7 @@ def devices_device_privatekey_get(device_id: str) -> Any:
 
 
 def devices_device_syncfolders_get(
-    device_id: str, sourcefolder: str, destfolder: str
+    device_id: str, sourcefolder: str, destfolder: str, progress_id: str = None
 ) -> Any:
     """Syncs a folder on the host with one on the target device
 
@@ -496,13 +498,28 @@ def devices_device_syncfolders_get(
         sourcefolder {src} -- source folder
         destfolder {src} -- target folder
     """
-    devices = targetdevice.TargetDevices()
+    cookies = progresscookie.ProgressCookies()
+    progress = None
 
-    if device_id not in devices:
-        return ("Device not found", 404)
+    if progress_id is not None and progress_id in cookies:
+        progress = cookies[progress_id]
 
-    devices[device_id].sync_folders(sourcefolder, destfolder)
-    return (connexion.NoContent, 200)
+    try:
+        devices = targetdevice.TargetDevices()
+
+        if device_id not in devices:
+            raise exceptions.ObjectNotFound("Device", device_id)
+
+        devices[device_id].sync_folders(sourcefolder, destfolder, progress)
+
+        if progress is not None:
+            progress.completed()
+
+        return (connexion.NoContent, 200)
+    except Exception as e:
+        if progress is not None:
+            progress.report_error(e)
+        raise e
 
 
 def devices_device_current_ip_get(device_id: str) -> Any:
@@ -735,24 +752,41 @@ def applications_application_updated_get(
     return (False, 200)
 
 
-def applications_application_build_get(application_id: str, configuration: str) -> Any:
+def applications_application_build_get(
+    application_id: str, configuration: str, progress_id: str = None
+) -> Any:
     """builds the application container
 
     Arguments:
         application_id {str} -- application id
         configuration -- debug/release
     """
-    applications = applicationconfig.ApplicationConfigs()
+    cookies = progresscookie.ProgressCookies()
+    progress = None
 
-    if application_id not in applications:
-        return ("Application not found", 404)
+    if progress_id is not None and progress_id in cookies:
+        progress = cookies[progress_id]
 
-    applications[application_id].build_image(configuration)
-    return (connexion.NoContent, 200)
+    try:
+        applications = applicationconfig.ApplicationConfigs()
+
+        if application_id not in applications:
+            raise exceptions.ObjectNotFound("Application", application_id)
+
+        applications[application_id].build_image(configuration, progress)
+
+        if progress is not None:
+            progress.completed()
+
+        return (connexion.NoContent, 200)
+    except Exception as e:
+        if progress is not None:
+            progress.report_error(e)
+        raise e
 
 
 def applications_application_deploy_get(
-    application_id: str, configuration: str, deviceid: str
+    application_id: str, configuration: str, deviceid: str, progress_id: str = None
 ) -> Any:
     """deploys the application container
 
@@ -761,21 +795,36 @@ def applications_application_deploy_get(
         configuration {str} -- debug/release
         deviceid {str} -- device
     """
-    applications = applicationconfig.ApplicationConfigs()
 
-    if application_id not in applications:
-        return ("Application not found", 404)
+    cookies = progresscookie.ProgressCookies()
+    progress = None
 
-    app = applications[application_id]
+    if progress_id is not None and progress_id in cookies:
+        progress = cookies[progress_id]
 
-    devices = targetdevice.TargetDevices()
+    try:
+        applications = applicationconfig.ApplicationConfigs()
 
-    if deviceid not in devices:
-        return ("Device not found", 404)
+        if application_id not in applications:
+            return ("Application not found", 404)
 
-    app.deploy_image(configuration, devices[deviceid])
+        app = applications[application_id]
 
-    return (connexion.NoContent, 200)
+        devices = targetdevice.TargetDevices()
+
+        if deviceid not in devices:
+            return ("Device not found", 404)
+
+        app.deploy_image(configuration, devices[deviceid], progress)
+
+        if progress is not None:
+            progress.completed()
+
+        return (connexion.NoContent, 200)
+    except Exception as e:
+        if progress is not None:
+            progress.report_error(e)
+        raise e
 
 
 def applications_application_run_get(
@@ -855,6 +904,7 @@ def applications_application_container_get(
     cfg = app.get_container(configuration, devices[deviceid])
     return (cfg.attrs, 200)
 
+
 def applications_application_sdk_container_get(
     application_id: str, configuration: str
 ) -> Any:
@@ -872,11 +922,12 @@ def applications_application_sdk_container_get(
 
     app = applications[application_id]
     cfg = app.get_sdk_container(configuration)
-    
+
     if cfg is None:
         return (connexion.NoContent, 204)
 
     return (cfg.attrs, 200)
+
 
 def applications_application_container_logs_get(
     application_id: str, configuration: str, deviceid: str, restart: bool
@@ -910,7 +961,7 @@ def applications_application_container_logs_get(
 
 
 def applications_application_sdk_run_get(
-    application_id: str, configuration: str, build: bool
+    application_id: str, configuration: str, build: bool, progress_id: str = None
 ) -> Any:
     """Runs the SDK container and returns SSH address for connection
 
@@ -922,23 +973,43 @@ def applications_application_sdk_run_get(
     Returns:
         url -- address of the SSH port on the container
     """
-    applications = applicationconfig.ApplicationConfigs()
+    cookies = progresscookie.ProgressCookies()
+    progress = None
 
-    if application_id not in applications:
-        return ("Application not found", 404)
+    if progress_id is not None and progress_id in cookies:
+        progress = cookies[progress_id]
 
-    app = applications[application_id]
+    try:
+        applications = applicationconfig.ApplicationConfigs()
 
-    if build is None:
-        build = True
+        if application_id not in applications:
+            raise exceptions.ObjectNotFound("Application", application_id)
 
-    app.start_sdk_container(configuration, build)
+        app = applications[application_id]
 
-    return (app.sdksshaddress, 200)
+        if build is None:
+            build = True
+
+        cookies = progresscookie.ProgressCookies()
+        progress = None
+
+        if progress_id is not None and progress_id in cookies:
+            progress = cookies[progress_id]
+
+        app.start_sdk_container(configuration, build, progress)
+
+        if progress is not None:
+            progress.completed()
+
+        return (app.sdksshaddress, 200)
+    except Exception as e:
+        if progress is not None:
+            progress.report_error(e)
+        raise e
 
 
 def applications_application_sdk_update_get(
-    application_id: str, configuration: str
+    application_id: str, configuration: str, progress_id: str = None
 ) -> Any:
     """Updates the SDK for an application
 
@@ -946,14 +1017,35 @@ def applications_application_sdk_update_get(
         application_id {str} -- application
         configuration {str} -- debug/release
     """
-    applications = applicationconfig.ApplicationConfigs()
+    cookies = progresscookie.ProgressCookies()
+    progress = None
 
-    if application_id not in applications:
-        return ("Application not found", 404)
+    if progress_id is not None and progress_id in cookies:
+        progress = cookies[progress_id]
 
-    app = applications[application_id]
-    app.update_sdk(configuration)
-    return (connexion.NoContent, 200)
+    try:
+        applications = applicationconfig.ApplicationConfigs()
+
+        if application_id not in applications:
+            raise exceptions.ObjectNotFound("Application", application_id)
+
+        cookies = progresscookie.ProgressCookies()
+        progress = None
+
+        if progress_id is not None and progress_id in cookies:
+            progress = cookies[progress_id]
+
+        app = applications[application_id]
+        app.update_sdk(configuration, progress)
+
+        if progress is not None:
+            progress.completed()
+
+        return (connexion.NoContent, 200)
+    except Exception as e:
+        if progress is not None:
+            progress.report_error(e)
+        raise e
 
 
 def applications_application_syncfolders_get(
@@ -963,6 +1055,7 @@ def applications_application_syncfolders_get(
     deviceid: str,
     destfolder: str,
     source_is_sdk: bool,
+    progress_id: str = None,
 ) -> Any:
     """Sincronizes a folder between the SDK container and the target
 
@@ -975,18 +1068,35 @@ def applications_application_syncfolders_get(
         source_is_sdk {bool} -- source if from SDK container
 
     """
-    applications = applicationconfig.ApplicationConfigs()
+    cookies = progresscookie.ProgressCookies()
+    progress = None
 
-    if application_id not in applications:
-        return ("Application not found", 404)
+    if progress_id is not None and progress_id in cookies:
+        progress = cookies[progress_id]
 
-    app = applications[application_id]
+    try:
+        applications = applicationconfig.ApplicationConfigs()
 
-    if source_is_sdk is None:
-        source_is_sdk = True
+        if application_id not in applications:
+            raise exceptions.ObjectNotFound("Application", application_id)
 
-    app.sync_folders(sourcefolder, configuration, deviceid, destfolder, source_is_sdk)
-    return (connexion.NoContent, 200)
+        app = applications[application_id]
+
+        if source_is_sdk is None:
+            source_is_sdk = True
+
+        app.sync_folders(
+            sourcefolder, configuration, deviceid, destfolder, source_is_sdk, progress
+        )
+
+        if progress is not None:
+            progress.completed()
+
+        return (connexion.NoContent, 200)
+    except Exception as e:
+        if progress is not None:
+            progress.report_error(e)
+        raise e
 
 
 def applications_application_privatekey_get(application_id: str) -> Any:
@@ -1010,44 +1120,102 @@ def applications_application_reseal_get(application_id: str) -> Any:
     return (connexion.NoContent, 200)
 
 
-def setup_pullcontainers_get() -> Any:
+def setup_pullcontainers_get(progress_id: str = None) -> Any:
     """Pulls all base containers needed for the different applications
 
     Raises:
         exceptions.PullImageError: error during image pull
     """
 
-    dockerclient = docker.from_env()
-    failed = []
+    progress: Optional[progresscookie.ProgressCookie] = None
 
-    for p in platformconfig.PlatformConfigs():
+    try:
+        cookies = progresscookie.ProgressCookies()
 
-        plat = platformconfig.PlatformConfigs()[p]
+        if progress_id is not None and progress_id in cookies:
+            progress = cookies[progress_id]
 
-        for k, v in plat.baseimage.items():
-            if v is not None:
-                logging.info("PULL - Pulling container %s:%s", v[0], v[1])
-                try:
-                    dockerclient.images.pull(v[0], v[1])
-                except:
-                    logging.exception(
-                        "PULL - Pull operation failed for image %s:%s.", v[0], v[1]
-                    )
-                    failed.append(str(v[0]) + ":" + str(v[1]))
+        dockerclient = docker.from_env()
+        failed = []
 
-        for k, v in plat.sdkbaseimage.items():
-            if v is not None:
-                logging.info("PULL - Pulling container %s:%s", v[0], v[1])
-                try:
-                    dockerclient.images.pull(v[0], v[1])
-                except:
-                    logging.exception(
-                        "PULL - Pull operation failed for image %s:%s.", v[0], v[1]
-                    )
-                    failed.append(str(v[0]) + ":" + str(v[1]))
+        counter = 0
+        max = len(platformconfig.PlatformConfigs())
 
-    if len(failed) != 0:
-        raise exceptions.PullImageError(failed)
+        for p in platformconfig.PlatformConfigs():
+
+            plat = platformconfig.PlatformConfigs()[p]
+
+            if progress is not None:
+                progress.set_progress(int(counter * 100 / max))
+                counter += 1
+
+            for k, v in plat.baseimage.items():
+                if v is not None:
+                    logging.info("PULL - Pulling container %s:%s", v[0], v[1])
+                    try:
+                        if progress is not None:
+                            progress.append_message(f"Downloading {v[0]}:{v[1]}")
+
+                        dockerclient.images.pull(v[0], v[1])
+                    except:
+                        logging.exception(
+                            "PULL - Pull operation failed for image %s:%s.", v[0], v[1]
+                        )
+                        failed.append(str(v[0]) + ":" + str(v[1]))
+
+            for k, v in plat.sdkbaseimage.items():
+                if v is not None:
+                    logging.info("PULL - Pulling container %s:%s", v[0], v[1])
+                    try:
+                        if progress is not None:
+                            progress.append_message(f"Downloading {v[0]}:{v[1]}")
+
+                        dockerclient.images.pull(v[0], v[1])
+                    except:
+                        logging.exception(
+                            "PULL - Pull operation failed for image %s:%s.", v[0], v[1]
+                        )
+                        failed.append(str(v[0]) + ":" + str(v[1]))
+
+        if len(failed) != 0:
+            raise exceptions.PullImageError(failed)
+
+        if progress is not None:
+            progress.set_progress(100)
+            progress.completed()
+
+    except Exception as ex:
+        if progress is not None:
+            progress.report_error(ex)
+        raise ex
+
+    return (connexion.NoContent, 200)
+
+
+def progress_create_get() -> Any:
+    cookies = progresscookie.ProgressCookies()
+    cookie = cookies.create_cookie()
+
+    progress_data = cookies.get_update(cookie.id, False)
+
+    return (progress_data, 200)
+
+
+def progress_delete_get(progress_id=""):
+    cookies = progresscookie.ProgressCookies()
+    cookie = cookies.delete_cookie(progress_id)
+
+    return (connexion.NoContent, 200)
+
+
+def progress_status_get(progress_id=""):
+    cookies = progresscookie.ProgressCookies()
+    progress_data = cookies.get_update(progress_id, True)
+
+    if progress_data is None:
+        return (connexion.NoContent, 404)
+
+    return (progress_data, 200)
 
 
 def init_api():

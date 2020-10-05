@@ -24,6 +24,7 @@ import yaml
 import rsync
 import utils
 import re
+import progresscookie
 from typing import Optional, List, Dict, Any, Iterable
 
 
@@ -90,7 +91,7 @@ class TargetDevice(config.ConfigurableKeysObject):
 
             # replace not in filter chars
             if fields["id"] is not None and len(fields["id"]) > 0:
-                fields["id"] = re.sub(r'[^-0-9a-zA-Z.]', '', fields["id"])
+                fields["id"] = re.sub(r"[^-0-9a-zA-Z.]", "", fields["id"])
 
         if (
             fields["name"] is None
@@ -576,14 +577,23 @@ class TargetDevice(config.ConfigurableKeysObject):
 
             return self._process_df_output(io.StringIO(plist.decode("utf-8")))
 
-    def sync_folders(self, sourcefolder, destfolder):
+    def sync_folders(
+        self,
+        sourcefolder: str,
+        destfolder: str,
+        progress: Optional[progresscookie.ProgressCookie],
+    ):
         """Syncronizes a local folder and a folder on the target device
 
         Arguments:
             sourcefolder {str} -- source folder
             destfolder {str} -- destination folder
+            progress (Optional[ProgressCookie]): progress object or None
         """
-        rsync.run_rsync(sourcefolder, self.id, destfolder)
+
+        assert self.id is not None
+
+        rsync.run_rsync(sourcefolder, self.id, destfolder, None, None, progress)
 
     def get_current_ip(self) -> str:
         """Returns the device current ip or the hostname
@@ -772,7 +782,7 @@ class TargetDevices(Dict[str, TargetDevice], metaclass=singleton.Singleton):
         productId = console.send_cmd(
             "cat /proc/device-tree/toradex,product-id", timeout
         ).rstrip("\x00")
-        
+
         if "No such file or directory" not in productId:
             logging.info("DETECT - Toradex device id %s", dev.id)
             dev.model = productId
@@ -782,40 +792,34 @@ class TargetDevices(Dict[str, TargetDevice], metaclass=singleton.Singleton):
             dev.runningtorizon = False
 
             # Check if the distro have docker
-            dockerCheck = console.send_cmd(
-                "ls /var/run/docker.sock", timeout
-            ).rstrip("\x00")
+            dockerCheck = console.send_cmd("ls /var/run/docker.sock", timeout).rstrip(
+                "\x00"
+            )
 
             if "No such file or directory" in dockerCheck:
-                logging.info("Docker socket not present, make sure you have " \
-                                + "Docker installed and running on your board.")
+                logging.info(
+                    "Docker socket not present, make sure you have "
+                    + "Docker installed and running on your board."
+                )
                 raise exceptions.InvalidDeviceError(dev)
 
             # Check if the board in running arm or arm64
-            archCheck = console.send_cmd(
-                "arch", timeout
-            ).rstrip("\x00")
+            archCheck = console.send_cmd("arch", timeout).rstrip("\x00")
 
             if "arm" not in archCheck:
                 logging.info("Unsupported architecture %s", archCheck)
                 raise exceptions.InvalidDeviceError(dev)
 
             # Community Devices has Model name
-            dev.model = console.send_cmd(
-                "cat /proc/device-tree/model", timeout
-            ).rstrip("\x00")
+            dev.model = console.send_cmd("cat /proc/device-tree/model", timeout).rstrip(
+                "\x00"
+            )
 
-            dev.hostname = console.send_cmd(
-                "cat /etc/hostname", timeout
-            ).rstrip("\x00")
+            dev.hostname = console.send_cmd("cat /etc/hostname", timeout).rstrip("\x00")
         else:
             raise exceptions.InvalidDeviceIdError()
 
-        logging.info(
-            "DETECT - %s detected :: Model %s",
-            dev.hostname,
-            dev.model
-        )
+        logging.info("DETECT - %s detected :: Model %s", dev.hostname, dev.model)
 
         dev.name = (
             console.send_cmd("cat /proc/device-tree/model", timeout).rstrip("\x00")

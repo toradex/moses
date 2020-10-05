@@ -22,6 +22,8 @@ import time
 import socket
 import rsync
 import pathlib
+import progresscookie
+import dockerapi
 from typing import Optional, Dict, Any, List
 
 
@@ -307,12 +309,15 @@ class ApplicationConfig(config.ConfigurableKeysObject):
         imagename += self.platformid + "_" + configuration + "_" + self.id
         return imagename
 
-    def build_image(self, configuration: str):
+    def build_image(
+        self, configuration: str, progress: Optional[progresscookie.ProgressCookie]
+    ):
         """Generate complete dockerfile from template and
         builds the image
 
         Arguments:
             configuration {str} - debug/release
+            progress (Optional[ProgressCookie]): progress object or None
         """
 
         assert self.folder is not None
@@ -369,12 +374,17 @@ class ApplicationConfig(config.ConfigurableKeysObject):
                 "\\", "/"
             )
 
-            img = localdocker.images.build(
-                path=str(self.folder),
-                dockerfile=dockerfilerelpath,
-                tag=self._get_image_name(configuration),
-                pull=False,
-            )[0]
+            img = dockerapi.build_image(
+                localdocker,
+                str(self.folder),
+                dockerfilerelpath,
+                self._get_image_name(configuration),
+                None,
+                progress,
+            )
+
+            if img is None:
+                raise exceptions.ImageNotFoundError(self._get_image_name(configuration))
 
             tag = self.get_custom_prop(configuration, "tag")
 
@@ -394,7 +404,12 @@ class ApplicationConfig(config.ConfigurableKeysObject):
         except docker.errors.DockerException as e:
             raise exceptions.LocalDockerError(e)
 
-    def deploy_image(self, configuration: str, device: targetdevice.TargetDevice):
+    def deploy_image(
+        self,
+        configuration: str,
+        device: targetdevice.TargetDevice,
+        progress: Optional[progresscookie.ProgressCookie],
+    ):
         """
         Checks if container needs to be deployed to remote and then
         transfers the actual file and loads it in the images collection
@@ -402,6 +417,7 @@ class ApplicationConfig(config.ConfigurableKeysObject):
         Arguments:
             configuration {str} -- debug/release container type
             device {TargetDevice} -- device where container has to be deployed
+            progress (Optional[ProgressCookie]): progress object or None
         """
 
         try:
@@ -453,9 +469,19 @@ class ApplicationConfig(config.ConfigurableKeysObject):
                 if rimg is not None:
                     # image is up to date
                     if limg.attrs["Created"] == rimg["Created"]:
+
+                        if progress is not None:
+                            progress.append_message(
+                                "Image on target is already up to date."
+                            )
                         return
 
                     logging.info("DEPLOY - Image on target is not up to date.")
+
+                    if progress is not None:
+                        progress.append_message(
+                            "Image on target is not up to date, removing it."
+                        )
 
                     # we need to stop active containers
                     containers = rd.get_containers(
@@ -469,8 +495,19 @@ class ApplicationConfig(config.ConfigurableKeysObject):
                         containers[0].remove(force=True)
 
                     rd.delete_image(rimg["Id"], True)
+
+                    if progress is not None:
+                        progress.append_message("Image has been removed.")
+
                 else:
                     logging.info("DEPLOY - Image not found on target device.")
+
+                    if progress is not None:
+                        progress.append_message("Image not found on target device.")
+
+                if progress is not None:
+                    progress.append_message("Exporting local image.")
+                    progress.set_minmax(0, limg.attrs["Size"] * 2)
 
                 stream = limg.save()
                 outputpath = str(self._get_work_folder() / (configuration + ".tar"))
@@ -478,12 +515,21 @@ class ApplicationConfig(config.ConfigurableKeysObject):
                 with open(outputpath, "wb") as f:
                     for chunk in stream:
                         f.write(chunk)
+                        if progress is not None:
+                            progress.update_progress_minmax(len(chunk))
+
                     f.flush()
                     f.close()
 
                 logging.info("DEPLOY - Image exported.")
 
-                rd.load_image(limg, outputpath)
+                if progress is not None:
+                    progress.append_message("Image exported, deploying to the target.")
+
+                rd.load_image(limg, outputpath, progress)
+
+                if progress is not None:
+                    progress.append_message("Image deployed.")
 
                 logging.info("DEPLOY - Image deployed.")
 
@@ -1045,11 +1091,14 @@ class ApplicationConfig(config.ConfigurableKeysObject):
 
         return imagename
 
-    def _build_sdk_image(self, configuration: str):
+    def _build_sdk_image(
+        self, configuration: str, progress: Optional[progresscookie.ProgressCookie]
+    ):
         """Builds a new image of the SDK container
 
         Arguments:
             configuration {str} -- active configuration
+            progress (Optional[ProgressCookie]): progress object or None
 
         Raises:
             exceptions.PlatformDoesNotRequireSDKError: [description]
@@ -1112,12 +1161,19 @@ class ApplicationConfig(config.ConfigurableKeysObject):
                 "\\", "/"
             )
 
-            sdkimage = localdocker.images.build(
-                path=str(self.folder),
-                dockerfile=dockerfilerelpath,
-                tag=self._get_sdk_image_name(configuration),
-                pull=False,
-            )[0]
+            sdkimage = dockerapi.build_image(
+                localdocker,
+                str(self.folder),
+                dockerfilerelpath,
+                self._get_sdk_image_name(configuration),
+                None,
+                progress,
+            )
+
+            if sdkimage is None:
+                raise exceptions.ImageNotFoundError(
+                    self._get_sdk_image_name(configuration)
+                )
 
             localdocker.containers.prune()
 
@@ -1125,7 +1181,7 @@ class ApplicationConfig(config.ConfigurableKeysObject):
             self.save()
 
             if containerwasrunning:
-                self.start_sdk_container(configuration, False)
+                self.start_sdk_container(configuration, False, progress)
 
         except docker.errors.DockerException as e:
             raise exceptions.LocalDockerError(e)
@@ -1147,7 +1203,7 @@ class ApplicationConfig(config.ConfigurableKeysObject):
 
         assert self.folder is not None
 
-        self.start_sdk_container(configuration, True)
+        self.start_sdk_container(configuration, True, None)
 
         if self.sdksshaddress is None:
             raise exceptions.SDKContainerNotRunningError(self.id)
@@ -1295,7 +1351,19 @@ class ApplicationConfig(config.ConfigurableKeysObject):
         except paramiko.SSHException as e:
             raise exceptions.SSHError(e)
 
-    def update_sdk(self, configuration: str):
+    def update_sdk(
+        self, configuration: str, progress: Optional[progresscookie.ProgressCookie]
+    ):
+        """Updates the application SDK
+
+        Args:
+            configuration (str): debug/release
+            progress (Optional[progresscookie.ProgressCookie]): progress object or None
+
+        Raises:
+            exceptions.PlatformDoesNotRequireSDKError: self explanatory
+            exceptions.SDKRequiresConfiguration: wrong configuration passed
+        """
 
         platform = platformconfig.PlatformConfigs().get_platform(self.platformid)
 
@@ -1307,9 +1375,14 @@ class ApplicationConfig(config.ConfigurableKeysObject):
         else:
             if configuration is None:
                 raise exceptions.SDKRequiresConfiguration()
-            self._build_sdk_image(configuration)
+            self._build_sdk_image(configuration, progress)
 
-    def start_sdk_container(self, configuration: str, build: bool):
+    def start_sdk_container(
+        self,
+        configuration: str,
+        build: bool,
+        progress: Optional[progresscookie.ProgressCookie],
+    ):
         """
         Runs an instance of the SDK container that will be specific
         for this application object
@@ -1317,6 +1390,7 @@ class ApplicationConfig(config.ConfigurableKeysObject):
         Arguments:
             configuration {str} - debug/release
             build {bool} - build container if it does not exist yet
+            progress (Optional[ProgressCookie]): progress object or None
 
         Raises:
             exceptions.PlatformDoesNotRequireSDKError -- raised if the
@@ -1357,7 +1431,7 @@ class ApplicationConfig(config.ConfigurableKeysObject):
                 except docker.errors.NotFound:
                     if build:
                         logging.info("SDK - SDK image not found, building it.")
-                        self._build_sdk_image(configuration)
+                        self._build_sdk_image(configuration, progress)
                     else:
                         raise exceptions.ImageNotFoundError(
                             self._get_sdk_image_name(configuration)
@@ -1415,7 +1489,13 @@ class ApplicationConfig(config.ConfigurableKeysObject):
             ]
 
     def sync_folders(
-        self, sourcefolder, configuration, deviceid, containerfolder, source_is_sdk
+        self,
+        sourcefolder: str,
+        configuration: str,
+        deviceid: str,
+        containerfolder: str,
+        source_is_sdk: bool,
+        progress: Optional[progresscookie.ProgressCookie],
     ):
         """Sync folders from host/SDK container to the app container
 
@@ -1425,12 +1505,12 @@ class ApplicationConfig(config.ConfigurableKeysObject):
             deviceid {str} -- target device
             containerfolder {str} -- target folder inside the app container
             source_is_sdk {bool} -- source folder is inside the app container
+            progress (Optional[ProgressCookie]): progress object or None
 
         Raises:
-            exceptions.ContainerNotRunningError: [description]
-            exceptions.ContainerNotRunningError: [description]
-            exceptions.SDKContainerNotRunningError: [description]
-            exceptions.RemoteCommandError: [description]
+            exceptions.ContainerNotRunningError: target container must be running
+            exceptions.SDKContainerNotRunningError: if source is SDK, SDK container must be running
+            exceptions.RemoteCommandError: Error executing rsync command
         """
         # get device info
         plat = platformconfig.PlatformConfigs().get_platform(self.platformid)
@@ -1448,11 +1528,15 @@ class ApplicationConfig(config.ConfigurableKeysObject):
         if "host" in container.attrs["NetworkSettings"]["Networks"]:
             port = "2222"
         else:
+
+            if not "2222/tcp" in container.attrs["NetworkSettings"]["Ports"]:
+                raise exceptions.ContainerDoesNotSupportSSH()
+
             ports = container.attrs["NetworkSettings"]["Ports"]["2222/tcp"]
             port = ports[0]["HostPort"]
 
         if source_is_sdk:
-            self.start_sdk_container(configuration, True)
+            self.start_sdk_container(configuration, True, progress)
 
             if self.sdksshaddress is None:
                 raise exceptions.SDKContainerNotRunningError(self.id)
@@ -1482,6 +1566,8 @@ class ApplicationConfig(config.ConfigurableKeysObject):
                     except FileNotFoundError:
                         pass
 
+                    assert self.folder is not None
+
                     sftp.put(str(self.folder / "id_rsa"), ".ssh/id_rsa", confirm=True)
                     sftp.chmod(".ssh/id_rsa", 0o600)
 
@@ -1491,6 +1577,8 @@ class ApplicationConfig(config.ConfigurableKeysObject):
                 )
                 # source
                 rsynccommand += sourcefolder + "/* "
+
+                assert self.username is not None
 
                 # destination
                 rsynccommand += (
@@ -1502,10 +1590,17 @@ class ApplicationConfig(config.ConfigurableKeysObject):
                 )
 
                 _, stdout, stderr = ssh.exec_command(rsynccommand)
+
+                output = ""
+
+                if progress is not None:
+                    for line in iter(stdout.readline(), ""):
+                        progress.append_message(line)
+                        output += line
+
                 status = stdout.channel.recv_exit_status()
 
                 if status != 0:
-                    output = ""
 
                     try:
                         output = "".join(stderr.readlines())
@@ -1517,7 +1612,12 @@ class ApplicationConfig(config.ConfigurableKeysObject):
                     raise exceptions.RemoteCommandError(rsynccommand, status)
         else:
             rsync.run_rsync(
-                sourcefolder, deviceid, containerfolder, self.get_privatekeypath(), port
+                sourcefolder,
+                deviceid,
+                containerfolder,
+                self.get_privatekeypath(),
+                int(port),
+                progress,
             )
 
     def touch(self):

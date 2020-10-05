@@ -6,6 +6,8 @@ import flask
 import docker
 import os
 
+from typing import Any, Optional, List, Dict
+
 """
 Exceptions and tools to convert them to API response codes
 When you add new errors, run this module to re-generate YAML
@@ -30,6 +32,15 @@ class MosesError(Exception):
             self.message = message
 
         super().__init__(self.message)
+
+
+class ObjectNotFound(MosesError):
+
+    code = 404
+    description = "Object not found"
+
+    def __init__(self, obj_type, obj_id):
+        super().__init__(message=f"{obj_type} {obj_id} not found.")
 
 
 class InternalServerError(MosesError):
@@ -97,15 +108,51 @@ class SudoError(MosesError):
         )
 
 
-class RemoteDockerError(MosesError):
+class DockerError(MosesError):
+    def __init__(
+        self,
+        e: Any,
+        log: Optional[List[str]] = None,
+        info: Optional[Dict[str, str]] = None,
+    ):
+        message = "Docker exception: " + str(e)
+
+        if info is not None:
+            for key, value in info.items():
+                message += f"{os.linesep}{key}:{value}"
+
+        if log is not None:
+            for logline in log:
+                message += f"{os.linesep}{logline}"
+
+        if isinstance(e, docker.errors.BuildError):
+            for line in e.build_log:
+                if "stream" in line:
+                    message += os.linesep + line["stream"].strip()
+
+        if isinstance(e, Exception):
+            super().__init__(message, exception=e)
+        else:
+            super().__init__(message)
+
+
+class RemoteDockerError(DockerError):
 
     code = 525
     description = "Remote docker exception."
 
-    def __init__(self, device, e):
-        super().__init__(
-            "Docker error on device " + str(device) + ":" + str(e), exception=e
-        )
+    def __init__(
+        self,
+        device: Any,
+        e: Any,
+        log: Optional[List[str]] = None,
+        info: Optional[Dict[str, str]] = None,
+    ):
+        remote_info = {"device": device}
+
+        if info is not None:
+            remote_info.update(info)
+        super().__init__(e, log=log, info=remote_info)
 
 
 class RemoteImageNotFoundError(MosesError):
@@ -148,19 +195,18 @@ class RemoteCommandError(MosesError):
         )
 
 
-class LocalDockerError(MosesError):
+class LocalDockerError(DockerError):
 
     code = 530
     description = "Local docker exception."
 
-    def __init__(self, e):
-        message = "Docker exception: " + str(e)
-
-        if isinstance(e, docker.errors.BuildError):
-            for line in e.build_log:
-                if "stream" in line:
-                    message += os.linesep + line["stream"].strip()
-        super().__init__(message, exception=e)
+    def __init__(
+        self,
+        e: Any,
+        log: Optional[List[str]] = None,
+        info: Optional[Dict[str, str]] = None,
+    ):
+        super().__init__(e, log=log, info=info)
 
 
 class InvalidObjectIdError(MosesError):
@@ -325,6 +371,14 @@ class SDKContainerNotFoundError(MosesError):
 
     def __init__(self, e):
         super().__init__("SDK Container not found: " + str(e), exception=e)
+
+
+class ContainerDoesNotSupportSSH(MosesError):
+    code = 549
+    description = "Container does not support SSH."
+
+    def __init__(self):
+        super().__init__("Application container does not expose SSH port 2222")
 
 
 def encode_error(e: MosesError):
