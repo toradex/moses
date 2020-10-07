@@ -8,7 +8,7 @@ Method | HTTP request | Description
 
 
 # **setup_pullcontainers**
-> setup_pullcontainers()
+> setup_pullcontainers(progress_id=progress_id)
 
 pulls containers from docker repo
 
@@ -33,16 +33,20 @@ configuration = moses_client.Configuration(
 with moses_client.ApiClient() as api_client:
     # Create an instance of the API class
     api_instance = moses_client.SetupApi(api_client)
-    
+    progress_id = 'progress_id_example' # str | Id of a progress cookie (uuid) (optional)
+
     try:
         # pulls containers from docker repo
-        api_instance.setup_pullcontainers()
+        api_instance.setup_pullcontainers(progress_id=progress_id)
     except ApiException as e:
         print("Exception when calling SetupApi->setup_pullcontainers: %s\n" % e)
 ```
 
 ### Parameters
-This endpoint does not need any parameter.
+
+Name | Type | Description  | Notes
+------------- | ------------- | ------------- | -------------
+ **progress_id** | **str**| Id of a progress cookie (uuid) | [optional] 
 
 ### Return type
 

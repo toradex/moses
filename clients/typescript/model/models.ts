@@ -1,5 +1,3 @@
-import localVarRequest from 'request';
-
 export * from './application';
 export * from './dockerAddress';
 export * from './dockerContainer';
@@ -39,20 +37,10 @@ export * from './memInfo';
 export * from './mountPoint';
 export * from './platform';
 export * from './process';
+export * from './progress';
 export * from './targetDevice';
 
-import * as fs from 'fs';
-
-export interface RequestDetailedFile {
-    value: Buffer;
-    options?: {
-        filename?: string;
-        contentType?: string;
-    }
-}
-
-export type RequestFile = string | Buffer | fs.ReadStream | RequestDetailedFile;
-
+import localVarRequest from 'request';
 
 import { Application } from './application';
 import { DockerAddress } from './dockerAddress';
@@ -93,6 +81,7 @@ import { MemInfo } from './memInfo';
 import { MountPoint } from './mountPoint';
 import { Platform } from './platform';
 import { Process } from './process';
+import { Progress } from './progress';
 import { TargetDevice } from './targetDevice';
 
 /* tslint:disable:no-unused-variable */
@@ -155,6 +144,7 @@ let typeMap: {[index: string]: any} = {
     "MountPoint": MountPoint,
     "Platform": Platform,
     "Process": Process,
+    "Progress": Progress,
     "TargetDevice": TargetDevice,
 }
 

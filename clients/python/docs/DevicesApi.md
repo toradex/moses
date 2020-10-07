@@ -1640,7 +1640,7 @@ No authorization required
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
 
 # **device_syncfolders**
-> device_syncfolders(device_id, sourcefolder, destfolder)
+> device_syncfolders(device_id, sourcefolder, destfolder, progress_id=progress_id)
 
 synchronizes folders
 
@@ -1668,10 +1668,11 @@ with moses_client.ApiClient() as api_client:
     device_id = 'device_id_example' # str | Target device serial number
 sourcefolder = 'sourcefolder_example' # str | 
 destfolder = 'destfolder_example' # str | 
+progress_id = 'progress_id_example' # str | Id of a progress cookie (uuid) (optional)
 
     try:
         # synchronizes folders
-        api_instance.device_syncfolders(device_id, sourcefolder, destfolder)
+        api_instance.device_syncfolders(device_id, sourcefolder, destfolder, progress_id=progress_id)
     except ApiException as e:
         print("Exception when calling DevicesApi->device_syncfolders: %s\n" % e)
 ```
@@ -1683,6 +1684,7 @@ Name | Type | Description  | Notes
  **device_id** | **str**| Target device serial number | 
  **sourcefolder** | **str**|  | 
  **destfolder** | **str**|  | 
+ **progress_id** | **str**| Id of a progress cookie (uuid) | [optional] 
 
 ### Return type
 

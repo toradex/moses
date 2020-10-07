@@ -25,7 +25,7 @@ Method | HTTP request | Description
 
 
 # **application_build**
-> application_build(application_id, configuration)
+> application_build(application_id, configuration, progress_id=progress_id)
 
 Builds container image
 
@@ -52,10 +52,11 @@ with moses_client.ApiClient() as api_client:
     api_instance = moses_client.ApplicationsApi(api_client)
     application_id = 'application_id_example' # str | Id of an application (uuid)
 configuration = 'configuration_example' # str | 
+progress_id = 'progress_id_example' # str | Id of a progress cookie (uuid) (optional)
 
     try:
         # Builds container image
-        api_instance.application_build(application_id, configuration)
+        api_instance.application_build(application_id, configuration, progress_id=progress_id)
     except ApiException as e:
         print("Exception when calling ApplicationsApi->application_build: %s\n" % e)
 ```
@@ -66,6 +67,7 @@ Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
  **application_id** | **str**| Id of an application (uuid) | 
  **configuration** | **str**|  | 
+ **progress_id** | **str**| Id of a progress cookie (uuid) | [optional] 
 
 ### Return type
 
@@ -153,7 +155,7 @@ No authorization required
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
 
 # **application_deploy**
-> application_deploy(application_id, configuration, deviceid)
+> application_deploy(application_id, configuration, deviceid, progress_id=progress_id)
 
 Deploys container image
 
@@ -181,10 +183,11 @@ with moses_client.ApiClient() as api_client:
     application_id = 'application_id_example' # str | Id of an application (uuid)
 configuration = 'configuration_example' # str | 
 deviceid = 'deviceid_example' # str | 
+progress_id = 'progress_id_example' # str | Id of a progress cookie (uuid) (optional)
 
     try:
         # Deploys container image
-        api_instance.application_deploy(application_id, configuration, deviceid)
+        api_instance.application_deploy(application_id, configuration, deviceid, progress_id=progress_id)
     except ApiException as e:
         print("Exception when calling ApplicationsApi->application_deploy: %s\n" % e)
 ```
@@ -196,6 +199,7 @@ Name | Type | Description  | Notes
  **application_id** | **str**| Id of an application (uuid) | 
  **configuration** | **str**|  | 
  **deviceid** | **str**|  | 
+ **progress_id** | **str**| Id of a progress cookie (uuid) | [optional] 
 
 ### Return type
 
@@ -702,7 +706,7 @@ No authorization required
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
 
 # **application_runsdk**
-> InlineResponse200 application_runsdk(application_id, configuration, build=build)
+> InlineResponse200 application_runsdk(application_id, configuration, build=build, progress_id=progress_id)
 
 Runs SDK containers
 
@@ -730,10 +734,11 @@ with moses_client.ApiClient() as api_client:
     application_id = 'application_id_example' # str | Id of an application (uuid)
 configuration = 'configuration_example' # str | 
 build = True # bool |  (optional) (default to True)
+progress_id = 'progress_id_example' # str | Id of a progress cookie (uuid) (optional)
 
     try:
         # Runs SDK containers
-        api_response = api_instance.application_runsdk(application_id, configuration, build=build)
+        api_response = api_instance.application_runsdk(application_id, configuration, build=build, progress_id=progress_id)
         pprint(api_response)
     except ApiException as e:
         print("Exception when calling ApplicationsApi->application_runsdk: %s\n" % e)
@@ -746,6 +751,7 @@ Name | Type | Description  | Notes
  **application_id** | **str**| Id of an application (uuid) | 
  **configuration** | **str**|  | 
  **build** | **bool**|  | [optional] [default to True]
+ **progress_id** | **str**| Id of a progress cookie (uuid) | [optional] 
 
 ### Return type
 
@@ -911,7 +917,7 @@ No authorization required
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
 
 # **application_syncfolders**
-> application_syncfolders(application_id, sourcefolder, configuration, deviceid, destfolder, source_is_sdk=source_is_sdk)
+> application_syncfolders(application_id, sourcefolder, configuration, deviceid, destfolder, source_is_sdk=source_is_sdk, progress_id=progress_id)
 
 synchronizes folders
 
@@ -942,10 +948,11 @@ configuration = 'configuration_example' # str |
 deviceid = 'deviceid_example' # str | 
 destfolder = 'destfolder_example' # str | 
 source_is_sdk = True # bool |  (optional)
+progress_id = 'progress_id_example' # str | Id of a progress cookie (uuid) (optional)
 
     try:
         # synchronizes folders
-        api_instance.application_syncfolders(application_id, sourcefolder, configuration, deviceid, destfolder, source_is_sdk=source_is_sdk)
+        api_instance.application_syncfolders(application_id, sourcefolder, configuration, deviceid, destfolder, source_is_sdk=source_is_sdk, progress_id=progress_id)
     except ApiException as e:
         print("Exception when calling ApplicationsApi->application_syncfolders: %s\n" % e)
 ```
@@ -960,6 +967,7 @@ Name | Type | Description  | Notes
  **deviceid** | **str**|  | 
  **destfolder** | **str**|  | 
  **source_is_sdk** | **bool**|  | [optional] 
+ **progress_id** | **str**| Id of a progress cookie (uuid) | [optional] 
 
 ### Return type
 
@@ -987,6 +995,7 @@ No authorization required
 **530** | Local docker exception. |  -  |
 **533** | SSH error. |  -  |
 **541** | SDK container is not running. |  -  |
+**548** | Container does not support SSH |  -  |
 
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
 
@@ -1058,7 +1067,7 @@ No authorization required
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
 
 # **application_updatesdk**
-> application_updatesdk(application_id, configuration)
+> application_updatesdk(application_id, configuration, progress_id=progress_id)
 
 Update SDK container
 
@@ -1085,10 +1094,11 @@ with moses_client.ApiClient() as api_client:
     api_instance = moses_client.ApplicationsApi(api_client)
     application_id = 'application_id_example' # str | Id of an application (uuid)
 configuration = 'configuration_example' # str | 
+progress_id = 'progress_id_example' # str | Id of a progress cookie (uuid) (optional)
 
     try:
         # Update SDK container
-        api_instance.application_updatesdk(application_id, configuration)
+        api_instance.application_updatesdk(application_id, configuration, progress_id=progress_id)
     except ApiException as e:
         print("Exception when calling ApplicationsApi->application_updatesdk: %s\n" % e)
 ```
@@ -1099,6 +1109,7 @@ Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
  **application_id** | **str**| Id of an application (uuid) | 
  **configuration** | **str**|  | 
+ **progress_id** | **str**| Id of a progress cookie (uuid) | [optional] 
 
 ### Return type
 

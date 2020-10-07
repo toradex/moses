@@ -1954,7 +1954,7 @@ No authorization required
 
 ## DeviceSyncfolders
 
-> void DeviceSyncfolders (string deviceId, string sourcefolder, string destfolder)
+> void DeviceSyncfolders (string deviceId, string sourcefolder, string destfolder, string progressId = null)
 
 synchronizes folders
 
@@ -1980,11 +1980,12 @@ namespace Example
             var deviceId = deviceId_example;  // string | Target device serial number
             var sourcefolder = sourcefolder_example;  // string | 
             var destfolder = destfolder_example;  // string | 
+            var progressId = progressId_example;  // string | Id of a progress cookie (uuid) (optional) 
 
             try
             {
                 // synchronizes folders
-                apiInstance.DeviceSyncfolders(deviceId, sourcefolder, destfolder);
+                apiInstance.DeviceSyncfolders(deviceId, sourcefolder, destfolder, progressId);
             }
             catch (ApiException e)
             {
@@ -2005,6 +2006,7 @@ Name | Type | Description  | Notes
  **deviceId** | **string**| Target device serial number | 
  **sourcefolder** | **string**|  | 
  **destfolder** | **string**|  | 
+ **progressId** | **string**| Id of a progress cookie (uuid) | [optional] 
 
 ### Return type
 

@@ -6,10 +6,13 @@ export * from './eulasApi';
 import { EulasApi } from './eulasApi';
 export * from './platformsApi';
 import { PlatformsApi } from './platformsApi';
+export * from './progressApi';
+import { ProgressApi } from './progressApi';
 export * from './setupApi';
 import { SetupApi } from './setupApi';
 export * from './versionApi';
 import { VersionApi } from './versionApi';
+import * as fs from 'fs';
 import * as http from 'http';
 
 export class HttpError extends Error {
@@ -19,6 +22,14 @@ export class HttpError extends Error {
     }
 }
 
-export { RequestFile } from '../model/models';
+export interface RequestDetailedFile {
+    value: Buffer;
+    options?: {
+        filename?: string;
+        contentType?: string;
+    }
+}
 
-export const APIS = [ApplicationsApi, DevicesApi, EulasApi, PlatformsApi, SetupApi, VersionApi];
+export type RequestFile = string | Buffer | fs.ReadStream | RequestDetailedFile;
+
+export const APIS = [ApplicationsApi, DevicesApi, EulasApi, PlatformsApi, ProgressApi, SetupApi, VersionApi];

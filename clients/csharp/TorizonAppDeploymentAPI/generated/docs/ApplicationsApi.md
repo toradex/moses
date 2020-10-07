@@ -27,7 +27,7 @@ Method | HTTP request | Description
 
 ## ApplicationBuild
 
-> void ApplicationBuild (string applicationId, string configuration)
+> void ApplicationBuild (string applicationId, string configuration, string progressId = null)
 
 Builds container image
 
@@ -52,11 +52,12 @@ namespace Example
             var apiInstance = new ApplicationsApi(Configuration.Default);
             var applicationId = applicationId_example;  // string | Id of an application (uuid)
             var configuration = configuration_example;  // string | 
+            var progressId = progressId_example;  // string | Id of a progress cookie (uuid) (optional) 
 
             try
             {
                 // Builds container image
-                apiInstance.ApplicationBuild(applicationId, configuration);
+                apiInstance.ApplicationBuild(applicationId, configuration, progressId);
             }
             catch (ApiException e)
             {
@@ -76,6 +77,7 @@ Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
  **applicationId** | **string**| Id of an application (uuid) | 
  **configuration** | **string**|  | 
+ **progressId** | **string**| Id of a progress cookie (uuid) | [optional] 
 
 ### Return type
 
@@ -181,7 +183,7 @@ No authorization required
 
 ## ApplicationDeploy
 
-> void ApplicationDeploy (string applicationId, string configuration, string deviceid)
+> void ApplicationDeploy (string applicationId, string configuration, string deviceid, string progressId = null)
 
 Deploys container image
 
@@ -207,11 +209,12 @@ namespace Example
             var applicationId = applicationId_example;  // string | Id of an application (uuid)
             var configuration = configuration_example;  // string | 
             var deviceid = deviceid_example;  // string | 
+            var progressId = progressId_example;  // string | Id of a progress cookie (uuid) (optional) 
 
             try
             {
                 // Deploys container image
-                apiInstance.ApplicationDeploy(applicationId, configuration, deviceid);
+                apiInstance.ApplicationDeploy(applicationId, configuration, deviceid, progressId);
             }
             catch (ApiException e)
             {
@@ -232,6 +235,7 @@ Name | Type | Description  | Notes
  **applicationId** | **string**| Id of an application (uuid) | 
  **configuration** | **string**|  | 
  **deviceid** | **string**|  | 
+ **progressId** | **string**| Id of a progress cookie (uuid) | [optional] 
 
 ### Return type
 
@@ -834,7 +838,7 @@ No authorization required
 
 ## ApplicationRunsdk
 
-> InlineResponse200 ApplicationRunsdk (string applicationId, string configuration, bool? build = null)
+> InlineResponse200 ApplicationRunsdk (string applicationId, string configuration, bool? build = null, string progressId = null)
 
 Runs SDK containers
 
@@ -860,11 +864,12 @@ namespace Example
             var applicationId = applicationId_example;  // string | Id of an application (uuid)
             var configuration = configuration_example;  // string | 
             var build = true;  // bool? |  (optional)  (default to true)
+            var progressId = progressId_example;  // string | Id of a progress cookie (uuid) (optional) 
 
             try
             {
                 // Runs SDK containers
-                InlineResponse200 result = apiInstance.ApplicationRunsdk(applicationId, configuration, build);
+                InlineResponse200 result = apiInstance.ApplicationRunsdk(applicationId, configuration, build, progressId);
                 Debug.WriteLine(result);
             }
             catch (ApiException e)
@@ -886,6 +891,7 @@ Name | Type | Description  | Notes
  **applicationId** | **string**| Id of an application (uuid) | 
  **configuration** | **string**|  | 
  **build** | **bool?**|  | [optional] [default to true]
+ **progressId** | **string**| Id of a progress cookie (uuid) | [optional] 
 
 ### Return type
 
@@ -1082,7 +1088,7 @@ No authorization required
 
 ## ApplicationSyncfolders
 
-> void ApplicationSyncfolders (string applicationId, string sourcefolder, string configuration, string deviceid, string destfolder, bool? sourceIsSdk = null)
+> void ApplicationSyncfolders (string applicationId, string sourcefolder, string configuration, string deviceid, string destfolder, bool? sourceIsSdk = null, string progressId = null)
 
 synchronizes folders
 
@@ -1111,11 +1117,12 @@ namespace Example
             var deviceid = deviceid_example;  // string | 
             var destfolder = destfolder_example;  // string | 
             var sourceIsSdk = true;  // bool? |  (optional) 
+            var progressId = progressId_example;  // string | Id of a progress cookie (uuid) (optional) 
 
             try
             {
                 // synchronizes folders
-                apiInstance.ApplicationSyncfolders(applicationId, sourcefolder, configuration, deviceid, destfolder, sourceIsSdk);
+                apiInstance.ApplicationSyncfolders(applicationId, sourcefolder, configuration, deviceid, destfolder, sourceIsSdk, progressId);
             }
             catch (ApiException e)
             {
@@ -1139,6 +1146,7 @@ Name | Type | Description  | Notes
  **deviceid** | **string**|  | 
  **destfolder** | **string**|  | 
  **sourceIsSdk** | **bool?**|  | [optional] 
+ **progressId** | **string**| Id of a progress cookie (uuid) | [optional] 
 
 ### Return type
 
@@ -1166,6 +1174,7 @@ No authorization required
 | **530** | Local docker exception. |  -  |
 | **533** | SSH error. |  -  |
 | **541** | SDK container is not running. |  -  |
+| **548** | Container does not support SSH |  -  |
 
 [[Back to top]](#)
 [[Back to API list]](../README.md#documentation-for-api-endpoints)
@@ -1255,7 +1264,7 @@ No authorization required
 
 ## ApplicationUpdatesdk
 
-> void ApplicationUpdatesdk (string applicationId, string configuration)
+> void ApplicationUpdatesdk (string applicationId, string configuration, string progressId = null)
 
 Update SDK container
 
@@ -1280,11 +1289,12 @@ namespace Example
             var apiInstance = new ApplicationsApi(Configuration.Default);
             var applicationId = applicationId_example;  // string | Id of an application (uuid)
             var configuration = configuration_example;  // string | 
+            var progressId = progressId_example;  // string | Id of a progress cookie (uuid) (optional) 
 
             try
             {
                 // Update SDK container
-                apiInstance.ApplicationUpdatesdk(applicationId, configuration);
+                apiInstance.ApplicationUpdatesdk(applicationId, configuration, progressId);
             }
             catch (ApiException e)
             {
@@ -1304,6 +1314,7 @@ Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
  **applicationId** | **string**| Id of an application (uuid) | 
  **configuration** | **string**|  | 
+ **progressId** | **string**| Id of a progress cookie (uuid) | [optional] 
 
 ### Return type
 

@@ -10,7 +10,7 @@ Method | HTTP request | Description
 
 ## SetupPullcontainers
 
-> void SetupPullcontainers ()
+> void SetupPullcontainers (string progressId = null)
 
 pulls containers from docker repo
 
@@ -33,11 +33,12 @@ namespace Example
         {
             Configuration.Default.BasePath = "http://localhost:5000/api";
             var apiInstance = new SetupApi(Configuration.Default);
+            var progressId = progressId_example;  // string | Id of a progress cookie (uuid) (optional) 
 
             try
             {
                 // pulls containers from docker repo
-                apiInstance.SetupPullcontainers();
+                apiInstance.SetupPullcontainers(progressId);
             }
             catch (ApiException e)
             {
@@ -52,7 +53,10 @@ namespace Example
 
 ### Parameters
 
-This endpoint does not need any parameter.
+
+Name | Type | Description  | Notes
+------------- | ------------- | ------------- | -------------
+ **progressId** | **string**| Id of a progress cookie (uuid) | [optional] 
 
 ### Return type
 
