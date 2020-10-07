@@ -789,7 +789,7 @@ class TargetDevices(Dict[str, TargetDevice], metaclass=singleton.Singleton):
             if "No such file or directory" in dockerCheck:
                 logging.info("Docker socket not present, make sure you have " \
                                 + "Docker installed and running on your board.")
-                raise exceptions.InvalidDeviceError()
+                raise exceptions.InvalidDeviceError(dev)
 
             # Check if the board in running arm or arm64
             archCheck = console.send_cmd(
@@ -798,7 +798,7 @@ class TargetDevices(Dict[str, TargetDevice], metaclass=singleton.Singleton):
 
             if "arm" not in archCheck:
                 logging.info("Unsupported architecture %s", archCheck)
-                raise exceptions.InvalidDeviceError()
+                raise exceptions.InvalidDeviceError(dev)
 
             # Community Devices has Model name
             dev.model = console.send_cmd(
