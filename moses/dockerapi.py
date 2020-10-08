@@ -4,6 +4,8 @@ import re
 import progresscookie
 import targetdevice
 import io
+import logging
+import os
 from docker import APIClient, DockerClient
 from docker.errors import BuildError
 from docker.models.images import Image
@@ -45,19 +47,30 @@ def build_image(
         return client.images.get(resp)
 
     for r in resp:
-        line = json.loads(r)
 
-        if "stream" in line:
-            if progress is not None:
-                progress.append_message(line["stream"])
-            output.append(line["stream"])
-        if "aux" in line:
-            image_id = line["aux"]["ID"]
-        if "error" in line:
-            info = None
-            if "errorDetail" in line:
-                info = line["errorDetail"]
-            raise LocalDockerError(line["error"], log=output, info=info)
+        for l in r.decode("utf-8").split("\r\n"):
+
+            if len(l) == 0:
+                continue
+
+            try:
+                line = json.loads(l)
+            except Exception as e:
+                logging.error(f"Invalid json string {l}")
+                logging.exception(e)
+                continue
+
+            if "stream" in line:
+                if progress is not None:
+                    progress.append_message(line["stream"])
+                output.append(line["stream"])
+            if "aux" in line:
+                image_id = line["aux"]["ID"]
+            if "error" in line:
+                info = None
+                if "errorDetail" in line:
+                    info = line["errorDetail"]
+                raise LocalDockerError(line["error"], log=output, info=info)
 
     if image_id is not None:
         return client.images.get(image_id)
