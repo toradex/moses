@@ -70,6 +70,7 @@ class PlatformConfig(config.ConfigurableObject):
         self.tags = []
         self.eulas = []
         self.disabled = False
+        self.architecture = ""
 
         if self.folder is not None:
             self.load()
@@ -210,11 +211,60 @@ class PlatformConfig(config.ConfigurableObject):
             configuration {str} -- debug/release
             prop {str} -- property
         """
-        if self.__dict__[prop][configuration] is not None:
-            return self.__dict__[prop][configuration]
-        if self.__dict__[prop]["common"] is not None:
-            return self.__dict__[prop]["common"]
+
+        if not prop in self.__dict__:
+            return None
+
+        # those properties are used to generate a tag
+        if prop == "baseimage" or prop == "sdkbaseimage":
+            if self.__dict__[prop][configuration] is not None:
+                return ":".join(self.__dict__[prop][configuration])
+            if self.__dict__[prop]["common"] is not None:
+                return ":".join(self.__dict__[prop]["common"])
+
+        if isinstance(self.__dict__[prop], dict):
+            if self.__dict__[prop][configuration] is not None:
+                return str(self.__dict__[prop][configuration])
+            if self.__dict__[prop]["common"] is not None:
+                return str(self.__dict__[prop]["common"])
+        else:
+            return str(self.__dict__[prop])
         return None
+
+    def get_custom_prop(self, configuration: str, property: str):
+        if property in self.props[configuration]:
+            return str(self.props[configuration][property])
+        if property in self.props["common"]:
+            return str(self.props["common"][property])
+        return None
+
+    def _get_value(self, obj: str, tag: str, configuration: str) -> str:
+        """Returns value for a tag in the format application/platform.tag
+
+        Arguments:
+            obj {str} -- application/platform
+            tag {str} -- tag
+            configuration {str} -- active configuration
+
+        Returns:
+            str -- value of the tag or empty string
+        """
+
+        if obj != "platform":
+            return ""
+
+        value = self.get_custom_prop(configuration, tag)
+
+        if value is None:
+            value = self.get_prop(configuration, tag)
+
+        if value is None:
+            if tag in self.__dict__:
+                value = str(self.__dict__[tag])
+            else:
+                value = ""
+
+        return value
 
     def check_device_compatibility(self, device: targetdevice.TargetDevice) -> bool:
         """Checks if a device is compatible with this platform

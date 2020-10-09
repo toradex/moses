@@ -65,6 +65,12 @@ class ProgressCookie(ProgressCookieData):
         return clone
 
     def append_message(self, message: str):
+
+        message = message.rstrip()
+
+        if message is None or len(message) == 0:
+            return
+
         self.acquire()
         try:
             self.messages.append(message)

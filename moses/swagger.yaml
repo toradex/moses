@@ -1,7 +1,7 @@
 swagger: "2.0"
 info:
   description: Toradex API to build and deploy applications running as containers on Torizon
-  version: 1.0.9
+  version: 1.0.10
   title: Torizon IDE-backend API
 consumes:
   - application/json
@@ -1231,6 +1231,7 @@ paths:
           type: string
           required: true
           pattern: "^[-0-9a-zA-Z.]*$"
+        - $ref: "#/parameters/progress_id"
       responses:
         200:
           description: Returns application container
@@ -1883,6 +1884,11 @@ definitions:
           type: string
         description: strings used to identify specific properties of the platform
         example: [ console, wayland ]
+        readOnly: true
+      Architecture:
+        type: string
+        description: architecture as defined by docker
+        example: linux/arm
         readOnly: true
 
   Application:

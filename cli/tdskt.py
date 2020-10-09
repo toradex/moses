@@ -724,10 +724,11 @@ def cmd_handler_application_run(args) -> int:
         int -- 0 for success
     """
     api = moses_client.ApplicationsApi()
+    progress_id = handle_progress(args)
 
     logging.info("Starting application...")
     container = api.application_run(
-        args.application_id, args.configuration, args.device_id
+        args.application_id, args.configuration, args.device_id, progress_id=progress_id
     )
     logging.info("Started container %s", container.id)
     return 0

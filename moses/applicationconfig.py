@@ -202,13 +202,13 @@ class ApplicationConfig(config.ConfigurableKeysObject):
             return str(self.props["common"][property])
         return None
 
-    def _get_value(self, obj: str, tag: str, container: str) -> str:
+    def _get_value(self, obj: str, tag: str, configuration: str) -> str:
         """Returns value for a tag in the format application/platform.tag
 
         Arguments:
             obj {str} -- application/platform
             tag {str} -- tag
-            container {str} -- active configuration
+            configuration {str} -- active configuration
 
         Returns:
             str -- value of the tag or empty string
@@ -217,26 +217,20 @@ class ApplicationConfig(config.ConfigurableKeysObject):
         platform = platformconfig.PlatformConfigs().get_platform(self.platformid)
 
         if obj == "application":
-            value = self.get_custom_prop(container, tag)
+            value = self.get_custom_prop(configuration, tag)
 
             if value is None:
-                value = self.get_prop(container, tag)
+                value = self.get_prop(configuration, tag)
 
             if value is None:
                 if tag in self.__dict__:
-                    value = self.__dict__[tag]
+                    value = str(self.__dict__[tag])
                 else:
                     value = ""
 
             return value
         elif obj == "platform":
-            if tag in platform.props[container]:
-                return str(platform.props[container][tag])
-            if tag in platform.props["common"]:
-                return str(platform.props["common"][tag])
-            if tag in platform.__dict__:
-                return str(platform.__dict__[tag])
-
+            return platform._get_value(obj, tag, configuration)
         return ""
 
     def _get_work_folder(self) -> Path:
@@ -374,14 +368,24 @@ class ApplicationConfig(config.ConfigurableKeysObject):
                 "\\", "/"
             )
 
-            img = dockerapi.build_image(
-                localdocker,
-                str(self.folder),
-                dockerfilerelpath,
-                self._get_image_name(configuration),
-                None,
-                progress,
-            )
+            if platform.architecture == "":
+                img = dockerapi.build_image(
+                    localdocker,
+                    str(self.folder),
+                    dockerfilerelpath,
+                    self._get_image_name(configuration),
+                    None,
+                    progress,
+                )
+            else:
+                img = dockerapi.build_image(
+                    localdocker,
+                    str(self.folder),
+                    dockerfilerelpath,
+                    self._get_image_name(configuration),
+                    platform.architecture,
+                    progress,
+                )
 
             if img is None:
                 raise exceptions.ImageNotFoundError(self._get_image_name(configuration))
@@ -616,19 +620,19 @@ class ApplicationConfig(config.ConfigurableKeysObject):
             return None
 
         if not isinstance(self.__dict__[prop], dict):
-            return None
+            return str(self.__dict__[prop])
 
         if (self.__dict__[prop][configuration] is not None) and not (
             prop in ApplicationConfig.non_nullable_properties
             and len(self.__dict__[prop][configuration]) == 0
         ):
-            return self.__dict__[prop][configuration]
+            return str(self.__dict__[prop][configuration])
 
         if (self.__dict__[prop]["common"] is not None) and not (
             prop in ApplicationConfig.non_nullable_properties
             and len(self.__dict__[prop]["common"]) == 0
         ):
-            return self.__dict__[prop]["common"]
+            return str(self.__dict__[prop]["common"])
 
         return None
 
@@ -638,6 +642,7 @@ class ApplicationConfig(config.ConfigurableKeysObject):
         plat: platformconfig.PlatformConfig,
         device: targetdevice.TargetDevice,
         scriptname: str,
+        progress: Optional[progresscookie.ProgressCookie],
     ):
         """Runs a script configured as "scriptname" property in platform and/or application
 
@@ -717,22 +722,36 @@ class ApplicationConfig(config.ConfigurableKeysObject):
             else:
                 scriptfile = platformscript
 
+            if progress is not None:
+                progress.append_message(f"running script {scriptfile}")
+
             with ssh.get_transport().open_session() as session:
 
                 session.exec_command("cd " + scriptpath + "&&" + "./" + scriptfile)
 
                 while not session.exit_status_ready():
                     while session.recv_ready():
-                        logging.info(session.recv(1024).decode("UTF-8"))
+                        msg = session.recv(1024).decode("UTF-8")
+                        logging.info(msg)
+                        if progress is not None:
+                            progress.append_message(msg)
                     while session.recv_stderr_ready():
-                        logging.warning(session.recv_stderr(1024).decode("UTF-8"))
+                        msg = session.recv_stderr(1024).decode("UTF-8")
+                        logging.warning(msg)
+                        if progress is not None:
+                            progress.append_message(msg)
 
                 if session.recv_exit_status() != 0:
                     logging.error("Error executing " + scriptname + ".")
 
             logging.info("Running script:" + scriptname + " done.")
 
-    def run(self, configuration: str, device: targetdevice.TargetDevice):
+    def run(
+        self,
+        configuration: str,
+        device: targetdevice.TargetDevice,
+        progress: Optional[progresscookie.ProgressCookie],
+    ):
         """Runs application selected container on the specified device.
 
         Arguments:
@@ -769,6 +788,10 @@ class ApplicationConfig(config.ConfigurableKeysObject):
             container = self.get_container(configuration, device)
 
             if container is not None:
+
+                if progress is not None:
+                    progress.append_message("Stopping current instance...")
+
                 self.stop(configuration, device)
 
                 assert device.id is not None
@@ -781,7 +804,10 @@ class ApplicationConfig(config.ConfigurableKeysObject):
             # if app script exist, then it's the only one invoked (but still has a
             # chance to invoke platform one if needed since it has been deployed in
             # the same place)
-            self._runscript(configuration, plat, device, "startupscript")
+            if progress is not None:
+                progress.append_message("running startup script...")
+
+            self._runscript(configuration, plat, device, "startupscript", progress)
 
             # for docker-compose only one file is deployed used, and application one takes precedence
             # over the platform one
@@ -796,6 +822,10 @@ class ApplicationConfig(config.ConfigurableKeysObject):
                     dockercomposefilepath = plat.folder / dockercomposefile
 
             if dockercomposefilepath is not None:
+
+                if progress is not None:
+                    progress.append_message("running docker-compose...")
+
                 ssh = sharedssh.SharedSSHClient.get_connection(device)
 
                 with paramiko.SFTPClient.from_transport(ssh.get_transport()) as sftp:
@@ -831,11 +861,15 @@ class ApplicationConfig(config.ConfigurableKeysObject):
 
                         while not session.exit_status_ready():
                             while session.recv_ready():
-                                logging.info(session.recv(1024).decode("UTF-8"))
+                                msg = session.recv(1024).decode("UTF-8")
+                                logging.info(msg)
+                                if progress is not None:
+                                    progress.append_message(msg)
                             while session.recv_stderr_ready():
-                                logging.warning(
-                                    session.recv_stderr(1024).decode("UTF-8")
-                                )
+                                msg = session.recv_stderr(1024).decode("UTF-8")
+                                logging.warning(msg)
+                                if progress is not None:
+                                    progress.append_message(msg)
 
                         if session.recv_exit_status() != 0:
                             logging.error("Error executing docker-compose.")
@@ -847,6 +881,9 @@ class ApplicationConfig(config.ConfigurableKeysObject):
             networks = list(
                 dict.fromkeys(self._append_props(plat, configuration, "networks"))
             )
+
+            if progress is not None:
+                progress.append_message("Starting new instance...")
 
             return rd.run_image(
                 limg,
@@ -931,7 +968,7 @@ class ApplicationConfig(config.ConfigurableKeysObject):
                         logging.error("Error executing docker-compose.")
 
         # run shutdown scripts
-        self._runscript(configuration, plat, device, "shutdownscript")
+        self._runscript(configuration, plat, device, "shutdownscript", None)
 
     def get_container(
         self, configuration, device, only_running=True

@@ -828,7 +828,7 @@ def applications_application_deploy_get(
 
 
 def applications_application_run_get(
-    application_id: str, configuration: str, deviceid: str
+    application_id: str, configuration: str, deviceid: str, progress_id: str = None
 ) -> Any:
     """runs the application container
 
@@ -837,20 +837,35 @@ def applications_application_run_get(
         configuration {str} -- debug/release
         deviceid {str} -- device
     """
-    applications = applicationconfig.ApplicationConfigs()
+    cookies = progresscookie.ProgressCookies()
+    progress = None
 
-    if application_id not in applications:
-        return ("Application not found", 404)
+    if progress_id is not None and progress_id in cookies:
+        progress = cookies[progress_id]
 
-    app = applications[application_id]
+    try:
+        applications = applicationconfig.ApplicationConfigs()
 
-    devices = targetdevice.TargetDevices()
+        if application_id not in applications:
+            return ("Application not found", 404)
 
-    if deviceid not in devices:
-        return ("Device not found", 404)
+        app = applications[application_id]
 
-    container = app.run(configuration, devices[deviceid])
-    return (container, 200)
+        devices = targetdevice.TargetDevices()
+
+        if deviceid not in devices:
+            return ("Device not found", 404)
+
+        container = app.run(configuration, devices[deviceid], progress)
+
+        if progress is not None:
+            progress.completed()
+
+        return (container, 200)
+    except Exception as e:
+        if progress is not None:
+            progress.report_error(e)
+        raise e
 
 
 def applications_application_stop_get(
@@ -1156,7 +1171,12 @@ def setup_pullcontainers_get(progress_id: str = None) -> Any:
                         if progress is not None:
                             progress.append_message(f"Downloading {v[0]}:{v[1]}")
 
-                        dockerclient.images.pull(v[0], v[1])
+                        if plat.architecture is not None and plat.architecture != "":
+                            dockerclient.images.pull(
+                                v[0], v[1], platform=plat.architecture
+                            )
+                        else:
+                            dockerclient.images.pull(v[0], v[1])
                     except:
                         logging.exception(
                             "PULL - Pull operation failed for image %s:%s.", v[0], v[1]
