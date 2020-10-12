@@ -2,9 +2,9 @@
 # set to true for platforms that are provided by Toradex
 standard: true
 # descriptive information
-name: debian Qt buster-slim arm32v7
+name: Qt5 arm32v7 buster
 version: "1.0"
-description: platform for applications using Qt libraries
+description: Platform for applications using Qt5 libraries on debian-buster for arm32v7 on debian-buster
 # supported modules (using product id),* means all modules except unsupported ones
 supportedmodels: ["*"]
 unsupportedmodels: []

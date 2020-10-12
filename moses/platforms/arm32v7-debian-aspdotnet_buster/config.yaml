@@ -2,9 +2,9 @@
 # set to true for platforms that are provided by Toradex
 standard: true
 # descriptive information
-name: ASP.NET for arm32v7
+name: ASP.NET core 3.1 arm32v7 buster
 version: "1.0"
-description: platform for ASP.NET applications
+description: Platform for web applications with ASP.NET core 3.1 on debian-buster for arm32v7 CPUs
 # supported modules (using product id),* means all modules except unsupported ones
 supportedmodels: ["*"]
 unsupportedmodels: []

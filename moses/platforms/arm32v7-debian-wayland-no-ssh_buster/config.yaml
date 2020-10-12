@@ -2,9 +2,9 @@
 # set to true for platforms that are provided by Toradex
 standard: true
 # descriptive information
-name: debian wayland buster-slim arm32v7
+name: Wayland arm32v7 buster
 version: "1.0"
-description: platform for wayland applications with a minimal set of libraries and components
+description: Platform for Wayland applications with a minimal set of libraries and components for arm32v7 on debian-buster
 # supported modules (using product id),* means all modules except unsupported ones
 supportedmodels: ["*"]
 unsupportedmodels: []

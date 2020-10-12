@@ -1,0 +1,77 @@
+---
+# set to true for platforms that are provided by Toradex
+standard: true
+# descriptive information
+name: Python 3 Qt arm32v7 bullseye
+version: "1.0"
+description: Python 3 with Qt support for arm32v7 on debian-bullseye
+# supported modules (using product id),* means all modules except unsupported ones
+supportedmodels: ["*"]
+unsupportedmodels: []
+# defines base image and dockerfile templates for the containers
+architecture: linux/arm
+baseimage:
+  common:
+    - "torizon/qt5-wayland"
+    - "2"
+  debug:
+  release:
+# names of dockerfile templates
+container:
+  common:
+  debug: debug.dockerfile
+  release: release.dockerfile
+# defines what languages/runtimes are supported by this platform
+runtimes:
+  - python3
+tags:
+  - qt
+# information about how containers should run
+ports:
+  common: {}
+  debug: { "6502/tcp": null }
+  release: {}
+volumes:
+  common:
+    /tmp: /tmp,rw
+    /dev/dri: /dev/dri
+  debug: {}
+  release: {}
+devices:
+  common: []
+  debug: []
+  release: []
+privileged: false
+extraparms:
+  common:
+    device_cgroup_rules: '[ "c 226:* rmw" ]'
+  debug: {}
+  release: {}
+# information about the SDK (if required)
+usesdk: false
+
+# additional platform-specific properties that can be used in projects or plugins
+props:
+  common: {}
+  debug: {}
+  release: {}
+
+# additional scripts (docker-compose or shell) that can be used to start/stop
+# the container
+# If you use docker-compose file the application container should NOT be listed in the services, since it will be started by the debugger
+dockercomposefile:
+  common: docker-compose.yml
+  debug: null
+  release: null
+startupscript:
+  common: null
+  debug: null
+  release: null
+shutdownscript:
+  common: null
+  debug: null
+  release: null
+networks:
+  common: []
+  debug: []
+  release: []

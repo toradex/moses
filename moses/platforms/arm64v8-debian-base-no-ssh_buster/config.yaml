@@ -2,9 +2,9 @@
 # set to true for platforms that are provided by Toradex
 standard: true
 # descriptive information
-name: debian buster-slim arm64v8
+name: debian arm64v8 buster
 version: "1.0"
-description: platform for headless applications with a minimal set of libraries and components
+description: Platform for headless applications with a minimal set of libs for arm64v8 on debian-buster
 # supported modules (using product id),* means all modules except unsupported ones
 supportedmodels:
   [

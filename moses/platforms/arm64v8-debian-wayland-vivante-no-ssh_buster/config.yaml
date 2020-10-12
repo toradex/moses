@@ -2,9 +2,9 @@
 # set to true for platforms that are provided by Toradex
 standard: true
 # descriptive information
-name: debian wayland buster-slim arm64v8
+name: Wayland arm64v8-vivante buster
 version: "1.0"
-description: platform for wayland applications with a minimal set of libraries and components on SOCs using Vivante GPUs
+description: Platform for Wayland applications with a minimal set of libraries and components for arm64v8 using vivante graphics on debian-buster
 # supported modules (using product id),* means all modules except unsupported ones
 supportedmodels:
   [
@@ -114,4 +114,4 @@ networks:
   common: []
   debug: []
   release: []
-eulas: [ "nxp-la-opt-v5" ]
+eulas: ["nxp-la-opt-v5"]

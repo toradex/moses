@@ -2,9 +2,9 @@
 # set to true for platforms that are provided by Toradex
 standard: true
 # descriptive information
-name: debian Qt buster-slim arm64v8 vivante
+name: Qt5 arm64v8-vivante buster
 version: "1.0"
-description: platform for applications using Qt libraries on SOCs using Vivante GPUs
+description: Platform for applications using Qt5 libraries on debian-buster for arm64v8 with vivante graphics on debian-buster
 # supported modules (using product id),* means all modules except unsupported ones
 supportedmodels:
   [
@@ -114,4 +114,4 @@ networks:
   common: []
   debug: []
   release: []
-eulas: [ "nxp-la-opt-v5" ]
+eulas: ["nxp-la-opt-v5"]

@@ -2,9 +2,9 @@
 # set to true for platforms that are provided by Toradex
 standard: true
 # descriptive information
-name: python3 arm32v7
+name: Python 3 arm32v7 buster
 version: "1.0"
-description: minimal python3 setup on debian
+description: Minimal Python 3 setup on debian-buster for arm32v7
 # supported modules (using product id),* means all modules except unsupported ones
 supportedmodels: ["*"]
 unsupportedmodels: []

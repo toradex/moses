@@ -2,9 +2,9 @@
 # set to true for platforms that are provided by Toradex
 standard: true
 # descriptive information
-name: python3 arm32v7 qt
+name: Python 3 Qt arm32v7 buster
 version: "1.0"
-description: qt for python
+description: Python 3 with Qt support for arm32v7 on debian-buster
 # supported modules (using product id),* means all modules except unsupported ones
 supportedmodels: ["*"]
 unsupportedmodels: []
@@ -42,7 +42,7 @@ devices:
   release: []
 privileged: false
 extraparms:
-  common: 
+  common:
     device_cgroup_rules: '[ "c 226:* rmw" ]'
   debug: {}
   release: {}

@@ -1190,7 +1190,12 @@ def setup_pullcontainers_get(progress_id: str = None) -> Any:
                         if progress is not None:
                             progress.append_message(f"Downloading {v[0]}:{v[1]}")
 
-                        dockerclient.images.pull(v[0], v[1])
+                        if plat.architecture is not None and plat.architecture != "":
+                            dockerclient.images.pull(
+                                v[0], v[1], platform=plat.architecture
+                            )
+                        else:
+                            dockerclient.images.pull(v[0], v[1])
                     except:
                         logging.exception(
                             "PULL - Pull operation failed for image %s:%s.", v[0], v[1]

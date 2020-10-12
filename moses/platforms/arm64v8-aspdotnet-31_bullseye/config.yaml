@@ -1,0 +1,104 @@
+---
+# set to true for platforms that are provided by Toradex
+standard: true
+# descriptive information
+name: ASP.NET core 3.1 arm64v8 bullseye
+version: "1.0"
+description: Platform for web applications with ASP.NET core 3.1 on debian-bullseye for arm64v8
+# supported modules (using product id),* means all modules except unsupported ones
+supportedmodels:
+  [
+    "0037",
+    "0047",
+    "0048",
+    "0049",
+    "0046",
+    "0053",
+    "0054",
+    "0038",
+    "0050",
+    "0051",
+    "0052",
+    "0055",
+    "0056",
+    "0057",
+    "0059",
+    "0060",
+  ]
+unsupportedmodels: []
+architecture: linux/arm64
+# defines base image and dockerfile templates for the containers
+baseimage:
+  common:
+  debug:
+    - torizon/aspdotnet-debug
+    - 2-3.1
+  release:
+    - torizon/aspdotnet
+    - 2-3.1
+# names of dockerfile templates
+container:
+  common:
+  debug: debug.dockerfile
+  release: release.dockerfile
+# defines what languages/runtimes are supported by this platform
+runtimes:
+  - aspdotnet
+tags: []
+# information about how containers should run
+ports:
+  common: {}
+  debug: { "2222/tcp": null }
+  release: {}
+volumes:
+  common: {}
+  debug: {}
+  release: {}
+devices:
+  common: []
+  debug: []
+  release: []
+privileged: false
+extraparms:
+  common: {}
+  debug: {}
+  release: {}
+# information about the SDK (if required)
+usesdk: false
+
+usesysroot: false
+# base image for the container/template
+sdkbaseimage:
+  common:
+  debug:
+  release:
+# template file for SDK container build
+sdkcontainer:
+  common: null
+  debug: null
+  release: null
+
+# additional platform-specific properties that can be used in projects or plugins
+props:
+  common: { "runtimeid": "linux-arm64" }
+  debug: {}
+  release: {}
+# additional scripts (docker-compose or shell) that can be used to start/stop
+# the container
+# If you use docker-compose file the application container should NOT be listed in the services, since it will be started by the debugger
+dockercomposefile:
+  common: null
+  debug: null
+  release: null
+startupscript:
+  common: null
+  debug: null
+  release: null
+shutdownscript:
+  common: null
+  debug: null
+  release: null
+networks:
+  common: []
+  debug: []
+  release: []
