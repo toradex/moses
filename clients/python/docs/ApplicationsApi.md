@@ -633,7 +633,7 @@ No authorization required
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
 
 # **application_run**
-> DockerContainer application_run(application_id, configuration, deviceid)
+> DockerContainer application_run(application_id, configuration, deviceid, progress_id=progress_id)
 
 Runs container image
 
@@ -661,10 +661,11 @@ with moses_client.ApiClient() as api_client:
     application_id = 'application_id_example' # str | Id of an application (uuid)
 configuration = 'configuration_example' # str | 
 deviceid = 'deviceid_example' # str | 
+progress_id = 'progress_id_example' # str | Id of a progress cookie (uuid) (optional)
 
     try:
         # Runs container image
-        api_response = api_instance.application_run(application_id, configuration, deviceid)
+        api_response = api_instance.application_run(application_id, configuration, deviceid, progress_id=progress_id)
         pprint(api_response)
     except ApiException as e:
         print("Exception when calling ApplicationsApi->application_run: %s\n" % e)
@@ -677,6 +678,7 @@ Name | Type | Description  | Notes
  **application_id** | **str**| Id of an application (uuid) | 
  **configuration** | **str**|  | 
  **deviceid** | **str**|  | 
+ **progress_id** | **str**| Id of a progress cookie (uuid) | [optional] 
 
 ### Return type
 

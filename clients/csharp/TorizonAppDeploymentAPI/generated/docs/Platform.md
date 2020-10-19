@@ -23,6 +23,7 @@ Name | Type | Description | Notes
 **Props** | **Dictionary&lt;string, Dictionary&lt;string, string&gt;&gt;** | Custom properties (may be used in dockerfile or by extensions) | [optional] 
 **Description** | **string** | Platform human-readable description | [optional] [readonly] 
 **Tags** | **List&lt;string&gt;** | strings used to identify specific properties of the platform | [optional] [readonly] 
+**Architecture** | **string** | architecture as defined by docker | [optional] [readonly] 
 
 [[Back to Model list]](../README.md#documentation-for-models)
 [[Back to API list]](../README.md#documentation-for-api-endpoints)

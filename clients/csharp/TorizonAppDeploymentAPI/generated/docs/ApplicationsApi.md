@@ -752,7 +752,7 @@ No authorization required
 
 ## ApplicationRun
 
-> DockerContainer ApplicationRun (string applicationId, string configuration, string deviceid)
+> DockerContainer ApplicationRun (string applicationId, string configuration, string deviceid, string progressId = null)
 
 Runs container image
 
@@ -778,11 +778,12 @@ namespace Example
             var applicationId = applicationId_example;  // string | Id of an application (uuid)
             var configuration = configuration_example;  // string | 
             var deviceid = deviceid_example;  // string | 
+            var progressId = progressId_example;  // string | Id of a progress cookie (uuid) (optional) 
 
             try
             {
                 // Runs container image
-                DockerContainer result = apiInstance.ApplicationRun(applicationId, configuration, deviceid);
+                DockerContainer result = apiInstance.ApplicationRun(applicationId, configuration, deviceid, progressId);
                 Debug.WriteLine(result);
             }
             catch (ApiException e)
@@ -804,6 +805,7 @@ Name | Type | Description  | Notes
  **applicationId** | **string**| Id of an application (uuid) | 
  **configuration** | **string**|  | 
  **deviceid** | **string**|  | 
+ **progressId** | **string**| Id of a progress cookie (uuid) | [optional] 
 
 ### Return type
 
