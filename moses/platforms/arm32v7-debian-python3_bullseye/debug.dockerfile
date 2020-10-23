@@ -22,7 +22,7 @@ RUN apt-get update \
     && rm -rf /var/lib/apt/lists/*
 
 RUN pip3 install --upgrade pip
-RUN pip3 install ptvsd
+RUN pip3 install debugpy
 
 COPY work/setup.sh /setup.sh
 COPY work/cleanup.sh /cleanup.sh
@@ -38,7 +38,7 @@ RUN chmod a+x /setup.sh &&\
 RUN echo "#!/bin/sh" > /startptvsd && \
     echo "cd /#%application.appname%#" >> /startptvsd && \
     echo "echo \"running #%application.appname%#\"" >> /startptvsd && \
-    echo "/usr/bin/python3 -m ptvsd --host 0.0.0.0 --port 6502 --wait #%application.main%# #%application.appargs%#" >> /startptvsd && \
+    echo "/usr/bin/python3 -m debugpy --listen 0.0.0.0:6502 --wait-for-client #%application.main%# #%application.appargs%#" >> /startptvsd && \
     chmod a+x /startptvsd
 
 #%application.buildfiles%#
