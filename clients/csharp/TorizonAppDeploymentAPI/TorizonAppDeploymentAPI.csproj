@@ -59,6 +59,8 @@
     <Compile Include="generated\src\TorizonRestAPI\Api\DevicesApi.cs" />
     <Compile Include="generated\src\TorizonRestAPI\Api\EulasApi.cs" />
     <Compile Include="generated\src\TorizonRestAPI\Api\PlatformsApi.cs" />
+    <Compile Include="generated\src\TorizonRestAPI\Api\ProgressApi.cs" />
+    <Compile Include="generated\src\TorizonRestAPI\Api\ProjectApi.cs" />
     <Compile Include="generated\src\TorizonRestAPI\Api\SetupApi.cs" />
     <Compile Include="generated\src\TorizonRestAPI\Api\VersionApi.cs" />
     <Compile Include="generated\src\TorizonRestAPI\Client\ApiClient.cs" />
@@ -108,6 +110,7 @@
     <Compile Include="generated\src\TorizonRestAPI\Model\MountPoint.cs" />
     <Compile Include="generated\src\TorizonRestAPI\Model\Platform.cs" />
     <Compile Include="generated\src\TorizonRestAPI\Model\Process.cs" />
+    <Compile Include="generated\src\TorizonRestAPI\Model\Progress.cs" />
     <Compile Include="generated\src\TorizonRestAPI\Model\TargetDevice.cs" />
     <Compile Include="TorizonAPIException.cs" />
     <Compile Include="Application.cs" />
