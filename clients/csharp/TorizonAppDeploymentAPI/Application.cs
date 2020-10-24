@@ -2,6 +2,8 @@
 using System.Threading.Tasks;
 using System.ComponentModel;
 using System.Net;
+using TorizonRestAPI.Api;
+using TorizonRestAPI.Model;
 
 namespace TorizonAppDeploymentAPI
 {
@@ -26,6 +28,28 @@ namespace TorizonAppDeploymentAPI
         public string[] ReadOnlyProperties { get { return new string[] { "Id", "Platformid", "Folder" }; } }
 
         public event PropertyChangedEventHandler PropertyChanged;
+
+        public static Action CreateProgressTask(ref Progress progressRef, Action<string, int> taskUpdateStatus)
+        {
+            ProgressApi progressApi = new ProgressApi();
+            Progress progress = progressApi.ProgressCreate();
+            progressRef = progress;
+
+            return () => {
+                while (progress.Pending)
+                {
+                    progress = progressApi.ProgressStatus(progress.Id);
+
+                    foreach (string msg in progress.Messages)
+                    {
+                        taskUpdateStatus?.Invoke(msg, progress._Progress);
+                    }
+                }
+
+                // send 100% for the current task
+                taskUpdateStatus?.Invoke("Done", -100);
+            };
+        }
 
         public static async Task<Application> CreateAsync(string platformid, string path, string username)
         {
@@ -97,25 +121,40 @@ namespace TorizonAppDeploymentAPI
             return updated;
         }
 
-        public async Task BuildContainerAsync(string configuration, Action BuildCompleted)
+        public async Task BuildContainerAsync(string configuration, Action<string, int> buildCompleted)
         {
-            await api.ApplicationBuildAsync(this.Id, configuration);
-            BuildCompleted?.Invoke();
+            Progress progress = null;
+            var taskBuild = CreateProgressTask(ref progress, buildCompleted);
+
+            _ = api.ApplicationBuildAsync(this.Id, configuration, progress?.Id);
+            await Task.Run(taskBuild);
         }
 
-        public async Task DeployContainerAsync(string configuration, TargetDevice targetdevice, Action DeploymentCompleted)
+        public async Task DeployContainerAsync(string configuration, TargetDevice targetdevice, Action<string, int> DeploymentCompleted)
         {
-            await api.ApplicationDeployAsync(this.Id, configuration, targetdevice.Id);
-            DeploymentCompleted?.Invoke();
+            Progress progress = null;
+            var taskBuild = CreateProgressTask(ref progress, DeploymentCompleted);
+
+            _ = api.ApplicationDeployAsync(this.Id, configuration, targetdevice.Id, progress.Id);
+            await Task.Run(taskBuild);
         }
 
-        public async Task<DockerContainer> RunAsync(string configuration, TargetDevice targetdevice, Action<DockerContainer> ApplicationStarted)
+        public async Task<DockerContainer> RunAsync(string configuration, TargetDevice targetdevice, Action<string, int> runningAction, Action<DockerContainer> ApplicationStarted)
         {
-            TorizonRestAPI.Model.DockerContainer model = Utils.ObjectOrException<TorizonRestAPI.Model.DockerContainer>(await api.ApplicationRunAsync(this.Id, configuration, targetdevice.Id));
+            Progress progress = null;
+            DockerContainer container = null;
 
-            DockerContainer container = new DockerContainer(model, targetdevice);
+            var taskBuild = CreateProgressTask(ref progress, runningAction);
 
-            ApplicationStarted?.Invoke(container);
+            _ = api.ApplicationRunAsync(this.Id, configuration, targetdevice.Id, progress?.Id).ContinueWith( task => {
+                TorizonRestAPI.Model.DockerContainer model =
+                    Utils.ObjectOrException<TorizonRestAPI.Model.DockerContainer>(task.Result);
+
+                container = new DockerContainer(model, targetdevice);
+                ApplicationStarted?.Invoke(container);
+            });
+
+            await Task.Run(taskBuild);
             return container;
         }
 
@@ -135,16 +174,22 @@ namespace TorizonAppDeploymentAPI
             return container;
         }
 
-        public async Task SyncFoldersAsync(string sdkfolder, string configuration, TargetDevice device, string destfolder, Action FolderSynced)
+        public async Task SyncFoldersAsync(string sdkfolder, string configuration, TargetDevice device, string destfolder, Action<string, int> FolderSynced)
         {
-            await api.ApplicationSyncfoldersAsync(this.Id, sdkfolder, configuration, device.Id, destfolder, true);
-            FolderSynced?.Invoke();
+            Progress progress = null;
+            var taskBuild = CreateProgressTask(ref progress, FolderSynced);
+
+            _ = api.ApplicationSyncfoldersAsync(this.Id, sdkfolder, configuration, device.Id, destfolder, true, progress?.Id);
+            await Task.Run(taskBuild);
         }
 
-        public async Task UpdateSDKAsync(string configuration, Action UpdateCompleted)
+        public async Task UpdateSDKAsync(string configuration, Action<string, int> UpdateCompleted)
         {
-            await api.ApplicationUpdatesdkAsync(this.Id, configuration);
-            UpdateCompleted?.Invoke();
+            Progress progress = null;
+            var taskBuild = CreateProgressTask(ref progress, UpdateCompleted);
+
+            _ = api.ApplicationUpdatesdkAsync(this.Id, configuration, progress?.Id);
+            await Task.Run(taskBuild);
         }
     }
 }

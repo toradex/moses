@@ -3,6 +3,9 @@ using System.ComponentModel;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Reflection;
+using TorizonRestAPI.Api;
+using TorizonRestAPI.Model;
+using System.Threading;
 
 namespace TorizonAppDeploymentAPI
 {
@@ -126,17 +129,35 @@ namespace TorizonAppDeploymentAPI
             return true;
         }
 
-        public static async Task PullContainersAsync(Action<Exception> operationCompleted=null)
+        public static async Task PullContainersAsync(Action<Exception, string, int> operationCompleted=null)
         {
             try
             {
                 TorizonRestAPI.Api.SetupApi api = new TorizonRestAPI.Api.SetupApi();
-                await api.SetupPullcontainersAsync();
-                operationCompleted?.Invoke(null);
+                ProgressApi progressApi = new ProgressApi();
+                Progress progress = progressApi.ProgressCreate();
+
+                _ = api.SetupPullcontainersAsync(progress.Id);
+
+                // check the status
+                await Task.Run(() => {
+                    while (progress.Pending)
+                    {
+                        progress = progressApi.ProgressStatus(progress.Id);
+
+                        foreach (string msg in progress.Messages)
+                        {
+                            operationCompleted?.Invoke(null, msg, progress._Progress);
+                        }
+                    }
+
+                    // send 100% for the current task
+                    operationCompleted?.Invoke(null, "Done", 100);
+                });
             }
             catch (Exception e)
             {
-                operationCompleted?.Invoke(e);
+                operationCompleted?.Invoke(e, null, 0);
             }
         }
 
