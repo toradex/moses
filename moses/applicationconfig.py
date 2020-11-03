@@ -1,6 +1,7 @@
 import os
 import io
 import shutil
+import platform
 import logging
 import uuid
 from pathlib import Path
@@ -1168,6 +1169,11 @@ class ApplicationConfig(config.ConfigurableKeysObject):
                 sdkcontainer.remove()
             except docker.errors.NotFound:
                 pass
+            except:
+                # on some Windows PCs an internal server errror is generated instead.
+                # see TIE-260
+                if platform.system() == "Windows":
+                    pass
 
             sdkcontainername = platform.get_prop(configuration, "sdkcontainer")
 
