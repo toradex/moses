@@ -1022,6 +1022,14 @@ class ApplicationConfig(config.ConfigurableKeysObject):
             return cnt
         except docker.errors.DockerException as e:
             raise exceptions.SDKContainerNotFoundError(e)
+        except Exception as e:
+            # on some Windows PCs an internal server errror is generated instead.
+            # see TIE-260
+            if platform_module.system() == "Windows":
+                raise exceptions.SDKContainerNotFoundError(e)
+            else:
+                raise
+
 
         return None
 
@@ -1174,6 +1182,8 @@ class ApplicationConfig(config.ConfigurableKeysObject):
                 # see TIE-260
                 if platform_module.system() == "Windows":
                     pass
+                else:
+                    raise
 
             sdkcontainername = platform.get_prop(configuration, "sdkcontainer")
 
@@ -1470,7 +1480,10 @@ class ApplicationConfig(config.ConfigurableKeysObject):
             # on some Windows PCs an internal server errror is generated instead.
             # see TIE-260
             if platform_module.system() == "Windows":
-                pass
+                container = None
+            else:
+                raise
+
 
         if container is None:
             if platform.usesdk and not platform.usesysroots:
