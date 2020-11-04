@@ -1,7 +1,7 @@
 import os
 import io
 import shutil
-import platform
+import platform as platform_module
 import logging
 import uuid
 from pathlib import Path
@@ -1172,7 +1172,7 @@ class ApplicationConfig(config.ConfigurableKeysObject):
             except:
                 # on some Windows PCs an internal server errror is generated instead.
                 # see TIE-260
-                if platform.system() == "Windows":
+                if platform_module.system() == "Windows":
                     pass
 
             sdkcontainername = platform.get_prop(configuration, "sdkcontainer")
