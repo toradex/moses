@@ -1466,6 +1466,11 @@ class ApplicationConfig(config.ConfigurableKeysObject):
                 container = None
         except docker.errors.NotFound:
             container = None
+        except:
+            # on some Windows PCs an internal server errror is generated instead.
+            # see TIE-260
+            if platform_module.system() == "Windows":
+                pass
 
         if container is None:
             if platform.usesdk and not platform.usesysroots:
