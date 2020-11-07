@@ -214,9 +214,6 @@ class ConfigurableKeysObject(ConfigurableObject):
         if platform.system() == "Windows":
             subprocess.run(["icacls.exe", keypath, "/c", "/t", "/Inheritance:d"])
             subprocess.run(
-                ["icacls.exe", keypath, "/c", "/t", "/Grant " + os.getlogin() + "F"]
-            )
-            subprocess.run(
                 [
                     "icacls.exe",
                     keypath,
@@ -224,12 +221,16 @@ class ConfigurableKeysObject(ConfigurableObject):
                     "/t",
                     "/Remove",
                     "Administrator",
-                    "BUILTIN\Administrators",
+                    "Authenticated Users",
+                    "BUILTIN\\Administrators",
                     "BUILTIN",
                     "Everyone",
                     "System",
                     "Users",
                 ]
+            )
+            subprocess.run(
+                ["icacls.exe", keypath, "/c", "/t", "/Grant", os.getlogin() + ":F"]
             )
         else:
             os.chmod(keypath, 0o600)
