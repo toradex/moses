@@ -71,6 +71,7 @@ class PlatformConfig(config.ConfigurableObject):
         self.eulas = []
         self.disabled = False
         self.architecture = ""
+        self.deprecated = False
 
         if self.folder is not None:
             self.load()
