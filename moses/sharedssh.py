@@ -74,10 +74,15 @@ class SharedSSHDockerTunnel(sshtunnel.SSHTunnelForwarder):
         """
 
         with cls.__lock:
-            if device.id in cls.__tunnels:
-                return cls.__tunnels[device.id]
-
             tunnel = None
+
+            if device.id in cls.__tunnels:
+                tunnel = cls.__tunnels[device.id]
+
+                if tunnel.is_active and tunnel.is_alive:
+                    return tunnel
+                else:
+                    tunnel = None
 
             for _ in range(0, 10):
                 try:
@@ -127,6 +132,16 @@ class SharedSSHDockerTunnel(sshtunnel.SSHTunnelForwarder):
         self.__objlock.acquire()
         return self
 
+    @classmethod
+    def remove_tunnel(cls, device):
+        with cls.__lock:
+            if device in cls.__tunnels:
+                logging.info("SSH - Tunnel to " + device + " closed")
+                connection = cls.__tunnels[device]
+                del cls.__tunnels[device]
+                thread = threading.Thread(target=connection.stop)
+                thread.start()
+
     def __exit__(self, type, value, traceback):
         try:
             self.__objlock.release()
@@ -135,6 +150,10 @@ class SharedSSHDockerTunnel(sshtunnel.SSHTunnelForwarder):
 
         try:
             if type:
+                SharedSSHClient.remove_connection(self.device)
+                SharedSSHDockerTunnel.remove_tunnel(self.device)
+                self.close()
+
                 logging.info("SSH - Tunnel to " + self.device + " closed")
                 with SharedSSHDockerTunnel.__lock:
                     if self.device in SharedSSHDockerTunnel.__tunnels:
@@ -176,7 +195,11 @@ class SharedSSHClient(paramiko.SSHClient):
         with cls.__lock:
             if device.id in cls.__connections:
                 ssh = cls.__connections[device.id]
-                if ssh.get_transport() is not None and ssh.get_transport().is_active():
+                if (
+                    ssh.get_transport() is not None
+                    and ssh.get_transport().is_active()
+                    and ssh.get_transport().is_alive()
+                ):
                     return ssh
                 try:
                     ssh.close()
@@ -209,14 +232,19 @@ class SharedSSHClient(paramiko.SSHClient):
         self.__objlock.acquire()
         return self
 
+    @classmethod
+    def remove_connection(cls, device):
+        with cls.__lock:
+            if device in cls.__connections:
+                logging.info("SSH - Connection to " + device + " closed")
+                del cls.__connections[device]
+
     def __exit__(self, type, value, traceback):
         self.__objlock.release()
         if type:
-            with SharedSSHClient.__lock:
-                logging.info("SSH - Connection to " + self.device + " closed")
-                if self.device in SharedSSHClient.__connections:
-                    del SharedSSHClient.__connections[self.device]
-                    self.close()
+            SharedSSHClient.remove_connection(self.device)
+            SharedSSHDockerTunnel.remove_tunnel(self.device)
+            self.close()
 
 
 class SSHForwarder(threading.Thread):

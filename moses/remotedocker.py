@@ -383,8 +383,13 @@ class RemoteDocker:
             self.sshtunnel.__exit__(type(e), e, None)
             raise e
 
-        localdocker = "tcp://127.0.0.1:" + str(self.sshtunnel.local_bind_port)
-        self.remotedocker = docker.DockerClient(base_url=localdocker, timeout=1800)
+        try:
+            localdocker = "tcp://127.0.0.1:" + str(self.sshtunnel.local_bind_port)
+            self.remotedocker = docker.DockerClient(base_url=localdocker, timeout=1800)
+        except Exception as e:
+            self.sshtunnel.__exit__(type(e), e, None)
+            raise e
+
         self.sshtunnel.__enter__()
         return self
 
