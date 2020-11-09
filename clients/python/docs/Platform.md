@@ -22,6 +22,7 @@ Name | Type | Description | Notes
 **description** | **str** | Platform human-readable description | [optional] [readonly] 
 **tags** | **list[str]** | strings used to identify specific properties of the platform | [optional] [readonly] 
 **architecture** | **str** | architecture as defined by docker | [optional] [readonly] 
+**deprecated** | **bool** | true for platforms that are no longer supported | [optional] [readonly] 
 
 [[Back to Model list]](../README.md#documentation-for-models) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to README]](../README.md)
 
