@@ -103,3 +103,4 @@ networks:
   common: []
   debug: []
   release: []
+deprecated: true

@@ -115,3 +115,4 @@ networks:
   debug: []
   release: []
 eulas: ["nxp-la-opt-v5"]
+deprecated: true

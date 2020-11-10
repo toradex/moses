@@ -77,3 +77,4 @@ networks:
 images:
   debug: null
   release: null
+deprecated: true
