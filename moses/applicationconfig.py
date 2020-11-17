@@ -1030,7 +1030,6 @@ class ApplicationConfig(config.ConfigurableKeysObject):
             else:
                 raise
 
-
         return None
 
     def get_container_name(self, img) -> str:
@@ -1484,7 +1483,6 @@ class ApplicationConfig(config.ConfigurableKeysObject):
             else:
                 raise
 
-
         if container is None:
             if platform.usesdk and not platform.usesysroots:
                 try:
@@ -1655,7 +1653,7 @@ class ApplicationConfig(config.ConfigurableKeysObject):
                 output = ""
 
                 if progress is not None:
-                    for line in iter(stdout.readline(), ""):
+                    for line in iter(stdout.readline, ""):
                         progress.append_message(line)
                         output += line
 
