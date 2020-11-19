@@ -66,6 +66,9 @@ def build_image(
                 output.append(line["stream"])
             if "aux" in line:
                 image_id = line["aux"]["ID"]
+            if "message" in line:
+                info = None
+                raise LocalDockerError(line["message"], log=output, info=info)
             if "error" in line:
                 info = None
                 if "errorDetail" in line:
@@ -156,4 +159,3 @@ def load_image(
         return client.images.get(image_id)
     else:
         return None
-
