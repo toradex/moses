@@ -1,7 +1,7 @@
 swagger: "2.0"
 info:
   description: Toradex API to build and deploy applications running as containers on Torizon
-  version: 1.0.11
+  version: 1.0.12
   title: Torizon IDE-backend API
 consumes:
   - application/json
@@ -1424,6 +1424,43 @@ paths:
         539:
           $ref: "#/responses/SSHTunnelError_539"
 
+  /applications/{application_id}/push_to_registry:
+
+    get:
+      operationId: application_push_to_registry
+      tags:
+        - Applications
+      summary: Push application to docker registry
+      description: Push application to a docker registry, using authentication
+      parameters:
+        - $ref: "#/parameters/application_id"
+        - name: configuration
+          in: query
+          type: string
+          required: true
+          pattern: "(?:debug|release)"
+        - name: username
+          in: query
+          type: string
+          required: true
+        - name: password
+          in: query
+          type: string
+          required: true
+        - $ref: "#/parameters/progress_id"
+      responses:
+        200:
+          description: Push completed
+        404:
+          description: Application not found
+        500:
+          $ref: "#/responses/InternalServerError_500"
+        520:
+          $ref: "#/responses/ImageNotFoundError_520"
+        530:
+          $ref: "#/responses/LocalDockerError_530"
+        550:
+          $ref: "#/responses/NoTagError_550"
 
   /applications/{application_id}/sdk/run:
 
@@ -1585,8 +1622,8 @@ paths:
           $ref: "#/responses/SSHError_533"
         541:
           $ref: "#/responses/SDKContainerNotRunningError_541"
-        548:
-          $ref: "#/responses/ContainerDoesNotSupportSSH_548"
+        549:
+          $ref: "#/responses/ContainerDoesNotSupportSSH_549"
 
   /applications/{application_id}/privatekey:
 
@@ -3487,8 +3524,12 @@ responses:
     description: SDK container not found.
     schema:
       $ref: "#/definitions/ErrorInfo"
-  ContainerDoesNotSupportSSH_548:
+  ContainerDoesNotSupportSSH_549:
     description: Container does not support SSH
+    schema:
+      $ref: "#/definitions/ErrorInfo"
+  NoTagError_550:
+    description: No tag has been set for the image
     schema:
       $ref: "#/definitions/ErrorInfo"
 

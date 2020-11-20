@@ -381,6 +381,16 @@ class ContainerDoesNotSupportSSH(MosesError):
         super().__init__("Application container does not expose SSH port 2222")
 
 
+class NoTagError(MosesError):
+    code = 550
+    description = "No tag has been specified for the image."
+
+    def __init__(self):
+        super().__init__(
+            "No tag has been specified for the image, please set tag property before pushing."
+        )
+
+
 def encode_error(e: MosesError):
 
     fields = {"code": (e).code, "description": (e).description, "message": str(e)}

@@ -974,6 +974,7 @@ def applications_application_container_logs_get(
 
     return (line, 200)
 
+
 def applications_application_docker_commandline_get(application_id, configuration):
     """Returns docker command line for the application's container
 
@@ -988,7 +989,8 @@ def applications_application_docker_commandline_get(application_id, configuratio
 
     app = applications.get(application_id)
 
-    return (app.get_docker_commandline(configuration),200)
+    return (app.get_docker_commandline(configuration), 200)
+
 
 def applications_application_docker_composefile_get(application_id, configuration):
     """Returns docker command line for the application's container
@@ -1004,7 +1006,46 @@ def applications_application_docker_composefile_get(application_id, configuratio
 
     app = applications.get(application_id)
 
-    return (app.get_docker_composefile(configuration),200)
+    return (app.get_docker_composefile(configuration), 200)
+
+
+def applications_application_push_to_registry_get(
+    application_id: str,
+    configuration: str,
+    username: str,
+    password: str,
+    progress_id: str = None,
+):
+    """builds the application container
+
+    Arguments:
+        application_id {str} -- application id
+        configuration -- debug/release
+    """
+    cookies = progresscookie.ProgressCookies()
+    progress = None
+
+    if progress_id is not None and progress_id in cookies:
+        progress = cookies[progress_id]
+
+    try:
+        applications = applicationconfig.ApplicationConfigs()
+
+        if application_id not in applications:
+            return ("Application not found", 404)
+
+        app = applications[application_id]
+
+        app.push_to_registry(configuration, username, password, progress)
+
+        if progress is not None:
+            progress.completed()
+
+        return (connexion.NoContent, 200)
+    except Exception as e:
+        if progress is not None:
+            progress.report_error(e)
+        raise e
 
 
 def applications_application_sdk_run_get(

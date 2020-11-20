@@ -2257,6 +2257,57 @@ class ApplicationConfig(config.ConfigurableKeysObject):
 
         return yaml.dump(composeyaml)
 
+    def push_to_registry(
+        self,
+        configuration: str,
+        username: str,
+        password: str,
+        progress: Optional[progresscookie.ProgressCookie],
+    ):
+        """Generate complete dockerfile from template and
+        builds the image
+
+        Arguments:
+            configuration {str} - debug/release
+            username {str} - username
+            password {str} - password/token
+            progress (Optional[ProgressCookie]): progress object or None
+        """
+        tag = self.get_custom_prop(configuration, "tag")
+
+        if tag is None:
+            raise exceptions.NoTagError()
+
+        repository = None
+
+        parts = tag.split(":")
+        if len(parts) > 1:
+            repository, tag = parts
+        else:
+            repository = tag
+            tag = None
+
+        imgid = self.images[configuration]
+
+        if imgid is None or imgid == "":
+            logging.error("Image has never been build for application %s.", self.folder)
+            raise exceptions.ImageNotFoundError("")
+
+        localdocker = docker.from_env()
+
+        try:
+            limg = localdocker.images.get(imgid)
+        except docker.errors.ImageNotFound:
+            logging.error(
+                "Image %s not found when deploying application %s.", imgid, self.folder,
+            )
+            raise exceptions.ImageNotFoundError(imgid)
+
+        # ensure that the image is correctly tagged
+        limg.tag(repository, tag)
+
+        dockerapi.push_image(localdocker, repository, tag, username, password, progress)
+
 
 class ApplicationConfigs(Dict[str, ApplicationConfig], metaclass=singleton.Singleton):
     """Class used to manage the applications.

@@ -9,7 +9,7 @@ import os
 from docker import APIClient, DockerClient
 from docker.errors import BuildError
 from docker.models.images import Image
-from typing import Optional, List
+from typing import Optional, List, Dict, Tuple
 from exceptions import LocalDockerError, RemoteDockerError
 
 
@@ -52,7 +52,6 @@ def build_image(
 
             if len(l) == 0:
                 continue
-
             try:
                 line = json.loads(l)
             except Exception as e:
@@ -159,3 +158,96 @@ def load_image(
         return client.images.get(image_id)
     else:
         return None
+
+
+def push_image(
+    client: DockerClient,
+    repository: str,
+    tag: Optional[str],
+    username: str,
+    password: str,
+    progress: Optional[progresscookie.ProgressCookie],
+):
+    """pushes an image returning messages generated during the operation
+
+    Args:
+        client (DockerClient): client
+        repository (str): full path to docker registry
+        tag (str): tag to be assigned to the newly built image
+        username (str): username for registry authentication
+        password (str): password/token
+        progress (Optional[ProgressCookie]): progress object or None
+
+    Returns:
+        Image - Docker image or None
+    """
+
+    apiclient = client.api
+
+    auth_config = {"username": username, "password": password}
+
+    resp = apiclient.push(repository, tag, auth_config=auth_config, stream=True)
+
+    output: List[str] = []
+    ids: Dict[str, Tuple[str, int, int]] = {}
+
+    for r in resp:
+
+        for l in r.decode("utf-8").split("\r\n"):
+
+            if len(l) == 0:
+                continue
+
+            print(l)
+
+            try:
+                line = json.loads(l)
+            except Exception as e:
+                logging.error(f"Invalid json string {l}")
+                logging.exception(e)
+                continue
+
+            if "stream" in line:
+                if progress is not None:
+                    progress.append_message(line["stream"])
+                output.append(line["stream"])
+            if "status" in line:
+
+                if progress is not None:
+
+                    cur = 0
+                    tot = 0
+
+                    if "id" in line:
+                        id = line["id"]
+
+                        if "progressDetail" in line:
+
+                            detail = line["progressDetail"]
+                            if "current" in detail:
+                                cur = detail["current"]
+                            if "total" in detail:
+                                tot = detail["total"]
+
+                        if id not in ids or line["status"] != ids[id][0]:
+                            ids[id] = (line["status"], cur, tot)
+
+                            progress.append_message(line["status"] + " " + id)
+
+                        if tot != 0:
+                            ids[id] = (line["status"], cur, tot)
+
+                            gc = 0
+                            gt = 0
+
+                            for i in ids.values():
+                                gc += i[1]
+                                gt += i[2]
+
+                            progress.set_minmax(0, gt)
+                            progress.set_progress_minmax(gc)
+            if "error" in line:
+                info = None
+                if "errorDetail" in line:
+                    info = line["errorDetail"]
+                raise LocalDockerError(line["error"], log=output, info=info)
