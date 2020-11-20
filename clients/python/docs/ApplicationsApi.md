@@ -14,6 +14,7 @@ Method | HTTP request | Description
 [**application_getdocker_composefile**](ApplicationsApi.md#application_getdocker_composefile) | **GET** /applications/{application_id}/docker_composefile | Get docker compose file
 [**application_getprivatekey**](ApplicationsApi.md#application_getprivatekey) | **GET** /applications/{application_id}/privatekey | Retrieves the path of the RSA private key
 [**application_modify**](ApplicationsApi.md#application_modify) | **PUT** /applications/{application_id} | Change application properties
+[**application_push_to_registry**](ApplicationsApi.md#application_push_to_registry) | **GET** /applications/{application_id}/push_to_registry | Push application to docker registry
 [**application_reseal**](ApplicationsApi.md#application_reseal) | **GET** /applications/{application_id}/reseal | Cleans id and keys for git repo uploading
 [**application_run**](ApplicationsApi.md#application_run) | **GET** /applications/{application_id}/run | Runs container image
 [**application_runsdk**](ApplicationsApi.md#application_runsdk) | **GET** /applications/{application_id}/sdk/run | Runs SDK containers
@@ -708,6 +709,80 @@ No authorization required
 
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
 
+# **application_push_to_registry**
+> application_push_to_registry(application_id, configuration, username, password, progress_id=progress_id)
+
+Push application to docker registry
+
+Push application to a docker registry, using authentication
+
+### Example
+
+```python
+from __future__ import print_function
+import time
+import moses_client
+from moses_client.rest import ApiException
+from pprint import pprint
+# Defining the host is optional and defaults to http://localhost:5000/api
+# See configuration.py for a list of all supported configuration parameters.
+configuration = moses_client.Configuration(
+    host = "http://localhost:5000/api"
+)
+
+
+# Enter a context with an instance of the API client
+with moses_client.ApiClient() as api_client:
+    # Create an instance of the API class
+    api_instance = moses_client.ApplicationsApi(api_client)
+    application_id = 'application_id_example' # str | Id of an application (uuid)
+configuration = 'configuration_example' # str | 
+username = 'username_example' # str | 
+password = 'password_example' # str | 
+progress_id = 'progress_id_example' # str | Id of a progress cookie (uuid) (optional)
+
+    try:
+        # Push application to docker registry
+        api_instance.application_push_to_registry(application_id, configuration, username, password, progress_id=progress_id)
+    except ApiException as e:
+        print("Exception when calling ApplicationsApi->application_push_to_registry: %s\n" % e)
+```
+
+### Parameters
+
+Name | Type | Description  | Notes
+------------- | ------------- | ------------- | -------------
+ **application_id** | **str**| Id of an application (uuid) | 
+ **configuration** | **str**|  | 
+ **username** | **str**|  | 
+ **password** | **str**|  | 
+ **progress_id** | **str**| Id of a progress cookie (uuid) | [optional] 
+
+### Return type
+
+void (empty response body)
+
+### Authorization
+
+No authorization required
+
+### HTTP request headers
+
+ - **Content-Type**: Not defined
+ - **Accept**: application/json
+
+### HTTP response details
+| Status code | Description | Response headers |
+|-------------|-------------|------------------|
+**200** | Push completed |  -  |
+**404** | Application not found |  -  |
+**500** | Unexpected exception. |  -  |
+**520** | Container image not found on local host. |  -  |
+**530** | Local docker exception. |  -  |
+**550** | No tag has been set for the image |  -  |
+
+[[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
+
 # **application_reseal**
 > application_reseal(application_id)
 
@@ -1135,7 +1210,7 @@ No authorization required
 **530** | Local docker exception. |  -  |
 **533** | SSH error. |  -  |
 **541** | SDK container is not running. |  -  |
-**548** | Container does not support SSH |  -  |
+**549** | Container does not support SSH |  -  |
 
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
 

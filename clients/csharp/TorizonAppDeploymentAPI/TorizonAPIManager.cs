@@ -51,5 +51,13 @@ namespace TorizonAppDeploymentAPI
             api.ExceptionFactory = TorizonAPIException.DefaultExceptionFactory;
             return api;
         }
+
+        public static ProgressApi GetProgressApi()
+        {
+            ProgressApi api = new ProgressApi();
+
+            api.ExceptionFactory = TorizonAPIException.DefaultExceptionFactory;
+            return api;
+        }
     }
 }

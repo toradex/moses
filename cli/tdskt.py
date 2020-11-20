@@ -830,7 +830,7 @@ def cmd_handler_application_cmdline(args) -> int:
 
 
 def cmd_handler_application_composefile(args) -> int:
-    """Returns docker command line for a specific application configuration
+    """Returns docker compose file for a specific application configuration
 
     Arguments:
         args {[type]} -- command line arguments
@@ -842,6 +842,30 @@ def cmd_handler_application_composefile(args) -> int:
 
     composefile = api.application_getdocker_composefile(
         args.application_id, args.configuration
+    )
+    logging.info(composefile)
+    return 0
+
+
+def cmd_handler_application_push(args) -> int:
+    """Pushes the required container to a docker registry
+
+    Arguments:
+        args {[type]} -- command line arguments
+
+    Returns:
+        int -- 0 for success
+    """
+    api = moses_client.ApplicationsApi()
+
+    progress_id = handle_progress(args)
+
+    composefile = api.application_push_to_registry(
+        args.application_id,
+        args.configuration,
+        args.username,
+        args.password,
+        progress_id=progress_id,
     )
     logging.info(composefile)
     return 0
@@ -1128,6 +1152,7 @@ def create_parser() -> argparse.ArgumentParser:
     application_sync_parser = application_subparsers.add_parser("sync")
     application_cmdline_parser = application_subparsers.add_parser("cmdline")
     application_composefile_parser = application_subparsers.add_parser("composefile")
+    application_push_parser = application_subparsers.add_parser("push")
 
     application_build_parser.add_argument(
         "configuration", help="Build/release or other app-specific configuration"
@@ -1199,6 +1224,16 @@ def create_parser() -> argparse.ArgumentParser:
 
     application_composefile_parser.add_argument(
         "configuration", help="Build/release or other app-specific configuration"
+    )
+
+    application_push_parser.add_argument(
+        "configuration", help="Build/release or other app-specific configuration"
+    )
+    application_push_parser.add_argument(
+        "username", help="Username for docker registry login"
+    )
+    application_push_parser.add_argument(
+        "password", help="password/token used for authentication"
     )
 
     # add command to create application

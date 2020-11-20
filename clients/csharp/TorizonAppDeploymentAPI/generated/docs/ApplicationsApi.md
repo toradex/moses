@@ -14,6 +14,7 @@ Method | HTTP request | Description
 [**ApplicationGetdockerComposefile**](ApplicationsApi.md#applicationgetdockercomposefile) | **GET** /applications/{application_id}/docker_composefile | Get docker compose file
 [**ApplicationGetprivatekey**](ApplicationsApi.md#applicationgetprivatekey) | **GET** /applications/{application_id}/privatekey | Retrieves the path of the RSA private key
 [**ApplicationModify**](ApplicationsApi.md#applicationmodify) | **PUT** /applications/{application_id} | Change application properties
+[**ApplicationPushToRegistry**](ApplicationsApi.md#applicationpushtoregistry) | **GET** /applications/{application_id}/push_to_registry | Push application to docker registry
 [**ApplicationReseal**](ApplicationsApi.md#applicationreseal) | **GET** /applications/{application_id}/reseal | Cleans id and keys for git repo uploading
 [**ApplicationRun**](ApplicationsApi.md#applicationrun) | **GET** /applications/{application_id}/run | Runs container image
 [**ApplicationRunsdk**](ApplicationsApi.md#applicationrunsdk) | **GET** /applications/{application_id}/sdk/run | Runs SDK containers
@@ -839,6 +840,93 @@ No authorization required
 [[Back to README]](../README.md)
 
 
+## ApplicationPushToRegistry
+
+> void ApplicationPushToRegistry (string applicationId, string configuration, string username, string password, string progressId = null)
+
+Push application to docker registry
+
+Push application to a docker registry, using authentication
+
+### Example
+
+```csharp
+using System.Collections.Generic;
+using System.Diagnostics;
+using TorizonRestAPI.Api;
+using TorizonRestAPI.Client;
+using TorizonRestAPI.Model;
+
+namespace Example
+{
+    public class ApplicationPushToRegistryExample
+    {
+        public static void Main()
+        {
+            Configuration.Default.BasePath = "http://localhost:5000/api";
+            var apiInstance = new ApplicationsApi(Configuration.Default);
+            var applicationId = applicationId_example;  // string | Id of an application (uuid)
+            var configuration = configuration_example;  // string | 
+            var username = username_example;  // string | 
+            var password = password_example;  // string | 
+            var progressId = progressId_example;  // string | Id of a progress cookie (uuid) (optional) 
+
+            try
+            {
+                // Push application to docker registry
+                apiInstance.ApplicationPushToRegistry(applicationId, configuration, username, password, progressId);
+            }
+            catch (ApiException e)
+            {
+                Debug.Print("Exception when calling ApplicationsApi.ApplicationPushToRegistry: " + e.Message );
+                Debug.Print("Status Code: "+ e.ErrorCode);
+                Debug.Print(e.StackTrace);
+            }
+        }
+    }
+}
+```
+
+### Parameters
+
+
+Name | Type | Description  | Notes
+------------- | ------------- | ------------- | -------------
+ **applicationId** | **string**| Id of an application (uuid) | 
+ **configuration** | **string**|  | 
+ **username** | **string**|  | 
+ **password** | **string**|  | 
+ **progressId** | **string**| Id of a progress cookie (uuid) | [optional] 
+
+### Return type
+
+void (empty response body)
+
+### Authorization
+
+No authorization required
+
+### HTTP request headers
+
+- **Content-Type**: Not defined
+- **Accept**: application/json
+
+### HTTP response details
+| Status code | Description | Response headers |
+|-------------|-------------|------------------|
+| **200** | Push completed |  -  |
+| **404** | Application not found |  -  |
+| **500** | Unexpected exception. |  -  |
+| **520** | Container image not found on local host. |  -  |
+| **530** | Local docker exception. |  -  |
+| **550** | No tag has been set for the image |  -  |
+
+[[Back to top]](#)
+[[Back to API list]](../README.md#documentation-for-api-endpoints)
+[[Back to Model list]](../README.md#documentation-for-models)
+[[Back to README]](../README.md)
+
+
 ## ApplicationReseal
 
 > void ApplicationReseal (string applicationId)
@@ -1340,7 +1428,7 @@ No authorization required
 | **530** | Local docker exception. |  -  |
 | **533** | SSH error. |  -  |
 | **541** | SDK container is not running. |  -  |
-| **548** | Container does not support SSH |  -  |
+| **549** | Container does not support SSH |  -  |
 
 [[Back to top]](#)
 [[Back to API list]](../README.md#documentation-for-api-endpoints)

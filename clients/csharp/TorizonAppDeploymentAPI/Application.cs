@@ -31,7 +31,7 @@ namespace TorizonAppDeploymentAPI
 
         public static Action CreateProgressTask(ref Progress progressRef, Action<string, int> taskUpdateStatus)
         {
-            ProgressApi progressApi = new ProgressApi();
+            ProgressApi progressApi = TorizonAPIManager.GetProgressApi();
             Progress progress = progressApi.ProgressCreate();
             progressRef = progress;
 
@@ -126,8 +126,9 @@ namespace TorizonAppDeploymentAPI
             Progress progress = null;
             var taskBuild = CreateProgressTask(ref progress, buildCompleted);
 
-            _ = api.ApplicationBuildAsync(this.Id, configuration, progress?.Id);
+            var task =  api.ApplicationBuildAsync(this.Id, configuration, progress?.Id);
             await Task.Run(taskBuild);
+            await task; // in this way exceptions will be generated
         }
 
         public async Task DeployContainerAsync(string configuration, TargetDevice targetdevice, Action<string, int> DeploymentCompleted)
@@ -135,8 +136,9 @@ namespace TorizonAppDeploymentAPI
             Progress progress = null;
             var taskBuild = CreateProgressTask(ref progress, DeploymentCompleted);
 
-            _ = api.ApplicationDeployAsync(this.Id, configuration, targetdevice.Id, progress.Id);
+            var task =  api.ApplicationDeployAsync(this.Id, configuration, targetdevice.Id, progress.Id);
             await Task.Run(taskBuild);
+            await task; // in this way exceptions will be generated
         }
 
         public async Task<DockerContainer> RunAsync(string configuration, TargetDevice targetdevice, Action<string, int> runningAction, Action<DockerContainer> ApplicationStarted)
@@ -146,7 +148,7 @@ namespace TorizonAppDeploymentAPI
 
             var taskBuild = CreateProgressTask(ref progress, runningAction);
 
-            _ = api.ApplicationRunAsync(this.Id, configuration, targetdevice.Id, progress?.Id).ContinueWith( task => {
+            _ =  api.ApplicationRunAsync(this.Id, configuration, targetdevice.Id, progress?.Id).ContinueWith( task => {
                 TorizonRestAPI.Model.DockerContainer model =
                     Utils.ObjectOrException<TorizonRestAPI.Model.DockerContainer>(task.Result);
 
@@ -179,8 +181,9 @@ namespace TorizonAppDeploymentAPI
             Progress progress = null;
             var taskBuild = CreateProgressTask(ref progress, FolderSynced);
 
-            _ = api.ApplicationSyncfoldersAsync(this.Id, sdkfolder, configuration, device.Id, destfolder, true, progress?.Id);
+            var task =  api.ApplicationSyncfoldersAsync(this.Id, sdkfolder, configuration, device.Id, destfolder, true, progress?.Id);
             await Task.Run(taskBuild);
+            await task; // in this way exceptions will be generated
         }
 
         public async Task UpdateSDKAsync(string configuration, Action<string, int> UpdateCompleted)
@@ -188,8 +191,9 @@ namespace TorizonAppDeploymentAPI
             Progress progress = null;
             var taskBuild = CreateProgressTask(ref progress, UpdateCompleted);
 
-            _ = api.ApplicationUpdatesdkAsync(this.Id, configuration, progress?.Id);
+            var task =  api.ApplicationUpdatesdkAsync(this.Id, configuration, progress?.Id);
             await Task.Run(taskBuild);
+            await task; // in this way exceptions will be generated
         }
 
         public async Task<string> GetDockerCommandLineAsync(string configuration)
@@ -210,6 +214,16 @@ namespace TorizonAppDeploymentAPI
             composefile = composefile.Trim(new char[] { '\"' });
 
             return composefile;
+        }
+
+        public async Task PushToDockerRegistryAsync(string configuration, string username, string password, Action<string,int> PushCompleted)
+        {
+            Progress progress = null;
+            var taskBuild = CreateProgressTask(ref progress, PushCompleted);
+
+            var task = api.ApplicationPushToRegistryAsync(this.Id, configuration, username, password, progress.Id);
+            await Task.Run(taskBuild);
+            await task; // in this way exceptions will be generated
         }
     }
 }
