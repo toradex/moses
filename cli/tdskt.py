@@ -1018,6 +1018,22 @@ def cmd_handler_pull(args) -> int:
     return 0
 
 
+def cmd_handler_enableemulation(args) -> int:
+    """Enables ARM emulation
+
+    Arguments:
+        args {[type]} -- command line arguments
+
+    Returns:
+        int -- 0 for success
+    """
+    api = moses_client.SetupApi()
+
+    progress_id = handle_progress(args)
+    api.setup_enableemulation(progress_id=progress_id)
+    return 0
+
+
 def create_parser() -> argparse.ArgumentParser:
     """Creates a parser for the command line arguments
 
@@ -1056,6 +1072,7 @@ def create_parser() -> argparse.ArgumentParser:
     create_parser = subparsers.add_parser("create")
     load_parser = subparsers.add_parser("load")
     pullcontainers_parser = subparsers.add_parser("pull")
+    enableemulation_parser = subparsers.add_parser("enableemulation")
 
     device_parser.add_argument(
         "device_id", help="Device serial number", metavar="device-id"

@@ -1,7 +1,7 @@
 swagger: "2.0"
 info:
   description: Toradex API to build and deploy applications running as containers on Torizon
-  version: 1.0.12
+  version: 1.0.13
   title: Torizon IDE-backend API
 consumes:
   - application/json
@@ -1672,13 +1672,30 @@ paths:
       description: installs base and sdk containers for supported platforms
       responses:
         200:
-          description: Sysroot updated
+          description: Containers pulled
         500:
           $ref: "#/responses/InternalServerError_500"
         530:
           $ref: "#/responses/LocalDockerError_530"
         542:
           $ref: "#/responses/PullImageError_542"
+
+  /setup/enableemulation:
+    get:
+      operationId: setup_enableemulation
+      parameters:
+        - $ref: "#/parameters/progress_id"
+      tags:
+        - Setup
+      summary: enables ARM emulation using qemu
+      description: uses binfmt and qemu to enable ARM emulation on non-ARM devices
+      responses:
+        200:
+          description: Emulation enabled
+        500:
+          $ref: "#/responses/InternalServerError_500"
+        530:
+          $ref: "#/responses/LocalDockerError_530"
 
   /progress/create:
     get:

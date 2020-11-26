@@ -20,6 +20,7 @@ from typing import Any, Optional, Dict
 APP_VERSION = "1.0"
 API_VERSION = "1.0"
 
+EMULATION_IMAGE_NAME = "torizon/binfmt"
 
 # validation of readonly fields is done internally
 def remove_readonly(validator, ro, instance, schema):
@@ -1227,7 +1228,20 @@ def setup_pullcontainers_get(progress_id: str = None) -> Any:
         failed = []
 
         counter = 0
-        max = len(platformconfig.PlatformConfigs())
+        max = len(platformconfig.PlatformConfigs()) + 1
+
+        try:
+            if progress is not None:
+                progress.append_message(f"Downloading {EMULATION_IMAGE_NAME}")
+
+            dockerclient.images.pull(EMULATION_IMAGE_NAME)
+        except:
+            logging.exception(
+                f"PULL - Pull operation failed for image {EMULATION_IMAGE_NAME}"
+            )
+            failed.append(EMULATION_IMAGE_NAME)
+
+        counter = 1
 
         for p in platformconfig.PlatformConfigs():
 
@@ -1280,6 +1294,40 @@ def setup_pullcontainers_get(progress_id: str = None) -> Any:
 
         if progress is not None:
             progress.set_progress(100)
+            progress.completed()
+
+    except Exception as ex:
+        if progress is not None:
+            progress.report_error(ex)
+        raise ex
+
+    return (connexion.NoContent, 200)
+
+
+def setup_enableemulation_get(progress_id: str = None) -> Any:
+    """Enables ARM emulation by running a privileged container        
+    """
+
+    progress: Optional[progresscookie.ProgressCookie] = None
+
+    try:
+        cookies = progresscookie.ProgressCookies()
+
+        if progress_id is not None and progress_id in cookies:
+            progress = cookies[progress_id]
+
+        dockerclient = docker.from_env()
+
+        output = dockerclient.containers.run(
+            EMULATION_IMAGE_NAME, remove=True, privileged=True, stderr=True, stdout=True
+        )
+
+        if progress is not None:
+            outputstr = output.decode("utf-8")
+
+            for l in outputstr.split("\n"):
+                progress.append_message(l)
+
             progress.completed()
 
     except Exception as ex:
