@@ -137,7 +137,7 @@ namespace TorizonAppDeploymentAPI
                 ProgressApi progressApi = new ProgressApi();
                 Progress progress = progressApi.ProgressCreate();
 
-                _ = api.SetupPullcontainersAsync(progress.Id);
+                var task = api.SetupPullcontainersAsync(progress.Id);
 
                 // check the status
                 await Task.Run(() => {
@@ -154,6 +154,8 @@ namespace TorizonAppDeploymentAPI
                     // send 100% for the current task
                     operationCompleted?.Invoke(null, "Done", 100);
                 });
+
+                await task;
             }
             catch (Exception e)
             {
@@ -161,6 +163,39 @@ namespace TorizonAppDeploymentAPI
             }
         }
 
+        public static async Task EnableEmulationAsync(Action<Exception, string, int> operationCompleted = null)
+        {
+            try
+            {
+                TorizonRestAPI.Api.SetupApi api = new TorizonRestAPI.Api.SetupApi();
+                ProgressApi progressApi = new ProgressApi();
+                Progress progress = progressApi.ProgressCreate();
+
+                var task = api.SetupEnableemulationAsync(progress.Id);
+
+                // check the status
+                await Task.Run(() => {
+                    while (progress.Pending)
+                    {
+                        progress = progressApi.ProgressStatus(progress.Id);
+
+                        foreach (string msg in progress.Messages)
+                        {
+                            operationCompleted?.Invoke(null, msg, progress._Progress);
+                        }
+                    }
+
+                    // send 100% for the current task
+                    operationCompleted?.Invoke(null, "Done", 100);
+                });
+
+                await task;
+            }
+            catch (Exception e)
+            {
+                operationCompleted?.Invoke(e, null, 0);
+            }
+        }
     }
 }
 
