@@ -295,7 +295,8 @@ class ApplicationConfig(config.ConfigurableKeysObject):
         fields = super().__getstate__()
         fields["id"] = self.id
         fields["sdksshaddress"] = self.sdksshaddress
-        del fields["logs"]
+        if "logs" in fields:
+            del fields["logs"]
         return fields
 
     def _to_json(self):
