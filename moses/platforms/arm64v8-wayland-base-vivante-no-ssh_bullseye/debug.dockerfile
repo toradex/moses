@@ -36,4 +36,4 @@ USER #%application.username%#
 
 WORKDIR /#%application.appname%#
 
-CMD gdbserver 0.0.0.0:6502 /#%application.appname%#/#%application.exename%# #%application.appargs%#
+CMD stdbuf -oL -eL gdbserver 0.0.0.0:6502 /#%application.appname%#/#%application.exename%# #%application.appargs%#
