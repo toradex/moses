@@ -6,7 +6,9 @@ FROM #%platform.sdkbaseimage%#
 # your regular RUN statements here
 # Install required packages
 RUN if [ ! -z "#%application.devpackages%#" ]; then apt-get -q -y update \
-    && apt-get -q -y install #%application.devpackages%#\
+    && apt-get -q -y install \
+    gdb \
+    #%application.devpackages%#\
     && rm -rf /var/lib/apt/lists/*; \
     fi
 

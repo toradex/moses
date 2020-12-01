@@ -27,6 +27,7 @@ RUN apt-get -q -y update \
     rsync \
     libc-dev \
     gdb \
+    g++ zip \
     #%application.extrapackages%#\
     && rm -rf /var/lib/apt/lists/*
 
