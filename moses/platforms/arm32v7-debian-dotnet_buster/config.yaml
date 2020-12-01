@@ -23,7 +23,8 @@ container:
 # defines what languages/runtimes are supported by this platform
 runtimes:
   - dotnet
-tags: []
+tags:
+  - .net3
 
 # information about how containers should run
 ports:
@@ -60,7 +61,7 @@ sdkcontainer:
 
 # additional platform-specific properties that can be used in projects or plugins
 props:
-  common: { "runtimeid": "linux-arm" }
+  common: { "runtimeid": "linux-arm", "targetframework": "netcoreapp3.1" }
   debug: {}
   release: {}
 # additional scripts (docker-compose or shell) that can be used to start/stop
