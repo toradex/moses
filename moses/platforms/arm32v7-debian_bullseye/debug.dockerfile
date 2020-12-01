@@ -18,6 +18,11 @@ ENV DEBIAN_FRONTEND="noninteractive"
 # commands that should be run before installing packages (ex: to add a feed or keys)
 #%application.preinstallcommands%#
 
+# NOTE: this is a hack for the VS 2019 warning about missing required g++
+# Check TIE-282
+RUN touch /usr/bin/g++ && \
+    chmod +x /usr/bin/g++
+
 # your regular RUN statements here
 # Install required packages
 RUN apt-get -q -y update \
@@ -27,7 +32,7 @@ RUN apt-get -q -y update \
     rsync \
     libc-dev \
     gdb \
-    g++ zip \
+    zip \
     #%application.extrapackages%#\
     && rm -rf /var/lib/apt/lists/*
 

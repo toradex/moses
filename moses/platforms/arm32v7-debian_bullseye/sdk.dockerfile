@@ -5,12 +5,11 @@ FROM #%platform.sdkbaseimage%#
 
 # your regular RUN statements here
 # Install required packages
-RUN if [ ! -z "#%application.devpackages%#" ]; then apt-get -q -y update \
+RUN apt-get -q -y update \
     && apt-get upgrade -q -y \
     && apt-get -q -y install \
-    gdb \
+    gdb rsync \
     #%application.devpackages%#\
-    && rm -rf /var/lib/apt/lists/*; \
-    fi
+    && rm -rf /var/lib/apt/lists/*
 
 #%application.sdkpostinstallcommands%#
