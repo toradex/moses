@@ -29,6 +29,7 @@ class ProgressCookie(ProgressCookieData):
         self.lock = threading.Lock()
         self.event = threading.Event()
         self.min = self.max = self.current = 0
+        self.aborted = False
 
     def set_minmax(self, minv: float, maxv: float):
         self.min = min(minv, maxv)
@@ -66,6 +67,8 @@ class ProgressCookie(ProgressCookieData):
 
     def append_message(self, message: str):
 
+        self.check_for_abort()
+
         message = message.rstrip()
 
         if message is None or len(message) == 0:
@@ -79,6 +82,9 @@ class ProgressCookie(ProgressCookieData):
             self.release()
 
     def set_progress(self, value: int):
+
+        self.check_for_abort()
+
         self.acquire()
         try:
             val = min(value, 100)
@@ -90,6 +96,9 @@ class ProgressCookie(ProgressCookieData):
             self.release()
 
     def set_progress_minmax(self, value: float):
+
+        self.check_for_abort()
+
         self.acquire()
 
         try:
@@ -106,6 +115,9 @@ class ProgressCookie(ProgressCookieData):
             self.release()
 
     def update_progress_minmax(self, increase: float):
+
+        self.check_for_abort()
+
         self.acquire()
 
         try:
@@ -120,6 +132,9 @@ class ProgressCookie(ProgressCookieData):
             self.release()
 
     def completed(self):
+
+        self.check_for_abort()
+
         self.acquire()
         try:
             self.pending = False
@@ -129,6 +144,18 @@ class ProgressCookie(ProgressCookieData):
             self.event.set()
         finally:
             self.release()
+
+    def abort(self):
+        self.aborted = True
+
+    def check_for_abort(self):
+
+        self.acquire()
+        aborted = self.aborted
+        self.release()
+
+        if aborted:
+            raise exceptions.AbortError()
 
     def report_error(self, exception: Exception):
         self.acquire()
@@ -175,6 +202,7 @@ class ProgressCookies(Dict[str, ProgressCookie], metaclass=singleton.Singleton):
         if cookie_id in self:
             cookie = self[cookie_id]
             cookie.acquire()
+            cookie.abort()
             del self[cookie_id]
             cookie.release()
 

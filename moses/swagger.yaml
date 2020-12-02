@@ -1,7 +1,7 @@
 swagger: "2.0"
 info:
   description: Toradex API to build and deploy applications running as containers on Torizon
-  version: 1.0.13
+  version: 1.0.14
   title: Torizon IDE-backend API
 consumes:
   - application/json
@@ -844,6 +844,9 @@ paths:
           $ref: "#/responses/SSHError_533"
         544:
           $ref: "#/responses/LocalCommandError_544"
+        551:
+          $ref: "#/responses/AbortError_551"
+
 
   /devices/{device_id}/current_ip:
     get:
@@ -1171,6 +1174,9 @@ paths:
           $ref: "#/responses/InternalServerError_500"
         530:
           $ref: "#/responses/LocalDockerError_530"
+        551:
+          $ref: "#/responses/AbortError_551"
+       
 
   /applications/{application_id}/deploy:
 
@@ -1210,6 +1216,9 @@ paths:
           $ref: "#/responses/SSHError_533"
         539:
           $ref: "#/responses/SSHTunnelError_539"
+        551:
+          $ref: "#/responses/AbortError_551"
+
 
   /applications/{application_id}/run:
 
@@ -1251,6 +1260,9 @@ paths:
           $ref: "#/responses/SSHError_533"
         539:
           $ref: "#/responses/SSHTunnelError_539"
+        551:
+          $ref: "#/responses/AbortError_551"
+
 
   /applications/{application_id}/stop:
 
@@ -1461,6 +1473,9 @@ paths:
           $ref: "#/responses/LocalDockerError_530"
         550:
           $ref: "#/responses/NoTagError_550"
+        551:
+          $ref: "#/responses/AbortError_551"
+
 
   /applications/{application_id}/sdk/run:
 
@@ -1504,6 +1519,8 @@ paths:
           $ref: "#/responses/ImageNotFoundError_520"
         530:
           $ref: "#/responses/LocalDockerError_530"
+        551:
+          $ref: "#/responses/AbortError_551"
 
   /applications/{application_id}/sdk/update:
 
@@ -1534,6 +1551,8 @@ paths:
           $ref: "#/responses/LocalDockerError_530"
         533:
           $ref: "#/responses/SSHError_533"
+        551:
+          $ref: "#/responses/AbortError_551"
   
   /applications/{application_id}/sdk/container:
 
@@ -1624,6 +1643,8 @@ paths:
           $ref: "#/responses/SDKContainerNotRunningError_541"
         549:
           $ref: "#/responses/ContainerDoesNotSupportSSH_549"
+        551:
+          $ref: "#/responses/AbortError_551"
 
   /applications/{application_id}/privatekey:
 
@@ -1679,6 +1700,8 @@ paths:
           $ref: "#/responses/LocalDockerError_530"
         542:
           $ref: "#/responses/PullImageError_542"
+        551:
+          $ref: "#/responses/AbortError_551"
 
   /setup/enableemulation:
     get:
@@ -1696,10 +1719,14 @@ paths:
           $ref: "#/responses/InternalServerError_500"
         530:
           $ref: "#/responses/LocalDockerError_530"
+        551:
+          $ref: "#/responses/AbortError_551"
 
   /progress/create:
     get:
       operationId: progress_create
+      summary: create a progress ID
+      description: creates a progress object that could be used to monitor and abort operations
       tags:
         - Progress
       responses:
@@ -1715,6 +1742,8 @@ paths:
       operationId: progress_status
       tags:
         - Progress
+      summary: retrieves status of an operation
+      description: return status and messages, it's blocking until status changes or the operation is completed
       parameters:
         - $ref: "#/parameters/progress_id"
       responses:
@@ -1731,6 +1760,8 @@ paths:
   /progress/delete:
     get:
       operationId: progress_delete
+      summary: releases progress ID
+      description: if delete is called when the operation is still pending, it will try to abort it
       tags:
         - Progress
       parameters:
@@ -3547,6 +3578,10 @@ responses:
       $ref: "#/definitions/ErrorInfo"
   NoTagError_550:
     description: No tag has been set for the image
+    schema:
+      $ref: "#/definitions/ErrorInfo"
+  AbortError_551:
+    description: Operation has been aborted
     schema:
       $ref: "#/definitions/ErrorInfo"
 

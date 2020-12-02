@@ -391,6 +391,14 @@ class NoTagError(MosesError):
         )
 
 
+class AbortError(MosesError):
+    code = 551
+    description = "Operation aborted."
+
+    def __init__(self):
+        super().__init__("Operation has been aborted.")
+
+
 def encode_error(e: MosesError):
 
     fields = {"code": (e).code, "description": (e).description, "message": str(e)}
