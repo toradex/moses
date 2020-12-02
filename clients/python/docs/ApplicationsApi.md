@@ -92,6 +92,7 @@ No authorization required
 **404** | Application not found |  -  |
 **500** | Unexpected exception. |  -  |
 **530** | Local docker exception. |  -  |
+**551** | Operation has been aborted |  -  |
 
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
 
@@ -228,6 +229,7 @@ No authorization required
 **530** | Local docker exception. |  -  |
 **533** | SSH error. |  -  |
 **539** | SSH tunnel error. |  -  |
+**551** | Operation has been aborted |  -  |
 
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
 
@@ -780,6 +782,7 @@ No authorization required
 **520** | Container image not found on local host. |  -  |
 **530** | Local docker exception. |  -  |
 **550** | No tag has been set for the image |  -  |
+**551** | Operation has been aborted |  -  |
 
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
 
@@ -917,6 +920,7 @@ No authorization required
 **530** | Local docker exception. |  -  |
 **533** | SSH error. |  -  |
 **539** | SSH tunnel error. |  -  |
+**551** | Operation has been aborted |  -  |
 
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
 
@@ -989,6 +993,7 @@ No authorization required
 **500** | Unexpected exception. |  -  |
 **520** | Container image not found on local host. |  -  |
 **530** | Local docker exception. |  -  |
+**551** | Operation has been aborted |  -  |
 
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
 
@@ -1211,6 +1216,7 @@ No authorization required
 **533** | SSH error. |  -  |
 **541** | SDK container is not running. |  -  |
 **549** | Container does not support SSH |  -  |
+**551** | Operation has been aborted |  -  |
 
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
 
@@ -1348,6 +1354,7 @@ No authorization required
 **520** | Container image not found on local host. |  -  |
 **530** | Local docker exception. |  -  |
 **533** | SSH error. |  -  |
+**551** | Operation has been aborted |  -  |
 
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
 

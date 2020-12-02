@@ -4,9 +4,9 @@ All URIs are relative to *http://localhost:5000/api*
 
 Method | HTTP request | Description
 ------------- | ------------- | -------------
-[**ProgressCreate**](ProgressApi.md#progresscreate) | **GET** /progress/create | 
-[**ProgressDelete**](ProgressApi.md#progressdelete) | **GET** /progress/delete | 
-[**ProgressStatus**](ProgressApi.md#progressstatus) | **GET** /progress/status | 
+[**ProgressCreate**](ProgressApi.md#progresscreate) | **GET** /progress/create | create a progress ID
+[**ProgressDelete**](ProgressApi.md#progressdelete) | **GET** /progress/delete | releases progress ID
+[**ProgressStatus**](ProgressApi.md#progressstatus) | **GET** /progress/status | retrieves status of an operation
 
 
 
@@ -14,7 +14,9 @@ Method | HTTP request | Description
 
 > Progress ProgressCreate ()
 
+create a progress ID
 
+creates a progress object that could be used to monitor and abort operations
 
 ### Example
 
@@ -36,6 +38,7 @@ namespace Example
 
             try
             {
+                // create a progress ID
                 Progress result = apiInstance.ProgressCreate();
                 Debug.WriteLine(result);
             }
@@ -83,7 +86,9 @@ No authorization required
 
 > void ProgressDelete (string progressId = null)
 
+releases progress ID
 
+if delete is called when the operation is still pending, it will try to abort it
 
 ### Example
 
@@ -106,6 +111,7 @@ namespace Example
 
             try
             {
+                // releases progress ID
                 apiInstance.ProgressDelete(progressId);
             }
             catch (ApiException e)
@@ -155,7 +161,9 @@ No authorization required
 
 > Progress ProgressStatus (string progressId = null)
 
+retrieves status of an operation
 
+return status and messages, it's blocking until status changes or the operation is completed
 
 ### Example
 
@@ -178,6 +186,7 @@ namespace Example
 
             try
             {
+                // retrieves status of an operation
                 Progress result = apiInstance.ProgressStatus(progressId);
                 Debug.WriteLine(result);
             }

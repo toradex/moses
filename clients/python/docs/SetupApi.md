@@ -68,6 +68,7 @@ No authorization required
 **200** | Emulation enabled |  -  |
 **500** | Unexpected exception. |  -  |
 **530** | Local docker exception. |  -  |
+**551** | Operation has been aborted |  -  |
 
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
 
@@ -132,6 +133,7 @@ No authorization required
 **500** | Unexpected exception. |  -  |
 **530** | Local docker exception. |  -  |
 **542** | Error pulling images from docker registry. |  -  |
+**551** | Operation has been aborted |  -  |
 
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
 

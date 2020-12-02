@@ -4,15 +4,17 @@ All URIs are relative to *http://localhost:5000/api*
 
 Method | HTTP request | Description
 ------------- | ------------- | -------------
-[**progress_create**](ProgressApi.md#progress_create) | **GET** /progress/create | 
-[**progress_delete**](ProgressApi.md#progress_delete) | **GET** /progress/delete | 
-[**progress_status**](ProgressApi.md#progress_status) | **GET** /progress/status | 
+[**progress_create**](ProgressApi.md#progress_create) | **GET** /progress/create | create a progress ID
+[**progress_delete**](ProgressApi.md#progress_delete) | **GET** /progress/delete | releases progress ID
+[**progress_status**](ProgressApi.md#progress_status) | **GET** /progress/status | retrieves status of an operation
 
 
 # **progress_create**
 > Progress progress_create()
 
+create a progress ID
 
+creates a progress object that could be used to monitor and abort operations
 
 ### Example
 
@@ -35,6 +37,7 @@ with moses_client.ApiClient() as api_client:
     api_instance = moses_client.ProgressApi(api_client)
     
     try:
+        # create a progress ID
         api_response = api_instance.progress_create()
         pprint(api_response)
     except ApiException as e:
@@ -68,7 +71,9 @@ No authorization required
 # **progress_delete**
 > progress_delete(progress_id=progress_id)
 
+releases progress ID
 
+if delete is called when the operation is still pending, it will try to abort it
 
 ### Example
 
@@ -92,6 +97,7 @@ with moses_client.ApiClient() as api_client:
     progress_id = 'progress_id_example' # str | Id of a progress cookie (uuid) (optional)
 
     try:
+        # releases progress ID
         api_instance.progress_delete(progress_id=progress_id)
     except ApiException as e:
         print("Exception when calling ProgressApi->progress_delete: %s\n" % e)
@@ -127,7 +133,9 @@ No authorization required
 # **progress_status**
 > Progress progress_status(progress_id=progress_id)
 
+retrieves status of an operation
 
+return status and messages, it's blocking until status changes or the operation is completed
 
 ### Example
 
@@ -151,6 +159,7 @@ with moses_client.ApiClient() as api_client:
     progress_id = 'progress_id_example' # str | Id of a progress cookie (uuid) (optional)
 
     try:
+        # retrieves status of an operation
         api_response = api_instance.progress_status(progress_id=progress_id)
         pprint(api_response)
     except ApiException as e:

@@ -2031,6 +2031,7 @@ No authorization required
 | **523** | Container is not running. |  -  |
 | **533** | SSH error. |  -  |
 | **544** | Local command execution failed. |  -  |
+| **551** | Operation has been aborted |  -  |
 
 [[Back to top]](#)
 [[Back to API list]](../README.md#documentation-for-api-endpoints)

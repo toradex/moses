@@ -9,6 +9,7 @@ import moses_client.models
 import tabulate
 import json
 import threading
+import signal
 
 from typing import Optional
 
@@ -39,7 +40,12 @@ def progress_function(api, progress_id):
     api.progress_delete(progress_id=progress_id)
 
 
+progress = None
+
+
 def handle_progress(args) -> Optional[str]:
+
+    global progress
 
     if not args.progress:
         return ""
@@ -1277,6 +1283,19 @@ def create_parser() -> argparse.ArgumentParser:
     return parser
 
 
+def abort_handler(sig, frame):
+
+    global progress
+
+    if progress is not None:
+        api = moses_client.ProgressApi()
+
+        api.progress_delete(progress_id=progress.id)
+
+    logging.error("Operation aborted by user.")
+    sys.exit(-1)
+
+
 # If we're running in stand alone mode, run the application
 if __name__ == "__main__":
 
@@ -1296,6 +1315,8 @@ if __name__ == "__main__":
 
     logger.addHandler(logstdout)
     logger.addHandler(logstderr)
+
+    signal.signal(signal.SIGINT, abort_handler)
 
     parser = create_parser()
 
