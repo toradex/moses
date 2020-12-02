@@ -1166,20 +1166,6 @@ class ApplicationConfig(config.ConfigurableKeysObject):
         imagename = imagename.replace("/", "_")
         return imagename + "_instance"
 
-    def _get_image_tag(self, configuration: str) -> str:
-        """Return unique image tag for this application
-
-        Args:
-            configuration (str): debug/release
-
-        Returns:
-            str: tag
-        """
-
-        assert self.id is not None
-
-        return self.platformid + "_" + self.id + "_" + configuration
-
     def _get_sdk_container_name(self, configuration: str) -> str:
         """Return the name of the SDK container for this application
 
@@ -2112,7 +2098,7 @@ class ApplicationConfig(config.ConfigurableKeysObject):
             else:
                 cmdline += " --publish " + str(p[1]) + ":" + p[0]
 
-        cmdline += " " + self._get_image_tag(configuration)
+        cmdline += " " + self._get_image_name(configuration)
 
         # check if there's a command specified in extra parms
         if "command" in extraparms:
@@ -2247,7 +2233,7 @@ class ApplicationConfig(config.ConfigurableKeysObject):
                     )
                     service[parm] = value
 
-        service["image"] = self._get_image_tag(configuration)
+        service["image"] = self._get_image_name(configuration)
 
         if self.get_prop(configuration, "depends_on") is not None:
             service["depends_on"] = self.get_prop(configuration, "depends_on")
