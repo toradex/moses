@@ -58,21 +58,21 @@ def create_tmp_key(keypath: str) -> str:
     )
 
     if result.returncode != 0:
-        raise exceptions.LocalCommandError(result.stderr)
+        raise exceptions.LocalCommandError(result)
 
     tmppath = result.stdout.decode("utf-8").strip("\n")
 
     result = subprocess.run(["wsl.exe", "cp", keypath, tmppath], stderr=subprocess.PIPE)
 
     if result.returncode != 0:
-        raise exceptions.LocalCommandError(result.stderr)
+        raise exceptions.LocalCommandError(result)
 
     result = subprocess.run(
         ["wsl.exe", "chmod", "600", tmppath], stderr=subprocess.PIPE
     )
 
     if result.returncode != 0:
-        raise exceptions.LocalCommandError(result.stderr)
+        raise exceptions.LocalCommandError(result)
 
     return tmppath
 
@@ -174,7 +174,7 @@ def run_rsync(
             process.wait()
 
         if process.returncode != 0:
-            raise exceptions.LocalCommandError(process.returncode)
+            raise exceptions.LocalCommandError(process)
 
     finally:
 
