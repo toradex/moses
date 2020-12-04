@@ -69,6 +69,7 @@ props:
   common:
     linkeroptions: "-Wl,--dynamic-linker=/lib/ld-linux-armhf.so.3"
     prefix: "arm-linux-gnueabihf-"
+    qt-includepath: "/usr/include/arm-linux-gnueabihf/qt5"
     vscode-arch: "arm"
     gdb-arch: "arm"
     cmake-arch: "armhf"

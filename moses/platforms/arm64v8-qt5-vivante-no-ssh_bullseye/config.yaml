@@ -89,6 +89,7 @@ props:
   common:
     linkeroptions: "-Wl,--dynamic-linker=/lib/ld-linux-arm64.so.3"
     prefix: "aarch64-linux-gnu-"
+    qt-includepath: "/usr/include/aarch64-linux-gnu/qt5"
     vscode-arch: "arm64"
     gdb-arch: "aarch64"
     cmake-arch: "aarch64"
