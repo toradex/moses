@@ -252,6 +252,20 @@ class ApplicationConfig(config.ConfigurableKeysObject):
             self.publickey = None
             self.save()
 
+        ld = docker.from_env()
+
+        for field in ["images", "sdkimages"]:
+            for configuration in ["debug", "release"]:
+                imgid = self.__dict__[field][configuration]
+
+                if imgid is None or imgid == "":
+                    continue
+
+                try:
+                    limg = ld.images.get(imgid)
+                except docker.errors.ImageNotFound:
+                    self.__dict__[field][configuration] = ""
+
     def _generate_keys(self):
         super()._generate_keys()
         with open(str(self.folder / "id_rsa.pub"), "w") as f:
