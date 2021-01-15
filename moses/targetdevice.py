@@ -656,7 +656,9 @@ class TargetDevices(Dict[str, TargetDevice], metaclass=singleton.Singleton):
         self.modeldict.update(
             dict.fromkeys(["0027", "0028", "0029", "0035"], "apalis-imx6")
         )
-        self.modeldict.update(dict.fromkeys(["0036"], "colibri-imx6ull"))
+        self.modeldict.update(
+            dict.fromkeys(["0036", "0040", "0044", "0045"], "colibri-imx6ull")
+        )
         self.modeldict.update(
             dict.fromkeys(
                 ["0037", "0047", "0048", "0049", "0046", "0053", "0054", "0038"],
