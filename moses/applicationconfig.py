@@ -2231,7 +2231,7 @@ class ApplicationConfig(config.ConfigurableKeysObject):
                 extraparms["ports"][p[0]] = p[1]
 
         for v in volumes.items():
-            bind, mode = (v[1] + ",rw").split(",")
+            bind, mode = (v[1] + ",rw").split(",")[0:2]
             extraparms["volumes"][v[0]] = {"bind": bind, "mode": mode}
 
         extraparms["devices"].extend(devices)
