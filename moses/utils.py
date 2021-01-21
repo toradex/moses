@@ -19,7 +19,7 @@ def _replace_tag(
     tagstr = str(match.group(0))[2:-2]
 
     if "." in tagstr:
-        obj, tag = tagstr.split(".")
+        obj, tag = tagstr.split(".")[0:2]
 
         if tag is None or obj is None:
             return tagstr

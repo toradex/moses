@@ -24,7 +24,7 @@ class SSHConsole(console.GenericConsole):
             device {str} -- hostname
         """
         if ":" in device:
-            self.hostname, portstr = device.split(":")
+            self.hostname, portstr = device.split(":")[0:2]
             self.port = int(portstr)
         else:
             self.hostname = device
