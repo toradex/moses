@@ -1,3 +1,10 @@
+"""Functions used to execute rsync.
+
+Rsync is used to deploy files between local PC and the device.
+Files can be on the local filesystems or in containers.
+Functions work also on Windows, translating paths and relying on 
+rsync provided by WSL.
+"""
 import os
 import platform
 import subprocess
@@ -20,15 +27,14 @@ if platform.system() == "Windows":
 
 
 def translate_path(originalpath: str) -> str:
-    """Translate Windows path to Linux
+    """Translate Windows path to Linux.
 
-    Arguments:
-        originalpath {str} -- original path
+    :param originalpath: Windows path
+    :type originalpath: str
+    :returns: Linux path that is valid inside WSL
+    :rtype: str
 
-    Returns:
-        str -- path that is valid inside WSL
     """
-
     originalpath = originalpath.replace("\\", "/")
 
     result = subprocess.run(
@@ -44,14 +50,15 @@ def translate_path(originalpath: str) -> str:
 
 
 def create_tmp_key(keypath: str) -> str:
-    """Create a temporary dummy key and set access rights
-    to be able to use it with ssh
+    """Create a temporary dummy key.
+    
+    Create the file and set access rights to be able to use it with ssh/rsync.
 
-    Arguments:
-        keypath {str} - - [description]
+    :param keypath: Linux path of the key file
+    :type keypath: str 
+    :returns: path of temp key
+    :rtype: str
 
-    Returns:
-        str -- path of temp key
     """
     result = subprocess.run(
         ["wsl.exe", "mktemp"], stdout=subprocess.PIPE, stderr=subprocess.PIPE
@@ -78,33 +85,40 @@ def create_tmp_key(keypath: str) -> str:
 
 
 def remove_tmp_key(keypath: str) -> None:
-    """Removes a key created with create_tmp_key
+    """Remove a key created with create_tmp_key.
 
-    Arguments:
-        kepath {str} -- path of the key
+    :param kepath: Linux path
+    :type keypath: str
+
     """
     subprocess.run(["wsl.exe", "rm", keypath], stderr=subprocess.PIPE)
 
 
 def run_rsync(
     sourcefolder: str,
-    deviceid: str,
+    device_id: str,
     targetfolder: str,
     keypath: Optional[str] = None,
     port: int = None,
     progress: Optional[progresscookie.ProgressCookie] = None,
 ) -> None:
-    """Syncs a folder from the host PC to target
+    """Sync a folder from the host PC to target.
 
-    Arguments:
-        sourcefolder {str} -- source path
-        deviceid {str} -- target device
-        targetfolder {str} -- target path
-        keypath {str} -- key path (if None device key will be used)
-        port {int} -- custom port (if None port 22 will be used)
+    :param sourcefolder: source folder
+    :type sourcefolder: str
+    :param device_id: device id
+    :type device_id: str
+    :param targetfolder: destination folder (on target)
+    :type targetfolder: str
+    :param keypath: local path of the SSH key used to authenticate (None will use device key)
+    :type keypath: str
+    :param port: port used for SSH connection (None will use 22)
+    :type port: int
+    :param progress: object used to report operation's progress  (Default value = None)
+    :type progress: progresscookie.ProgressCookie, optional
+
     """
-
-    device = targetdevice.TargetDevices()[deviceid]
+    device = targetdevice.TargetDevices()[device_id]
 
     try:
         ip, mdns = sharedssh.resolve_hostname(device.hostname)

@@ -1,9 +1,7 @@
-"""Implementation of API entry points and management of global objects
-"""
-import json
+"""Implementation of API entry points and management of global objects."""
 import logging
-import serial
 import docker
+import docker.models.containers
 import connexion
 import pathlib
 import targetdevice
@@ -13,9 +11,7 @@ import platformconfig
 import config
 import exceptions
 import progresscookie
-import flask
-import os
-from typing import Any, Optional, Dict
+from typing import Any, Optional, Dict, Union
 
 APP_VERSION = "1.0"
 API_VERSION = "1.0"
@@ -23,17 +19,38 @@ API_VERSION = "1.0"
 EMULATION_IMAGE_NAME = "torizon/binfmt"
 
 # validation of readonly fields is done internally
-def remove_readonly(validator, ro, instance, schema):
+def remove_readonly(validator: Any, ro: Any, instance: Any, schema: Any) -> None:
+    """Skip validation of readonly fields.
+
+    this function is required to avoid that read-only fields passed back during update
+    requests will lead to errors, RO fields validation will be done later inside the
+    appropriate object
+
+    :param validator:
+    :param ro:
+    :param instance:
+    :param schema:
+
+    """
     return
 
 
 class CustomJSONEncoder(connexion.apps.flask_app.FlaskJSONEncoder):
-    """Used to encode internal objects to json, this will allow the
-    objects to return only specific fields, keep implementation fields 
+    """Object used to encode internal objects to json.
+
+    this will allow the objects to return only specific fields, keep implementation fields
     hidden
+
     """
 
-    def default(self, obj):  # pylint: disable=E0202
+    def default(self, obj: Any) -> Union[str, float, Any]:
+        """Serialize objects using their _to_json method, when available.
+
+        If the object has a _to_json method, it will be used for serialization
+
+        :param obj: object to be serialized
+
+        """
         to_json = getattr(obj, "_to_json", None)
         if callable(to_json):
             return obj._to_json()
@@ -41,19 +58,14 @@ class CustomJSONEncoder(connexion.apps.flask_app.FlaskJSONEncoder):
 
 
 class ApiResolver(connexion.Resolver):
-    """Resolves url to a function inside this module
+    """Object used to resolve url to a function inside this module."""
 
-    Args:
-        connexion ([type]): [description]
-    """
+    def resolve(self, operation: Any) -> connexion.Resolution:
+        """Generate a function name from an operation path.
 
-    def resolve(self, operation):
-        """Generates a function name from an operation path
+        :param operation: connexion
 
-        Arguments:
-            operation {connexion.operation.Operation} -- operation
         """
-
         function = "api."
         firstloop = True
         items = operation.path.split("/")
@@ -81,34 +93,35 @@ class ApiResolver(connexion.Resolver):
 
 
 def version_get() -> Any:
-    """Returns version information
+    """Return version information.
 
-    Returns:
-        dict -- app_version and api_version as strings
+    :returns: API tuple with object and return code
+
     """
-
-    return {"app_version": APP_VERSION, "api_version": API_VERSION}
+    return ({"app_version": APP_VERSION, "api_version": API_VERSION}, 200)
 
 
 def version_docker_get() -> Any:
-    """Returns docker version information
+    """Return docker version information.
 
     Returns: Docker information
-    """
 
+    :returns: API tuple with object and return code
+
+    """
     try:
         client = docker.from_env()
 
-        return client.version()
+        return (client.version(), 200)
     except:
         return ("Docker not responding", 500)
 
 
 def devices_get() -> Any:
-    """Returns the list of devices
+    """Return the list of devices.
 
-    Returns:
-        list -- devices
+    :returns: API tuple with object and return code
+
     """
     deviceslist = []
 
@@ -116,16 +129,21 @@ def devices_get() -> Any:
         deviceslist.append(dev)
 
     deviceslist.sort(key=lambda x: x.name)
-    return deviceslist
+    return (deviceslist, 200)
 
 
 def devices_serial_detect_get(port: str, username: str, password: str) -> Any:
-    """Detects a serial device on the specified port
+    """Detect a serial device on the specified port.
 
-    Arguments:
-        port {str} -- port name
-        username {str} -- username
-        password {str} -- password
+    :param port: serial port (COM*: on Windows, /dev/tty* on Linux)
+    :type port: str
+    :param username: username for setup (must be in sudoers)
+    :param username: str
+    :param password: password
+    :param password: str
+
+    :returns: API tuple with object and return code
+
     """
     devices = targetdevice.TargetDevices()
 
@@ -134,12 +152,17 @@ def devices_serial_detect_get(port: str, username: str, password: str) -> Any:
 
 
 def devices_network_detect_get(hostname: str, username: str, password: str) -> Any:
-    """Detects a network device
+    """Detect a network device.
 
-    Arguments:
-        hostname {str} -- hostname or ip address
-        username {str} -- username
-        password {str} -- password
+    :param hostname: hostname or ip address
+    :type hostname: str
+    :param username: user used for setup (must be in sudoers)
+    :type username: str
+    :param password: password
+    :type password: str
+
+    :returns: API tuple with object and return code
+
     """
     devices = targetdevice.TargetDevices()
 
@@ -148,28 +171,32 @@ def devices_network_detect_get(hostname: str, username: str, password: str) -> A
 
 
 def devices_device_get(device_id: str) -> Any:
-    """Returns a device given its id
+    """Return a device given its id.
 
-    Arguments:
-        device_id {str} -- device serial number
+    :param device_id: device id
+    :type device_id: str
 
-    Returns:
-        targetdevice.TargetDevice -- device or 404 error
+    :returns: API tuple with object and return code
+
     """
     devices = targetdevice.TargetDevices()
 
     if device_id not in devices:
         return ("Device not found", 404)
 
-    return devices[device_id]
+    return (devices[device_id], 200)
 
 
 def devices_device_put(device_id: str, device: Dict[str, Any]) -> Any:
-    """Changes device properties
+    """Change device properties.
 
-    Arguments:
-        device_id {str} -- device id (must exists)
-        device {dict} -- device properties
+    :param device_id: device id
+    :type device_id: str
+    :param device: dictionary of device properties
+    :type device: dict
+
+    :returns: API tuple with object and return code
+
     """
     devices = targetdevice.TargetDevices()
 
@@ -180,17 +207,17 @@ def devices_device_put(device_id: str, device: Dict[str, Any]) -> Any:
 
     dev.import_data(device)
     dev.save()
-    return dev
+    return (dev, 200)
 
 
 def devices_device_delete(device_id: str) -> Any:
-    """Removes a device given its id
+    """Remove a device given its id.
 
-    Arguments:
-        device_id {str} -- device serial number
+    :param device_id: device id
+    :type device_id: str
 
-    Returns:
-        targetdevice.TargetDevice -- device or 404 error
+    :returns: API tuple with object and return code
+
     """
     devices = targetdevice.TargetDevices()
 
@@ -202,7 +229,13 @@ def devices_device_delete(device_id: str) -> Any:
 
 
 def devices_device_update_get(device_id: str) -> Any:
-    """Retrieves updated device information from network
+    """Retrieve updated device information from network.
+
+    :param device_id: device id
+    :type device_id: str
+
+    :returns: API tuple with object and return code
+
     """
     devices = targetdevice.TargetDevices()
 
@@ -214,6 +247,16 @@ def devices_device_update_get(device_id: str) -> Any:
 
 
 def devices_device_docker_open_get(device_id: str, port: int = 0) -> Any:
+    """Redirect the devices's docker interface on a local port.
+
+    :param device_id: device id
+    :type device_id: str
+    :param port: int:  (Default value = 0)
+    :type port: int
+
+    :returns: API tuple with object and return code
+
+    """
     devices = targetdevice.TargetDevices()
 
     if device_id not in devices:
@@ -225,6 +268,14 @@ def devices_device_docker_open_get(device_id: str, port: int = 0) -> Any:
 
 
 def devices_device_docker_close_get(device_id: str) -> Any:
+    """Terminate docker port sharing.
+
+    :param device_id: device id
+    :type device_id: str
+
+    :returns: API tuple with object and return code
+
+    """
     devices = targetdevice.TargetDevices()
 
     if device_id not in devices:
@@ -236,6 +287,14 @@ def devices_device_docker_close_get(device_id: str) -> Any:
 
 
 def devices_device_docker_port_get(device_id: str) -> Any:
+    """Return current local port where docker APIs are exposed.
+
+    :param device_id: device id
+    :type device_id: str
+
+    :returns: API tuple with object and return code
+
+    """
     devices = targetdevice.TargetDevices()
 
     if device_id not in devices:
@@ -247,6 +306,17 @@ def devices_device_docker_port_get(device_id: str) -> Any:
 
 
 def devices_device_ssh_open_get(device_id: str, port: int = 0) -> Any:
+    """Open a SSH connection and tunnels it to a local port.
+
+    :param device_id: device id
+    :type device_id: str
+    :param port: port (Default value = 0)
+    :type port: int
+
+    :returns: API tuple with object and return code
+
+
+    """
     devices = targetdevice.TargetDevices()
 
     if device_id not in devices:
@@ -258,6 +328,14 @@ def devices_device_ssh_open_get(device_id: str, port: int = 0) -> Any:
 
 
 def devices_device_ssh_close_get(device_id: str) -> Any:
+    """Terminate SSH port sharing.
+
+    :param device_id: device id
+    :type device_id: str
+
+    :returns: API tuple with object and return code
+
+    """
     devices = targetdevice.TargetDevices()
 
     if device_id not in devices:
@@ -269,6 +347,14 @@ def devices_device_ssh_close_get(device_id: str) -> Any:
 
 
 def devices_device_ssh_port_get(device_id: str) -> Any:
+    """Return currently used SHH local port.
+
+    :param device_id: device id
+    :type device_id: str
+
+    :returns: API tuple with object and return code
+
+    """
     devices = targetdevice.TargetDevices()
 
     if device_id not in devices:
@@ -280,6 +366,14 @@ def devices_device_ssh_port_get(device_id: str) -> Any:
 
 
 def devices_device_processes_get(device_id: str) -> Any:
+    """Return a list of the processes running on the device.
+
+    :param device_id: device id
+    :type device_id: str
+
+    :returns: API tuple with object and return code
+
+    """
     devices = targetdevice.TargetDevices()
 
     if device_id not in devices:
@@ -291,6 +385,14 @@ def devices_device_processes_get(device_id: str) -> Any:
 
 
 def devices_device_memory_get(device_id: str) -> Any:
+    """Return information about memory usage on the device.
+
+    :param device_id: device id
+    :type device_id: str
+
+    :returns: API tuple with object and return code
+
+    """
     devices = targetdevice.TargetDevices()
 
     if device_id not in devices:
@@ -300,6 +402,14 @@ def devices_device_memory_get(device_id: str) -> Any:
 
 
 def devices_device_storage_get(device_id: str) -> Any:
+    """Return information about storage available on the device.
+
+    :param device_id: device id
+    :type device_id: str
+
+    :returns: API tuple with object and return code
+
+    """
     devices = targetdevice.TargetDevices()
 
     if device_id not in devices:
@@ -311,10 +421,13 @@ def devices_device_storage_get(device_id: str) -> Any:
 
 
 def devices_device_images_get(device_id: str) -> Any:
-    """Returns a list of the containers running on a specific device
+    """Return the list of container images currently on the device.
 
-    Arguments:
-        device_id {str} -- device id
+    :param device_id: device id
+    :type device_id: str
+
+    :returns: API tuple with object and return code
+
     """
     devices = targetdevice.TargetDevices()
 
@@ -331,6 +444,16 @@ def devices_device_images_get(device_id: str) -> Any:
 
 
 def devices_device_images_image_get(device_id: str, image_id: str) -> Any:
+    """Return information on a specific image.
+
+    :param device_id: device id
+    :type device_id: str
+    :param image_id: image ID (SHA)
+    :type image_id: str
+
+    :returns: API tuple with object and return code
+
+    """
     devices = targetdevice.TargetDevices()
 
     if device_id not in devices:
@@ -344,6 +467,16 @@ def devices_device_images_image_get(device_id: str, image_id: str) -> Any:
 
 
 def devices_device_images_image_delete(device_id: str, image_id: str) -> Any:
+    """Remove a specific image.
+
+    :param device_id: device id
+    :type device_id: str
+    :param image_id: image ID (SHA)
+    :type image_id: str
+
+    :returns: API tuple with object and return code
+
+    """
     devices = targetdevice.TargetDevices()
 
     if device_id not in devices:
@@ -355,10 +488,13 @@ def devices_device_images_image_delete(device_id: str, image_id: str) -> Any:
 
 
 def devices_device_containers_get(device_id: str) -> Any:
-    """Returns a list of the containers running on a specific device
+    """Return the list of containers currently running or suspended on the device.
 
-    Arguments:
-        device_id {str} -- device id
+    :param device_id: device id
+    :type device_id: str
+
+    :returns: API tuple with object and return code
+
     """
     devices = targetdevice.TargetDevices()
 
@@ -375,6 +511,16 @@ def devices_device_containers_get(device_id: str) -> Any:
 
 
 def devices_device_containers_container_get(device_id: str, container_id: str) -> Any:
+    """Return information about a specific container.
+
+    :param device_id: device id
+    :type device_id: str
+    :param container_id: container id (SHA)
+    :type container_id: str
+
+    :returns: API tuple with object and return code
+
+    """
     devices = targetdevice.TargetDevices()
 
     if device_id not in devices:
@@ -390,6 +536,16 @@ def devices_device_containers_container_get(device_id: str, container_id: str) -
 def devices_device_containers_container_delete(
     device_id: str, container_id: str
 ) -> Any:
+    """Delete a specific container.
+
+    :param device_id: device id
+    :type device_id: str
+    :param container_id: container id (SHA)
+    :type container_id: str
+
+    :returns: API tuple with object and return code
+
+    """
     devices = targetdevice.TargetDevices()
 
     if device_id not in devices:
@@ -403,6 +559,16 @@ def devices_device_containers_container_delete(
 def devices_device_containers_container_start_get(
     device_id: str, container_id: str
 ) -> Any:
+    """Start a specific container.
+
+    :param device_id: device id
+    :type device_id: str
+    :param container_id: container id (SHA)
+    :type container_id: str
+
+    :returns: API tuple with object and return code
+
+    """
     devices = targetdevice.TargetDevices()
 
     if device_id not in devices:
@@ -416,6 +582,16 @@ def devices_device_containers_container_start_get(
 def devices_device_containers_container_stop_get(
     device_id: str, container_id: str
 ) -> Any:
+    """Stop a specific container.
+
+    :param device_id: device id
+    :type device_id: str
+    :param container_id: container id (SHA)
+    :type container_id: str
+
+    :returns: API tuple with object and return code
+
+    """
     devices = targetdevice.TargetDevices()
 
     if device_id not in devices:
@@ -429,6 +605,16 @@ def devices_device_containers_container_stop_get(
 def devices_device_containers_container_processes_get(
     device_id: str, container_id: str
 ) -> Any:
+    """Return list of processes running inside a specific container.
+
+    :param device_id: device id
+    :type device_id: str
+    :param container_id: container id (SHA)
+    :type container_id: str
+
+    :returns: API tuple with object and return code
+
+    """
     devices = targetdevice.TargetDevices()
 
     if device_id not in devices:
@@ -442,6 +628,16 @@ def devices_device_containers_container_processes_get(
 def devices_device_containers_container_memory_get(
     device_id: str, container_id: str
 ) -> Any:
+    """Return memory information about a specific container.
+
+    :param device_id: device id
+    :type device_id: str
+    :param container_id: container id (SHA)
+    :type container_id: str
+
+    :returns: API tuple with object and return code
+
+    """
     devices = targetdevice.TargetDevices()
 
     if device_id not in devices:
@@ -453,6 +649,16 @@ def devices_device_containers_container_memory_get(
 def devices_device_containers_container_storage_get(
     device_id: str, container_id: str
 ) -> Any:
+    """Return information about mountpoints and storage for a specific container.
+
+    :param device_id: device id
+    :type device_id: str
+    :param container_id: container id (SHA)
+    :type container_id: str
+
+    :returns: API tuple with object and return code
+
+    """
     devices = targetdevice.TargetDevices()
 
     if device_id not in devices:
@@ -466,6 +672,16 @@ def devices_device_containers_container_storage_get(
 def devices_device_containers_container_logs_get(
     device_id: str, container_id: str, restart: bool
 ) -> Any:
+    """Return logs for a specific container (line by line).
+
+    :param device_id: device id
+    :type device_id: str
+    :param container_id: container id (SHA)
+    :type container_id: str
+
+    :returns: API tuple with object and return code
+
+    """
     devices = targetdevice.TargetDevices()
 
     if device_id not in devices:
@@ -481,6 +697,14 @@ def devices_device_containers_container_logs_get(
 
 
 def devices_device_privatekey_get(device_id: str) -> Any:
+    """Return private key for SSH connection with the device.
+
+    :param device_id: device id
+    :type device_id: str
+
+    :returns: API tuple with object and return code
+
+    """
     devices = targetdevice.TargetDevices()
 
     if device_id not in devices:
@@ -492,12 +716,19 @@ def devices_device_privatekey_get(device_id: str) -> Any:
 def devices_device_syncfolders_get(
     device_id: str, sourcefolder: str, destfolder: str, progress_id: str = None
 ) -> Any:
-    """Syncs a folder on the host with one on the target device
+    """Sync a folder on the host with one on the target device.
 
-    Arguments:
-        device_id {str} -- target device
-        sourcefolder {src} -- source folder
-        destfolder {src} -- target folder
+    :param device_id: device id
+    :type device_id: str
+    :param sourcefolder: source folder (on local machine)
+    :type sourcefolder: str
+    :param destfolder: destination folder (on the device)
+    :type destfolder: str
+    :param progress_id: progress object ID  (Default value = None)
+    :type progress_id: str
+
+    :returns: API tuple with object and return code
+
     """
     cookies = progresscookie.ProgressCookies()
     progress = None
@@ -524,10 +755,13 @@ def devices_device_syncfolders_get(
 
 
 def devices_device_current_ip_get(device_id: str) -> Any:
-    """Syncs a folder on the host with one on the target device
+    """Return the device current IP address.
 
-    Arguments:
-        device_id {str} -- target device
+    :param device_id: device id
+    :type device_id: str
+
+    :returns: API tuple with object and return code
+
     """
     devices = targetdevice.TargetDevices()
 
@@ -538,45 +772,47 @@ def devices_device_current_ip_get(device_id: str) -> Any:
 
 
 def eulas_get() -> Any:
-    """Returns a list of eulas
+    """Return a list of eulas.
 
-    Returns:
-        [list] -- eulas
+    :returns: API tuple with object and return code
+
     """
-
     eulas = eula.EULAs()
 
     eulalist = list(eulas.values())
     eulalist.sort(key=lambda x: x.title)
 
-    return eulalist
+    return (eulalist, 200)
 
 
 def eulas_eula_get(eula_id: str) -> Any:
-    """Returns an eula given its id
+    """Return information about a specific eula.
 
-    Arguments:
-        eula_id {str} -- eula id
+    :param eula_id: eula id
+    :type eula_id: str
 
-    Returns:
-        [dict] -- eula
+    :returns: API tuple with object and return code
+
     """
-
     eulas = eula.EULAs()
 
     if eula_id not in eulas:
         return ("eula not found", 404)
 
     e = eulas.get(eula_id)
-    return e
+    return (e, 200)
 
 
 def eulas_eula_put(eula_id: str, e: Dict[str, Any]) -> Any:
-    """Changes device properties
+    """Change eula properties.
 
-    Arguments:
-        eula_id {str} -- eula id (must exists)
-        e {dict} -- eula properties
+    :param eula_id: eula id
+    :type eula_id: str
+    :param e: Eula properties
+    :type e: dict
+
+    :returns: API tuple with object and return code
+
     """
     eulas = eula.EULAs()
 
@@ -587,53 +823,53 @@ def eulas_eula_put(eula_id: str, e: Dict[str, Any]) -> Any:
 
     eulaupdated.import_data(e)
     eulaupdated.save()
-    return eulaupdated
+    return (eulaupdated, 200)
 
 
 def platforms_get(runtime: Optional[str] = None) -> Any:
-    """Returns a list of platforms
+    """Return a list of platforms.
 
-    Arguments:
-        runtime {str} -- return only platform that support the specified runtime
+    API returns the list of all platform (when runtime is none) or platforms supporting the specified runtime
 
-    Returns:
-        [list] -- platforms
+    :param runtime: runtime id or None  (Default value = None)
+    :type runtime: str
+
+    :returns: API tuple with object and return code
+
     """
-
     platforms = platformconfig.PlatformConfigs()
 
     platformslist = platforms.get_platforms(runtime)
 
     platformslist.sort(key=lambda x: x.name)
-    return platformslist
+    return (platformslist, 200)
 
 
 def platforms_platform_get(platform_id: str) -> Any:
-    """Returns a platform given its id
+    """Return a platform given its id.
 
-    Arguments:
-        platform_id {str} -- platform id
+    :param platform_id: platform id
+    :type platform_id: str
 
-    Returns:
-        [dict] -- platform
+    :returns: API tuple with object and return code
+
     """
-
     platforms = platformconfig.PlatformConfigs()
 
     if platform_id not in platforms:
         return ("Platform not found", 404)
 
-    return platforms[platform_id]
+    return (platforms[platform_id], 200)
 
 
 def platforms_platform_compatibledevices_get(platform_id: str) -> Any:
-    """Returns a list of devices that are compatible with the selected platform
+    """Return a list of devices that are compatible with the selected platform.
 
-    Arguments:
-        platform_id {[type]} -- [description]
+    :param platform_id: platform id
+    :type platform_id: str
 
-    Returns:
-        [type] -- [description]
+    :returns: API tuple with object and return code
+
     """
     platforms = platformconfig.PlatformConfigs()
 
@@ -643,15 +879,21 @@ def platforms_platform_compatibledevices_get(platform_id: str) -> Any:
     platform = platforms[platform_id]
     deviceslist = platform.get_compatible_devices()
     deviceslist.sort(key=lambda x: x.name)
-    return deviceslist
+    return (deviceslist, 200)
 
 
 def applications_create_get(platform_id: str, path: str, username: str) -> Any:
-    """Creates a new application
+    """Create a new application.
 
-    Arguments:
-        folder {string} -- Folder where application configuration must be
-                           stored
+    :param platform_id: platform id
+    :type platform_id: str
+    :param path: base path for the application folder
+    :type path:  str
+    :param username: username to be used inside the container
+    :type username: str
+
+    :returns: API tuple with object and return code
+
     """
     applications = applicationconfig.ApplicationConfigs()
     platforms = platformconfig.PlatformConfigs()
@@ -666,11 +908,13 @@ def applications_create_get(platform_id: str, path: str, username: str) -> Any:
 
 
 def applications_load_get(path: str) -> Any:
-    """Loads an existing application
+    """Load an existing application.
 
-    Arguments:
-        platform_id {str} -- platform id
-        folder {string} -- Folder where application configuration is stored
+    :param path: path of the application folder
+    :type path:  str
+
+    :returns: API tuple with object and return code
+
     """
     applications = applicationconfig.ApplicationConfigs()
 
@@ -678,15 +922,14 @@ def applications_load_get(path: str) -> Any:
 
 
 def applications_application_get(application_id: str) -> Any:
-    """Returns an application given its id
+    """Return an application given its id.
 
-    Arguments:
-        application_id {str} -- application id
+    :param application_id: application id
+    :type application_id: str
 
-    Returns:
-        [dict] -- application
+    :returns: API tuple with object and return code
+
     """
-
     applications = applicationconfig.ApplicationConfigs()
 
     if application_id not in applications:
@@ -698,11 +941,15 @@ def applications_application_get(application_id: str) -> Any:
 def applications_application_put(
     application_id: str, application: Dict[str, Any]
 ) -> Any:
-    """Changes application properties
+    """Change application properties.
 
-    Arguments:
-        application_id {str} -- application id (must be loaded)
-        app {dict} -- application properties
+    :param application_id: application id
+    :type application_id: str
+    :param application: application properties
+    :type application: dict
+
+    :returns: API tuple with object and return code
+
     """
     apps = applicationconfig.ApplicationConfigs()
 
@@ -714,15 +961,19 @@ def applications_application_put(
     app.import_data(application)
     app.touch()
     app.save()
-    return app
+    return (app, 200)
 
 
 def applications_application_delete(application_id: str) -> Any:
-    """Changes application properties
+    """Delete a specific application.
 
-    Arguments:
-        application_id {str} -- application id (must be loaded)
-        app {dict} -- application properties
+    :param application_id: application id
+    :type application_id: str
+    :param application: application properties
+    :type application: dict
+
+    :returns: API tuple with object and return code
+
     """
     apps = applicationconfig.ApplicationConfigs()
 
@@ -737,11 +988,15 @@ def applications_application_delete(application_id: str) -> Any:
 def applications_application_updated_get(
     application_id: str, configuration: str
 ) -> Any:
-    """check if container is up to date
+    """Delete a specific application.
 
-    Arguments:
-        application_id {str} -- application id
-        configuration -- debug/release
+    :param application_id: application id
+    :type application_id: str
+    :param configuration: debug/release
+    :type configuration: str
+
+    :returns: API tuple with object and return code
+
     """
     applications = applicationconfig.ApplicationConfigs()
 
@@ -756,11 +1011,17 @@ def applications_application_updated_get(
 def applications_application_build_get(
     application_id: str, configuration: str, progress_id: str = None
 ) -> Any:
-    """builds the application container
+    """Build the application container.
 
-    Arguments:
-        application_id {str} -- application id
-        configuration -- debug/release
+    :param application_id: application id
+    :type application_id: str
+    :param configuration: debug/release
+    :type configuration: str
+    :param progress_id: progress object id  (Default value = None)
+    :type progress_id: str
+
+    :returns: API tuple with object and return code
+
     """
     cookies = progresscookie.ProgressCookies()
     progress = None
@@ -787,16 +1048,22 @@ def applications_application_build_get(
 
 
 def applications_application_deploy_get(
-    application_id: str, configuration: str, deviceid: str, progress_id: str = None
+    application_id: str, configuration: str, device_id: str, progress_id: str = None
 ) -> Any:
-    """deploys the application container
+    """Deploy the application container.
 
-    Arguments:
-        application_id {str} -- application
-        configuration {str} -- debug/release
-        deviceid {str} -- device
+    :param application_id: application id
+    :type application_id: str
+    :param configuration: debug/release
+    :type configuration: str
+    :param device_id: device id
+    :type device_id: str
+    :param progress_id: progress object id  (Default value = None)
+    :type progress_id: str
+
+    :returns: API tuple with object and return code
+
     """
-
     cookies = progresscookie.ProgressCookies()
     progress = None
 
@@ -813,10 +1080,10 @@ def applications_application_deploy_get(
 
         devices = targetdevice.TargetDevices()
 
-        if deviceid not in devices:
+        if device_id not in devices:
             return ("Device not found", 404)
 
-        app.deploy_image(configuration, devices[deviceid], progress)
+        app.deploy_image(configuration, devices[device_id], progress)
 
         if progress is not None:
             progress.completed()
@@ -829,14 +1096,21 @@ def applications_application_deploy_get(
 
 
 def applications_application_run_get(
-    application_id: str, configuration: str, deviceid: str, progress_id: str = None
+    application_id: str, configuration: str, device_id: str, progress_id: str = None
 ) -> Any:
-    """runs the application container
+    """Run the application container.
 
-    Arguments:
-        application_id {str} -- application
-        configuration {str} -- debug/release
-        deviceid {str} -- device
+    :param application_id: application id
+    :type application_id: str
+    :param configuration: debug/release
+    :type configuration: str
+    :param device_id: device id
+    :type device_id: str
+    :param progress_id: progress object id  (Default value = None)
+    :type progress_id: str
+
+    :returns: API tuple with object and return code
+
     """
     cookies = progresscookie.ProgressCookies()
     progress = None
@@ -854,10 +1128,10 @@ def applications_application_run_get(
 
         devices = targetdevice.TargetDevices()
 
-        if deviceid not in devices:
+        if device_id not in devices:
             return ("Device not found", 404)
 
-        container = app.run(configuration, devices[deviceid], progress)
+        container = app.run(configuration, devices[device_id], progress)
 
         if progress is not None:
             progress.completed()
@@ -870,14 +1144,19 @@ def applications_application_run_get(
 
 
 def applications_application_stop_get(
-    application_id: str, configuration: str, deviceid: str
+    application_id: str, configuration: str, device_id: str
 ) -> Any:
-    """stops the application container
+    """Stop the application container.
 
-    Arguments:
-        application_id {str} -- application
-        configuration {str} -- debug/release
-        deviceid {str} -- device
+    :param application_id: application id
+    :type application_id: str
+    :param configuration: debug/release
+    :type configuration: str
+    :param device_id: device id
+    :type device_id: str
+
+    :returns: API tuple with object and return code
+
     """
     applications = applicationconfig.ApplicationConfigs()
 
@@ -888,22 +1167,27 @@ def applications_application_stop_get(
 
     devices = targetdevice.TargetDevices()
 
-    if deviceid not in devices:
+    if device_id not in devices:
         return ("Device not found", 404)
 
-    app.stop(configuration, devices[deviceid])
+    app.stop(configuration, devices[device_id])
     return (connexion.NoContent, 200)
 
 
 def applications_application_container_get(
-    application_id: str, configuration: str, deviceid: str
+    application_id: str, configuration: str, device_id: str
 ) -> Any:
-    """Returns app currently running container
+    """Return the application's container properties.
 
-    Arguments:
-        application_id {str} -- application
-        configuration {str} -- debug/release
-        deviceid {str} -- device
+    :param application_id: application id
+    :type application_id: str
+    :param configuration: debug/release
+    :type configuration: str
+    :param device_id: device id
+    :type device_id: str
+
+    :returns: API tuple with object and return code
+
     """
     applications = applicationconfig.ApplicationConfigs()
 
@@ -914,23 +1198,30 @@ def applications_application_container_get(
 
     devices = targetdevice.TargetDevices()
 
-    if deviceid not in devices:
+    if device_id not in devices:
         return ("Device not found", 404)
 
-    cfg = app.get_container(configuration, devices[deviceid])
+    cfg = app.get_container(configuration, devices[device_id])
+
+    if cfg is None:
+        return ("Container not found", 404)
+
     return (cfg.attrs, 200)
 
 
 def applications_application_sdk_container_get(
     application_id: str, configuration: str
 ) -> Any:
-    """Returns app currently running container
+    """Return the application's SDK container instance.
 
-    Arguments:
-        application_id {str} -- application
-        configuration {str} -- debug/release
+    :param application_id: application id
+    :type application_id: str
+    :param configuration: debug/release
+    :type configuration: str
+
+    :returns: API tuple with object and return code
+
     """
-
     applications = applicationconfig.ApplicationConfigs()
 
     if application_id not in applications:
@@ -946,15 +1237,20 @@ def applications_application_sdk_container_get(
 
 
 def applications_application_container_logs_get(
-    application_id: str, configuration: str, deviceid: str, restart: bool
+    application_id: str, configuration: str, device_id: str, restart: bool
 ) -> Any:
-    """Returns app currently running container
+    """Return one line from the container's log.
 
-    Arguments:
-        application_id {str} -- application
-        configuration {str} -- debug/release
-        deviceid {str} -- device
-        restart { bool } -- read log from the beginning
+    :param application_id: application id
+    :type application_id: str
+    :param configuration: debug/release
+    :type configuration: str
+    :param device_id: device id
+    :type device_id: str
+    :param restart: when true force the operation to return logs from the first one
+    :type restart: bool
+
+    :returns: API tuple with object and return code
     """
     applications = applicationconfig.ApplicationConfigs()
 
@@ -965,10 +1261,10 @@ def applications_application_container_logs_get(
 
     devices = targetdevice.TargetDevices()
 
-    if deviceid not in devices:
+    if device_id not in devices:
         return ("Device not found", 404)
 
-    line = app.get_container_logs(configuration, devices[deviceid], restart)
+    line = app.get_container_logs(configuration, devices[device_id], restart)
 
     if line is None:
         return (connexion.NoContent, 204)
@@ -976,12 +1272,18 @@ def applications_application_container_logs_get(
     return (line, 200)
 
 
-def applications_application_docker_commandline_get(application_id, configuration):
-    """Returns docker command line for the application's container
+def applications_application_docker_commandline_get(
+    application_id: str, configuration: str
+) -> Any:
+    """Return docker command line for the application's container.
 
-    Args:
-        application_id {str} -- application
-        configuration {str}: debug/release
+    :param application_id: application id
+    :type application_id: str
+    :param configuration: debug/release
+    :type configuration: str
+
+    :returns: API tuple with object and return code
+
     """
     applications = applicationconfig.ApplicationConfigs()
 
@@ -989,16 +1291,24 @@ def applications_application_docker_commandline_get(application_id, configuratio
         return ("Application not found", 404)
 
     app = applications.get(application_id)
+
+    assert app is not None
 
     return (app.get_docker_commandline(configuration), 200)
 
 
-def applications_application_docker_composefile_get(application_id, configuration):
-    """Returns docker command line for the application's container
+def applications_application_docker_composefile_get(
+    application_id: str, configuration: str
+) -> Any:
+    """Return docker-compose YAML for the application's container.
 
-    Args:
-        application_id {str} -- application
-        configuration {str}: debug/release
+    :param application_id: application id
+    :type application_id: str
+    :param configuration: debug/release
+    :type configuration: str
+
+    :returns: API tuple with object and return code
+
     """
     applications = applicationconfig.ApplicationConfigs()
 
@@ -1006,6 +1316,8 @@ def applications_application_docker_composefile_get(application_id, configuratio
         return ("Application not found", 404)
 
     app = applications.get(application_id)
+
+    assert app is not None
 
     return (app.get_docker_composefile(configuration), 200)
 
@@ -1016,12 +1328,22 @@ def applications_application_push_to_registry_get(
     username: str,
     password: str,
     progress_id: str = None,
-):
-    """builds the application container
+) -> Any:
+    """Push application's container to docker registry.
 
-    Arguments:
-        application_id {str} -- application id
-        configuration -- debug/release
+    :param application_id: application id
+    :type application_id: str
+    :param configuration: debug/release
+    :type configuration: str
+    :param username: username for docker login
+    :type username: str
+    :param password: password for docker login
+    :type password: str
+    :param progress_id: progress object id  (Default value = None)
+    :type progress_id: str
+
+    :returns: API tuple with object and return code
+
     """
     cookies = progresscookie.ProgressCookies()
     progress = None
@@ -1052,15 +1374,19 @@ def applications_application_push_to_registry_get(
 def applications_application_sdk_run_get(
     application_id: str, configuration: str, build: bool, progress_id: str = None
 ) -> Any:
-    """Runs the SDK container and returns SSH address for connection
+    """Run the SDK container and return SSH address for connection.
 
-    Arguments:
-        application_id {str} -- application
-        configuration {str} -- debug/release
-        build {bool} - build image if it does not exists
+    :param application_id: application id
+    :type application_id: str
+    :param configuration: debug/release
+    :type configuration: str
+    :param build: if true and SDK container does not exist, it will be built
+    :type build: boolean
+    :param progress_id: progress object id  (Default value = None)
+    :type progress_id: str
 
-    Returns:
-        url -- address of the SSH port on the container
+    :returns: API tuple with object and return code
+
     """
     cookies = progresscookie.ProgressCookies()
     progress = None
@@ -1100,11 +1426,17 @@ def applications_application_sdk_run_get(
 def applications_application_sdk_update_get(
     application_id: str, configuration: str, progress_id: str = None
 ) -> Any:
-    """Updates the SDK for an application
+    """Update/build the SDK for an application.
 
-    Arguments:
-        application_id {str} -- application
-        configuration {str} -- debug/release
+    :param application_id: application id
+    :type application_id: str
+    :param configuration: debug/release
+    :type configuration: str
+    :param progress_id: progress object id  (Default value = None)
+    :type progress_id: str
+
+    :returns: API tuple with object and return code
+
     """
     cookies = progresscookie.ProgressCookies()
     progress = None
@@ -1141,20 +1473,29 @@ def applications_application_syncfolders_get(
     application_id: str,
     sourcefolder: str,
     configuration: str,
-    deviceid: str,
+    device_id: str,
     destfolder: str,
     source_is_sdk: bool,
     progress_id: str = None,
 ) -> Any:
-    """Sincronizes a folder between the SDK container and the target
+    """Syncronize a folder between the SDK container and the target.
 
-    Arguments:
-        application_id {str} -- application
-        sourcefolder {str}} -- path on the SDK container
-        configuration {str} -- debug/release
-        deviceid {str} -- device
-        destfolder {str} -- path on the target device
-        source_is_sdk {bool} -- source if from SDK container
+    :param application_id: application id
+    :type application_id: str
+    :param sourcefolder: source folder (on local machine or inside SDK container)
+    :type sourcefolder: str
+    :param configuration: debug/release
+    :type configuration: str
+    :param device_id: device id
+    :type device_id: str
+    :param destfolder: destination folder (on device)
+    :type destfolder: str
+    :param source_is_sdk: if true the source path will be inside the SDK container
+    :type source_is_sdk: bool
+    :param progress_id: progress object id  (Default value = None)
+    :type progress_id: str
+
+    :returns: API tuple with object and return code
 
     """
     cookies = progresscookie.ProgressCookies()
@@ -1175,7 +1516,7 @@ def applications_application_syncfolders_get(
             source_is_sdk = True
 
         app.sync_folders(
-            sourcefolder, configuration, deviceid, destfolder, source_is_sdk, progress
+            sourcefolder, configuration, device_id, destfolder, source_is_sdk, progress
         )
 
         if progress is not None:
@@ -1189,6 +1530,14 @@ def applications_application_syncfolders_get(
 
 
 def applications_application_privatekey_get(application_id: str) -> Any:
+    """Return the application's private key.
+
+    :param application_id: application id
+    :type application_id: str
+
+    :returns: API tuple with object and return code
+
+    """
     applications = applicationconfig.ApplicationConfigs()
 
     if application_id not in applications:
@@ -1199,6 +1548,14 @@ def applications_application_privatekey_get(application_id: str) -> Any:
 
 
 def applications_application_reseal_get(application_id: str) -> Any:
+    """Clean all the IDs/keys from application.
+
+    :param application_id: application id
+    :type application_id: str
+
+    :returns: API tuple with object and return code
+
+    """
     applications = applicationconfig.ApplicationConfigs()
 
     if application_id not in applications:
@@ -1210,12 +1567,14 @@ def applications_application_reseal_get(application_id: str) -> Any:
 
 
 def setup_pullcontainers_get(progress_id: str = None) -> Any:
-    """Pulls all base containers needed for the different applications
+    """Pull all base containers needed for the different applications.
 
-    Raises:
-        exceptions.PullImageError: error during image pull
+    :param progress_id: progress object id  (Default value = None)
+    :type progress_id: str
+
+    :returns: API tuple with object and return code
+
     """
-
     progress: Optional[progresscookie.ProgressCookie] = None
 
     try:
@@ -1305,9 +1664,14 @@ def setup_pullcontainers_get(progress_id: str = None) -> Any:
 
 
 def setup_enableemulation_get(progress_id: str = None) -> Any:
-    """Enables ARM emulation by running a privileged container        
-    """
+    """Enable ARM emulation by running a privileged container.
 
+    :param progress_id: progress object id  (Default value = None)
+    :type progress_id: str
+
+    :returns: API tuple with object and return code
+
+    """
     progress: Optional[progresscookie.ProgressCookie] = None
 
     try:
@@ -1339,6 +1703,11 @@ def setup_enableemulation_get(progress_id: str = None) -> Any:
 
 
 def progress_create_get() -> Any:
+    """Create a new progress object.
+
+    :returns: API tuple with object and return code
+
+    """
     cookies = progresscookie.ProgressCookies()
     cookie = cookies.create_cookie()
 
@@ -1347,14 +1716,31 @@ def progress_create_get() -> Any:
     return (progress_data, 200)
 
 
-def progress_delete_get(progress_id=""):
+def progress_delete_get(progress_id: str = "") -> Any:
+    """Destroy a progress object.
+
+    :param progress_id: progress object id  (Default value = "")
+    :type progress_id: str
+
+    :returns: API tuple with object and return code
+
+    """
     cookies = progresscookie.ProgressCookies()
-    cookie = cookies.delete_cookie(progress_id)
+
+    cookies.delete_cookie(progress_id)
 
     return (connexion.NoContent, 200)
 
 
-def progress_status_get(progress_id=""):
+def progress_status_get(progress_id: str = "") -> Any:
+    """Return a progress object.
+
+    :param progress_id: progress object id  (Default value = "")
+    :type progress_id: str
+
+    :returns: API tuple with object and return code
+
+    """
     cookies = progresscookie.ProgressCookies()
     progress_data = cookies.get_update(progress_id, True)
 
@@ -1364,8 +1750,6 @@ def progress_status_get(progress_id=""):
     return (progress_data, 200)
 
 
-def init_api():
-    """Initializes the api and allocates all required objects
-    """
-
+def init_api() -> None:
+    """Initialize the api and allocates all required objects."""
     config.ServerConfig()

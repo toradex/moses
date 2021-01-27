@@ -1,27 +1,24 @@
-"""Module to implement console features on SSH
-"""
-
-
+"""Implements console functions over SSH connection."""
+from types import TracebackType
 import console
 import socket
 import time
 import paramiko
-import logging
 import io
 import exceptions
 import sharedssh
-import targetdevice
-from typing import Optional
+from typing import Optional, Type
 
 
 class SSHConsole(console.GenericConsole):
-    """SSH console
-    """
+    """Implementation of console over SSH."""
 
     def __init__(self, device: str):
-        """Must be re-defined in subclasses
-        Arguments:
-            device {str} -- hostname
+        """Initialize object.
+
+        :param device: target hostname
+        :type device: str
+
         """
         if ":" in device:
             self.hostname, portstr = device.split(":")[0:2]
@@ -30,26 +27,27 @@ class SSHConsole(console.GenericConsole):
             self.hostname = device
             self.port = 22
 
-        self.ssh: paramiko.SSHClient = None
-        self.channel: paramiko.Channel = None
+        self.ssh: Optional[paramiko.SSHClient] = None
+        self.channel: Optional[paramiko.Channel] = None
 
     def send_cmd(self, command: str, timeout: int = 30) -> str:
-        """Sends a command to the device and returns its output
+        """Send a command to the device and returns its output.
 
-        Arguments:
-            command {str} -- command to be sent
+        :param command: command to send
+        :type command: str
+        :param timeout: timeout in seconds (Default value = 30)
+        :param timeout: int
+        :returns: output of the command (till next prompt)
+        :rtype: str
 
-        Keyword Arguments:
-            timeout {int} -- timeout in seconds (default: {30})
-
-        Returns:
-            str -- output of the command (till next prompt)
         """
         super().send_cmd(command, timeout)
 
         output = error = ""
 
         try:
+            assert self.ssh is not None
+
             _, stdout, stderr = self.ssh.exec_command(command, timeout=5)
 
             output = stdout.read().decode("utf-8")
@@ -65,12 +63,13 @@ class SSHConsole(console.GenericConsole):
     def wait_for_prompt(
         self, channel: paramiko.Channel, prompt: str, timeout: int = 30
     ) -> None:
-        """Wait until the specific string is received
+        """Wait until the specific string is received.
 
-        Keyword Arguments:
-            prompt {str} -- prompt to wait, if None the one set using
-                            {set_prompt} will be used (default: {None})
-            timeout {int} -- timeout in seconds (default: {30})
+        :param prompt: prompt or None to use the one configured by set_prompt  (Default value = None)
+        :type prompt: str, optional
+        :param timeout: timeout in seconds  (Default value = 30)
+        :type timeout: int
+
         """
         output = ""
 
@@ -89,24 +88,18 @@ class SSHConsole(console.GenericConsole):
         return
 
     def login(self, username: str, password: str, timeout: int = 60) -> None:
-        """Tries to login user and configures prompt
+        """Try to login user and configures prompt.
 
-        Arguments:
-            username {str} -- username
-            password {str} -- cleartext password
+        An exception is generated if login attempts fail.
 
-        Keyword Arguments:
-            timeout {int} -- timeout in seconds (default: {30})
-
-        Returns:
-            bool -- true if login was successful
-
-        Raises:
-            exceptions.SSHError : ssh error
-            exceptions.OSError : OS related error
+        :param username: username
+        :type username: str
+        :param password: password
+        :tpye password: str
+        :param timeout: timeout in seconds (Default value = 60)
+        :type timeout: int
 
         """
-
         self.password = password
         self.ssh = paramiko.SSHClient()
         self.ssh.set_missing_host_key_policy(sharedssh.IgnorePolicy())
@@ -183,10 +176,13 @@ class SSHConsole(console.GenericConsole):
             raise exceptions.OSError(e)
 
     def connect(self, username: str, key: str) -> None:
-        """Connects to device using keys
+        """Connect to the device using SSH key.
 
-        Arguments:
-            key {str} -- ssh key
+        :param username: username
+        :type username: str
+        :param key: SSH key encoded in ASCII
+        :type key: str
+
         """
         try:
             k = paramiko.RSAKey.from_private_key(io.StringIO(key))
@@ -205,13 +201,22 @@ class SSHConsole(console.GenericConsole):
         except paramiko.SSHException as e:
             raise exceptions.SSHError(e)
 
-    # enable object to be used in "with" statements
-    def __enter__(self):
+    def __enter__(self) -> "SSHConsole":
+        """Ensure that object state is managed correctly in with statements."""
         return self
 
-    def __exit__(self, type, value, traceback):
+    def __exit__(
+        self,
+        etype: Optional[Type[BaseException]],
+        value: Optional[BaseException],
+        traceback: Optional[TracebackType],
+    ) -> Optional[bool]:
+        """Ensure that object state is managed correctly in with statements."""
         try:
-            self.channel.close()
-            self.ssh.close()
+            if self.channel is not None:
+                self.channel.close()
+            if self.ssh is not None:
+                self.ssh.close()
         except:
             pass
+        return None

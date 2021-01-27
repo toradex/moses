@@ -1,5 +1,4 @@
-"""Module used to store configuration information
-"""
+"""Base classes for objects that store configuration information."""
 import yaml
 import shutil
 import os
@@ -17,19 +16,24 @@ APP_NAME: str = "moses"
 
 
 class ConfigurableObject:
-    """ Base class for objects that can store their configuration
-        in folders and json files.
-        Those objects have a folder and a unique id.
+    """Base class for objects that can store their configuration in folders and json files.
+
+    Those objects have a folder and a unique id.
+
     """
 
     readonlyfields: set = {"folder"}
 
     @classmethod
     def parse_schema(cls, schema: dict) -> None:
-        """parses the yaml schema and sets read-only fields
+        """Parse the yaml schema and sets read-only fields.
 
-        Arguments:
-            schema {dict} -- yaml object
+        This function is called at startup, on the object classes of
+        objects that support put API calls
+
+        :param schema: schema from YAML definition
+        :type schema: dict
+
         """
         for key, prop in schema["properties"].items():
             if "readOnly" in prop:
@@ -37,7 +41,11 @@ class ConfigurableObject:
                     cls.readonlyfields.add(key)
 
     def __init__(self, folder: Optional[pathlib.Path]):
+        """Initialize the object.
 
+        :param folder: folder where configuration is going to be stored.
+        :type folder: pathlib.Path,optional
+        """
         self.folder = folder
         self.id: Optional[str] = None
 
@@ -45,7 +53,10 @@ class ConfigurableObject:
             self.id = self.folder.name
 
     def load(self) -> None:
-        """Loads object data
+        """Load object data from YAML file.
+
+        Objects store their data in a folder with a file named config.yaml with all the serializable properties
+
         """
         if self.folder is None:
             raise Exception("")
@@ -61,21 +72,21 @@ class ConfigurableObject:
         self.__setstate__(fields)
 
     def _build_folder_path(self) -> pathlib.Path:
-        """Create full folder path from id and other info
+        """Create full folder path from id and other info.
 
-        Returns:
-            pathlib.Path -- path where configuration is stored
+        :returns: path where configuration is stored
+        :rtype: pathlib.Path
+
         """
         raise NotImplementedError()
 
     def save(self) -> None:
-        """Save object data
+        """Save object data.
 
-        Raises:
-            InvalidObjectIdError: No id has been defined for object
-            InvalidObjectStateError: Object state is not valid
+        :raises InvalidObjectIdError: No id has been defined for object
+        :raises InvalidObjectStateError: Object state is not valid
+
         """
-
         if self.id is None:
             raise exceptions.InvalidObjectIdError()
 
@@ -92,22 +103,19 @@ class ConfigurableObject:
             yaml.dump(self.__getstate__(), out, indent=4, sort_keys=True)
 
     def is_valid(self, fields: dict = None) -> bool:
-        """Validate fields of current object
+        """Validate fields of current object.
 
-        Arguments:
-            fields {dict} -- dictionary with values, if None then
-                                   self.__dict__ will be used
+        :param fields: properties, if None then self.__dict__ is used  (Default value = None)
+        :type fields: dict
+        :returns: true if all fields contain valid values
+        :rtype: bool
 
-        Returns:
-            bool -- true if all fields contain valid values
         """
         pass
 
     def destroy(self) -> None:
-        """Removes permanently stored information about the device
-        """
-
-        # device is not permanent
+        """Remove permanently all stored information about the object."""
+        # object is not permanent
         if self.folder is None:
             return
 
@@ -117,16 +125,14 @@ class ConfigurableObject:
             pass
 
     def check_readonly(self, fields: dict) -> dict:
-        """remove all read-only fields after checking that
-        the value is matching the current one
+        """Remove all read-only fields after checking that the required value is matching the current one.
 
-        Arguments:
-            fields {dict} -- fields
+        :param fields: properties that need to be updated
+        :tpye fields: dict
+        :returns: cleaned-up dictionary
+        :rtype: dict
 
-        Returns:
-            dict -- cleaned-up dictionary
         """
-
         readonlyitems = []
 
         for key, value in fields.items():
@@ -141,30 +147,41 @@ class ConfigurableObject:
         return fields
 
     def import_data(self, fields: Dict[str, Any]) -> None:
-        """Import data from a field list, checking read-only
-        properties
+        """Import data from a field list, checking if changes are required on read-only fields.
 
-        Arguments:
-            fields {dict} -- fields and values
+        :param fields: properties, if None then self.__dict__
+        :type fields: dict
+
         """
         self.__setstate__(self.check_readonly(fields))
 
-    # convert object to string
-
     def __str__(self) -> str:
+        """Convert object to string, returning its ID."""
         return str(self.id)
 
-    # support serialization
     def __getstate__(self) -> Dict[str, Any]:
+        """Return a dictionary with exported properties.
+
+        :return: properties as a dictionary
+        :rtype: Dict[str, Any]
+
+        """
         fields = self.__dict__.copy()
         del fields["id"]
         del fields["folder"]
         return fields
 
-    def __setstate__(self, fields) -> None:
+    def __setstate__(self, fields: Dict[str, Any]) -> None:
+        """Support deserialization from a dictionary."""
         self.__dict__.update(fields)
 
-    def _to_json(self) -> dict:
+    def _to_json(self) -> Dict[str, Any]:
+        """Convert object to an array of json-compatible key-value pairs.
+
+        :return: properties as a dictionary
+        :rtype: Dict[str, Any]
+
+        """
         fields = self.__getstate__()
         # we keep id in the info we return via REST
         fields["id"] = self.id
@@ -172,11 +189,14 @@ class ConfigurableObject:
 
 
 class ConfigurableKeysObject(ConfigurableObject):
-    """Implements and object that manages ssh public/private keys
-    """
+    """Implement a ConfigurableObject that manages a public/private key pair."""
 
     def __init__(self, folder: Optional[pathlib.Path]):
+        """Initialize the object.
 
+        :param folder: folder where configuration data is stored
+        :type folder: pathlib.Path, optional
+        """
         self.publickey: Optional[str] = None
         self.privatekey: Optional[str] = None
         self.username: Optional[str] = None
@@ -184,9 +204,10 @@ class ConfigurableKeysObject(ConfigurableObject):
         super().__init__(folder)
 
     def save(self) -> None:
-        """Save object data
-        """
+        """Save object data.
 
+        On object first save the key pair is generated and stored inside the object's configuration
+        """
         super().save()
 
         if self.privatekey is None:
@@ -194,9 +215,10 @@ class ConfigurableKeysObject(ConfigurableObject):
             self.save()
 
     def _generate_keys(self) -> None:
-        """Generates SSH keys used to connect with the device over SSH
-        """
+        """Generate public/private key pair.
 
+        Object has to be saved to store them permanently
+        """
         if self.folder is None:
             return
 
@@ -207,7 +229,7 @@ class ConfigurableKeysObject(ConfigurableObject):
             self.privatekey = keystrio.getvalue()
 
             if self.folder is not None:
-                key.write_private_key_file(keypath)
+                key.write_private_key_file(str(keypath))
 
         self.publickey = "ssh-rsa " + key.get_base64()
 
@@ -235,19 +257,25 @@ class ConfigurableKeysObject(ConfigurableObject):
         else:
             os.chmod(keypath, 0o600)
 
-    # support serialization
+    def _to_json(self) -> Dict[str, Any]:
+        """Convert object to an array of json-compatible key-value pairs.
 
-    def _to_json(self) -> dict:
+        Remove keys from json serialization
+
+        :return: properties as a dictionary
+        :rtype: Dict[str, Any]
+
+        """
         fields = super()._to_json()
         del fields["privatekey"]
         del fields["publickey"]
         return fields
 
     def get_privatekeypath(self) -> Optional[str]:
-        """returns path for the private key file
+        """Return path for the private key file.
 
-        Returns:
-            str -- path
+        :returns: path or None if keys haven't been generated yet
+
         """
         if self.folder is None:
             return None
@@ -255,7 +283,10 @@ class ConfigurableKeysObject(ConfigurableObject):
 
 
 class ServerConfig(metaclass=singleton.Singleton):
+    """Class used to store application parameters."""
+
     def _create_folders(self) -> None:
+        """Create the different folders required by the application."""
         if not self.datapath.exists():
             self.datapath.mkdir()
 
@@ -274,14 +305,13 @@ class ServerConfig(metaclass=singleton.Singleton):
         if not self.eulaspath.exists():
             self.eulaspath.mkdir()
 
-    def __init__(self):
-        """Initializes configuration
+    def __init__(self) -> None:
+        """Initialize configuration.
 
         Assigns default values to parameter, then loads configuration
         from a json file passed as argument and creates required
         folders
         """
-
         self.commandtimeout: int = 30
         self.apppath = pathlib.Path(os.path.dirname(os.path.abspath(__file__)))
         self.datapath = pathlib.Path.home() / ("." + APP_NAME)

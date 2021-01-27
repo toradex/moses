@@ -1,9 +1,11 @@
-""" Class used to manage remote docker instance
+"""Class used to manage remote docker instance.
+
+The backend opens a tunnel to the remote docker instance and then
+uses docker APIs over the local socket.
+
 """
-import io
-import time
 import logging
-import json
+from types import TracebackType
 import yaml
 import paramiko
 import docker
@@ -13,14 +15,19 @@ import sharedssh
 import targetdevice
 import progresscookie
 import dockerapi
-from typing import Optional, List, Dict, Any
+from typing import Optional, List, Dict, Any, Type
 
 
 class RemoteDocker:
-    """ Manages a remote instance and support with statement
-    """
+    """Manages docker instance running on a device."""
 
     def __init__(self, device: "targetdevice.TargetDevice"):
+        """Create the tunnel.
+
+        :param device: target device
+        :type device: targetdevice.TargetDevice
+
+        """
         self.dev = device
         self.remotedocker: docker.DockerClient = None
 
@@ -34,13 +41,14 @@ class RemoteDocker:
             raise exceptions.SSHTunnelError(e)
 
     def get_image_by_tag(self, tag: str) -> Optional[dict]:
-        """Return information about a specific image
+        """Return information about a specific image.
 
-        Arguments:
-            tag {str} - - Image tag
+        :param tag: tag used to find the image
+        :tpye tag: str
 
-        Returns:
-            dict -- Image information
+        :returns: image information as dictionary
+        :rtype: dict
+
         """
         try:
             image = self.remotedocker.images.get(tag)
@@ -52,16 +60,13 @@ class RemoteDocker:
         return image.attrs
 
     def delete_image(self, img: str, force: bool) -> None:
-        """Removes a remote image
+        """Remove a remote image.
 
-        Args:
-            img (str): image name
-            force (bool): terminates existing instances
+        :param img: image id (SHA)
+        :type img: str
+        :param force: if true running instances are terminated
 
-        Raises:
-            exceptions.RemoteDockerError: [description]
         """
-
         try:
 
             self.remotedocker.images.remove(image=img, force=force, noprune=False)
@@ -75,11 +80,15 @@ class RemoteDocker:
         localpath: str,
         progress: Optional[progresscookie.ProgressCookie],
     ) -> None:
-        """Loads an image on the target device
+        """Load an image on the target device.
 
-        Arguments:
-            img {docker.models.images.Image} -- local docker image
-            path {str} -- local image path
+        :param limg: local docker image
+        :type limg: docker.models.images.Image
+        :param localpath: local path of the image file to be imported
+        :type localpath: str
+        :param progress: object used to return progress information
+        :type progress: progresscookie.ProgressCookie, optional
+
         """
         try:
 
@@ -106,26 +115,29 @@ class RemoteDocker:
         extraparms: Dict[str, str],
         networks: List[str],
     ) -> docker.models.containers.Container:
-        """Runs a new instance of the specified image
+        """Run a new instance of the specified image.
 
-        Arguments:
-            img {docker.models.images.Image} -- image used for the instance
-            name {str} -- instance name
-            ports {dict} -- dictionary of local ports
-            volumes {dict} -- dictionary of volumes to be mounted
-            devices {list} -- list of device
-            privileged {bool} -- if true runs as privileged
-            extraparms {dict} -- additional parameters in a dictionary
-            networks {list} -- networks that should be connected to the container
+        :param img: docker image to be used for this instance
+        :type img: docker.models.image.Image
+        :param name: name to be assigned to the instance
+        :type name: str
+        :param ports: dictionary with host/container ports
+        :type ports: dict
+        :param volumes: dictionary with local/container mount point
+        :type volumes: dict
+        :param devices: list of devices to be shared with container
+        :type device: list
+        :param privileged: true if the container must run in privileged mode
+        :type privileged: bool
+        :param extraparms: dictionary with additional parameters and their value
+        :type extraparams: dict
+        :param networks: list of networks that the container will be connected to
+        :type network: list
 
-        Raises:
-            exceptions.RemoteImageNotFoundError: [description]
-            exceptions.RemoteDockerError: [description]
+        :returns: container
+        :rtype: docker.models.containers.Container
 
-        Returns:
-            docker.models.containers.Container -- [description]
         """
-
         image = self.remotedocker.images.get(img.id)
 
         if image is None:
@@ -211,18 +223,16 @@ class RemoteDocker:
             raise exceptions.RemoteDockerError(self.dev, str(e))
 
     def get_containers(
-        self, filters: Dict[str, Any]
+        self, filters: Optional[Dict[str, Any]]
     ) -> List[docker.models.containers.Container]:
-        """Returns one or more containers matching the filters
+        """Return one or more containers matching the filters.
 
-        Arguments:
-            filters {list} -- list of strings
+        :param filters: dictionary with filters
+        :type filters: dict, optional
 
-        Raises:
-            RemoteDockerError -- command error
+        :returns: list of container objects
+        :rtype: docker.models.containers.Container
 
-        Returns:
-            list -- array of docker.models.containers.Container objects
         """
         try:
             containers = self.remotedocker.containers.list(all=True, filters=filters)
@@ -232,13 +242,12 @@ class RemoteDocker:
             raise exceptions.RemoteDockerError(self.dev, str(e))
 
     def is_container_running(self, container_id: str) -> bool:
-        """checks if a container is running
+        """Check if a container is running.
 
-        Arguments:
-            container_id {str} -- container id
+        :param container_id: str
+        :param container_id: str:
+        :returns: bool -- true if container exists
 
-        Returns:
-            bool -- true if container exists
         """
         try:
             if self.remotedocker.containers.get(container_id):
@@ -253,16 +262,14 @@ class RemoteDocker:
             raise e
 
     def get_container(self, container_id: str) -> docker.models.containers.Container:
-        """returns a container given its Id
+        """Return a container given its Id.
 
-        Arguments:
-            container_id {str} -- container id
+        :param container_id: container ID (SHA)
+        :type container_id: str
 
-        Raises:
-            exceptions.RemoteDockerError: error on docker on the device
+        :returns: container
+        :rtype: docker.models.containers.Container
 
-        Returns:
-            docker.models.containers.Container -- container
         """
         try:
             return self.remotedocker.containers.get(container_id)
@@ -271,17 +278,15 @@ class RemoteDocker:
         except docker.errors.DockerException as e:
             raise exceptions.RemoteDockerError(self.dev, str(e))
 
-    def get_images(self, filters: Dict[str, Any]) -> List[dict]:
-        """Returns one or more images matching the filters
+    def get_images(self, filters: Optional[Dict[str, Any]]) -> List[dict]:
+        """Return one or more images matching the filters.
 
-        Arguments:
-            filters {dict} -- list of strings
+        :param filters: dictionary with filters
+        :type filters: dict, optional
 
-        Raises:
-            RemoteDockerError -- command error
+        :returns: list of image objects
+        :rtype: list[dict]
 
-        Returns:
-            list -- array of dict objects
         """
         try:
             images = self.remotedocker.images.list(filters)
@@ -297,13 +302,14 @@ class RemoteDocker:
             raise exceptions.RemoteDockerError(self.dev, str(e))
 
     def get_image_by_id(self, id: str) -> docker.models.images.Image:
-        """Return information about a specific image
+        """Return information about a specific image.
 
-        Arguments:
-            id {str} - - Image tag
+        :param id: image ID (SHA)
+        :type id: str
 
-        Returns:
-            docker.models.images.Image -- Image information
+        :returns: Image information
+        :rtype: docker.models.images.Image
+
         """
         try:
             image = self.remotedocker.images.get(id)
@@ -315,13 +321,11 @@ class RemoteDocker:
         return image
 
     def remove_image_by_id(self, id: str) -> None:
-        """removes a remote image
+        """Remove a remote image.
 
-        Args:
-            id (str): image id
+        :param id: image ID (SHA)
+        :type id: str
 
-        Raises:
-            exceptions.RemoteDockerError: docker error
         """
         try:
             self.remotedocker.images.remove(image=id, force=True, noprune=False)
@@ -333,13 +337,11 @@ class RemoteDocker:
             raise exceptions.RemoteDockerError(self.dev, str(e))
 
     def remove_container(self, id: str) -> None:
-        """removes a remote container
+        """Remove a remote container.
 
-        Args:
-            id (str): container id
+        :param id: container ID (SHA)
+        :type id: str
 
-        Raises:
-            exceptions.RemoteDockerError: docker exception
         """
         try:
             container = self.remotedocker.containers.get(id)
@@ -354,13 +356,14 @@ class RemoteDocker:
             raise exceptions.RemoteDockerError(self.dev, str(e))
 
     def get_network(self, network: str) -> docker.models.networks.Network:
-        """Returns a network given its name
+        """Return a network given its name.
 
-        Args:
-            network (str): network name
+        :param network: network name
+        :type network: str
 
-        Returns:
-            docker.Network: network object
+        :returns: network object
+        :rtype: docker.models.networks.Network
+
         """
         list = self.remotedocker.networks.list(names=[network])
 
@@ -371,11 +374,10 @@ class RemoteDocker:
 
         # enable object to be used in "with" statements
 
-    def __enter__(self):
-
+    def __enter__(self) -> "RemoteDocker":
+        """Check that connections are OK before starting remote operations."""
         if self.sshtunnel is None:
             e = exceptions.SSHTunnelError(Exception("Tunnel is not connected."))
-            self.sshtunnel.__exit__(type(e), e, None)
             raise e
 
         if not (self.sshtunnel.is_active and self.sshtunnel.is_alive):
@@ -393,6 +395,15 @@ class RemoteDocker:
         self.sshtunnel.__enter__()
         return self
 
-    def __exit__(self, etype, value, traceback):
+    def __exit__(
+        self,
+        etype: Optional[Type[BaseException]],
+        value: Optional[BaseException],
+        traceback: Optional[TracebackType],
+    ) -> Optional[bool]:
+        """Close shared connections when an exceptions is generated."""
         self.remotedocker.close()
-        self.sshtunnel.__exit__(etype, value, traceback)
+
+        if self.sshtunnel is not None:
+            return self.sshtunnel.__exit__(etype, value, traceback)
+        return None

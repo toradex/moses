@@ -20,7 +20,7 @@ paths:
       tags:
         - Version
       summary: APP/API version
-      description: returns app and API version
+      description: Return app and API version
       responses:
         200:
           description: Successful
@@ -37,7 +37,7 @@ paths:
       tags:
         - Version
       summary: Docker version info
-      description: returns docker version information
+      description: Return docker version information
       responses:
         200:
           description: Successful
@@ -56,7 +56,7 @@ paths:
       description: Returns all configured devices
       responses:
         200:
-          description: Successful
+          description: Devices list
           schema:
             type: array
             items:
@@ -69,8 +69,8 @@ paths:
       operationId: devices_networkdetect
       tags:
         - Devices
-      summary: Finds a network device
-      description: Returns a new device detected from network
+      summary: Detect a network device
+      description: Detect a device using its ip or hostname
       parameters:
         - name: hostname
           in: query
@@ -87,7 +87,7 @@ paths:
 
       responses:
         200:
-          description: Returns device
+          description: Device information
           schema:
             $ref: "#/definitions/TargetDevice"
         500:
@@ -114,8 +114,8 @@ paths:
       operationId: devices_serialdetect
       tags:
         - Devices
-      summary: Finds a device connected to serial port
-      description: Returns a new device detected from serial port
+      summary: Detect a serial device
+      description: Detect a device connected to a local serial port
       parameters:
         - name: port
           in: query
@@ -132,7 +132,7 @@ paths:
 
       responses:
         200:
-          description: Returns device
+          description: Device information
           schema:
             $ref: "#/definitions/TargetDevice"
         500:
@@ -165,12 +165,12 @@ paths:
       tags:
         - Devices
       summary: Get device
-      description: Returns a specified device, knowing its id
+      description: Return a specific configured device, knowing its id
       parameters:
         - $ref: "#/parameters/device_id"
       responses:
         200:
-          description: Returns device
+          description: Device Information
           schema:
             $ref: "#/definitions/TargetDevice"
         404:
@@ -183,7 +183,7 @@ paths:
       tags:
         - Devices
       summary: Change device properties
-      description: Changes specified properties on a device
+      description: Changes specified properties on a configured device
       parameters:
         - $ref: "#/parameters/device_id"
         - name: device
@@ -192,7 +192,7 @@ paths:
              $ref: "#/definitions/TargetDevice"
       responses:
         200:
-          description: Returns device
+          description: Device information
           schema:
             $ref: "#/definitions/TargetDevice"
         404:
@@ -209,11 +209,12 @@ paths:
         - Devices
       operationId: device_delete
       summary: Remove a device
+      description: Permanently remove a device from the list of configured ones
       parameters:
         - $ref: "#/parameters/device_id"
       responses:
         204:
-          description: Device was correctly deleted
+          description: Device was correctly removed
         404:
           description: Device not found
         500:
@@ -224,13 +225,13 @@ paths:
       tags:
         - Devices
       operationId: device_update
-      summary: update information for a specific device
-      description: Returns a specified device, with updated info if available
+      summary: Update device information
+      description: Checks for updates on the remote device and return up-to-date information
       parameters:
         - $ref: "#/parameters/device_id"
       responses:
         200:
-          description: Returns device
+          description: Device information
           schema:
             $ref: "#/definitions/TargetDevice"
         500:
@@ -253,7 +254,7 @@ paths:
       tags:
         - Devices
       summary: Expose remote docker
-      description: Expose remote docker port on localhost
+      description: Expose remote docker port on localhost via SSH tunnel
       parameters:
         - $ref: "#/parameters/device_id"
         - name: port
@@ -262,7 +263,7 @@ paths:
           required: false
       responses:
         200:
-          description: Returns port
+          description: Local port for docker interface
           schema:
             type: integer
         404:
@@ -280,7 +281,7 @@ paths:
       operationId: device_closedocker
       tags:
         - Devices
-      summary: Disables remote docker
+      summary: Close SSH tunnel for docker API
       description: Stop exposing remote docker port on localhost
       parameters:
         - $ref: "#/parameters/device_id"
@@ -298,13 +299,13 @@ paths:
       operationId: device_getdockerport
       tags:
         - Devices
-      summary: remote docker local port
-      description: Get local port where docker is tunneled
+      summary: Get local port for remote docker tunnel
+      description: Get local port where docker is tunneled via SSH
       parameters:
         - $ref: "#/parameters/device_id"
       responses:
         200:
-          description: Returns port
+          description: Local port for docker interface
           schema:
             type: integer
         404:
@@ -322,8 +323,8 @@ paths:
       operationId: device_openssh
       tags:
         - Devices
-      summary: Expose remote ssh
-      description: Expose remote ssh port on localhost
+      summary: Expose shell via SSH
+      description: Expose remote shell on local port via SSH
       parameters:
         - $ref: "#/parameters/device_id"
         - name: port
@@ -332,7 +333,7 @@ paths:
           required: false
       responses:
         200:
-          description: Returns port
+          description: Local port for SSH shell
           schema:
             type: integer
         404:
@@ -350,8 +351,8 @@ paths:
       operationId: device_closessh
       tags:
         - Devices
-      summary: Disables ssh tunneling
-      description: Stop exposing remote ssh port on localhost
+      summary: Close SSH tunnel for shell
+      description: Stop exposing remote shell port on localhost
       parameters:
         - $ref: "#/parameters/device_id"
       responses:
@@ -368,13 +369,13 @@ paths:
       operationId: device_getsshport
       tags:
         - Devices
-      summary: remote ssh local port
-      description: Get local port where ssh is tunneled
+      summary: Get local port for shell
+      description: Get local port where remote shell is tunneled via SSH
       parameters:
         - $ref: "#/parameters/device_id"
       responses:
         200:
-          description: Returns port
+          description: Local port for SSH shell
           schema:
             type: integer
         404:
@@ -392,13 +393,13 @@ paths:
       operationId: device_getprocesses
       tags:
         - Devices
-      summary: list running processes on a device
-      description: Get processes running on a specified device
+      summary: Get list of processes
+      description: Get list of processes running on a specified device
       parameters:
         - $ref: "#/parameters/device_id"
       responses:
         200:
-          description: Returns list of processes
+          description: List of processes
           schema:
             type: "array"
             items:
@@ -418,13 +419,13 @@ paths:
       operationId: device_getmemory
       tags:
         - Devices
-      summary: Return memory information
+      summary: Get device memory information
       description: Return total/free/available memory on the device
       parameters:
         - $ref: "#/parameters/device_id"
       responses:
         200:
-          description: Returns memory information
+          description: Memory information
           schema:
             $ref: "#/definitions/MemInfo"
         404:
@@ -442,13 +443,13 @@ paths:
       operationId: device_getmountpoints
       tags:
         - Devices
-      summary: return storage information for a device
-      description: Get a list of storages for the specified device
+      summary: Get storage information for a device
+      description: Return a list with information about every mountpoint
       parameters:
         - $ref: "#/parameters/device_id"
       responses:
         200:
-          description: Returns list of storage information
+          description: List of mount point information
           schema:
             type: "array"
             items:
@@ -468,13 +469,13 @@ paths:
       operationId: device_getimages
       tags:
         - Devices
-      summary: list images
-      description: Get images available on a specified device
+      summary: List container images on the device
+      description: Get list of all container images available on a specified device
       parameters:
         - $ref: "#/parameters/device_id"
       responses:
         200:
-          description: Returns list of images
+          description: List of container images
           schema:
             type: array
             items:
@@ -496,14 +497,14 @@ paths:
       operationId: images_getimage
       tags:
         - Devices
-      summary: get image details
-      description: Get detailed information on an image
+      summary: Get information about an image
+      description: Get detailed information on a specific container image stored on a device
       parameters:
         - $ref: "#/parameters/device_id"
         - $ref: "#/parameters/image_id"
       responses:
         200:
-          description: Returns image
+          description: Container image information
           schema:
             $ref: "#/definitions/Docker_Image"
         404:
@@ -521,8 +522,8 @@ paths:
       operationId: images_deleteimage
       tags:
         - Devices
-      summary: delete an image
-      description: Executes rmi command on and image
+      summary: Delete a container image
+      description: Delete a specific container image from the device
       parameters:
         - $ref: "#/parameters/device_id"
         - $ref: "#/parameters/image_id"
@@ -546,13 +547,13 @@ paths:
       operationId: device_getcontainers
       tags:
         - Devices
-      summary: list containers
-      description: Get containers running on a specified device
+      summary: List containers
+      description: Get a list of the containers on a specific device
       parameters:
         - $ref: "#/parameters/device_id"
       responses:
         200:
-          description: Returns list of containers
+          description: List of containers
           schema:
             type: "array"
             items:
@@ -574,14 +575,14 @@ paths:
       operationId: containers_getcontainer
       tags:
         - Devices
-      summary: get container details
-      description: Get detailed information on a specific container
+      summary: Get information about a container
+      description: Get detailed information on a specific container running on a device
       parameters:
         - $ref: "#/parameters/device_id"
         - $ref: "#/parameters/container_id"
       responses:
         200:
-          description: Returns container
+          description: Container information
           schema:
             $ref: "#/definitions/Docker_Container"
         404:
@@ -599,8 +600,8 @@ paths:
       operationId: containers_deletecontainer
       tags:
         - Devices
-      summary: delete a container
-      description: Executes rm command on container
+      summary: Delete a container
+      description: Stops and removes a container running on a device
       parameters:
         - $ref: "#/parameters/device_id"
         - $ref: "#/parameters/container_id"
@@ -624,14 +625,14 @@ paths:
       operationId: container_start
       tags:
         - Devices
-      summary: starts container
-      description: Start specified container
+      summary: Starts container
+      description: Start a specified container on a device
       parameters:
         - $ref: "#/parameters/device_id"
         - $ref: "#/parameters/container_id"
       responses:
         200:
-          description: Returns container
+          description: Container information
           schema:
             $ref: "#/definitions/Docker_Container"
         404:
@@ -651,8 +652,8 @@ paths:
       operationId: container_stop
       tags:
         - Devices
-      summary: stops container
-      description: Stops specified container
+      summary: Stop container
+      description: Stop a specified container running on a device
       parameters:
         - $ref: "#/parameters/device_id"
         - $ref: "#/parameters/container_id"
@@ -678,14 +679,14 @@ paths:
       operationId: container_getprocesses
       tags:
         - Devices
-      summary: return processes running in container
-      description: returns a list of processes running in the specified container
+      summary: Get processes running in container
+      description: Return a list of processes running in the specified container on a device
       parameters:
         - $ref: "#/parameters/device_id"
         - $ref: "#/parameters/container_id"
       responses:
         200:
-          description: Returns list of processes
+          description: List of processes
           schema:
             type: "array"
             items:
@@ -708,13 +709,13 @@ paths:
       tags:
         - Devices
       summary: Return container memory information
-      description: Return total/free/available memory on a specific container
+      description: Return total/free/available memory on a specific container running on a device
       parameters:
         - $ref: "#/parameters/device_id"
         - $ref: "#/parameters/container_id"
       responses:
         200:
-          description: Returns memory information
+          description: Memory information
           schema:
             $ref: "#/definitions/MemInfo"
         404:
@@ -732,14 +733,14 @@ paths:
       operationId: container_getmountpoints
       tags:
         - Devices
-      summary: return information about storage
-      description: returns a list of storages available inside the container
+      summary: Return information about storage
+      description: Return a list of mount points available inside the container
       parameters:
         - $ref: "#/parameters/device_id"
         - $ref: "#/parameters/container_id"
       responses:
         200:
-          description: Returns list of storage informations
+          description: List of mount point information
           schema:
             type: "array"
             items:
@@ -761,8 +762,8 @@ paths:
       operationId: container_getlogs
       tags:
         - Devices
-      summary: return container logs one chunk a time
-      description: return one or more lines of the log, waiting until it's available, this will allow clients to show logs in almost real time
+      summary: Return text lines from the container logs
+      description: Return one or more lines from the log, waiting until it's available, this will allow clients to show logs in almost real time
       parameters:
         - $ref: "#/parameters/device_id"
         - $ref: "#/parameters/container_id"
@@ -774,7 +775,7 @@ paths:
           description: when true reads the lock back from beginning
       responses:
         200:
-          description: Returns list of storage informations
+          description: Text from the logs
           schema:
             type: string
         204:
@@ -795,13 +796,13 @@ paths:
       operationId: device_getprivatekey
       tags:
         - Devices
-      summary: return the path of the device private key
-      description: returns the key that can be used to activate passowordless connections to the device
+      summary: Return the path of the device private key
+      description: Returns the file containing the key that can be used to activate passowordless connections to the device
       parameters:
         - $ref: "#/parameters/device_id"
       responses:
         200:
-          description: Path of the private key file
+          description: Path of the key file
           schema:
             type: string
         404:
@@ -815,8 +816,8 @@ paths:
       operationId: device_syncfolders
       tags:
         - Devices
-      summary: synchronizes folders
-      description: synchronizes folders between host and target
+      summary: Synchronize folders
+      description: Synchronize folders between host and target
       parameters:
         - $ref: "#/parameters/device_id"
         - name: sourcefolder
@@ -831,7 +832,7 @@ paths:
 
       responses:
         200:
-          description: Sysroot updated
+          description: OK
         404:
           description: Device not found
         500:
@@ -853,8 +854,8 @@ paths:
       tags:
         - Devices
       operationId: device_current_ip
-      summary: returns current ip of the device
-      description: Returns current ip of the device using local DNS and mDNS
+      summary: Get current ip of the device
+      description: Return current ip of the device using local DNS and mDNS
       parameters:
         - $ref: "#/parameters/device_id"
       responses:
@@ -877,10 +878,10 @@ paths:
       tags:
         - Eulas
       summary: Get all eulas
-      description: Returns all eulas
+      description: Returns information about all eulas required to run different platforms on the system
       responses:
         200:
-          description: Successful
+          description: List of Eulas
           schema:
             type: array
             items:
@@ -893,17 +894,17 @@ paths:
       operationId: eula_get
       tags:
         - Eulas
-      summary: Get an eula
-      description: Returns data about a specific eula
+      summary: Get detail about an eula
+      description: Return detailed information about a specific eula
       parameters:
         - $ref: "#/parameters/eula_id"
       responses:
         200:
-          description: Returns an eula
+          description: Eula Information
           schema:
             $ref: "#/definitions/Eula"
         404:
-          description: eula not found
+          description: Eula not found
         500:
           $ref: "#/responses/InternalServerError_500"
 
@@ -921,11 +922,11 @@ paths:
              $ref: "#/definitions/Eula"
       responses:
         200:
-          description: Returns eula
+          description: Eula information
           schema:
             $ref: "#/definitions/Eula"
         404:
-          description: eula not found
+          description: Eula not found
         500:
           $ref: "#/responses/InternalServerError_500"
         531:
@@ -939,7 +940,7 @@ paths:
       tags:
         - Platforms
       summary: Get all platforms
-      description: Returns all configured platforms
+      description: Return all configured platforms
       parameters:
         - name: runtime
           in: query
@@ -947,7 +948,7 @@ paths:
           required: false
       responses:
         200:
-          description: Successful
+          description: List of Platforms
           schema:
             type: array
             items:
@@ -960,13 +961,13 @@ paths:
       operationId: platform_get
       tags:
         - Platforms
-      summary: Get a platform
-      description: Returns data about a specific platform
+      summary: Get detailed information about a platform
+      description: Return data about a specific platform
       parameters:
         - $ref: "#/parameters/platform_id"
       responses:
         200:
-          description: Returns a platform
+          description: Platform information
           schema:
             $ref: "#/definitions/Platform"
         404:
@@ -979,13 +980,13 @@ paths:
       operationId: platform_compatibledevices_get
       tags:
         - Platforms
-      summary: get compatible devices
-      description: Returns a list of devices that are compatible with the platform
+      summary: Get compatible devices
+      description: Return a list of devices that are compatible with the platform
       parameters:
         - $ref: "#/parameters/platform_id"
       responses:
         200:
-          description: Returns a list of devices
+          description: List of devices
           schema:
             type: array
             items:
@@ -1000,8 +1001,8 @@ paths:
       operationId: applications_create
       tags:
         - Applications
-      summary: Loads an application configuration
-      description: Returns data about an application
+      summary: Create an application configuration
+      description: Create a new application configuration 
       parameters:
         - name: platform_id
           in: query
@@ -1017,7 +1018,7 @@ paths:
           required: false
       responses:
         200:
-          description: Returns an application
+          description: Application information
           schema:
             $ref: "#/definitions/Application"
         404:
@@ -1036,8 +1037,8 @@ paths:
       operationId: applications_load
       tags:
         - Applications
-      summary: Loads an application configuration
-      description: Returns data about an application
+      summary: Load an application configuration
+      description: Load an application configuration from the local filesystem
       parameters:
         - name: path
           in: query
@@ -1084,7 +1085,7 @@ paths:
       tags:
         - Applications
       summary: Change application properties
-      description: Changes specified properties on an applicaton
+      description: Changes specified properties on an application
       parameters:
         - $ref: "#/parameters/application_id"
         - name: application
@@ -1093,7 +1094,7 @@ paths:
              $ref: "#/definitions/Application"
       responses:
         200:
-          description: Returns application
+          description: Application information
           schema:
             $ref: "#/definitions/Application"
         404:
@@ -1109,12 +1110,13 @@ paths:
       tags:
         - Applications
       operationId: application_delete
-      summary: Remove an application and all the associated data and containers
+      summary: Remove an application
+      description: Remove an application and all the associated data and containers
       parameters:
         - $ref: "#/parameters/application_id"
       responses:
         204:
-          description: Application was correctly deleted
+          description: OK
         404:
           description: Application no found
         500:
@@ -1127,8 +1129,8 @@ paths:
       operationId: application_updated
       tags:
         - Applications
-      summary: Builds container image
-      description: Builds application release or debug container
+      summary: Check if container image is up to date
+      description: Check if some properties have been changed after the last build of the configuration-specific container image
       parameters:
         - $ref: "#/parameters/application_id"
         - name: configuration
@@ -1138,7 +1140,7 @@ paths:
           pattern: "(?:debug|release)"
       responses:
         200:
-          description: Successful build
+          description: true if container image is up to date
           schema:
             type: boolean
         404:
@@ -1155,8 +1157,8 @@ paths:
       operationId: application_build
       tags:
         - Applications
-      summary: Builds container image
-      description: Builds application release or debug container
+      summary: Build container image
+      description: Build application release or debug container
       parameters:
         - $ref: "#/parameters/application_id"
         - name: configuration
@@ -1167,7 +1169,7 @@ paths:
         - $ref: "#/parameters/progress_id"
       responses:
         200:
-          description: Successful build
+          description: OK
         404:
           description: Application not found
         500:
@@ -1184,8 +1186,8 @@ paths:
       operationId: application_deploy
       tags:
         - Applications
-      summary: Deploys container image
-      description: Deploys application release or debug container to target
+      summary: Deploy container image
+      description: Deploy application container to target
       parameters:
         - $ref: "#/parameters/application_id"
         - name: configuration
@@ -1201,7 +1203,7 @@ paths:
         - $ref: "#/parameters/progress_id"
       responses:
         200:
-          description: Successful build
+          description: OK
         404:
           description: Application not found
         500:
@@ -1226,8 +1228,8 @@ paths:
       operationId: application_run
       tags:
         - Applications
-      summary: Runs container image
-      description: Runs application release or debug container on target, if the application is already running, restarts it
+      summary: Run container image
+      description: Run the application release or debug container on target, if the application is already running, restarts it
       parameters:
         - $ref: "#/parameters/application_id"
         - name: configuration
@@ -1243,7 +1245,7 @@ paths:
         - $ref: "#/parameters/progress_id"
       responses:
         200:
-          description: Returns application container
+          description: Container information
           schema:
             $ref: "#/definitions/Docker_Container"
         404:
@@ -1270,8 +1272,8 @@ paths:
       operationId: application_stop
       tags:
         - Applications
-      summary: Stops running container image
-      description: Stops application release or debug container currently running on target
+      summary: Stop running container image
+      description: Stop application release or debug container currently running on target, operation succeeds even if the container is not running
       parameters:
         - $ref: "#/parameters/application_id"
         - name: configuration
@@ -1286,7 +1288,7 @@ paths:
           pattern: "^[-0-9a-zA-Z.]*$"
       responses:
         200:
-          description: Application stopped (returned also if not running)
+          description: OK
         500:
           $ref: "#/responses/InternalServerError_500"
         525:
@@ -1303,7 +1305,7 @@ paths:
       tags:
         - Applications
       summary: Get container information
-      description: Get informations about container
+      description: Get detailed informations about container
       parameters:
         - $ref: "#/parameters/application_id"
         - name: configuration
@@ -1318,7 +1320,7 @@ paths:
           pattern: "^[-0-9a-zA-Z.]*$"
       responses:
         200:
-          description: Returns application container
+          description: Container information
           schema:
             $ref: "#/definitions/Docker_Container"
         404:
@@ -1342,7 +1344,7 @@ paths:
       operationId: application_getcontainer_logs
       tags:
         - Applications
-      summary: Get container log, chunk by chunk
+      summary: Get one of more lines from container logs
       description: Return one chunk of log (one or more lines), blocking if no data is available
       parameters:
         - $ref: "#/parameters/application_id"
@@ -1364,7 +1366,7 @@ paths:
           description: when true reads the lock back from beginning
       responses:
         200:
-          description: Returns a chunk of logs
+          description: Log entries as text
           schema:
             type: string
         204:
@@ -1384,8 +1386,8 @@ paths:
       operationId: application_getdocker_commandline
       tags:
         - Applications
-      summary: Get docker command line used to run the container
-      description: returns full command line
+      summary: Get docker command line to run the application/json
+      description: Return the full docker command line that can be used to run the application container
       parameters:
         - $ref: "#/parameters/application_id"
         - name: configuration
@@ -1395,7 +1397,7 @@ paths:
           pattern: "(?:debug|release)"
       responses:
         200:
-          description: Returns command line
+          description: Command line
           schema:
             type: string
         404:
@@ -1414,7 +1416,7 @@ paths:
       tags:
         - Applications
       summary: Get docker compose file 
-      description: returns docker compose file that can be used to run the container and its dependencies
+      description: Return docker-compose file that can be used to run the application container and its dependencies
       parameters:
         - $ref: "#/parameters/application_id"
         - name: configuration
@@ -1424,7 +1426,7 @@ paths:
           pattern: "(?:debug|release)"
       responses:
         200:
-          description: Docker-compose file as string with *nix line ending
+          description: Docker-compose file (string with *nix line endings)
           schema:
             type: string
         404:
@@ -1443,7 +1445,7 @@ paths:
       tags:
         - Applications
       summary: Push application to docker registry
-      description: Push application to a docker registry, using authentication
+      description: Push application's container to a docker registry, using authentication
       parameters:
         - $ref: "#/parameters/application_id"
         - name: configuration
@@ -1462,7 +1464,7 @@ paths:
         - $ref: "#/parameters/progress_id"
       responses:
         200:
-          description: Push completed
+          description: OK
         404:
           description: Application not found
         500:
@@ -1483,8 +1485,8 @@ paths:
       operationId: application_runsdk
       tags:
         - Applications
-      summary: Runs SDK containers
-      description: Runs SDK container and return its IP and SSH port
+      summary: Run SDK containers
+      description: Run SDK container and return its IP and SSH port
       parameters:
         - $ref: "#/parameters/application_id"
         - name: configuration
@@ -1500,7 +1502,7 @@ paths:
         - $ref: "#/parameters/progress_id"
       responses:
         200:
-          description: Container started
+          description: IP and port of the SSH port exposed by container (if any)
           schema:
             type: object
             properties:
@@ -1529,7 +1531,7 @@ paths:
       tags:
         - Applications
       summary: Update SDK container
-      description: Updates/rebuilds the SDK container by adding new dev libraries or synchronizing sysroots
+      description: Update the SDK container by adding new dev libraries or synchronizing sysroots
       parameters:
         - $ref: "#/parameters/application_id"
         - name: configuration
@@ -1540,7 +1542,7 @@ paths:
         - $ref: "#/parameters/progress_id"
       responses:
         200:
-          description: SDK updated
+          description: OK
         404:
           description: Application not found
         500:
@@ -1561,7 +1563,7 @@ paths:
       tags:
         - Applications
       summary: Get SDK container
-      description: Get SDK container for check if it is running
+      description: Get SDK container information (can be used to check if it's running)
       parameters:
         - $ref: "#/parameters/application_id"
         - name: configuration
@@ -1571,7 +1573,7 @@ paths:
           pattern: "(?:debug|release)"
       responses:
         200:
-          description: Returns application container
+          description: Container information
           schema:
             $ref: "#/definitions/Docker_Container"
         204:
@@ -1593,8 +1595,8 @@ paths:
       operationId: application_syncfolders
       tags:
         - Applications
-      summary: synchronizes folders
-      description: synchronizes folders between host/SDK container and application container
+      summary: Synchronize folders
+      description: Synchronizes folders between host/SDK container and the application container
       parameters:
         - $ref: "#/parameters/application_id"
         - name: sourcefolder
@@ -1622,7 +1624,7 @@ paths:
         - $ref: "#/parameters/progress_id"
       responses:
         200:
-          description: Sysroot updated
+          description: OK
         404:
           description: Application not found
         500:
@@ -1652,13 +1654,14 @@ paths:
       operationId: application_getprivatekey
       tags:
         - Applications
-      summary: Retrieves the path of the RSA private key
-      description: The application stores the public key inside the container if ssh is enabled, this key will allow passwordless connections to a running instance
+      summary: Get the path of the RSA private key
+      description: Retrieve the path of the private key that allows passwordless connection to the container. 
+                   The application stores the public key inside the container if ssh is enabled (usually for debug builds only)
       parameters:
         - $ref: "#/parameters/application_id"
       responses:
         200:
-          description: key returned
+          description: Key path
           schema:
             type: string
         404:
@@ -1672,13 +1675,14 @@ paths:
       operationId: application_reseal
       tags:
         - Applications
-      summary: Cleans id and keys for git repo uploading
-      description: This operation make the application no longer valid, but allow you to upload it to a git repo from where it can be cloned/forked re-generating new ids every time, avoiding that all clones share the same id/keys.
+      summary: Clean id and keys from application configuration
+      description: This operation make the application no longer valid, but allow you to upload it to a git repo from where it can be cloned/forked. 
+                   Id and keys will be re-generated on next re-opening of the application, leading to different names for the images etc.
       parameters:
         - $ref: "#/parameters/application_id"
       responses:
         200:
-          description: key returned
+          description: OK
         404:
           description: Application not found
 
@@ -1689,11 +1693,11 @@ paths:
         - $ref: "#/parameters/progress_id"
       tags:
         - Setup
-      summary: pulls containers from docker repo
-      description: installs base and sdk containers for supported platforms
+      summary: Pulls container from docker repo
+      description: Pulls all base and SDK base container for the configured platforms. This can also be used to update them.
       responses:
         200:
-          description: Containers pulled
+          description: OK
         500:
           $ref: "#/responses/InternalServerError_500"
         530:
@@ -1710,11 +1714,11 @@ paths:
         - $ref: "#/parameters/progress_id"
       tags:
         - Setup
-      summary: enables ARM emulation using qemu
-      description: uses binfmt and qemu to enable ARM emulation on non-ARM devices
+      summary: Enable ARM emulation using binfmt/qemu
+      description: Uses an externa container that leverages binfmt and qemu to enable ARM32 and ARM64 emulation on non-ARM devices
       responses:
         200:
-          description: Emulation enabled
+          description: OK
         500:
           $ref: "#/responses/InternalServerError_500"
         530:
@@ -1725,13 +1729,15 @@ paths:
   /progress/create:
     get:
       operationId: progress_create
-      summary: create a progress ID
-      description: creates a progress object that could be used to monitor and abort operations
+      summary: Create a progress cookie
+      description: Creates a progress object that could be used to monitor and abort operations.
+                   A progress cookie must be used only for one operation and deleted when the operation is completed/terminated.
+                   Passing cookies to different operations may lead to unpredictable results.
       tags:
         - Progress
       responses:
         200:
-          description: returns new empty object
+          description: Progress Cookie Information
           schema:
             $ref: "#definitions/Progress"
         500:
@@ -1742,13 +1748,15 @@ paths:
       operationId: progress_status
       tags:
         - Progress
-      summary: retrieves status of an operation
-      description: return status and messages, it's blocking until status changes or the operation is completed
+      summary: Retrieves progress status of an operation
+      description: Return the operation status, progress and messages, it's blocking until status changes or the operation is completed/terminated.
+                   Not all operations can return detailed progress information (it may not be possible to estimate it before starting the actual operation),
+                   it's anyway granted that an operation will report its completition/failure.
       parameters:
         - $ref: "#/parameters/progress_id"
       responses:
         200:
-          description: return object with up to date information
+          description: Progress Cookie Information
           schema:
             $ref: "#definitions/Progress"
         404:
@@ -1760,8 +1768,10 @@ paths:
   /progress/delete:
     get:
       operationId: progress_delete
-      summary: releases progress ID
-      description: if delete is called when the operation is still pending, it will try to abort it
+      summary: Releases a progress cookie
+      description: Delete the cookie. If the operation is pending this will cause an abort. Abort may not be immediate.
+                   After the delete operation is called the progress cookie id is no longer valid and further calls to 
+                   progress_status will fail.
       tags:
         - Progress
       parameters:
@@ -1784,7 +1794,7 @@ parameters:
 
   eula_id:
     name: eula_id
-    description: Id of an eula
+    description: Id of an Eula
     in: path
     type: string
     required: true

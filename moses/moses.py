@@ -1,5 +1,6 @@
 #!python3
-
+"""Main entry point and initialization of all global objects."""
+from eula import EULAs
 import sys
 import os
 import logging
@@ -13,9 +14,10 @@ from connexion.json_schema import Draft4RequestValidator
 import yaml
 import targetdevice
 import applicationconfig
+import eula
 import argparse
 import requests
-import paramiko
+from typing import Any
 
 if getattr(sys, "frozen", False):
     options = {"swagger_path": os.path.dirname(sys.executable) + "/api/ui"}
@@ -27,12 +29,18 @@ app = connexion.App("moses", options=options)
 
 
 @app.app.before_request
-def log_rest_in():
+def log_rest_in() -> None:
+    """Log API request."""
     logging.info("REST -> %s", request.path)
 
 
 @app.app.after_request
-def log_rest_out(response):
+def log_rest_out(response: Any) -> Any:
+    """Log API request and its result.
+
+    :param response: Flask response object
+
+    """
     logging.info("REST <- %s - %d", request.path, response.status_code)
     return response
 
@@ -109,6 +117,7 @@ if __name__ == "__main__":
     applicationconfig.ApplicationConfig.parse_schema(
         schema["definitions"]["Application"]
     )
+    eula.EULA.parse_schema(schema["definitions"]["Eula"])
 
     app.app.json_encoder = api.CustomJSONEncoder
     api.init_api()

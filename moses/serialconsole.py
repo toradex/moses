@@ -1,25 +1,21 @@
+"""Implements console functions over serial connection."""
 import time
 import serial
 import console
 import exceptions
-from typing import Optional
-
-"""This module is used to communicate to the device over serial port
-"""
+from typing import Optional, Type
+from types import TracebackType
 
 
 class SerialConsole(console.GenericConsole):
-    """Class implementing console features on serial port
-
-        Arguments:
-            console {console.GenericConsole} -- base class
-    """
+    """Class implementing console features on serial port."""
 
     def __init__(self, device: str):
-        """Must be re-defined in subclasses
+        """Configure serial connection.
 
-        Arguments:
-            device {str} -- port name
+        :param device: serial device (COM*: on Windows,/dev/tty* on Linux)
+        :type device: str
+
         """
         try:
             self.ser = serial.Serial(device, 115200, 8, serial.PARITY_NONE, 1, 5)
@@ -28,25 +24,25 @@ class SerialConsole(console.GenericConsole):
         self._prompt = ""
 
     def set_prompt(self, prompt: str) -> None:
-        """Configures what should be recognized as prompt
+        """Configure what should be recognized as prompt.
 
-        Arguments:
-            prompt {str} -- current prompt (including trailing spaces)
+        :param prompt: prompt string
+        :type prompt: str
+
         """
         self._prompt = prompt
 
     # Methods of the base console class
     def send_cmd(self, command: str, timeout: int = 30) -> str:
-        """Sends a command to the device and returns its output
+        """Send a command to the device and returns its output.
 
-        Arguments:
-            command {str} -- command to be sent
+        :param command: command to be sent
+        :type command: str
+        :param timeout: timeout in seconds
+        :tpye timeout: int
+        :returns: output of the command (till next prompt)
+        :rtype: str
 
-        Keyword Arguments:
-            timeout {int} -- timeout in seconds (default: {30})
-
-        Returns:
-            str -- output of the command (till next prompt)
         """
         output = ""
 
@@ -74,12 +70,13 @@ class SerialConsole(console.GenericConsole):
             raise exceptions.OSError(e)
 
     def wait_for_prompt(self, prompt: Optional[str] = None, timeout: int = 30) -> None:
-        """Wait until the specific string is received
+        """Wait until the specific string is received.
 
-        Keyword Arguments:
-            prompt {str} -- prompt to wait, if None the one set using
-                            {set_prompt} will be used (default: {None})
-            timeout {int} -- timeout in seconds (default: {30})
+        :param prompt: prompt or None to use the one configured by set_prompt  (Default value = None)
+        :type prompt: str, optional
+        :param timeout: timeout in seconds  (Default value = 30)
+        :type timeout: int
+
         """
         output = ""
 
@@ -101,19 +98,18 @@ class SerialConsole(console.GenericConsole):
         return
 
     def login(self, username: str, password: str, timeout: int = 60) -> None:
-        """Tries to login user and configures prompt
+        """Try to login user and configures prompt.
 
-        Arguments:
-            username {str} -- username
-            password {str} -- cleartext password
+        An exception is generated if login attempts fail.
 
-        Keyword Arguments:
-            timeout {int} -- timeout in seconds (default: {30})
+        :param username: username
+        :type username: str
+        :param password: password
+        :tpye password: str
+        :param timeout: timeout in seconds (Default value = 60)
+        :type timeout: int
 
-        Returns:
-            bool -- true if login was successful
         """
-
         try:
 
             loggedin = False
@@ -213,14 +209,21 @@ class SerialConsole(console.GenericConsole):
         except OSError as e:
             raise exceptions.OSError(e)
 
-    # enable object to be used in "with" statements
-    def __enter__(self):
+    def __enter__(self) -> "SerialConsole":
+        """Ensure that serial object is managed correctly in with statements."""
         self.ser.__enter__()
         return self
 
-    def __exit__(self, type, value, traceback):
+    def __exit__(
+        self,
+        etype: Optional[Type[BaseException]],
+        value: Optional[BaseException],
+        traceback: Optional[TracebackType],
+    ) -> Optional[bool]:
+        """Ensure that serial object is managed correctly in with statements."""
         try:
             self.ser.write("exit\n".encode("utf-8"))
-            self.ser.__exit__(type, value, traceback)
+            self.ser.__exit__(etype, value, traceback)
         except:
             pass
+        return None

@@ -1,3 +1,8 @@
+"""Classes used to share SSH connections and SSH tunnels.
+
+Since activating an SSH connection usually takes some time, those are 
+kept active and shared between the different requests.
+"""
 import io
 import threading
 import logging
@@ -8,7 +13,8 @@ import time
 import dns.resolver
 import socket
 import targetdevice
-from typing import Tuple, Dict, Optional
+from typing import Tuple, Dict, Optional, Type, Any, List
+from types import TracebackType
 
 resolver = dns.resolver.Resolver()
 resolver.nameservers = ["224.0.0.251"]
@@ -16,17 +22,16 @@ resolver.port = 5353
 
 
 def resolve_hostname(hostname: str) -> Tuple[str, bool]:
-    """
-    Convert a hostname to ip using dns first and then mdnsself.
+    """Convert a hostname to ip using dns first and then mdns.
+
     If it does not resolve it, returns the original value (in
-    case this may be parsed in some smarter ways down the line)
+    case this may be parsed in some smarter ways down the line).
 
-    Arguments:
-        hostname {str} -- mnemonic name
+    :param hostname: name to be solved
+    :type hostname: str
+    :returns: tuple with ip address as string and flag telling if mdns has been used
+    :rtype: tuple
 
-    Returns:
-        str -- ip address as string
-        bool - true id mdns has been used
     """
     global resolver
 
@@ -53,6 +58,11 @@ def resolve_hostname(hostname: str) -> Tuple[str, bool]:
 
 
 class SharedSSHDockerTunnel(sshtunnel.SSHTunnelForwarder):
+    """Class used to manage a SHH tunnels.
+
+    since creating the tunnel is time consuming, all connections to docker on the device will share the same tunnel
+
+    """
 
     __tunnels: Dict[str, "SharedSSHDockerTunnel"] = {}
     __lock = threading.RLock()
@@ -62,17 +72,14 @@ class SharedSSHDockerTunnel(sshtunnel.SSHTunnelForwarder):
     def get_tunnel(
         cls, device: "targetdevice.TargetDevice"
     ) -> Optional["SharedSSHDockerTunnel"]:
+        """Return an SharedSSHDockerTunnel object,allocating it if it's required.
+
+        :param device: destination device
+        :tpye device: targetdevice.TargetDevice
+        :returns: tunnel object
+        :rtype: SharedSSHDockerTunnel
+
         """
-        Returns an SharedSSHDockerTunnel object,
-        allocating it if it's required
-
-        Arguments:
-            device {TargetDevice} -- device
-
-        Returns:
-            SharedSSHDockerTunnel -- object
-        """
-
         with cls.__lock:
             tunnel = None
 
@@ -106,10 +113,15 @@ class SharedSSHDockerTunnel(sshtunnel.SSHTunnelForwarder):
             return tunnel
 
     def __init__(self, device: "targetdevice.TargetDevice"):
+        """Connect to the device via SSH tunneling.
 
+        :param device: target device
+        :type device: targetdevice.TargetDevice
+
+        """
         logging.info("SSH - Creating tunnel to " + str(device.id))
 
-        self.device = device.id
+        self.device_id = device.id
         self.__objlock = threading.RLock()
 
         k = paramiko.RSAKey.from_private_key(io.StringIO(device.privatekey))
@@ -128,77 +140,107 @@ class SharedSSHDockerTunnel(sshtunnel.SSHTunnelForwarder):
         self.start()
         logging.info("SSH - Tunnel to " + str(device.id) + " activated")
 
-    def __enter__(self):
+    def __enter__(self) -> "SharedSSHDockerTunnel":
+        """Lock the object when used in with statement."""
         self.__objlock.acquire()
         return self
 
     @classmethod
-    def remove_tunnel(cls, device):
+    def remove_tunnel(cls, device_id: str) -> None:
+        """Close the connection to a specific device after an error.
+
+        :param device_id: target device id
+        :type device: str
+
+        """
         with cls.__lock:
-            if device in cls.__tunnels:
-                logging.info("SSH - Tunnel to " + device + " closed")
-                connection = cls.__tunnels[device]
-                del cls.__tunnels[device]
+            if device_id in cls.__tunnels:
+                logging.info("SSH - Tunnel to " + device_id + " closed")
+                connection = cls.__tunnels[device_id]
+                del cls.__tunnels[device_id]
                 thread = threading.Thread(target=connection.stop)
                 thread.start()
 
-    def __exit__(self, type, value, traceback):
+    def __exit__(
+        self,
+        etype: Optional[Type[BaseException]],
+        value: Optional[BaseException],
+        traceback: Optional[TracebackType],
+    ) -> Optional[bool]:
+        """Ensure that tunnel is closed when an exception occours during operations."""
         try:
             self.__objlock.release()
         except:
             pass
 
         try:
-            if type:
-                SharedSSHClient.remove_connection(self.device)
-                SharedSSHDockerTunnel.remove_tunnel(self.device)
+            if etype is not None:
+                assert self.device_id is not None
+                SharedSSHClient.remove_connection(self.device_id)
+                SharedSSHDockerTunnel.remove_tunnel(self.device_id)
                 self.close()
 
-                logging.info("SSH - Tunnel to " + self.device + " closed")
+                logging.info("SSH - Tunnel to " + self.device_id + " closed")
                 with SharedSSHDockerTunnel.__lock:
-                    if self.device in SharedSSHDockerTunnel.__tunnels:
-                        del SharedSSHDockerTunnel.__tunnels[self.device]
+                    if self.device_id in SharedSSHDockerTunnel.__tunnels:
+                        del SharedSSHDockerTunnel.__tunnels[self.device_id]
                         thread = threading.Thread(target=self.stop)
                         thread.start()
         except:
             pass
 
+        return None
+
 
 class IgnorePolicy(paramiko.MissingHostKeyPolicy):
-    """
+    """Helper class for SSH implementation.
+
     Policy for automatically adding the hostname and new host key to the
     local `.HostKeys` object, and saving it.  This is used by `.SSHClient`.
+
     """
 
-    def missing_host_key(self, client, hostname, key):
+    def missing_host_key(self, client: Any, hostname: Any, key: Any) -> None:
+        """Handle missing host key (does nothing, justs n ignore thes n reques -> Nonet to save hostname/key pairs).
+
+        :param client:
+        :param hostname:
+        :param key:
+
+        """
         pass
 
 
 class SharedSSHClient(paramiko.SSHClient):
+    """Class used to manage SSH connection to a specific device.
+
+    Since activating SSH connections is time-consuming, all commands are sent on a shared connection.
+
+    """
 
     __connections: Dict[str, "SharedSSHClient"] = {}
     __lock = threading.RLock()
 
     @classmethod
     def get_connection(cls, device: "targetdevice.TargetDevice") -> "SharedSSHClient":
+        """Return an SSH connection object,allocating it if it's required.
+
+        :param device: destination device
+        :type device: targetdevice.TargetDevice
+        :returns: connection object
+        :rtype: SharedSSHClient
+
         """
-        Returns an SSH connection object,
-        allocating it if it's required
-
-        Arguments:
-            device {TargetDevice} -- device
-
-        Returns:
-            SharedSSHClient -- object
-        """
-
         with cls.__lock:
             if device.id in cls.__connections:
                 ssh = cls.__connections[device.id]
+
+                transport = ssh.get_transport()
+
                 if (
-                    ssh.get_transport() is not None
-                    and ssh.get_transport().is_active()
-                    and ssh.get_transport().is_alive()
+                    transport is not None
+                    and transport.is_active()
+                    and transport.is_alive()
                 ):
                     return ssh
                 try:
@@ -207,6 +249,8 @@ class SharedSSHClient(paramiko.SSHClient):
                     pass
 
             k = paramiko.RSAKey.from_private_key(io.StringIO(device.privatekey))
+
+            assert device.id is not None
 
             ssh = cls(device.id)
 
@@ -222,45 +266,85 @@ class SharedSSHClient(paramiko.SSHClient):
             cls.__connections[str(device.id)] = ssh
             return ssh
 
-    def __init__(self, device):
-        self.device = device
+    def __init__(self, device_id: str):
+        """Initialize object.
+
+        :param device: device id
+        :type device: targetdevice.TargetDevice
+        """
+        self.device_id = device_id
         self.__objlock = threading.RLock()
         super().__init__()
-        logging.info("SSH - Connecting to device " + device)
+        logging.info("SSH - Connecting to device " + device_id)
 
-    def __enter__(self):
+    def __enter__(self) -> "SharedSSHClient":
+        """Lock the object when used in with statements."""
         self.__objlock.acquire()
         return self
 
     @classmethod
-    def remove_connection(cls, device):
-        with cls.__lock:
-            if device in cls.__connections:
-                logging.info("SSH - Connection to " + device + " closed")
-                del cls.__connections[device]
+    def remove_connection(cls, device_id: str) -> None:
+        """Remove a connection after an error.
 
-    def __exit__(self, type, value, traceback):
+        :param device_id: ID of the device that needs to be removed from the list
+        :type device: targetdevice.TargetDevice
+
+        """
+        with cls.__lock:
+            if device_id in cls.__connections:
+                logging.info("SSH - Connection to " + device_id + " closed")
+                del cls.__connections[device_id]
+
+    def __exit__(
+        self,
+        etype: Optional[Type[BaseException]],
+        value: Optional[BaseException],
+        traceback: Optional[TracebackType],
+    ) -> None:
+        """Close the connection if an exception is generated during operations."""
         self.__objlock.release()
-        if type:
-            SharedSSHClient.remove_connection(self.device)
-            SharedSSHDockerTunnel.remove_tunnel(self.device)
+        if etype is not None:
+            SharedSSHClient.remove_connection(self.device_id)
+            SharedSSHDockerTunnel.remove_tunnel(self.device_id)
             self.close()
 
 
 class SSHForwarder(threading.Thread):
+    """Class that implements port forwarding via SSH.
+
+    Forwards traffic from a local port to SSH default port on a device in a secure way.
+
+    """
 
     MAX_BLOCK_SIZE = 65536
 
-    def __init__(self, listenthread, socket, device):
+    def __init__(
+        self,
+        listenthread: "SSHListenThread",
+        socket: socket.socket,
+        device: "targetdevice.TargetDevice",
+    ):
+        """Create forwarding thread.
+
+        :param listenthread: object that accepted the incoming connection
+        :type listenthread: SSHListenThread
+        :param socket: socket that has been created during accept
+        :type socket: socket.socket
+        :param device: target device
+        :type device: targetdevice.TargetDevice
+
+        """
         super().__init__()
 
         self.socket = socket
         self.parent = listenthread
         self.device = device
-        self.ssh = None
+        self.ssh: Optional[paramiko.SSHClient] = None
         self.stopped = False
 
-    def run(self):
+    def run(self) -> None:
+        """Forward data between the local and remote ports."""
+        channel = None
 
         try:
             k = paramiko.RSAKey.from_private_key(io.StringIO(self.device.privatekey))
@@ -276,8 +360,8 @@ class SSHForwarder(threading.Thread):
 
             channel = self.ssh.invoke_shell()
 
-            self.socket.setblocking(0)
-            channel.setblocking(0)
+            self.socket.setblocking(False)
+            channel.setblocking(False)
 
             inputs = [self.socket, channel]
 
@@ -302,7 +386,8 @@ class SSHForwarder(threading.Thread):
                 pass
 
         try:
-            channel.shutdown(2)
+            if channel is not None:
+                channel.shutdown(2)
             self.socket.shutdown(socket.SHUT_RDWR)
         except Exception:
             pass
@@ -310,14 +395,25 @@ class SSHForwarder(threading.Thread):
         if not self.stopped:
             self.parent.client_closed(self)
 
-    def stop(self):
+    def stop(self) -> None:
+        """Stop traffic forwarding."""
         self.stopped = True
         self.socket.shutdown(socket.SHUT_RDWR)
         self.socket.close()
 
 
 class SSHListenThread(threading.Thread):
-    def __init__(self, port, device):
+    """Class that creates a forward channel for any connection on local port."""
+
+    def __init__(self, port: Optional[int], device: "targetdevice.TargetDevice"):
+        """Initialize socket and start listening for connections.
+
+        :param port: destination port on the target, if port is None, then port number will be assigned by the system
+        :type port: int, optional
+        :param device: target device
+        :type device: targetdevices.TargetDevice
+
+        """
         super().__init__()
 
         self.device = device
@@ -330,21 +426,23 @@ class SSHListenThread(threading.Thread):
 
         self.port = port
         self.socket.listen(5)
-        self.clients = []
+        self.clients: List[SSHForwarder] = []
 
     def get_port(self) -> int:
+        """Return used port."""
+        assert self.port is not None
         return self.port
 
-    def run(self):
-
+    def run(self) -> None:
+        """Accept incoming connections and create forward thread."""
         while True:
             client = self.socket.accept()[0]
             forwarder = SSHForwarder(self, client, self.device)
             self.clients.append(forwarder)
             forwarder.start()
 
-    def stop(self):
-
+    def stop(self) -> None:
+        """Stop accepting incoming connections and close all pending forward threads."""
         try:
             self.socket.shutdown(socket.SHUT_RDWR)
             self.socket.close()
@@ -357,7 +455,12 @@ class SSHListenThread(threading.Thread):
             except Exception:
                 pass
 
-    def client_closed(self, client):
+    def client_closed(self, client: SSHForwarder) -> None:
+        """Remove a client from the active clients list.
 
+        :param client: client to be remove
+        :type client: SSHForwarder
+
+        """
         if client in self.clients:
             self.clients.remove(client)
