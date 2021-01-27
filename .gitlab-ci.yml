@@ -1,5 +1,25 @@
 stages:
+  - validate
   - build
+
+moses-validation:
+  image: ubuntu:18.04
+  stage: validate
+  script:
+    - apt-get update -y
+    - apt-get install -y software-properties-common
+    - add-apt-repository -y ppa:deadsnakes/ppa
+    - apt-get update -y
+    - DEBIAN_FRONTEND=noninteractive apt-get install -y python3.9 python3.9-dev python3.9-distutils python3-pip
+    - python3.9 -m pip install pip
+    - python3.9 -m pip install virtualenv
+    - python3.9 -m virtualenv .pyenv
+    - . ./.pyenv/bin/activate
+    - python -m pip install -r requirements.txt
+    - cd moses && mypy *py && cd -
+    - cd moses && pydocstyle *py && cd -
+  tags:
+    - docker
 
 build-moses-linux:
   image: ubuntu:18.04
@@ -9,18 +29,17 @@ build-moses-linux:
     - apt-get install -y software-properties-common
     - add-apt-repository -y ppa:deadsnakes/ppa
     - apt-get update -y
-    - apt-get install -y python3.8 python3.8-dev python3.9-distutils python3-pip
+    - DEBIAN_FRONTEND=noninteractive apt-get install -y python3.9 python3.9-dev python3.9-distutils python3-pip
     - python3.9 -m pip install pip
     - python3.9 -m pip install virtualenv
     - python3.9 -m virtualenv .pyenv
     - . ./.pyenv/bin/activate
     - python -m pip install -r requirements.txt
-    - cd clients/python && python3.8 -m setup install && cd -
+    - cd clients/python && python3.9 -m setup install && cd -
     - cd moses && export PYTHONOPTIMIZE=1 && pyinstaller -y moses.linux.spec && pyinstaller -y ../cli/tdskt.linux.spec && cp -R dist/tdskt-linux/* dist/moses-linux/ && cd dist/moses-linux && rm $(ls -1 lib*.so* | grep -v libffi | grep -v libpython | tr "\n" " ") && cd -
   artifacts:
     paths:
       - moses/dist/moses-linux/
-
   tags:
     - docker
 
