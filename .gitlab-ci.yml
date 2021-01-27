@@ -9,10 +9,10 @@ build-moses-linux:
     - apt-get install -y software-properties-common
     - add-apt-repository -y ppa:deadsnakes/ppa
     - apt-get update -y
-    - apt-get install -y python3.8 python3.8-dev python3-pip
-    - python3.8 -m pip install pip
-    - python3.8 -m pip install virtualenv
-    - python3.8 -m virtualenv .pyenv
+    - apt-get install -y python3.8 python3.8-dev python3.9-distutils python3-pip
+    - python3.9 -m pip install pip
+    - python3.9 -m pip install virtualenv
+    - python3.9 -m virtualenv .pyenv
     - . ./.pyenv/bin/activate
     - python -m pip install -r requirements.txt
     - cd clients/python && python3.8 -m setup install && cd -
