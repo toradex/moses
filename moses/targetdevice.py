@@ -1,26 +1,20 @@
+"""Classes used to manage connected devices."""
 import exceptions
 import io
 import logging
 import os
-import platform
-import select
-import socket
-import threading
-import time
 import pathlib
 import docker
-import flask
 import paramiko
-import serial
 import sshtunnel
 import config
 import docker
 import remotedocker
+import console
 import serialconsole
-import singleton
 import sshconsole
+import singleton
 import sharedssh
-import yaml
 import rsync
 import utils
 import re
@@ -28,16 +22,13 @@ import progresscookie
 from typing import Optional, List, Dict, Any, Iterable
 
 
-""" This module contain classes used to manage devices and their connections
-"""
-
 PS_CMD_LINE = "ps -A -o pid,ppid,user,time,nice,stat,args"
 DF_CMDLINE = "df -k"
 FREE_CMD_LINE = "free -k"
 
 
 class TargetDevice(config.ConfigurableKeysObject):
-    """ Class used to store information about a specific device
+    """Class used to store information about a specific device.
 
     Property changes will be saved permanently.
     Methods are used to retrieve information from device, and to
@@ -47,11 +38,10 @@ class TargetDevice(config.ConfigurableKeysObject):
     readonlyfields = config.ConfigurableKeysObject.readonlyfields.copy()
 
     def __init__(self, folder: Optional[pathlib.Path] = None):
-        """Loads data from a configuration file
+        """Load data from a configuration file.
 
-        Arguments:
-            folder {Path} -- Path of the folder used to store
-                             target information
+        :param folder: path to the folder used to store configuration data
+        :type folder: pathlib.Path
         """
         super().__init__(folder)
 
@@ -73,19 +63,19 @@ class TargetDevice(config.ConfigurableKeysObject):
         self.logs: Dict[str, Any] = {}
 
     def _build_folder_path(self) -> pathlib.Path:
+        """Generate folder path usign base folder and ID."""
+        assert self.id is not None
         return config.ServerConfig().devicespath / self.id
 
     def is_valid(self, fields: dict = None) -> bool:
-        """Validate fields of current object
+        """Validate the fields of current object.
 
-        Arguments:
-            fields {dictionary} -- dictionary with values, if None then
-                                   self.__dict__ will be used
+        :param fields: object properties as a dictionary, if None is passed then self.__dict__ is used
+        :type fields: dict
+        :returns: true if all fields contain valid values
+        :rtype: bool
 
-        Returns:
-            bool -- true if all fields contain valid values
         """
-
         if fields is None:
             fields = self.__dict__
 
@@ -103,6 +93,7 @@ class TargetDevice(config.ConfigurableKeysObject):
         return True
 
     def __repr__(self) -> str:
+        """Generate string rapresentation of the object."""
         return (
             "name :"
             + self.name
@@ -134,15 +125,12 @@ class TargetDevice(config.ConfigurableKeysObject):
         )
 
     def get_containers(self) -> List[dict]:
-        """Returns a list of containers running on the target device
+        """Return a list of containers running on the target device.
 
-        Raises:
-            ConnectionException -- connection error
+        :return: List of containers (as property dictionaries)
+        :rtype: List[dict]
 
-        Returns:
-            list -- containers
         """
-
         with remotedocker.RemoteDocker(self) as rd:
             containers = rd.get_containers(None)
 
@@ -154,22 +142,27 @@ class TargetDevice(config.ConfigurableKeysObject):
             return jsoncontainers
 
     def get_container(self, container_id: str) -> docker.models.containers.Container:
-        """returns a given container
+        """Return a container, given its ID.
 
-        Arguments:
-            container_id {str} -- id of the container
+        :param container_id: container ID (SHA)
+        :type container_id: str
 
-        Returns:
-            docker.models.containers.Container -- container
+        :returns: container object
+        :rtype: docker.models.containers.Container
+
         """
         with remotedocker.RemoteDocker(self) as rd:
             return rd.get_container(container_id)
 
     def start_container(self, container_id: str) -> docker.models.containers.Container:
-        """starts a given container
+        """Start a container, given it ID.
 
-        Arguments:
-            container_id {str} -- id of the container
+        :param container_id: container ID (SHA)
+        :type container_id: str
+
+        :returns: container object
+        :rtype: docker.models.containers.Container
+
         """
         with remotedocker.RemoteDocker(self) as rd:
             container = rd.get_container(container_id)
@@ -181,10 +174,14 @@ class TargetDevice(config.ConfigurableKeysObject):
             return rd.get_container(container_id)
 
     def stop_container(self, container_id: str) -> docker.models.containers.Container:
-        """stops a given container
+        """Stop a given container.
 
-        Arguments:
-            container_id {str} -- id of the container
+        :param container_id: container ID (SHA)
+        :type container_id: str
+
+        :returns: container object
+        :rtype: docker.models.containers.Container
+
         """
         with remotedocker.RemoteDocker(self) as rd:
             container = rd.get_container(container_id)
@@ -192,45 +189,44 @@ class TargetDevice(config.ConfigurableKeysObject):
             return rd.get_container(container_id)
 
     def get_images(self) -> List[dict]:
-        """Returns a list of images available on the target device
+        """Return a list of container images available on the target device.
 
-        Raises:
-            ConnectionException -- connection error
+        :returns: list of images as property dictionary
+        :rtype: List[dict]
 
-        Returns:
-            list -- images
         """
-
         with remotedocker.RemoteDocker(self) as rd:
             return rd.get_images(None)
 
     def get_image(self, image_id: str) -> docker.models.images.Image:
-        """Returns a specific docker image running on target
+        """Return a docker image stored on the target, given it ID.
 
-        Arguments:
-            image_id {str} -- image id
+        :param image_id: image ID (SHA)
+        :type image_id: str
 
-        Returns:
-            docker.models.images.Image -- image info
+        :returns:  image object
+        :rtype: docker.models.images.Image
+
         """
-
         with remotedocker.RemoteDocker(self) as rd:
             return rd.get_image_by_id(image_id)
 
-    def remove_image(self, image_id: str):
-        """Removes specified image
+    def remove_image(self, image_id: str) -> None:
+        """Remove specified image, given its ID.
 
-        Arguments:
-            image_id {string} -- image id
+        :param image_id: image ID (SHA)
+        :type image_id: str
+
         """
         with remotedocker.RemoteDocker(self) as rd:
             rd.remove_image_by_id(image_id)
 
-    def remove_container(self, container_id: str):
-        """Removes specified image
+    def remove_container(self, container_id: str) -> None:
+        """Remove specified container, given its ID.
 
-        Arguments:
-            container_id {str} -- container id
+        :param container_id: container ID (SHA)
+        :type container_id: str
+
         """
         with remotedocker.RemoteDocker(self) as rd:
             rd.remove_container(container_id)
@@ -239,20 +235,17 @@ class TargetDevice(config.ConfigurableKeysObject):
             del self.logs[container_id]
 
     def expose_docker(self, port: Optional[int]) -> Optional[int]:
-        """Exposes remote docker REST interface as local port
+        """Expose remote docker REST interface as local port.
 
-        Arguments:
-            port {int} -- local port where shell should be exposed,
-                          if None system will use random port
+        This is done over a safe SSH tunnel
 
-        Raises:
-            exceptions.SSHError -- Error on SSH layer
-            exceptions.SSHTunnelError -- Error on SSH tunnel layer
+        :param port: local port where shell should be exposed, if None system will use random port
+        :type port: int
 
-        Returns:
-            int -- local port where the docker socket is exposed
+        :returns: local port where the docker socket is exposed
+        :rtype: int
+
         """
-
         if self.dockertunnel is not None:
             return None
 
@@ -285,10 +278,8 @@ class TargetDevice(config.ConfigurableKeysObject):
         except sshtunnel.BaseSSHTunnelForwarderError as e:
             raise exceptions.SSHTunnelError(e)
 
-    def stop_exposing_docker(self):
-        """Disable the docker interface remotized via SSH tunnel
-        """
-
+    def stop_exposing_docker(self) -> None:
+        """Disable the docker interface remotized via SSH tunnel."""
         if self.dockertunnel is None:
             return
 
@@ -301,16 +292,12 @@ class TargetDevice(config.ConfigurableKeysObject):
         self.dockertunnel = None
 
     def get_docker_port(self) -> Optional[int]:
-        """Returns the port where the remote docker socket is exposed on localhost
+        """Return the port where the remote docker socket is exposed on localhost.
 
-        Raises:
-            exceptions.SSHError -- Error on SSH layer
-            exceptions.SSHTunnelError -- Error on SSH tunnel layer
+        :returns: local port where the docker socket is exposed on None if docker is not exposed locally
+        :rtype: int | None
 
-        Returns:
-            int -- local port where the docker socket is exposed
         """
-
         if self.dockertunnel is None:
             return None
 
@@ -325,20 +312,15 @@ class TargetDevice(config.ConfigurableKeysObject):
         raise exceptions.InternalServerError(None)
 
     def expose_ssh(self, port: Optional[int]) -> int:
-        """Expose an already connected SSH shell
+        """Expose an already connected SSH shell on a local port.
 
-        Arguments:
-            port {int} -- local port where shell should be exposed,
-                          if None system will use random port
+        :param port: local port where shell should be exposed,  if None system will use random port
+        :type port: int
 
-        Raises:
-            exceptions.SSHError -- [description]
-            exceptions.SSHTunnelError -- [description]
+        :returns: port where shell is exposed
+        :rtype: int
 
-        Returns:
-            int -- [description]
         """
-
         try:
             if self.sshforwarder is not None:
                 return self.sshforwarder.get_port()
@@ -355,7 +337,8 @@ class TargetDevice(config.ConfigurableKeysObject):
             raise exceptions.InternalServerError(e)
         raise exceptions.InternalServerError(None)
 
-    def stop_exposing_ssh(self):
+    def stop_exposing_ssh(self) -> None:
+        """Stop exposing local port for SSH shell."""
         try:
             if self.sshforwarder is None:
                 return
@@ -367,6 +350,12 @@ class TargetDevice(config.ConfigurableKeysObject):
         self.sshforwarder = None
 
     def get_ssh_port(self) -> Optional[int]:
+        """Return the port where the remote SSH shell is exposed on localhost.
+
+        :returns: local port where the remote shell is exposed on None if shell is not exposed locally
+        :rtype: int
+
+        """
         if self.sshforwarder is None:
             return None
 
@@ -380,16 +369,16 @@ class TargetDevice(config.ConfigurableKeysObject):
             raise exceptions.InternalServerError(e)
         raise exceptions.InternalServerError(None)
 
-    def _process_ps_output(self, stream: Iterable[str]) -> List[dict]:
-        """Processes output of ps command into a jsonizable dictionary
+    def _process_ps_output(self, stream: Iterable[str]) -> List[Dict[str, Any]]:
+        """Convert output of ps command into a jsonizable dictionary.
 
-        Arguments:
-            stream {Iterable[str]} -- stream used to parse information
+        :param stream: output of ps command
+        :type stream: Iterable[str]
 
-        Returns:
-            list -- list of running processes with their properties
+        :returns: list of running processes with their properties as dictionary
+        :rtype: List[Dict[str,Any]]
+
         """
-
         # 1st row contains headers
         first = True
         processes = []
@@ -420,7 +409,13 @@ class TargetDevice(config.ConfigurableKeysObject):
 
         return processes
 
-    def get_process_list(self) -> List[dict]:
+    def get_process_list(self) -> List[Dict[str, Any]]:
+        """Return jsonizable list of local processes.
+
+        :returns: list of processed as a property dictionary
+        :rtype: List[Dict[str,Any]]
+
+        """
         try:
             with sharedssh.SharedSSHClient.get_connection(self) as ssh:
                 return self._process_ps_output(ssh.exec_command(PS_CMD_LINE)[1])
@@ -428,7 +423,16 @@ class TargetDevice(config.ConfigurableKeysObject):
         except paramiko.SSHException as e:
             raise exceptions.SSHError(e)
 
-    def get_container_process_list(self, container_id) -> List[dict]:
+    def get_container_process_list(self, container_id: str) -> List[Dict[str, Any]]:
+        """Return jsonizable list of processes running inside a specific container.
+
+        :param container_id: container ID (SHA)
+        :type container_id: str
+
+        :returns: list of processed as a property dictionary
+        :rtype: List[Dict[str,Any]]
+
+        """
         with remotedocker.RemoteDocker(self) as rd:
 
             container = rd.get_container(container_id)
@@ -436,16 +440,16 @@ class TargetDevice(config.ConfigurableKeysObject):
 
             return self._process_ps_output(io.StringIO(plist.decode("utf-8")))
 
-    def _process_free_output(self, stream: Iterable[str]) -> Optional[dict]:
-        """Collects relevant information from the output of free command
+    def _process_free_output(self, stream: Iterable[str]) -> Dict[str, int]:
+        """Collect output of free command as jsonizable dictionary.
 
-        Arguments:
-            stream {Iterable[str]} -- stdout of free command
+        :param stream: output of free command
+        :type stream: Iterable[str]
 
-        Returns:
-            dict -- MemInfo struct (total/free/available kb)
+        :returns: MemInfo struct (total/free/available kb) as property dictionary
+        :rtype: Dict[str, int]
+
         """
-
         # 1st row contains headers
         first = True
 
@@ -467,16 +471,13 @@ class TargetDevice(config.ConfigurableKeysObject):
 
         return meminfo
 
-    def get_memoryinfo(self) -> Optional[dict]:
-        """Retrieves memory information for the device
+    def get_memoryinfo(self) -> Dict[str, int]:
+        """Retrieve memory information for the device as jsonizable dictionary.
 
-        Raises:
-            exceptions.SSHError -- SHH error
+        :returns: MemInfo struct (total/free/available kb) as property dictionary
+        :rtype: Dict[str, int]
 
-        Returns:
-            dict -- MemInfo struct (total/free/available kb)
         """
-
         try:
             with sharedssh.SharedSSHClient.get_connection(self) as ssh:
 
@@ -485,19 +486,16 @@ class TargetDevice(config.ConfigurableKeysObject):
         except paramiko.SSHException as e:
             raise exceptions.SSHError(e)
 
-    def get_container_memoryinfo(self, container_id: str) -> Optional[dict]:
-        """Retrieves memory information for a specific container
+    def get_container_memoryinfo(self, container_id: str) -> Dict[str, int]:
+        """Retrieve memory information for as specific container as jsonizable dictionary.
 
-        Arguments:
-            container_id {str} -- Container id
+        :param container_id: container ID (SHA)
+        :type container_id: str
 
-        Raises:
-            exceptions.SSHError -- SHH error
+        :returns: MemInfo struct (total/free/available kb) as property dictionary
+        :rtype: Dict[str, int]
 
-        Returns:
-            dict -- MemInfo struct (total/free/available kb)
         """
-
         with remotedocker.RemoteDocker(self) as rd:
 
             container = rd.get_container(container_id)
@@ -505,16 +503,16 @@ class TargetDevice(config.ConfigurableKeysObject):
 
             return self._process_free_output(io.StringIO(plist.decode("utf-8")))
 
-    def _process_df_output(self, stream: Iterable[str]) -> list:
-        """Collects relevant information from the output of df command
+    def _process_df_output(self, stream: Iterable[str]) -> List[Dict[str, Any]]:
+        """Collect output of df command as a list of jsonable dictionary.
 
-        Arguments:
-            stream {file} -- stdout of df command
+        :param stream: output of df command
+        :type stream: Iterable[str]
 
-        Returns:
-            dict -- List of StorageInfo items
+        :returns: StorageInfo struct as property dictionary
+        :rtype: List[Dict[str,Any]]
+
         """
-
         # 1st row contains headers
         first = True
         storages = []
@@ -539,16 +537,13 @@ class TargetDevice(config.ConfigurableKeysObject):
 
         return storages
 
-    def get_storageinfo(self) -> list:
-        """Retrieves storage information for the device
+    def get_storageinfo(self) -> List[Dict[str, Any]]:
+        """Retrieve storage information for the device as jsonizable dictionary.
 
-        Raises:
-            exceptions.SSHError -- SHH error
+        :returns: StorageInfo struct  as property dictionary
+        :rtype: List[Dict[str,Any]]
 
-        Returns:
-            list -- List of StorageInfo objects
         """
-
         try:
             with sharedssh.SharedSSHClient.get_connection(self) as ssh:
 
@@ -557,19 +552,16 @@ class TargetDevice(config.ConfigurableKeysObject):
         except paramiko.SSHException as e:
             raise exceptions.SSHError(e)
 
-    def get_container_storageinfo(self, container_id) -> list:
-        """Retrieves storage information for a specific container
+    def get_container_storageinfo(self, container_id: str) -> list:
+        """Retrieve storage information for a specific container as jsonizable dictionary.
 
-        Arguments:
-            container_id {str} -- Container id
+        :param container_id: container ID (SHA)
+        :type container_id: str
 
-        Raises:
-            exceptions.SSHError -- SHH error
+        :returns: StorageInfo struct  as property dictionary
+        :rtype: List[Dict[str,Any]]
 
-        Returns:
-            list -- List of StorageInfo objects
         """
-
         with remotedocker.RemoteDocker(self) as rd:
 
             container = rd.get_container(container_id)
@@ -582,40 +574,44 @@ class TargetDevice(config.ConfigurableKeysObject):
         sourcefolder: str,
         destfolder: str,
         progress: Optional[progresscookie.ProgressCookie],
-    ):
-        """Syncronizes a local folder and a folder on the target device
+    ) -> None:
+        """Syncronize a local folder and a folder on the target device.
 
-        Arguments:
-            sourcefolder {str} -- source folder
-            destfolder {str} -- destination folder
-            progress (Optional[ProgressCookie]): progress object or None
+        :param sourcefolder: local folder
+        :type sourcefolder: str
+        :param destfolder: remote folder (on target)
+        :type destfolder: str
+        :param progress: object used to notify about operation progress
+        :type progress: progresscookie.ProgressCookie, optional
+
         """
-
         assert self.id is not None
 
         rsync.run_rsync(sourcefolder, self.id, destfolder, None, None, progress)
 
     def get_current_ip(self) -> str:
-        """Returns the device current ip or the hostname
+        """Return the device current ip.
 
-        Returns:
-            str -- device current ip or hostname if ip can't be solved
+        :returns: device ip or hostname if it was not possible to solve it
+        :rtype: str
+
         """
-        ip, mdns = sharedssh.resolve_hostname(self.hostname)
+        ip, _ = sharedssh.resolve_hostname(self.hostname)
 
         return ip
 
-    def get_container_logs(self, container_id, restart):
-        """Returns container logs
+    def get_container_logs(self, container_id: str, restart: bool) -> Optional[str]:
+        """Return one line of a specific container logs.
 
-        Arguments:
-            container_id {str} -- specific container id
-            restart {bool} -- reloads log generator
+        :param container_id: container ID (SHA)
+        :type container_id: str
+        :param restart: if true then the log will be returned from first line
+        :type restart: bool
 
-        Returns:
-            line {str} -- log line on None for EOF
+        :returns: one line from the logs
+        :rtype: str
+
         """
-
         log = None
 
         if container_id in self.logs and not restart:
@@ -629,27 +625,38 @@ class TargetDevice(config.ConfigurableKeysObject):
 
     # support for serialization
 
-    def __getstate__(self):
+    def __getstate__(self) -> Dict[str, Any]:
+        """Return a dictionary with exported properties.
+
+        :return: properties as a dictionary
+        :rtype: Dict[str, Any]
+
+        """
         fields = super().__getstate__()
         del fields["dockertunnel"]
         del fields["sshforwarder"]
         del fields["logs"]
         return fields
 
-    def save(self):
+    def save(self) -> None:
+        """Save object data.
 
+        On object first save the key pair is generated and stored inside the object's configuration.
+
+        """
         super().save()
 
 
 class TargetDevices(Dict[str, TargetDevice], metaclass=singleton.Singleton):
-    """ Manages the list of devices
+    """Class that manages the list of devices.
 
     Works only as a container, Specific properties are accessed
     using the :class:`TargetDevice` class
+
     """
 
-    def __init__(self):
-
+    def __init__(self) -> None:
+        """Initialize global structs and load configured devices."""
         # dictionary with supported modules
         self.modeldict = dict.fromkeys(["0014", "0015", "0016", "0017"], "colibri-imx6")
         self.modeldict.update(dict.fromkeys(["0032", "0033", "0039"], "colibri-imx7"))
@@ -680,26 +687,42 @@ class TargetDevices(Dict[str, TargetDevice], metaclass=singleton.Singleton):
         for dir in subfolders:
             try:
                 dev = TargetDevice(dir)
+
+                assert dev.id is not None
+
                 self[dev.id] = dev
             except:
                 logging.exception("Can't create device from folder %s.", str(dir))
 
-    def __delitem__(self, key):
-        if key not in self:
+    def __delitem__(self, device_id: str) -> None:
+        """Remove a device and its data.
+
+        :param device_id: device ID
+        :type device_id: str
+
+        """
+        if device_id not in self:
             return
 
-        self[key].destroy()
-        dict.__delitem__(self, key)
+        self[device_id].destroy()
+        dict.__delitem__(self, device_id)
 
-    def _unlock_ssh(self, console, dev, timeout):
-        """Enable ssh connection to the device without having to use a password
+    def _unlock_ssh(
+        self, console: console.GenericConsole, dev: TargetDevice, timeout: int
+    ) -> None:
+        """Enable ssh connection to the device without having to use a password.
 
-        Arguments:
-            console {GenericConsole} -- console
-            dev {TargetDevice} -- device
-            timeout {timeout} -- timeout in seconds
+        :param console: serial or SSH console
+        :type console: console.GenericConsole
+        :param dev: target device
+        :type dev: TargetDevice
+        :param timeout: timeout in seconds
+        :type timeout: int
+
         """
         keysfile = console.send_cmd("ls .ssh/authorized_keys", timeout)
+
+        keys = None
 
         # file does not exists
         if keysfile != ".ssh/authorized_keys":
@@ -707,8 +730,12 @@ class TargetDevices(Dict[str, TargetDevice], metaclass=singleton.Singleton):
         else:
             keys = console.send_cmd("cat .ssh/authorized_keys", timeout)
 
+            assert dev.publickey is not None
+
             if dev.publickey not in keys:
                 keys += "\n" + dev.publickey
+
+        assert keys is not None
 
         # regenerates the keys file
         console.send_cmd("mkdir .ssh")
@@ -716,24 +743,49 @@ class TargetDevices(Dict[str, TargetDevice], metaclass=singleton.Singleton):
         console.send_cmd("chmod 644 .ssh/authorized_keys")
         console.send_cmd("chmod 700 .ssh")
 
-    def _enable_sudo(self, console, username, password):
+    def _check_sudo(
+        self, console: console.GenericConsole, username: str, password: str
+    ) -> None:
+        """Check that user can run commands as root.
 
+        If sudo is not enabled for the user, then an exception is rised
+
+        :param console: serial or SSH console
+        :type console: console.GenericConsole
+        :param username: username
+        :type username: str
+        :param password: password
+        :type password: str
+
+        """
         if "sudo enabled" not in console.send_cmd(
             'echo "' + password + '" | sudo -S echo "sudo enabled"'
         ):
             raise exceptions.SudoError(username)
 
-    def _add_debug_warning(self, console, timeout):
+    def _add_debug_warning(self, console: console.GenericConsole, timeout: int) -> None:
+        """Add a warning message at boot for devices where ide-connectivity has been enabled.
+
+        :param console: SSH or serial console
+        :type console: console.GenericConsole
+        :param timeout: timeout in seconds
+        :type timeout: int
+        """
         # TODO add a warning to boot scripts
         pass
 
-    def _get_version_info_from_console(self, console, dev, timeout):
-        """Collects device version info from a console
+    def _get_version_info_from_console(
+        self, console: console.GenericConsole, dev: TargetDevice, timeout: int
+    ) -> None:
+        """Collect device version info from a console.
 
-        Arguments:
-            console {console.GenericConsole} -- console
-            dev {TargetDevice} -- device
-            timeout {int} -- timeout in seconds
+        :param console: serial or SSH console
+        :type console: console.GenericConsole
+        :param dev: target device
+        :type dev: TargetDevice
+        :param timeout: timeout in seconds
+        :type timeout: int
+
         """
         dev.hwrev = console.send_cmd(
             "cat /proc/device-tree/toradex,board-rev", timeout
@@ -756,24 +808,19 @@ class TargetDevices(Dict[str, TargetDevice], metaclass=singleton.Singleton):
         dev.distroversion = dev.distroversion.lstrip("PRETTY_NAME=")
         dev.distroversion = dev.distroversion.strip('"')
 
-    def _create_device_from_console(self, console, timeout) -> TargetDevice:
-        """Create a new device collecting its information from the console
+    def _create_device_from_console(
+        self, console: console.GenericConsole, timeout: int
+    ) -> TargetDevice:
+        """Create a new device collecting its information from the console.
 
-        Arguments:
-            console {console.GenericConsole} -- console
-            timeout {int} -- Timeout in seconds
+        :param console: serial or SSH console
+        :type console: console.GenericConsole
+        :param timeout: timeout in seconds
+        :type timeout: int
+        :returns: device object
+        :rtype: TargetDevice
 
-        Returns:
-            TargetDevice -- [description]
-
-        Raises:
-            exceptions.InvalidDeviceIdError: device id is not valid
-            exceptions.LoginFailedError: login failed
-            exceptions.SSHException: ssh error
-            exceptions.SerialException: serial port error
-            exceptions.InvalidDeviceError: device data is not valid
         """
-
         dev = TargetDevice()
 
         dev.id = console.send_cmd(
@@ -842,20 +889,33 @@ class TargetDevices(Dict[str, TargetDevice], metaclass=singleton.Singleton):
             raise exceptions.InvalidDeviceError(dev)
         return dev
 
-    def _reboot_device(self, console, password):
-        """
-        Reboots target device at the end of setup process
+    def _reboot_device(self, console: console.GenericConsole, password: str) -> None:
+        """Reboot target device at the end of setup process.
 
-        Arguments:
-            console {Console} -- console
-        """
+        :param console: serial or SSH console
+        :type console: console.GenericConsole
+        :param password: password
+        :type password: str
 
+        """
         try:
             console.send_cmd("echo " + password + " | sudo -S reboot", 0)
         except exceptions.TimeoutError:
             pass
 
-    def _enable_docker_interface(self, console, timeout, password):
+    def _enable_docker_interface(
+        self, console: console.GenericConsole, timeout: int, password: str
+    ) -> None:
+        """Enable docker TCP/IP interface on localhost.
+
+        :param console: serial or SSH console
+        :type console: console.GenericConsole
+        :param timeout: timeout in seconds
+        :type timeout: int
+        :param password: password
+        :type password: str
+
+        """
         # checks if override folder exists
         folder = (
             console.send_cmd(
@@ -886,8 +946,25 @@ class TargetDevices(Dict[str, TargetDevice], metaclass=singleton.Singleton):
             timeout,
         )
 
-    def _setup_device(self, console, username, password, timeout) -> TargetDevice:
+    def _setup_device(
+        self,
+        console: console.GenericConsole,
+        username: str,
+        password: str,
+        timeout: int,
+    ) -> TargetDevice:
+        """Configure device to be used with ide-extensions.
 
+        :param console: serial or SSH console
+        :type console: console.GenericConsole
+        :param username: username
+        :type username: str
+        :param password: password
+        :type password: str
+        :param timeout: timeout in seconds
+        :type timeout: int
+
+        """
         console.login(username, password, timeout * 2)
 
         logging.warning("DETECT - Login successful.")
@@ -903,7 +980,7 @@ class TargetDevices(Dict[str, TargetDevice], metaclass=singleton.Singleton):
             device.publickey = self[device.id].publickey
             device.privatekey = self[device.id].privatekey
 
-        self._enable_sudo(console, username, password)
+        self._check_sudo(console, username, password)
 
         device.save()
 
@@ -914,13 +991,20 @@ class TargetDevices(Dict[str, TargetDevice], metaclass=singleton.Singleton):
         self[device.id] = device
         return device
 
-    def add_serial_device(self, port, username, password) -> TargetDevice:
-        """Initializes a device from serial console
+    def add_serial_device(
+        self, port: str, username: str, password: str
+    ) -> TargetDevice:
+        """Initialize a device using serial port.
 
-        Arguments:
-            port {str} -- serial port name
-            username {str} -- username
-            password {str} -- password
+        :param port: OS-specific port name (COM*: on Windows, /dev/tty* on Linux)
+        :type port: str
+        :param username: username
+        :type username: str
+        :param password: password
+        :type password: str
+        :returns: device object
+        :rtype: TargetDevice
+
         """
         timeout = config.ServerConfig().commandtimeout
 
@@ -929,13 +1013,20 @@ class TargetDevices(Dict[str, TargetDevice], metaclass=singleton.Singleton):
         with serialconsole.SerialConsole(port) as console:
             return self._setup_device(console, username, password, timeout)
 
-    def add_network_device(self, hostname, username, password) -> TargetDevice:
-        """Initializes a device from serial console
+    def add_network_device(
+        self, hostname: str, username: str, password: str
+    ) -> TargetDevice:
+        """Initialize a device using network.
 
-        Arguments:
-            hostname {str} -- hostname (can be hostname:port)
-            username {str} -- username
-            password {str} -- password
+        :param hostname: device hostname or ip as string
+        :type hostname: str
+        :param username: username
+        :type username: str
+        :param password: password
+        :type password: str
+        :returns: device object
+        :rtype: TargetDevice
+
         """
         timeout = config.ServerConfig().commandtimeout
 
@@ -961,39 +1052,42 @@ class TargetDevices(Dict[str, TargetDevice], metaclass=singleton.Singleton):
 
             return dev
 
-    def refresh_device_info(self, device_id):
-        """Reads back version information from a device
+    def refresh_device_info(self, device_id: str) -> TargetDevice:
+        """Read information from a device.
 
-        Arguments:
-            device_id {str} -- device id (api ensures that is valid)
+        :param device_id: device ID
+        :type device_id: str
 
-        Returns:
-            TargetDevice -- device with update information or None for failure
+        :returns: device object
+        :rtype: TargetDevice
+
         """
         timeout = config.ServerConfig().commandtimeout
+
+        if not device_id in self:
+            raise exceptions.InvalidDeviceError(device_id)
 
         dev = self[device_id]
 
         with sshconsole.SSHConsole(dev.hostname) as console:
+            assert dev.username is not None
+            assert dev.privatekey is not None
             console.connect(dev.username, dev.privatekey)
             self._get_version_info_from_console(console, dev, timeout)
 
         dev.save()
+        return dev
 
     def get_hostname_from_model(self, model: str) -> str:
+        """Return default hostname for specific model.
+
+        :param model: model string
+        :type model: str
+
+        :returns: device name prefix
+        :rtype: str
+
         """
-        return default hostname for specific model
-
-        Arguments:
-            model {str} -- model code (ex: "0015")
-
-        Returns:
-            str -- standard hostname or None
-
-        Raises:
-            exceptions.InvalidModelError
-        """
-
         if model in self.modeldict:
             return self.modeldict[model]
         raise exceptions.InvalidModelError(model)

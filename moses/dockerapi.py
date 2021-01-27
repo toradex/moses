@@ -1,15 +1,18 @@
+"""This module export some functions that access low-level docker api.
+
+This is required to provide some kind of progress during the operation, 
+since high-level API is based on REST calls.add()
+"""
 import six
 import json
 import re
 import progresscookie
-import targetdevice
 import io
 import logging
-import os
 from docker import APIClient, DockerClient
 from docker.errors import BuildError
 from docker.models.images import Image
-from typing import Optional, List, Dict, Tuple
+from typing import Optional, List, Dict, Tuple, Any
 from exceptions import LocalDockerError, RemoteDockerError
 
 
@@ -21,19 +24,23 @@ def build_image(
     platform: Optional[str],
     progress: Optional[progresscookie.ProgressCookie],
 ) -> Optional[Image]:
-    """builds an image returning messages generated during the operation
+    """Build an image returning messages generated during the operation.
 
-    Args:
-        client (DockerClient): client
-        path (str): path of the image folder
-        dockerfile (str): dockerfile path
-        tag (str): tag to be assigned to the newly built image
-        progress (Optional[ProgressCookie]): progress object or None
+    :param client: docker API client
+    :type client: DockerClient
+    :param path: path of the image folder
+    :type path: str
+    :param dockerfile: dockerfile path
+    :type dockerfile: str
+    :param tag: tag to be assigned to the newly built image
+    :type tag: str
+    :param progress: progress object or None
+    :type progress: progresscookie.ProgressCookie, optional
 
-    Returns:
-        Image - Docker image or None
+    :returns: Docker image or None
+    :rtype: Image
+
     """
-
     apiclient = client.api
 
     resp = apiclient.build(
@@ -81,18 +88,43 @@ def build_image(
 
 
 class ReadProgress(io.BufferedReader):
+    """Helper class used to retrieve messages during deploy operation.
+
+    The class wraps a BufferedReader and returns progress information
+    during read operations.
+    """
+
     def __init__(
         self, reader: io.BufferedReader, progress: progresscookie.ProgressCookie
-    ):
+    ) -> None:
+        """Initialize object.
+
+        :param reader: original reader that will be wrapped by the class
+        :type reader: io.BufferedReader
+        :param progress: object used to report progress
+        :type progress: progresscookie.ProgressCookie
+        """
         self.progress = progress
         super().__init__(reader.raw)
 
-    def read(self, size):
+    def read(self, size: Optional[int] = None) -> bytes:
+        """Return data and update progress.
+
+        :param size: number of bytes to read
+        :type size: int
+
+        """
         buffer = super().read(size)
         self.progress.update_progress_minmax(len(buffer))
         return buffer
 
-    def read1(self, size):
+    def read1(self, size: int = 0) -> bytes:
+        """Return data and update progress.
+
+        :param size: number of bytes to read
+        :type size: int
+
+        """
         buffer = super().read1(size)
         self.progress.update_progress_minmax(len(buffer))
         return buffer
@@ -101,18 +133,22 @@ class ReadProgress(io.BufferedReader):
 def load_image(
     client: DockerClient,
     filepath: str,
-    device,
+    device: Any,
     progress: Optional[progresscookie.ProgressCookie],
 ) -> Optional[Image]:
-    """[summary]
+    """Load an image on the target device.
 
-    Args:
-        client (DockerClient): client
-        filepath (str): path of the tar file to be imported
-        progress (Optional[ProgressCookie]): progress object or None
+    :param client: client
+    :type client: DockerClient
+    :param filepath: path of the tar file to be imported
+    :type filepath: str
+    :param device: destination device
+    :param progress: progress object or None
+    :type progress: progresscookie.ProgressCookie, optional
 
-    Returns:
-        Optional[Image]: Image or None
+    :returns: Image or None
+    :rtype: Image | None
+
     """
     apiclient = client.api
 
@@ -167,21 +203,23 @@ def push_image(
     username: str,
     password: str,
     progress: Optional[progresscookie.ProgressCookie],
-):
-    """pushes an image returning messages generated during the operation
+) -> None:
+    """Push an image, returning messages generated during the operation via progress.
 
-    Args:
-        client (DockerClient): client
-        repository (str): full path to docker registry
-        tag (str): tag to be assigned to the newly built image
-        username (str): username for registry authentication
-        password (str): password/token
-        progress (Optional[ProgressCookie]): progress object or None
+    :param client: client
+    :type client: DockerClient
+    :param repository: full path to docker registry
+    :type repository: str
+    :param tag: tag to be assigned to the newly built image
+    :type tag: str
+    :param username: username for registry authentication
+    :type username: str
+    :param password: password/token
+    :type password: str
+    :param progress: progress object or None
+    :type progress: progresscookie.ProgressCookie, optional
 
-    Returns:
-        Image - Docker image or None
     """
-
     apiclient = client.api
 
     auth_config = {"username": username, "password": password}

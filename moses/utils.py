@@ -1,20 +1,20 @@
+"""Utility functions."""
 import re
-from typing import Optional, Any, Callable
+from typing import Generator, Optional, Any, Callable
 
 
 def _replace_tag(
     match: re.Match, tagfn: Callable[[str, str, Any], str], args: Any
 ) -> str:
-    """Replaces a tag with the corresponding value
+    """Replace a tag with the corresponding value.
 
-    Arguments:
-        match {re.Match} -- match object
-        tagfn -- function used to convert tag to value
-        args -- additional arguments passed to tagfn
+    :param match:
+    :type match: re.Match
+    :param tagfn: function used to convert tag to value
+    :type tagfn: Callable[[str, str, Any], str]
+    :returns: value of the tag
+    :rtype: str
 
-    Return:
-
-        str -- value of the tag
     """
     tagstr = str(match.group(0))[2:-2]
 
@@ -36,17 +36,18 @@ tag = re.compile("#%.*?%#")
 
 
 def replace_tags(text: str, tagfn: Callable[[str, str, Any], str], args: Any) -> str:
-    """Replaces tags marked with #%<tag>%# in the source string
+    """Replace tags marked with #%<tag>%# in the source string.
 
-    Args:
-        text (str): source string
-        tagfn (Callable[[str,str,Any],str]): callback used to resolve tags
-        args (Any): arguments passed to the callback
+    :param text: source string
+    :type text: str
+    :param tagfn: callback used to resolve tags
+    :type tagfn: Callable[[str, str, Any], str]
+    :param args: arguments passed to the callback
+    :type args: Any
+    :returns: string with tags replaced
+    :rtype: str
 
-    Returns:
-        str: string with tags replaced
     """
-
     global tag
 
     newtext = text
@@ -60,13 +61,17 @@ def replace_tags(text: str, tagfn: Callable[[str, str, Any], str], args: Any) ->
 def apply_template(
     templatepath: str, outputpath: str, tagfn: Callable[[str, str, Any], str], args: Any
 ) -> None:
-    """Replaces tags in the template file to generate output file
+    """Replace tags in the template file to generate the output file.
 
-    Arguments:
-        templatepath {str} -- template path
-        outputpath {str} -- output file path
-        tagfn -- function used to convert tag to value
-        args -- additional arguments passed to tagfn
+    :param templatepath: path of the template file
+    :type templatepath: str
+    :param outputpath: path of the generated file
+    :type outputpath: str
+    :param tagfn: callback used to resolve tags
+    :type tagfn: Callable[[str, str, Any], str]
+    :param args: arguments passed to the callback
+    :type args: Any
+
     """
     # processes template replacing #%XXX%# escapes
     # with corresponding fields
@@ -77,16 +82,15 @@ def apply_template(
                 out.write(newline)
 
 
-def get_log_chunk(log) -> Optional[str]:
-    """Returns a chunk from the log, avoiding single bytes (from interactive containers)
+def get_log_chunk(log: Generator) -> Optional[str]:
+    """Return a chunk from the log, avoiding single bytes (from interactive containers).
 
-    Args:
-        log (generator): generator
+    :param log: generator
+    :type log: generator
+    :returns: log chunk or None
+    :rtype: str
 
-    Returns:
-        str: log chunk or None
     """
-
     line = ""
     emptylog = True
 

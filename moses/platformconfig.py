@@ -1,5 +1,6 @@
-"""Classes used to manage platforms. Platforms define containers
-that will run on a device.
+"""Classes used to manage platforms.
+
+Platforms define containers that will run on a device.
 """
 import config
 import shutil
@@ -9,21 +10,20 @@ import singleton
 import targetdevice
 import exceptions
 import eula
-from typing import Optional, List, Dict
+from typing import Optional, List, Dict, Any
 
 
 class PlatformConfig(config.ConfigurableObject):
-    """Class used to manage a platform
-    """
+    """Class used to manage a platform."""
 
-    def __init__(self, folder=None, standard=False):
-        """Loads data from a configuration folder
+    def __init__(self, folder: Path = None, standard: bool = False) -> None:
+        """Load data from a configuration folder.
 
-        Arguments:
-            folder {Path} -- Path of the folder used to store
-                             target information
-            standard {bool} -- true if the platform is a standard
-                               one provided directly by toradex
+        :param folder: Path of the folder used to store configuration
+        :type folder: pathlib.Path
+
+        :param standard: True if the plaform is provided by Toradex as part of default setup
+        :type standard: bool
 
         """
         super().__init__(folder)
@@ -33,42 +33,73 @@ class PlatformConfig(config.ConfigurableObject):
         self.name = ""
         self.description = ""
         self.usesysroots = False
-        self.sysroots: Dict[str, List[str]] = None
-        self.sdkcontainer: Optional[str] = None
+        self.sysroots: Dict[str, List[str]] = {}
         self.usesdk = False
         self.supportedmodels = ["*"]
-        self.unsupportedmodels = []
+        self.unsupportedmodels: List[str] = []
         self.container = {"common": None, "debug": None, "release": None}
 
         self.baseimage = {"common": None, "debug": None, "release": None}
 
-        self.sdkcontainer = {"common": None, "debug": None, "release": None}
+        self.sdkcontainer: Dict[str, Optional[str]] = {
+            "common": None,
+            "debug": None,
+            "release": None,
+        }
 
         self.sdkbaseimage = {"common": None, "debug": None, "release": None}
         self.sdkcontainerusername = "build"
         self.sdkcontainerpassword = "build"
 
         self.privileged = False
-        self.ports = {"common": {}, "debug": {}, "release": {}}
-        self.volumes = {"common": {}, "debug": {}, "release": {}}
-        self.devices = {"common": [], "debug": [], "release": []}
+        self.ports: Dict[str, Dict[str, str]] = {
+            "common": {},
+            "debug": {},
+            "release": {},
+        }
+        self.volumes: Dict[str, Dict[str, str]] = {
+            "common": {},
+            "debug": {},
+            "release": {},
+        }
+        self.devices: Dict[str, List[str]] = {"common": [], "debug": [], "release": []}
 
-        self.extraparms = {"common": {}, "debug": {}, "release": {}}
+        self.extraparms: Dict[str, Dict[str, Any]] = {
+            "common": {},
+            "debug": {},
+            "release": {},
+        }
 
-        self.dockercompose = {"common": None, "debug": None, "release": None}
+        self.dockercompose: Dict[str, Optional[str]] = {
+            "common": None,
+            "debug": None,
+            "release": None,
+        }
 
-        self.startupscript = {"common": None, "debug": None, "release": None}
+        self.startupscript: Dict[str, Optional[str]] = {
+            "common": None,
+            "debug": None,
+            "release": None,
+        }
 
-        self.shutdownscript = {"common": None, "debug": None, "release": None}
+        self.shutdownscript: Dict[str, Optional[str]] = {
+            "common": None,
+            "debug": None,
+            "release": None,
+        }
 
-        self.props = {"common": {}, "debug": {}, "release": {}}
+        self.props: Dict[str, Dict[str, str]] = {
+            "common": {},
+            "debug": {},
+            "release": {},
+        }
 
-        self.runtimes = []
+        self.runtimes: List[str] = []
 
-        self.networks = {"common": [], "debug": [], "release": []}
+        self.networks: Dict[str, List[str]] = {"common": [], "debug": [], "release": []}
 
-        self.tags = []
-        self.eulas = []
+        self.tags: List[str] = []
+        self.eulas: List[str] = []
         self.disabled = False
         self.architecture = ""
         self.deprecated = False
@@ -77,36 +108,35 @@ class PlatformConfig(config.ConfigurableObject):
             self.load()
 
     def _build_folder_path(self) -> Path:
+        """Create a folder path concatenating base folder and the platform id."""
+        assert self.id is not None
         if not self.standard:
             return config.ServerConfig().platformspath / self.id
         else:
             return config.ServerConfig().standardplatformspath / self.id
 
-    def destroy(self):
+    def destroy(self) -> None:
+        """Remove the platform (can't be done on standard ones)."""
         if self.standard:
             raise Exception("Can't delete a standard platform.")
         super().destroy()
 
-    def save(self):
-        """Save object data
-        """
-
+    def save(self) -> None:
+        """Save object data."""
         if self.standard:
             raise Exception("Can't overwrite a standard platform.")
 
         super().save()
 
     def is_valid(self, fields: dict = None) -> bool:
-        """Validate fields of current object
+        """Validate the fields of current object.
 
-        Arguments:
-            fields {dictionary} -- dictionary with values, if None then
-                                   self.__dict__ will be used
+        :param fields: object properties as a dictionary, if None is passed then self.__dict__ is used
+        :type fields: dict
+        :returns: true if all fields contain valid values
+        :rtype: bool
 
-        Returns:
-            bool -- true if all fields contain valid values
         """
-
         if fields is None:
             fields = self.__dict__
 
@@ -188,13 +218,13 @@ class PlatformConfig(config.ConfigurableObject):
         return True
 
     def supports_model(self, model: str) -> bool:
-        """Checks if this platform support a specific HW model
+        """Check if this platform support a specific HW model.
 
-        Arguments:
-            model {str} -- Model code (ex: 0028)
+        :param model: Toradex model code
+        :type model: str
+        :returns: true if model is supported
+        :rtype: bool
 
-        Returns:
-            bool -- [description]
         """
         if model in self.unsupportedmodels:
             return False
@@ -205,14 +235,20 @@ class PlatformConfig(config.ConfigurableObject):
         return model in self.supportedmodels
 
     def get_prop(self, configuration: str, prop: str) -> Optional[str]:
-        """Return configuration-specific property or common one
-        if the specific one is not available
+        """Return value for a base property.
 
-        Arguments:
-            configuration {str} -- debug/release
-            prop {str} -- property
+        If there is a configuration-specific value, it's returned, otherwise the function
+        checks for a common value, if even this one has not been configured, then it will
+        return None.
+
+        :param configuration: debug/release
+        :type configuration: str
+        :param prop: property name
+        :type prop: str
+        :returns: property value or None
+        :rtype: str | None
+
         """
-
         if not prop in self.__dict__:
             return None
 
@@ -232,7 +268,21 @@ class PlatformConfig(config.ConfigurableObject):
             return str(self.__dict__[prop])
         return None
 
-    def get_custom_prop(self, configuration: str, property: str):
+    def get_custom_prop(self, configuration: str, property: str) -> Optional[str]:
+        """Return value for a custom property.
+
+        If there is a configuration-specific value, it's returned, otherwise the function
+        checks for a common value, if even this one has not been configured, then it will
+        return None.
+
+        :param configuration: debug/release
+        :type configuration: str
+        :param prop: property name
+        :type prop: str
+        :returns: property value or None
+        :rtype: str | None
+
+        """
         if property in self.props[configuration]:
             return str(self.props[configuration][property])
         if property in self.props["common"]:
@@ -240,17 +290,20 @@ class PlatformConfig(config.ConfigurableObject):
         return None
 
     def _get_value(self, obj: str, tag: str, configuration: str) -> str:
-        """Returns value for a tag in the format application/platform.tag
+        """Return value for a tag checking base and custom properties.
 
-        Arguments:
-            obj {str} -- application/platform
-            tag {str} -- tag
-            configuration {str} -- active configuration
+        This function is used to replace values in templates.
 
-        Returns:
-            str -- value of the tag or empty string
+        :param obj: object name, must be "platform"
+        :type obj: str
+        :param tag: tag name
+        :type tag: str
+        :param configuration: debug/release
+        :type configuration: str
+        :param obj: str:
+        :returns: value of the tag or empty string
+
         """
-
         if obj != "platform":
             return ""
 
@@ -268,15 +321,14 @@ class PlatformConfig(config.ConfigurableObject):
         return value
 
     def check_device_compatibility(self, device: targetdevice.TargetDevice) -> bool:
-        """Checks if a device is compatible with this platform
+        """Check if a device is compatible with this platform.
 
-        Arguments:
-            device {targetdevice.TargetDevice} -- device
+        :param device: target device
+        :type device: targetdevice.TargetDevice
+        :returns: true is device is compatible
+        :rtype: bool
 
-        Returns:
-            bool -- true is device is compatible
         """
-
         if device.model in self.supportedmodels:
             return True
 
@@ -289,10 +341,11 @@ class PlatformConfig(config.ConfigurableObject):
         return False
 
     def get_compatible_devices(self) -> List[targetdevice.TargetDevice]:
-        """Returns a list of devices that are compabile with the platform
+        """Return a list of devices that are compabile with the platform.
 
-        Returns:
-            list -- list of targetdevice.TargetDevice objects
+        :returns: list of devices that are compatible with this platform
+        :rtype: List[targetdevice.TargetDevice]
+
         """
         return [
             d
@@ -302,12 +355,10 @@ class PlatformConfig(config.ConfigurableObject):
 
 
 class PlatformConfigs(Dict[str, PlatformConfig], metaclass=singleton.Singleton):
-    """Class used to manage the collection of platforms
-    """
+    """Class used to manage the collection of platforms."""
 
-    def __init__(self):
-        """ Iterates on all platforms in standard and custom folders
-        """
+    def __init__(self) -> None:
+        """Enumerate platforms in the different folders and load them."""
         path = config.ServerConfig().standardplatformspath
 
         subfolders = [dir for dir in path.iterdir() if dir.is_dir()]
@@ -315,6 +366,7 @@ class PlatformConfigs(Dict[str, PlatformConfig], metaclass=singleton.Singleton):
         for dir in subfolders:
             try:
                 plat = PlatformConfig(dir, True)
+                assert plat.id is not None
                 self[plat.id] = plat
             except Exception as e:
                 logging.exception(
@@ -330,47 +382,48 @@ class PlatformConfigs(Dict[str, PlatformConfig], metaclass=singleton.Singleton):
         for dir in subfolders:
             try:
                 plat = PlatformConfig(dir, False)
+                assert plat.id is not None
                 self[plat.id] = plat
             except:
                 logging.exception("Can't create platform from folder %s.", str(dir))
 
-    def __delitem__(self, key: str):
-        """Removes a platform given its id
+    def __delitem__(self, platform_id: str) -> None:
+        """Remove a platform given its id.
 
-        Args:
-            key (str): id
+        :param platform_id: platform id
+        :type platform_id: str
+
         """
-        if key not in self:
+        if platform_id not in self:
             return
 
-        self[key].destroy()
-        dict.__delitem__(self, key)
+        self[platform_id].destroy()
+        dict.__delitem__(self, platform_id)
 
-    def get_platform(self, platformid: str) -> PlatformConfig:
-        """Returns a platform give its id
+    def get_platform(self, platform_id: str) -> PlatformConfig:
+        """Return a platform given its id.
 
-        Args:
-            platformid (str): id
+        :param platform_id: platform id
+        :type platform_id: str
+        :returns: plaform object
+        :rtype: PlatformConfig
 
-        Raises:
-            exceptions.PlatformDoesNotExistError: [description]
-
-        Returns:
-            PlatformConfig: [description]
         """
-        if platformid not in self:
-            raise exceptions.PlatformDoesNotExistError(platformid)
+        if platform_id not in self:
+            raise exceptions.PlatformDoesNotExistError(platform_id)
 
-        return self[platformid]
+        return self[platform_id]
 
     def get_platforms(self, runtime: Optional[str]) -> List[PlatformConfig]:
-        """Return a list of plaforms supporting a specific runtime
+        """Return a list of plaforms supporting a specific runtime.
 
-        Arguments:
-            runtime {str} -- runtime or None for no filtering
+        Platform that require an EULA won't be returned if the Eula hasn't been accepted
 
-        Returns:
-            list -- list of platforms
+        :param runtime: required runtime or None to get full list of platforms
+        :type runtime: str, optional
+        :returns: list of platform objects
+        :rtype: List[PlatformConfig]
+
         """
         platformslist = []
         eulas = eula.EULAs()
