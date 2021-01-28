@@ -16,7 +16,8 @@ import exceptions
 import datetime
 import targetdevice
 import socket
-import utils
+import logs
+import tags
 import sharedssh
 import stat
 import time
@@ -526,7 +527,7 @@ class ApplicationConfig(config.ConfigurableKeysObject):
             )
             dockerfile = self._get_work_folder() / ("Dockerfile." + configuration)
 
-            utils.apply_template(
+            tags.apply_template(
                 str(dockertemplatefull),
                 str(dockerfile),
                 lambda obj, tag, args: self._get_value(obj, tag, args),
@@ -748,7 +749,7 @@ class ApplicationConfig(config.ConfigurableKeysObject):
 
         for key, value in merged.items():
             if isinstance(value, str):
-                newvalue = utils.replace_tags(
+                newvalue = tags.replace_tags(
                     value,
                     lambda obj, tag, args: self._get_value(obj, tag, args),
                     configuration,
@@ -785,7 +786,7 @@ class ApplicationConfig(config.ConfigurableKeysObject):
             map(
                 lambda i: i
                 if not isinstance(i, str)
-                else utils.replace_tags(
+                else tags.replace_tags(
                     i,
                     lambda obj, tag, args: self._get_value(obj, tag, args),
                     configuration,
@@ -894,7 +895,7 @@ class ApplicationConfig(config.ConfigurableKeysObject):
                 targetscriptpath = self._get_work_folder() / (
                     script + "." + configuration
                 )
-                utils.apply_template(
+                tags.apply_template(
                     str(fullscriptpath),
                     str(targetscriptpath),
                     lambda obj, tag, args: self._get_value(obj, tag, args),
@@ -908,7 +909,7 @@ class ApplicationConfig(config.ConfigurableKeysObject):
                 targetplatformscript = self._get_work_folder() / (
                     platformscript + "." + configuration
                 )
-                utils.apply_template(
+                tags.apply_template(
                     str(fullplatformscript),
                     str(targetplatformscript),
                     lambda obj, tag, args: self._get_value(obj, tag, args),
@@ -1064,7 +1065,7 @@ class ApplicationConfig(config.ConfigurableKeysObject):
                 targetdockercomposepath = self._get_work_folder() / (
                     dockercomposefile + "." + configuration
                 )
-                utils.apply_template(
+                tags.apply_template(
                     str(dockercomposefilepath),
                     str(targetdockercomposepath),
                     lambda obj, tag, args: self._get_value(obj, tag, args),
@@ -1430,7 +1431,7 @@ class ApplicationConfig(config.ConfigurableKeysObject):
 
             dockerfile = self._get_work_folder() / ("Dockerfile_SDK." + configuration)
 
-            utils.apply_template(
+            tags.apply_template(
                 str(dockertemplatefull),
                 str(dockerfile),
                 lambda obj, tag, args: self._get_value(obj, tag, args),
@@ -2015,7 +2016,7 @@ class ApplicationConfig(config.ConfigurableKeysObject):
             log = container.logs(stream=True)
             self.logs[device.id][configuration] = log
 
-        return utils.get_log_chunk(log)
+        return logs.get_log_chunk(log)
 
     boolean_parms: Dict[str, str] = {
         "auto_remove": "--rm",
@@ -2150,7 +2151,7 @@ class ApplicationConfig(config.ConfigurableKeysObject):
         for parm in extraparms:
             rawvalue = extraparms[parm]
 
-            rawvalue = utils.replace_tags(
+            rawvalue = tags.replace_tags(
                 rawvalue,
                 lambda obj, tag, args: self._get_value(obj, tag, args),
                 configuration,
