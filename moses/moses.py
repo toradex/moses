@@ -1,6 +1,5 @@
 #!python3
 """Main entry point and initialization of all global objects."""
-from eula import EULAs
 import sys
 import os
 import logging

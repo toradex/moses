@@ -9,8 +9,7 @@ import re
 import progresscookie
 import io
 import logging
-from docker import APIClient, DockerClient
-from docker.errors import BuildError
+from docker import DockerClient
 from docker.models.images import Image
 from typing import Optional, List, Dict, Tuple, Any
 from exceptions import LocalDockerError, RemoteDockerError

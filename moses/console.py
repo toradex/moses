@@ -1,6 +1,4 @@
 """Base module to implement console features on serial and SSH."""
-import logging
-
 
 
 class GenericConsole:

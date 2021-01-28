@@ -4,7 +4,6 @@ When you add new errors, run this module to re-generate YAML
 that can then be pasted inside the API definition file.
 """
 import os
-import subprocess
 import logging
 import json
 import flask

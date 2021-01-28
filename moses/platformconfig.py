@@ -3,7 +3,6 @@
 Platforms define containers that will run on a device.
 """
 import config
-import shutil
 import logging
 from pathlib import Path
 import singleton
