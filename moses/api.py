@@ -744,13 +744,11 @@ def devices_device_syncfolders_get(
 
         devices[device_id].sync_folders(sourcefolder, destfolder, progress)
 
-        if progress is not None:
-            progress.completed()
+        progresscookie.progress_completed(progress)
 
         return (connexion.NoContent, 200)
     except Exception as e:
-        if progress is not None:
-            progress.report_error(e)
+        progresscookie.progress_report_error(progress, e)
         raise e
 
 
@@ -1037,13 +1035,11 @@ def applications_application_build_get(
 
         applications[application_id].build_image(configuration, progress)
 
-        if progress is not None:
-            progress.completed()
+        progresscookie.progress_completed(progress)
 
         return (connexion.NoContent, 200)
     except Exception as e:
-        if progress is not None:
-            progress.report_error(e)
+        progresscookie.progress_report_error(progress, e)
         raise e
 
 
@@ -1085,13 +1081,11 @@ def applications_application_deploy_get(
 
         app.deploy_image(configuration, devices[device_id], progress)
 
-        if progress is not None:
-            progress.completed()
+        progresscookie.progress_completed(progress)
 
         return (connexion.NoContent, 200)
     except Exception as e:
-        if progress is not None:
-            progress.report_error(e)
+        progresscookie.progress_report_error(progress, e)
         raise e
 
 
@@ -1133,13 +1127,11 @@ def applications_application_run_get(
 
         container = app.run(configuration, devices[device_id], progress)
 
-        if progress is not None:
-            progress.completed()
+        progresscookie.progress_completed(progress)
 
         return (container, 200)
     except Exception as e:
-        if progress is not None:
-            progress.report_error(e)
+        progresscookie.progress_report_error(progress, e)
         raise e
 
 
@@ -1361,13 +1353,11 @@ def applications_application_push_to_registry_get(
 
         app.push_to_registry(configuration, username, password, progress)
 
-        if progress is not None:
-            progress.completed()
+        progresscookie.progress_completed(progress)
 
         return (connexion.NoContent, 200)
     except Exception as e:
-        if progress is not None:
-            progress.report_error(e)
+        progresscookie.progress_report_error(progress, e)
         raise e
 
 
@@ -1413,13 +1403,11 @@ def applications_application_sdk_run_get(
 
         app.start_sdk_container(configuration, build, progress)
 
-        if progress is not None:
-            progress.completed()
+        progresscookie.progress_completed(progress)
 
         return (app.sdksshaddress, 200)
     except Exception as e:
-        if progress is not None:
-            progress.report_error(e)
+        progresscookie.progress_report_error(progress, e)
         raise e
 
 
@@ -1459,13 +1447,11 @@ def applications_application_sdk_update_get(
         app = applications[application_id]
         app.update_sdk(configuration, progress)
 
-        if progress is not None:
-            progress.completed()
+        progresscookie.progress_completed(progress)
 
         return (connexion.NoContent, 200)
     except Exception as e:
-        if progress is not None:
-            progress.report_error(e)
+        progresscookie.progress_report_error(progress, e)
         raise e
 
 
@@ -1519,13 +1505,11 @@ def applications_application_syncfolders_get(
             sourcefolder, configuration, device_id, destfolder, source_is_sdk, progress
         )
 
-        if progress is not None:
-            progress.completed()
+        progresscookie.progress_completed(progress)
 
         return (connexion.NoContent, 200)
     except Exception as e:
-        if progress is not None:
-            progress.report_error(e)
+        progresscookie.progress_report_error(progress, e)
         raise e
 
 
@@ -1590,8 +1574,9 @@ def setup_pullcontainers_get(progress_id: str = None) -> Any:
         max = len(platformconfig.PlatformConfigs()) + 1
 
         try:
-            if progress is not None:
-                progress.append_message(f"Downloading {EMULATION_IMAGE_NAME}")
+            progresscookie.progress_message(
+                progress, f"Downloading {EMULATION_IMAGE_NAME}"
+            )
 
             dockerclient.images.pull(EMULATION_IMAGE_NAME)
         except:
@@ -1614,8 +1599,7 @@ def setup_pullcontainers_get(progress_id: str = None) -> Any:
                 if v is not None:
                     logging.info("PULL - Pulling container %s:%s", v[0], v[1])
                     try:
-                        if progress is not None:
-                            progress.append_message(f"Downloading {v[0]}:{v[1]}")
+                        progresscookie.progress_message(f"Downloading {v[0]}:{v[1]}")
 
                         if plat.architecture is not None and plat.architecture != "":
                             dockerclient.images.pull(
@@ -1633,8 +1617,7 @@ def setup_pullcontainers_get(progress_id: str = None) -> Any:
                 if v is not None:
                     logging.info("PULL - Pulling container %s:%s", v[0], v[1])
                     try:
-                        if progress is not None:
-                            progress.append_message(f"Downloading {v[0]}:{v[1]}")
+                        progresscookie.progress_message(f"Downloading {v[0]}:{v[1]}")
 
                         if plat.architecture is not None and plat.architecture != "":
                             dockerclient.images.pull(
@@ -1656,8 +1639,7 @@ def setup_pullcontainers_get(progress_id: str = None) -> Any:
             progress.completed()
 
     except Exception as ex:
-        if progress is not None:
-            progress.report_error(ex)
+        progresscookie.progress_report_error(progress, ex)
         raise ex
 
     return (connexion.NoContent, 200)
@@ -1695,8 +1677,7 @@ def setup_enableemulation_get(progress_id: str = None) -> Any:
             progress.completed()
 
     except Exception as ex:
-        if progress is not None:
-            progress.report_error(ex)
+        progresscookie.progress_report_error(progress, ex)
         raise ex
 
     return (connexion.NoContent, 200)

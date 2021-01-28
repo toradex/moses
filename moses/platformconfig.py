@@ -32,7 +32,6 @@ class PlatformConfig(config.ConfigurableObject):
         self.name = ""
         self.description = ""
         self.usesysroots = False
-        self.sysroots: Dict[str, List[str]] = {}
         self.usesdk = False
         self.supportedmodels = ["*"]
         self.unsupportedmodels: List[str] = []
@@ -174,27 +173,8 @@ class PlatformConfig(config.ConfigurableObject):
                 return False
 
             if fields["usesysroot"]:
-                if fields["sysroots"] is None or type(fields["sysroots"]) is not dict:
-                    return False
-
-                for k in fields["sysroots"].keys():
-                    if fields["sysroots"][k] is None or len(fields["sysroots"][k]) == 0:
-                        fields["sysroots"][k] = ["/"]
-                    else:
-                        for r in fields["sysroots"][k]:
-                            if not r.startswith("/"):
-                                logging.error(
-                                    "Platform sysroots must be absolute paths in plaform %s.",
-                                    self.id,
-                                )
-                                return False
-
-                    fields["sysroots"][k] = list(
-                        map(
-                            lambda r: r[:-1] if r.endswith("/") else r,
-                            fields["sysroots"][k],
-                        )
-                    )
+                logging.error("sysroots are no longer supported by the ide-backend.")
+                return False
             else:
                 if (
                     fields["sdkcontainer"]["common"] is None
