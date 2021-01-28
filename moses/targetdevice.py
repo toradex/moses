@@ -16,7 +16,7 @@ import sshconsole
 import singleton
 import sharedssh
 import rsync
-import utils
+import logs
 import re
 import progresscookie
 from typing import Optional, List, Dict, Any, Iterable
@@ -621,7 +621,7 @@ class TargetDevice(config.ConfigurableKeysObject):
             log = container.logs(stream=True)
             self.logs[container_id] = log
 
-        return utils.get_log_chunk(log)
+        return logs.get_log_chunk(log)
 
     # support for serialization
 

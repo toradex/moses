@@ -1,6 +1,10 @@
-"""Utility functions."""
+"""Functions used to use tags and teplates.
+
+This is used to convert platform templates into actual dockerfiles and to 
+expand tags into property values.
+"""
 import re
-from typing import Generator, Optional, Any, Callable
+from typing import Any, Callable
 
 
 def _replace_tag(
@@ -80,33 +84,3 @@ def apply_template(
             for _, line in enumerate(inp):
                 newline = replace_tags(line, tagfn, args)
                 out.write(newline)
-
-
-def get_log_chunk(log: Generator) -> Optional[str]:
-    """Return a chunk from the log, avoiding single bytes (from interactive containers).
-
-    :param log: generator
-    :type log: generator
-    :returns: log chunk or None
-    :rtype: str
-
-    """
-    line = ""
-    emptylog = True
-
-    try:
-
-        for b in log:
-            c = b.decode("utf-8")
-            line += c
-            emptylog = False
-            if "\n" in line:
-                break
-
-        if emptylog:
-            return None
-
-        return line
-
-    except StopIteration:
-        return line if not emptylog else None
