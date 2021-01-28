@@ -66,8 +66,7 @@ def build_image(
                 continue
 
             if "stream" in line:
-                if progress is not None:
-                    progress.append_message(line["stream"])
+                progresscookie.progress_message(progress, line["stream"])
                 output.append(line["stream"])
             if "aux" in line:
                 image_id = line["aux"]["ID"]
@@ -166,8 +165,7 @@ def load_image(
     for line in resp:
 
         if "stream" in line:
-            if progress is not None:
-                progress.append_message(line["stream"])
+            progresscookie.progress_message(progress, line["stream"])
             output.append(line["stream"])
 
             match = re.search(
@@ -180,8 +178,7 @@ def load_image(
             msg = line["status"]
             if "id" in line:
                 msg += " - " + line["id"]
-            if progress is not None:
-                progress.append_message(msg)
+            progresscookie.progress_message(progress, msg)
             output.append(line["status"])
         if "error" in line:
             info = None
@@ -245,8 +242,7 @@ def push_image(
                 continue
 
             if "stream" in line:
-                if progress is not None:
-                    progress.append_message(line["stream"])
+                progresscookie.progress_message(progress, line["stream"])
                 output.append(line["stream"])
             if "status" in line:
 

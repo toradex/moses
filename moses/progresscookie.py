@@ -296,3 +296,39 @@ class ProgressCookies(Dict[str, ProgressCookie], metaclass=singleton.Singleton):
             clone = self[cookie_id].freeze(wait_for_update)
             return clone
         return None
+
+
+def progress_message(progress: Optional[ProgressCookie], message: str) -> None:
+    """Output a message or ignore the call if progress is None.
+
+    :param progress: progress object
+    :type progress: ProgressCookie, optional
+    :param message: message
+    :type message: str
+    """
+    if progress is not None:
+        progress.append_message(message)
+
+
+def progress_completed(progress: Optional[ProgressCookie]) -> None:
+    """Output a message or ignore the call if progress is None.
+
+    :param progress: progress object
+    :type progress: ProgressCookie, optional
+    """
+    if progress is not None:
+        progress.completed()
+
+
+def progress_report_error(
+    progress: Optional[ProgressCookie], exception: Exception
+) -> None:
+    """Output a message or ignore the call if progress is None.
+
+    :param progress: progress object
+    :type progress: ProgressCookie, optional
+    :param exception: exception generated during operation
+    :type message: exception
+    """
+    if progress is not None:
+        progress.report_error(exception)
