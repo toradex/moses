@@ -5,12 +5,10 @@ Files can be on the local filesystems or in containers.
 Functions work also on Windows, translating paths and relying on 
 rsync provided by WSL.
 """
-import os
 import platform
 import subprocess
 import exceptions
 import targetdevice
-import logging
 import socket
 import sharedssh
 import progresscookie
