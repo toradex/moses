@@ -4,8 +4,8 @@ All URIs are relative to *http://localhost:5000/api*
 
 Method | HTTP request | Description
 ------------- | ------------- | -------------
-[**SetupEnableemulation**](SetupApi.md#setupenableemulation) | **GET** /setup/enableemulation | enables ARM emulation using qemu
-[**SetupPullcontainers**](SetupApi.md#setuppullcontainers) | **GET** /setup/pullcontainers | pulls containers from docker repo
+[**SetupEnableemulation**](SetupApi.md#setupenableemulation) | **GET** /setup/enableemulation | Enable ARM emulation using binfmt/qemu
+[**SetupPullcontainers**](SetupApi.md#setuppullcontainers) | **GET** /setup/pullcontainers | Pulls container from docker repo
 
 
 
@@ -13,9 +13,9 @@ Method | HTTP request | Description
 
 > void SetupEnableemulation (string progressId = null)
 
-enables ARM emulation using qemu
+Enable ARM emulation using binfmt/qemu
 
-uses binfmt and qemu to enable ARM emulation on non-ARM devices
+Uses an externa container that leverages binfmt and qemu to enable ARM32 and ARM64 emulation on non-ARM devices
 
 ### Example
 
@@ -38,7 +38,7 @@ namespace Example
 
             try
             {
-                // enables ARM emulation using qemu
+                // Enable ARM emulation using binfmt/qemu
                 apiInstance.SetupEnableemulation(progressId);
             }
             catch (ApiException e)
@@ -75,7 +75,7 @@ No authorization required
 ### HTTP response details
 | Status code | Description | Response headers |
 |-------------|-------------|------------------|
-| **200** | Emulation enabled |  -  |
+| **200** | OK |  -  |
 | **500** | Unexpected exception. |  -  |
 | **530** | Local docker exception. |  -  |
 | **551** | Operation has been aborted |  -  |
@@ -90,9 +90,9 @@ No authorization required
 
 > void SetupPullcontainers (string progressId = null)
 
-pulls containers from docker repo
+Pulls container from docker repo
 
-installs base and sdk containers for supported platforms
+Pulls all base and SDK base container for the configured platforms. This can also be used to update them.
 
 ### Example
 
@@ -115,7 +115,7 @@ namespace Example
 
             try
             {
-                // pulls containers from docker repo
+                // Pulls container from docker repo
                 apiInstance.SetupPullcontainers(progressId);
             }
             catch (ApiException e)
@@ -152,7 +152,7 @@ No authorization required
 ### HTTP response details
 | Status code | Description | Response headers |
 |-------------|-------------|------------------|
-| **200** | Containers pulled |  -  |
+| **200** | OK |  -  |
 | **500** | Unexpected exception. |  -  |
 | **530** | Local docker exception. |  -  |
 | **542** | Error pulling images from docker registry. |  -  |

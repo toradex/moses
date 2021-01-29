@@ -4,7 +4,7 @@ All URIs are relative to *http://localhost:5000/api*
 
 Method | HTTP request | Description
 ------------- | ------------- | -------------
-[**EulaGet**](EulasApi.md#eulaget) | **GET** /eulas/{eula_id} | Get an eula
+[**EulaGet**](EulasApi.md#eulaget) | **GET** /eulas/{eula_id} | Get detail about an eula
 [**EulaModify**](EulasApi.md#eulamodify) | **PUT** /eulas/{eula_id} | Change eula properties
 [**EulasGet**](EulasApi.md#eulasget) | **GET** /eulas | Get all eulas
 
@@ -14,9 +14,9 @@ Method | HTTP request | Description
 
 > Eula EulaGet (string eulaId)
 
-Get an eula
+Get detail about an eula
 
-Returns data about a specific eula
+Return detailed information about a specific eula
 
 ### Example
 
@@ -35,11 +35,11 @@ namespace Example
         {
             Configuration.Default.BasePath = "http://localhost:5000/api";
             var apiInstance = new EulasApi(Configuration.Default);
-            var eulaId = eulaId_example;  // string | Id of an eula
+            var eulaId = eulaId_example;  // string | Id of an Eula
 
             try
             {
-                // Get an eula
+                // Get detail about an eula
                 Eula result = apiInstance.EulaGet(eulaId);
                 Debug.WriteLine(result);
             }
@@ -59,7 +59,7 @@ namespace Example
 
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
- **eulaId** | **string**| Id of an eula | 
+ **eulaId** | **string**| Id of an Eula | 
 
 ### Return type
 
@@ -77,8 +77,8 @@ No authorization required
 ### HTTP response details
 | Status code | Description | Response headers |
 |-------------|-------------|------------------|
-| **200** | Returns an eula |  -  |
-| **404** | eula not found |  -  |
+| **200** | Eula Information |  -  |
+| **404** | Eula not found |  -  |
 | **500** | Unexpected exception. |  -  |
 
 [[Back to top]](#)
@@ -112,7 +112,7 @@ namespace Example
         {
             Configuration.Default.BasePath = "http://localhost:5000/api";
             var apiInstance = new EulasApi(Configuration.Default);
-            var eulaId = eulaId_example;  // string | Id of an eula
+            var eulaId = eulaId_example;  // string | Id of an Eula
             var e = new Eula(); // Eula |  (optional) 
 
             try
@@ -137,7 +137,7 @@ namespace Example
 
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
- **eulaId** | **string**| Id of an eula | 
+ **eulaId** | **string**| Id of an Eula | 
  **e** | [**Eula**](Eula.md)|  | [optional] 
 
 ### Return type
@@ -156,8 +156,8 @@ No authorization required
 ### HTTP response details
 | Status code | Description | Response headers |
 |-------------|-------------|------------------|
-| **200** | Returns eula |  -  |
-| **404** | eula not found |  -  |
+| **200** | Eula information |  -  |
+| **404** | Eula not found |  -  |
 | **500** | Unexpected exception. |  -  |
 | **531** | Object Does not have a valid id. |  -  |
 | **532** | Object cannot be saved because it&#39;s in an invalid state. |  -  |
@@ -174,7 +174,7 @@ No authorization required
 
 Get all eulas
 
-Returns all eulas
+Returns information about all eulas required to run different platforms on the system
 
 ### Example
 
@@ -231,7 +231,7 @@ No authorization required
 ### HTTP response details
 | Status code | Description | Response headers |
 |-------------|-------------|------------------|
-| **200** | Successful |  -  |
+| **200** | List of Eulas |  -  |
 | **500** | Unexpected exception. |  -  |
 
 [[Back to top]](#)

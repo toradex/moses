@@ -4,35 +4,35 @@ All URIs are relative to *http://localhost:5000/api*
 
 Method | HTTP request | Description
 ------------- | ------------- | -------------
-[**application_build**](ApplicationsApi.md#application_build) | **GET** /applications/{application_id}/build | Builds container image
-[**application_delete**](ApplicationsApi.md#application_delete) | **DELETE** /applications/{application_id} | Remove an application and all the associated data and containers
-[**application_deploy**](ApplicationsApi.md#application_deploy) | **GET** /applications/{application_id}/deploy | Deploys container image
+[**application_build**](ApplicationsApi.md#application_build) | **GET** /applications/{application_id}/build | Build container image
+[**application_delete**](ApplicationsApi.md#application_delete) | **DELETE** /applications/{application_id} | Remove an application
+[**application_deploy**](ApplicationsApi.md#application_deploy) | **GET** /applications/{application_id}/deploy | Deploy container image
 [**application_get**](ApplicationsApi.md#application_get) | **GET** /applications/{application_id} | Get application
 [**application_getcontainer**](ApplicationsApi.md#application_getcontainer) | **GET** /applications/{application_id}/container | Get container information
-[**application_getcontainer_logs**](ApplicationsApi.md#application_getcontainer_logs) | **GET** /applications/{application_id}/container_logs | Get container log, chunk by chunk
-[**application_getdocker_commandline**](ApplicationsApi.md#application_getdocker_commandline) | **GET** /applications/{application_id}/docker_commandline | Get docker command line used to run the container
+[**application_getcontainer_logs**](ApplicationsApi.md#application_getcontainer_logs) | **GET** /applications/{application_id}/container_logs | Get one of more lines from container logs
+[**application_getdocker_commandline**](ApplicationsApi.md#application_getdocker_commandline) | **GET** /applications/{application_id}/docker_commandline | Get docker command line to run the application/json
 [**application_getdocker_composefile**](ApplicationsApi.md#application_getdocker_composefile) | **GET** /applications/{application_id}/docker_composefile | Get docker compose file
-[**application_getprivatekey**](ApplicationsApi.md#application_getprivatekey) | **GET** /applications/{application_id}/privatekey | Retrieves the path of the RSA private key
+[**application_getprivatekey**](ApplicationsApi.md#application_getprivatekey) | **GET** /applications/{application_id}/privatekey | Get the path of the RSA private key
 [**application_modify**](ApplicationsApi.md#application_modify) | **PUT** /applications/{application_id} | Change application properties
 [**application_push_to_registry**](ApplicationsApi.md#application_push_to_registry) | **GET** /applications/{application_id}/push_to_registry | Push application to docker registry
-[**application_reseal**](ApplicationsApi.md#application_reseal) | **GET** /applications/{application_id}/reseal | Cleans id and keys for git repo uploading
-[**application_run**](ApplicationsApi.md#application_run) | **GET** /applications/{application_id}/run | Runs container image
-[**application_runsdk**](ApplicationsApi.md#application_runsdk) | **GET** /applications/{application_id}/sdk/run | Runs SDK containers
+[**application_reseal**](ApplicationsApi.md#application_reseal) | **GET** /applications/{application_id}/reseal | Clean id and keys from application configuration
+[**application_run**](ApplicationsApi.md#application_run) | **GET** /applications/{application_id}/run | Run container image
+[**application_runsdk**](ApplicationsApi.md#application_runsdk) | **GET** /applications/{application_id}/sdk/run | Run SDK containers
 [**application_sdk_container**](ApplicationsApi.md#application_sdk_container) | **GET** /applications/{application_id}/sdk/container | Get SDK container
-[**application_stop**](ApplicationsApi.md#application_stop) | **GET** /applications/{application_id}/stop | Stops running container image
-[**application_syncfolders**](ApplicationsApi.md#application_syncfolders) | **GET** /applications/{application_id}/syncfolders | synchronizes folders
-[**application_updated**](ApplicationsApi.md#application_updated) | **GET** /applications/{application_id}/updated | Builds container image
+[**application_stop**](ApplicationsApi.md#application_stop) | **GET** /applications/{application_id}/stop | Stop running container image
+[**application_syncfolders**](ApplicationsApi.md#application_syncfolders) | **GET** /applications/{application_id}/syncfolders | Synchronize folders
+[**application_updated**](ApplicationsApi.md#application_updated) | **GET** /applications/{application_id}/updated | Check if container image is up to date
 [**application_updatesdk**](ApplicationsApi.md#application_updatesdk) | **GET** /applications/{application_id}/sdk/update | Update SDK container
-[**applications_create**](ApplicationsApi.md#applications_create) | **GET** /applications/create | Loads an application configuration
-[**applications_load**](ApplicationsApi.md#applications_load) | **GET** /applications/load | Loads an application configuration
+[**applications_create**](ApplicationsApi.md#applications_create) | **GET** /applications/create | Create an application configuration
+[**applications_load**](ApplicationsApi.md#applications_load) | **GET** /applications/load | Load an application configuration
 
 
 # **application_build**
 > application_build(application_id, configuration, progress_id=progress_id)
 
-Builds container image
+Build container image
 
-Builds application release or debug container
+Build application release or debug container
 
 ### Example
 
@@ -58,7 +58,7 @@ configuration = 'configuration_example' # str |
 progress_id = 'progress_id_example' # str | Id of a progress cookie (uuid) (optional)
 
     try:
-        # Builds container image
+        # Build container image
         api_instance.application_build(application_id, configuration, progress_id=progress_id)
     except ApiException as e:
         print("Exception when calling ApplicationsApi->application_build: %s\n" % e)
@@ -88,7 +88,7 @@ No authorization required
 ### HTTP response details
 | Status code | Description | Response headers |
 |-------------|-------------|------------------|
-**200** | Successful build |  -  |
+**200** | OK |  -  |
 **404** | Application not found |  -  |
 **500** | Unexpected exception. |  -  |
 **530** | Local docker exception. |  -  |
@@ -98,6 +98,8 @@ No authorization required
 
 # **application_delete**
 > application_delete(application_id)
+
+Remove an application
 
 Remove an application and all the associated data and containers
 
@@ -123,7 +125,7 @@ with moses_client.ApiClient() as api_client:
     application_id = 'application_id_example' # str | Id of an application (uuid)
 
     try:
-        # Remove an application and all the associated data and containers
+        # Remove an application
         api_instance.application_delete(application_id)
     except ApiException as e:
         print("Exception when calling ApplicationsApi->application_delete: %s\n" % e)
@@ -151,7 +153,7 @@ No authorization required
 ### HTTP response details
 | Status code | Description | Response headers |
 |-------------|-------------|------------------|
-**204** | Application was correctly deleted |  -  |
+**204** | OK |  -  |
 **404** | Application no found |  -  |
 **500** | Unexpected exception. |  -  |
 **530** | Local docker exception. |  -  |
@@ -159,11 +161,11 @@ No authorization required
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
 
 # **application_deploy**
-> application_deploy(application_id, configuration, deviceid, progress_id=progress_id)
+> application_deploy(application_id, configuration, device_id, progress_id=progress_id)
 
-Deploys container image
+Deploy container image
 
-Deploys application release or debug container to target
+Deploy application container to target
 
 ### Example
 
@@ -186,12 +188,12 @@ with moses_client.ApiClient() as api_client:
     api_instance = moses_client.ApplicationsApi(api_client)
     application_id = 'application_id_example' # str | Id of an application (uuid)
 configuration = 'configuration_example' # str | 
-deviceid = 'deviceid_example' # str | 
+device_id = 'device_id_example' # str | Target device serial number
 progress_id = 'progress_id_example' # str | Id of a progress cookie (uuid) (optional)
 
     try:
-        # Deploys container image
-        api_instance.application_deploy(application_id, configuration, deviceid, progress_id=progress_id)
+        # Deploy container image
+        api_instance.application_deploy(application_id, configuration, device_id, progress_id=progress_id)
     except ApiException as e:
         print("Exception when calling ApplicationsApi->application_deploy: %s\n" % e)
 ```
@@ -202,7 +204,7 @@ Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
  **application_id** | **str**| Id of an application (uuid) | 
  **configuration** | **str**|  | 
- **deviceid** | **str**|  | 
+ **device_id** | **str**| Target device serial number | 
  **progress_id** | **str**| Id of a progress cookie (uuid) | [optional] 
 
 ### Return type
@@ -221,7 +223,7 @@ No authorization required
 ### HTTP response details
 | Status code | Description | Response headers |
 |-------------|-------------|------------------|
-**200** | Successful build |  -  |
+**200** | OK |  -  |
 **404** | Application not found |  -  |
 **500** | Unexpected exception. |  -  |
 **520** | Container image not found on local host. |  -  |
@@ -298,11 +300,11 @@ No authorization required
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
 
 # **application_getcontainer**
-> DockerContainer application_getcontainer(application_id, configuration, deviceid)
+> DockerContainer application_getcontainer(application_id, configuration, device_id)
 
 Get container information
 
-Get informations about container
+Get detailed informations about container
 
 ### Example
 
@@ -325,11 +327,11 @@ with moses_client.ApiClient() as api_client:
     api_instance = moses_client.ApplicationsApi(api_client)
     application_id = 'application_id_example' # str | Id of an application (uuid)
 configuration = 'configuration_example' # str | 
-deviceid = 'deviceid_example' # str | 
+device_id = 'device_id_example' # str | Target device serial number
 
     try:
         # Get container information
-        api_response = api_instance.application_getcontainer(application_id, configuration, deviceid)
+        api_response = api_instance.application_getcontainer(application_id, configuration, device_id)
         pprint(api_response)
     except ApiException as e:
         print("Exception when calling ApplicationsApi->application_getcontainer: %s\n" % e)
@@ -341,7 +343,7 @@ Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
  **application_id** | **str**| Id of an application (uuid) | 
  **configuration** | **str**|  | 
- **deviceid** | **str**|  | 
+ **device_id** | **str**| Target device serial number | 
 
 ### Return type
 
@@ -359,7 +361,7 @@ No authorization required
 ### HTTP response details
 | Status code | Description | Response headers |
 |-------------|-------------|------------------|
-**200** | Returns application container |  -  |
+**200** | Container information |  -  |
 **404** | Application not found |  -  |
 **500** | Unexpected exception. |  -  |
 **520** | Container image not found on local host. |  -  |
@@ -371,9 +373,9 @@ No authorization required
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
 
 # **application_getcontainer_logs**
-> str application_getcontainer_logs(application_id, configuration, deviceid, restart=restart)
+> str application_getcontainer_logs(application_id, configuration, device_id, restart=restart)
 
-Get container log, chunk by chunk
+Get one of more lines from container logs
 
 Return one chunk of log (one or more lines), blocking if no data is available
 
@@ -398,12 +400,12 @@ with moses_client.ApiClient() as api_client:
     api_instance = moses_client.ApplicationsApi(api_client)
     application_id = 'application_id_example' # str | Id of an application (uuid)
 configuration = 'configuration_example' # str | 
-deviceid = 'deviceid_example' # str | 
+device_id = 'device_id_example' # str | Target device serial number
 restart = False # bool | when true reads the lock back from beginning (optional) (default to False)
 
     try:
-        # Get container log, chunk by chunk
-        api_response = api_instance.application_getcontainer_logs(application_id, configuration, deviceid, restart=restart)
+        # Get one of more lines from container logs
+        api_response = api_instance.application_getcontainer_logs(application_id, configuration, device_id, restart=restart)
         pprint(api_response)
     except ApiException as e:
         print("Exception when calling ApplicationsApi->application_getcontainer_logs: %s\n" % e)
@@ -415,7 +417,7 @@ Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
  **application_id** | **str**| Id of an application (uuid) | 
  **configuration** | **str**|  | 
- **deviceid** | **str**|  | 
+ **device_id** | **str**| Target device serial number | 
  **restart** | **bool**| when true reads the lock back from beginning | [optional] [default to False]
 
 ### Return type
@@ -434,7 +436,7 @@ No authorization required
 ### HTTP response details
 | Status code | Description | Response headers |
 |-------------|-------------|------------------|
-**200** | Returns a chunk of logs |  -  |
+**200** | Log entries as text |  -  |
 **204** | No content |  -  |
 **404** | Application not found |  -  |
 **500** | Unexpected exception. |  -  |
@@ -446,9 +448,9 @@ No authorization required
 # **application_getdocker_commandline**
 > str application_getdocker_commandline(application_id, configuration)
 
-Get docker command line used to run the container
+Get docker command line to run the application/json
 
-returns full command line
+Return the full docker command line that can be used to run the application container
 
 ### Example
 
@@ -473,7 +475,7 @@ with moses_client.ApiClient() as api_client:
 configuration = 'configuration_example' # str | 
 
     try:
-        # Get docker command line used to run the container
+        # Get docker command line to run the application/json
         api_response = api_instance.application_getdocker_commandline(application_id, configuration)
         pprint(api_response)
     except ApiException as e:
@@ -503,7 +505,7 @@ No authorization required
 ### HTTP response details
 | Status code | Description | Response headers |
 |-------------|-------------|------------------|
-**200** | Returns command line |  -  |
+**200** | Command line |  -  |
 **404** | Application not found |  -  |
 **500** | Unexpected exception. |  -  |
 **525** | Remote docker exception. |  -  |
@@ -516,7 +518,7 @@ No authorization required
 
 Get docker compose file
 
-returns docker compose file that can be used to run the container and its dependencies
+Return docker-compose file that can be used to run the application container and its dependencies
 
 ### Example
 
@@ -571,7 +573,7 @@ No authorization required
 ### HTTP response details
 | Status code | Description | Response headers |
 |-------------|-------------|------------------|
-**200** | Docker-compose file as string with *nix line ending |  -  |
+**200** | Docker-compose file (string with *nix line endings) |  -  |
 **404** | Application not found |  -  |
 **500** | Unexpected exception. |  -  |
 **525** | Remote docker exception. |  -  |
@@ -582,9 +584,9 @@ No authorization required
 # **application_getprivatekey**
 > str application_getprivatekey(application_id)
 
-Retrieves the path of the RSA private key
+Get the path of the RSA private key
 
-The application stores the public key inside the container if ssh is enabled, this key will allow passwordless connections to a running instance
+Retrieve the path of the private key that allows passwordless connection to the container. The application stores the public key inside the container if ssh is enabled (usually for debug builds only)
 
 ### Example
 
@@ -608,7 +610,7 @@ with moses_client.ApiClient() as api_client:
     application_id = 'application_id_example' # str | Id of an application (uuid)
 
     try:
-        # Retrieves the path of the RSA private key
+        # Get the path of the RSA private key
         api_response = api_instance.application_getprivatekey(application_id)
         pprint(api_response)
     except ApiException as e:
@@ -637,7 +639,7 @@ No authorization required
 ### HTTP response details
 | Status code | Description | Response headers |
 |-------------|-------------|------------------|
-**200** | key returned |  -  |
+**200** | Key path |  -  |
 **404** | Application not found |  -  |
 **500** | Unexpected exception. |  -  |
 
@@ -648,7 +650,7 @@ No authorization required
 
 Change application properties
 
-Changes specified properties on an applicaton
+Changes specified properties on an application
 
 ### Example
 
@@ -703,7 +705,7 @@ No authorization required
 ### HTTP response details
 | Status code | Description | Response headers |
 |-------------|-------------|------------------|
-**200** | Returns application |  -  |
+**200** | Application information |  -  |
 **404** | Application not found |  -  |
 **500** | Unexpected exception. |  -  |
 **531** | Object Does not have a valid id. |  -  |
@@ -716,7 +718,7 @@ No authorization required
 
 Push application to docker registry
 
-Push application to a docker registry, using authentication
+Push application's container to a docker registry, using authentication
 
 ### Example
 
@@ -776,7 +778,7 @@ No authorization required
 ### HTTP response details
 | Status code | Description | Response headers |
 |-------------|-------------|------------------|
-**200** | Push completed |  -  |
+**200** | OK |  -  |
 **404** | Application not found |  -  |
 **500** | Unexpected exception. |  -  |
 **520** | Container image not found on local host. |  -  |
@@ -789,9 +791,9 @@ No authorization required
 # **application_reseal**
 > application_reseal(application_id)
 
-Cleans id and keys for git repo uploading
+Clean id and keys from application configuration
 
-This operation make the application no longer valid, but allow you to upload it to a git repo from where it can be cloned/forked re-generating new ids every time, avoiding that all clones share the same id/keys.
+This operation make the application no longer valid, but allow you to upload it to a git repo from where it can be cloned/forked. Id and keys will be re-generated on next re-opening of the application, leading to different names for the images etc.
 
 ### Example
 
@@ -815,7 +817,7 @@ with moses_client.ApiClient() as api_client:
     application_id = 'application_id_example' # str | Id of an application (uuid)
 
     try:
-        # Cleans id and keys for git repo uploading
+        # Clean id and keys from application configuration
         api_instance.application_reseal(application_id)
     except ApiException as e:
         print("Exception when calling ApplicationsApi->application_reseal: %s\n" % e)
@@ -843,17 +845,17 @@ No authorization required
 ### HTTP response details
 | Status code | Description | Response headers |
 |-------------|-------------|------------------|
-**200** | key returned |  -  |
+**200** | OK |  -  |
 **404** | Application not found |  -  |
 
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
 
 # **application_run**
-> DockerContainer application_run(application_id, configuration, deviceid, progress_id=progress_id)
+> DockerContainer application_run(application_id, configuration, device_id, progress_id=progress_id)
 
-Runs container image
+Run container image
 
-Runs application release or debug container on target, if the application is already running, restarts it
+Run the application release or debug container on target, if the application is already running, restarts it
 
 ### Example
 
@@ -876,12 +878,12 @@ with moses_client.ApiClient() as api_client:
     api_instance = moses_client.ApplicationsApi(api_client)
     application_id = 'application_id_example' # str | Id of an application (uuid)
 configuration = 'configuration_example' # str | 
-deviceid = 'deviceid_example' # str | 
+device_id = 'device_id_example' # str | Target device serial number
 progress_id = 'progress_id_example' # str | Id of a progress cookie (uuid) (optional)
 
     try:
-        # Runs container image
-        api_response = api_instance.application_run(application_id, configuration, deviceid, progress_id=progress_id)
+        # Run container image
+        api_response = api_instance.application_run(application_id, configuration, device_id, progress_id=progress_id)
         pprint(api_response)
     except ApiException as e:
         print("Exception when calling ApplicationsApi->application_run: %s\n" % e)
@@ -893,7 +895,7 @@ Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
  **application_id** | **str**| Id of an application (uuid) | 
  **configuration** | **str**|  | 
- **deviceid** | **str**|  | 
+ **device_id** | **str**| Target device serial number | 
  **progress_id** | **str**| Id of a progress cookie (uuid) | [optional] 
 
 ### Return type
@@ -912,7 +914,7 @@ No authorization required
 ### HTTP response details
 | Status code | Description | Response headers |
 |-------------|-------------|------------------|
-**200** | Returns application container |  -  |
+**200** | Container information |  -  |
 **404** | Application not found |  -  |
 **500** | Unexpected exception. |  -  |
 **520** | Container image not found on local host. |  -  |
@@ -927,9 +929,9 @@ No authorization required
 # **application_runsdk**
 > InlineResponse200 application_runsdk(application_id, configuration, build=build, progress_id=progress_id)
 
-Runs SDK containers
+Run SDK containers
 
-Runs SDK container and return its IP and SSH port
+Run SDK container and return its IP and SSH port
 
 ### Example
 
@@ -956,7 +958,7 @@ build = True # bool |  (optional) (default to True)
 progress_id = 'progress_id_example' # str | Id of a progress cookie (uuid) (optional)
 
     try:
-        # Runs SDK containers
+        # Run SDK containers
         api_response = api_instance.application_runsdk(application_id, configuration, build=build, progress_id=progress_id)
         pprint(api_response)
     except ApiException as e:
@@ -988,7 +990,7 @@ No authorization required
 ### HTTP response details
 | Status code | Description | Response headers |
 |-------------|-------------|------------------|
-**200** | Container started |  -  |
+**200** | IP and port of the SSH port exposed by container (if any) |  -  |
 **404** | Application not found |  -  |
 **500** | Unexpected exception. |  -  |
 **520** | Container image not found on local host. |  -  |
@@ -1002,7 +1004,7 @@ No authorization required
 
 Get SDK container
 
-Get SDK container for check if it is running
+Get SDK container information (can be used to check if it's running)
 
 ### Example
 
@@ -1057,7 +1059,7 @@ No authorization required
 ### HTTP response details
 | Status code | Description | Response headers |
 |-------------|-------------|------------------|
-**200** | Returns application container |  -  |
+**200** | Container information |  -  |
 **204** | No content |  -  |
 **404** | Application not found |  -  |
 **500** | Unexpected exception. |  -  |
@@ -1068,11 +1070,11 @@ No authorization required
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
 
 # **application_stop**
-> application_stop(application_id, configuration, deviceid)
+> application_stop(application_id, configuration, device_id)
 
-Stops running container image
+Stop running container image
 
-Stops application release or debug container currently running on target
+Stop application release or debug container currently running on target, operation succeeds even if the container is not running
 
 ### Example
 
@@ -1095,11 +1097,11 @@ with moses_client.ApiClient() as api_client:
     api_instance = moses_client.ApplicationsApi(api_client)
     application_id = 'application_id_example' # str | Id of an application (uuid)
 configuration = 'configuration_example' # str | 
-deviceid = 'deviceid_example' # str | 
+device_id = 'device_id_example' # str | Target device serial number
 
     try:
-        # Stops running container image
-        api_instance.application_stop(application_id, configuration, deviceid)
+        # Stop running container image
+        api_instance.application_stop(application_id, configuration, device_id)
     except ApiException as e:
         print("Exception when calling ApplicationsApi->application_stop: %s\n" % e)
 ```
@@ -1110,7 +1112,7 @@ Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
  **application_id** | **str**| Id of an application (uuid) | 
  **configuration** | **str**|  | 
- **deviceid** | **str**|  | 
+ **device_id** | **str**| Target device serial number | 
 
 ### Return type
 
@@ -1128,7 +1130,7 @@ No authorization required
 ### HTTP response details
 | Status code | Description | Response headers |
 |-------------|-------------|------------------|
-**200** | Application stopped (returned also if not running) |  -  |
+**200** | OK |  -  |
 **500** | Unexpected exception. |  -  |
 **525** | Remote docker exception. |  -  |
 **533** | SSH error. |  -  |
@@ -1137,11 +1139,11 @@ No authorization required
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
 
 # **application_syncfolders**
-> application_syncfolders(application_id, sourcefolder, configuration, deviceid, destfolder, source_is_sdk=source_is_sdk, progress_id=progress_id)
+> application_syncfolders(application_id, sourcefolder, configuration, device_id, destfolder, source_is_sdk=source_is_sdk, progress_id=progress_id)
 
-synchronizes folders
+Synchronize folders
 
-synchronizes folders between host/SDK container and application container
+Synchronizes folders between host/SDK container and the application container
 
 ### Example
 
@@ -1165,14 +1167,14 @@ with moses_client.ApiClient() as api_client:
     application_id = 'application_id_example' # str | Id of an application (uuid)
 sourcefolder = 'sourcefolder_example' # str | 
 configuration = 'configuration_example' # str | 
-deviceid = 'deviceid_example' # str | 
+device_id = 'device_id_example' # str | Target device serial number
 destfolder = 'destfolder_example' # str | 
 source_is_sdk = True # bool |  (optional)
 progress_id = 'progress_id_example' # str | Id of a progress cookie (uuid) (optional)
 
     try:
-        # synchronizes folders
-        api_instance.application_syncfolders(application_id, sourcefolder, configuration, deviceid, destfolder, source_is_sdk=source_is_sdk, progress_id=progress_id)
+        # Synchronize folders
+        api_instance.application_syncfolders(application_id, sourcefolder, configuration, device_id, destfolder, source_is_sdk=source_is_sdk, progress_id=progress_id)
     except ApiException as e:
         print("Exception when calling ApplicationsApi->application_syncfolders: %s\n" % e)
 ```
@@ -1184,7 +1186,7 @@ Name | Type | Description  | Notes
  **application_id** | **str**| Id of an application (uuid) | 
  **sourcefolder** | **str**|  | 
  **configuration** | **str**|  | 
- **deviceid** | **str**|  | 
+ **device_id** | **str**| Target device serial number | 
  **destfolder** | **str**|  | 
  **source_is_sdk** | **bool**|  | [optional] 
  **progress_id** | **str**| Id of a progress cookie (uuid) | [optional] 
@@ -1205,7 +1207,7 @@ No authorization required
 ### HTTP response details
 | Status code | Description | Response headers |
 |-------------|-------------|------------------|
-**200** | Sysroot updated |  -  |
+**200** | OK |  -  |
 **404** | Application not found |  -  |
 **500** | Unexpected exception. |  -  |
 **520** | Container image not found on local host. |  -  |
@@ -1223,9 +1225,9 @@ No authorization required
 # **application_updated**
 > bool application_updated(application_id, configuration)
 
-Builds container image
+Check if container image is up to date
 
-Builds application release or debug container
+Check if some properties have been changed after the last build of the configuration-specific container image
 
 ### Example
 
@@ -1250,7 +1252,7 @@ with moses_client.ApiClient() as api_client:
 configuration = 'configuration_example' # str | 
 
     try:
-        # Builds container image
+        # Check if container image is up to date
         api_response = api_instance.application_updated(application_id, configuration)
         pprint(api_response)
     except ApiException as e:
@@ -1280,7 +1282,7 @@ No authorization required
 ### HTTP response details
 | Status code | Description | Response headers |
 |-------------|-------------|------------------|
-**200** | Successful build |  -  |
+**200** | true if container image is up to date |  -  |
 **404** | Application not found |  -  |
 **500** | Unexpected exception. |  -  |
 **530** | Local docker exception. |  -  |
@@ -1292,7 +1294,7 @@ No authorization required
 
 Update SDK container
 
-Updates/rebuilds the SDK container by adding new dev libraries or synchronizing sysroots
+Update the SDK container by adding new dev libraries or synchronizing sysroots
 
 ### Example
 
@@ -1348,7 +1350,7 @@ No authorization required
 ### HTTP response details
 | Status code | Description | Response headers |
 |-------------|-------------|------------------|
-**200** | SDK updated |  -  |
+**200** | OK |  -  |
 **404** | Application not found |  -  |
 **500** | Unexpected exception. |  -  |
 **520** | Container image not found on local host. |  -  |
@@ -1361,9 +1363,9 @@ No authorization required
 # **applications_create**
 > Application applications_create(platform_id, path, username=username)
 
-Loads an application configuration
+Create an application configuration
 
-Returns data about an application
+Create a new application configuration
 
 ### Example
 
@@ -1389,7 +1391,7 @@ path = 'path_example' # str |
 username = 'username_example' # str |  (optional)
 
     try:
-        # Loads an application configuration
+        # Create an application configuration
         api_response = api_instance.applications_create(platform_id, path, username=username)
         pprint(api_response)
     except ApiException as e:
@@ -1420,7 +1422,7 @@ No authorization required
 ### HTTP response details
 | Status code | Description | Response headers |
 |-------------|-------------|------------------|
-**200** | Returns an application |  -  |
+**200** | Application information |  -  |
 **404** | Platform not found |  -  |
 **500** | Unexpected exception. |  -  |
 **531** | Object Does not have a valid id. |  -  |
@@ -1432,9 +1434,9 @@ No authorization required
 # **applications_load**
 > Application applications_load(path)
 
-Loads an application configuration
+Load an application configuration
 
-Returns data about an application
+Load an application configuration from the local filesystem
 
 ### Example
 
@@ -1458,7 +1460,7 @@ with moses_client.ApiClient() as api_client:
     path = 'path_example' # str | 
 
     try:
-        # Loads an application configuration
+        # Load an application configuration
         api_response = api_instance.applications_load(path)
         pprint(api_response)
     except ApiException as e:

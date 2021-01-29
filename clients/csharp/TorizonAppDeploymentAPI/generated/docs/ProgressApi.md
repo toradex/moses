@@ -4,9 +4,9 @@ All URIs are relative to *http://localhost:5000/api*
 
 Method | HTTP request | Description
 ------------- | ------------- | -------------
-[**ProgressCreate**](ProgressApi.md#progresscreate) | **GET** /progress/create | create a progress ID
-[**ProgressDelete**](ProgressApi.md#progressdelete) | **GET** /progress/delete | releases progress ID
-[**ProgressStatus**](ProgressApi.md#progressstatus) | **GET** /progress/status | retrieves status of an operation
+[**ProgressCreate**](ProgressApi.md#progresscreate) | **GET** /progress/create | Create a progress cookie
+[**ProgressDelete**](ProgressApi.md#progressdelete) | **GET** /progress/delete | Releases a progress cookie
+[**ProgressStatus**](ProgressApi.md#progressstatus) | **GET** /progress/status | Retrieves progress status of an operation
 
 
 
@@ -14,9 +14,9 @@ Method | HTTP request | Description
 
 > Progress ProgressCreate ()
 
-create a progress ID
+Create a progress cookie
 
-creates a progress object that could be used to monitor and abort operations
+Creates a progress object that could be used to monitor and abort operations. A progress cookie must be used only for one operation and deleted when the operation is completed/terminated. Passing cookies to different operations may lead to unpredictable results.
 
 ### Example
 
@@ -38,7 +38,7 @@ namespace Example
 
             try
             {
-                // create a progress ID
+                // Create a progress cookie
                 Progress result = apiInstance.ProgressCreate();
                 Debug.WriteLine(result);
             }
@@ -73,7 +73,7 @@ No authorization required
 ### HTTP response details
 | Status code | Description | Response headers |
 |-------------|-------------|------------------|
-| **200** | returns new empty object |  -  |
+| **200** | Progress Cookie Information |  -  |
 | **500** | Unexpected exception. |  -  |
 
 [[Back to top]](#)
@@ -86,9 +86,9 @@ No authorization required
 
 > void ProgressDelete (string progressId = null)
 
-releases progress ID
+Releases a progress cookie
 
-if delete is called when the operation is still pending, it will try to abort it
+Delete the cookie. If the operation is pending this will cause an abort. Abort may not be immediate. After the delete operation is called the progress cookie id is no longer valid and further calls to progress_status will fail.
 
 ### Example
 
@@ -111,7 +111,7 @@ namespace Example
 
             try
             {
-                // releases progress ID
+                // Releases a progress cookie
                 apiInstance.ProgressDelete(progressId);
             }
             catch (ApiException e)
@@ -161,9 +161,9 @@ No authorization required
 
 > Progress ProgressStatus (string progressId = null)
 
-retrieves status of an operation
+Retrieves progress status of an operation
 
-return status and messages, it's blocking until status changes or the operation is completed
+Return the operation status, progress and messages, it's blocking until status changes or the operation is completed/terminated. Not all operations can return detailed progress information (it may not be possible to estimate it before starting the actual operation), it's anyway granted that an operation will report its completition/failure.
 
 ### Example
 
@@ -186,7 +186,7 @@ namespace Example
 
             try
             {
-                // retrieves status of an operation
+                // Retrieves progress status of an operation
                 Progress result = apiInstance.ProgressStatus(progressId);
                 Debug.WriteLine(result);
             }
@@ -224,7 +224,7 @@ No authorization required
 ### HTTP response details
 | Status code | Description | Response headers |
 |-------------|-------------|------------------|
-| **200** | return object with up to date information |  -  |
+| **200** | Progress Cookie Information |  -  |
 | **404** | Object not found |  -  |
 | **500** | Unexpected exception. |  -  |
 

@@ -4,7 +4,7 @@ All URIs are relative to *http://localhost:5000/api*
 
 Method | HTTP request | Description
 ------------- | ------------- | -------------
-[**eula_get**](EulasApi.md#eula_get) | **GET** /eulas/{eula_id} | Get an eula
+[**eula_get**](EulasApi.md#eula_get) | **GET** /eulas/{eula_id} | Get detail about an eula
 [**eula_modify**](EulasApi.md#eula_modify) | **PUT** /eulas/{eula_id} | Change eula properties
 [**eulas_get**](EulasApi.md#eulas_get) | **GET** /eulas | Get all eulas
 
@@ -12,9 +12,9 @@ Method | HTTP request | Description
 # **eula_get**
 > Eula eula_get(eula_id)
 
-Get an eula
+Get detail about an eula
 
-Returns data about a specific eula
+Return detailed information about a specific eula
 
 ### Example
 
@@ -35,10 +35,10 @@ configuration = moses_client.Configuration(
 with moses_client.ApiClient() as api_client:
     # Create an instance of the API class
     api_instance = moses_client.EulasApi(api_client)
-    eula_id = 'eula_id_example' # str | Id of an eula
+    eula_id = 'eula_id_example' # str | Id of an Eula
 
     try:
-        # Get an eula
+        # Get detail about an eula
         api_response = api_instance.eula_get(eula_id)
         pprint(api_response)
     except ApiException as e:
@@ -49,7 +49,7 @@ with moses_client.ApiClient() as api_client:
 
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
- **eula_id** | **str**| Id of an eula | 
+ **eula_id** | **str**| Id of an Eula | 
 
 ### Return type
 
@@ -67,8 +67,8 @@ No authorization required
 ### HTTP response details
 | Status code | Description | Response headers |
 |-------------|-------------|------------------|
-**200** | Returns an eula |  -  |
-**404** | eula not found |  -  |
+**200** | Eula Information |  -  |
+**404** | Eula not found |  -  |
 **500** | Unexpected exception. |  -  |
 
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
@@ -99,7 +99,7 @@ configuration = moses_client.Configuration(
 with moses_client.ApiClient() as api_client:
     # Create an instance of the API class
     api_instance = moses_client.EulasApi(api_client)
-    eula_id = 'eula_id_example' # str | Id of an eula
+    eula_id = 'eula_id_example' # str | Id of an Eula
 e = moses_client.Eula() # Eula |  (optional)
 
     try:
@@ -114,7 +114,7 @@ e = moses_client.Eula() # Eula |  (optional)
 
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
- **eula_id** | **str**| Id of an eula | 
+ **eula_id** | **str**| Id of an Eula | 
  **e** | [**Eula**](Eula.md)|  | [optional] 
 
 ### Return type
@@ -133,8 +133,8 @@ No authorization required
 ### HTTP response details
 | Status code | Description | Response headers |
 |-------------|-------------|------------------|
-**200** | Returns eula |  -  |
-**404** | eula not found |  -  |
+**200** | Eula information |  -  |
+**404** | Eula not found |  -  |
 **500** | Unexpected exception. |  -  |
 **531** | Object Does not have a valid id. |  -  |
 **532** | Object cannot be saved because it&#39;s in an invalid state. |  -  |
@@ -146,7 +146,7 @@ No authorization required
 
 Get all eulas
 
-Returns all eulas
+Returns information about all eulas required to run different platforms on the system
 
 ### Example
 
@@ -195,7 +195,7 @@ No authorization required
 ### HTTP response details
 | Status code | Description | Response headers |
 |-------------|-------------|------------------|
-**200** | Successful |  -  |
+**200** | List of Eulas |  -  |
 **500** | Unexpected exception. |  -  |
 
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
