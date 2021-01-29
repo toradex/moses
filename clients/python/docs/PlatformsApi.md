@@ -4,17 +4,17 @@ All URIs are relative to *http://localhost:5000/api*
 
 Method | HTTP request | Description
 ------------- | ------------- | -------------
-[**platform_compatibledevices_get**](PlatformsApi.md#platform_compatibledevices_get) | **GET** /platforms/{platform_id}/compatibledevices | get compatible devices
-[**platform_get**](PlatformsApi.md#platform_get) | **GET** /platforms/{platform_id} | Get a platform
+[**platform_compatibledevices_get**](PlatformsApi.md#platform_compatibledevices_get) | **GET** /platforms/{platform_id}/compatibledevices | Get compatible devices
+[**platform_get**](PlatformsApi.md#platform_get) | **GET** /platforms/{platform_id} | Get detailed information about a platform
 [**platforms_get**](PlatformsApi.md#platforms_get) | **GET** /platforms | Get all platforms
 
 
 # **platform_compatibledevices_get**
 > list[TargetDevice] platform_compatibledevices_get(platform_id)
 
-get compatible devices
+Get compatible devices
 
-Returns a list of devices that are compatible with the platform
+Return a list of devices that are compatible with the platform
 
 ### Example
 
@@ -38,7 +38,7 @@ with moses_client.ApiClient() as api_client:
     platform_id = 'platform_id_example' # str | Id of a platform formatted as name_version
 
     try:
-        # get compatible devices
+        # Get compatible devices
         api_response = api_instance.platform_compatibledevices_get(platform_id)
         pprint(api_response)
     except ApiException as e:
@@ -67,7 +67,7 @@ No authorization required
 ### HTTP response details
 | Status code | Description | Response headers |
 |-------------|-------------|------------------|
-**200** | Returns a list of devices |  -  |
+**200** | List of devices |  -  |
 **404** | Platform not found |  -  |
 **500** | Unexpected exception. |  -  |
 
@@ -76,9 +76,9 @@ No authorization required
 # **platform_get**
 > Platform platform_get(platform_id)
 
-Get a platform
+Get detailed information about a platform
 
-Returns data about a specific platform
+Return data about a specific platform
 
 ### Example
 
@@ -102,7 +102,7 @@ with moses_client.ApiClient() as api_client:
     platform_id = 'platform_id_example' # str | Id of a platform formatted as name_version
 
     try:
-        # Get a platform
+        # Get detailed information about a platform
         api_response = api_instance.platform_get(platform_id)
         pprint(api_response)
     except ApiException as e:
@@ -131,7 +131,7 @@ No authorization required
 ### HTTP response details
 | Status code | Description | Response headers |
 |-------------|-------------|------------------|
-**200** | Returns a platform |  -  |
+**200** | Platform information |  -  |
 **404** | Platform not found |  -  |
 **500** | Unexpected exception. |  -  |
 
@@ -142,7 +142,7 @@ No authorization required
 
 Get all platforms
 
-Returns all configured platforms
+Return all configured platforms
 
 ### Example
 
@@ -195,7 +195,7 @@ No authorization required
 ### HTTP response details
 | Status code | Description | Response headers |
 |-------------|-------------|------------------|
-**200** | Successful |  -  |
+**200** | List of Platforms |  -  |
 **500** | Unexpected exception. |  -  |
 
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)

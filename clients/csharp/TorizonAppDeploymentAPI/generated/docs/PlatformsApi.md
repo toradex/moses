@@ -4,8 +4,8 @@ All URIs are relative to *http://localhost:5000/api*
 
 Method | HTTP request | Description
 ------------- | ------------- | -------------
-[**PlatformCompatibledevicesGet**](PlatformsApi.md#platformcompatibledevicesget) | **GET** /platforms/{platform_id}/compatibledevices | get compatible devices
-[**PlatformGet**](PlatformsApi.md#platformget) | **GET** /platforms/{platform_id} | Get a platform
+[**PlatformCompatibledevicesGet**](PlatformsApi.md#platformcompatibledevicesget) | **GET** /platforms/{platform_id}/compatibledevices | Get compatible devices
+[**PlatformGet**](PlatformsApi.md#platformget) | **GET** /platforms/{platform_id} | Get detailed information about a platform
 [**PlatformsGet**](PlatformsApi.md#platformsget) | **GET** /platforms | Get all platforms
 
 
@@ -14,9 +14,9 @@ Method | HTTP request | Description
 
 > List&lt;TargetDevice&gt; PlatformCompatibledevicesGet (string platformId)
 
-get compatible devices
+Get compatible devices
 
-Returns a list of devices that are compatible with the platform
+Return a list of devices that are compatible with the platform
 
 ### Example
 
@@ -39,7 +39,7 @@ namespace Example
 
             try
             {
-                // get compatible devices
+                // Get compatible devices
                 List<TargetDevice> result = apiInstance.PlatformCompatibledevicesGet(platformId);
                 Debug.WriteLine(result);
             }
@@ -77,7 +77,7 @@ No authorization required
 ### HTTP response details
 | Status code | Description | Response headers |
 |-------------|-------------|------------------|
-| **200** | Returns a list of devices |  -  |
+| **200** | List of devices |  -  |
 | **404** | Platform not found |  -  |
 | **500** | Unexpected exception. |  -  |
 
@@ -91,9 +91,9 @@ No authorization required
 
 > Platform PlatformGet (string platformId)
 
-Get a platform
+Get detailed information about a platform
 
-Returns data about a specific platform
+Return data about a specific platform
 
 ### Example
 
@@ -116,7 +116,7 @@ namespace Example
 
             try
             {
-                // Get a platform
+                // Get detailed information about a platform
                 Platform result = apiInstance.PlatformGet(platformId);
                 Debug.WriteLine(result);
             }
@@ -154,7 +154,7 @@ No authorization required
 ### HTTP response details
 | Status code | Description | Response headers |
 |-------------|-------------|------------------|
-| **200** | Returns a platform |  -  |
+| **200** | Platform information |  -  |
 | **404** | Platform not found |  -  |
 | **500** | Unexpected exception. |  -  |
 
@@ -170,7 +170,7 @@ No authorization required
 
 Get all platforms
 
-Returns all configured platforms
+Return all configured platforms
 
 ### Example
 
@@ -231,7 +231,7 @@ No authorization required
 ### HTTP response details
 | Status code | Description | Response headers |
 |-------------|-------------|------------------|
-| **200** | Successful |  -  |
+| **200** | List of Platforms |  -  |
 | **500** | Unexpected exception. |  -  |
 
 [[Back to top]](#)

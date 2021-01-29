@@ -15,7 +15,7 @@ Method | HTTP request | Description
 
 Docker version info
 
-returns docker version information
+Return docker version information
 
 ### Example
 
@@ -87,7 +87,7 @@ No authorization required
 
 APP/API version
 
-returns app and API version
+Return app and API version
 
 ### Example
 

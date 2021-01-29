@@ -4,16 +4,16 @@ All URIs are relative to *http://localhost:5000/api*
 
 Method | HTTP request | Description
 ------------- | ------------- | -------------
-[**setup_enableemulation**](SetupApi.md#setup_enableemulation) | **GET** /setup/enableemulation | enables ARM emulation using qemu
-[**setup_pullcontainers**](SetupApi.md#setup_pullcontainers) | **GET** /setup/pullcontainers | pulls containers from docker repo
+[**setup_enableemulation**](SetupApi.md#setup_enableemulation) | **GET** /setup/enableemulation | Enable ARM emulation using binfmt/qemu
+[**setup_pullcontainers**](SetupApi.md#setup_pullcontainers) | **GET** /setup/pullcontainers | Pulls container from docker repo
 
 
 # **setup_enableemulation**
 > setup_enableemulation(progress_id=progress_id)
 
-enables ARM emulation using qemu
+Enable ARM emulation using binfmt/qemu
 
-uses binfmt and qemu to enable ARM emulation on non-ARM devices
+Uses an externa container that leverages binfmt and qemu to enable ARM32 and ARM64 emulation on non-ARM devices
 
 ### Example
 
@@ -37,7 +37,7 @@ with moses_client.ApiClient() as api_client:
     progress_id = 'progress_id_example' # str | Id of a progress cookie (uuid) (optional)
 
     try:
-        # enables ARM emulation using qemu
+        # Enable ARM emulation using binfmt/qemu
         api_instance.setup_enableemulation(progress_id=progress_id)
     except ApiException as e:
         print("Exception when calling SetupApi->setup_enableemulation: %s\n" % e)
@@ -65,7 +65,7 @@ No authorization required
 ### HTTP response details
 | Status code | Description | Response headers |
 |-------------|-------------|------------------|
-**200** | Emulation enabled |  -  |
+**200** | OK |  -  |
 **500** | Unexpected exception. |  -  |
 **530** | Local docker exception. |  -  |
 **551** | Operation has been aborted |  -  |
@@ -75,9 +75,9 @@ No authorization required
 # **setup_pullcontainers**
 > setup_pullcontainers(progress_id=progress_id)
 
-pulls containers from docker repo
+Pulls container from docker repo
 
-installs base and sdk containers for supported platforms
+Pulls all base and SDK base container for the configured platforms. This can also be used to update them.
 
 ### Example
 
@@ -101,7 +101,7 @@ with moses_client.ApiClient() as api_client:
     progress_id = 'progress_id_example' # str | Id of a progress cookie (uuid) (optional)
 
     try:
-        # pulls containers from docker repo
+        # Pulls container from docker repo
         api_instance.setup_pullcontainers(progress_id=progress_id)
     except ApiException as e:
         print("Exception when calling SetupApi->setup_pullcontainers: %s\n" % e)
@@ -129,7 +129,7 @@ No authorization required
 ### HTTP response details
 | Status code | Description | Response headers |
 |-------------|-------------|------------------|
-**200** | Containers pulled |  -  |
+**200** | OK |  -  |
 **500** | Unexpected exception. |  -  |
 **530** | Local docker exception. |  -  |
 **542** | Error pulling images from docker registry. |  -  |

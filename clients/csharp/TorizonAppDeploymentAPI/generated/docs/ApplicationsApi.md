@@ -4,27 +4,27 @@ All URIs are relative to *http://localhost:5000/api*
 
 Method | HTTP request | Description
 ------------- | ------------- | -------------
-[**ApplicationBuild**](ApplicationsApi.md#applicationbuild) | **GET** /applications/{application_id}/build | Builds container image
-[**ApplicationDelete**](ApplicationsApi.md#applicationdelete) | **DELETE** /applications/{application_id} | Remove an application and all the associated data and containers
-[**ApplicationDeploy**](ApplicationsApi.md#applicationdeploy) | **GET** /applications/{application_id}/deploy | Deploys container image
+[**ApplicationBuild**](ApplicationsApi.md#applicationbuild) | **GET** /applications/{application_id}/build | Build container image
+[**ApplicationDelete**](ApplicationsApi.md#applicationdelete) | **DELETE** /applications/{application_id} | Remove an application
+[**ApplicationDeploy**](ApplicationsApi.md#applicationdeploy) | **GET** /applications/{application_id}/deploy | Deploy container image
 [**ApplicationGet**](ApplicationsApi.md#applicationget) | **GET** /applications/{application_id} | Get application
 [**ApplicationGetcontainer**](ApplicationsApi.md#applicationgetcontainer) | **GET** /applications/{application_id}/container | Get container information
-[**ApplicationGetcontainerLogs**](ApplicationsApi.md#applicationgetcontainerlogs) | **GET** /applications/{application_id}/container_logs | Get container log, chunk by chunk
-[**ApplicationGetdockerCommandline**](ApplicationsApi.md#applicationgetdockercommandline) | **GET** /applications/{application_id}/docker_commandline | Get docker command line used to run the container
+[**ApplicationGetcontainerLogs**](ApplicationsApi.md#applicationgetcontainerlogs) | **GET** /applications/{application_id}/container_logs | Get one of more lines from container logs
+[**ApplicationGetdockerCommandline**](ApplicationsApi.md#applicationgetdockercommandline) | **GET** /applications/{application_id}/docker_commandline | Get docker command line to run the application/json
 [**ApplicationGetdockerComposefile**](ApplicationsApi.md#applicationgetdockercomposefile) | **GET** /applications/{application_id}/docker_composefile | Get docker compose file
-[**ApplicationGetprivatekey**](ApplicationsApi.md#applicationgetprivatekey) | **GET** /applications/{application_id}/privatekey | Retrieves the path of the RSA private key
+[**ApplicationGetprivatekey**](ApplicationsApi.md#applicationgetprivatekey) | **GET** /applications/{application_id}/privatekey | Get the path of the RSA private key
 [**ApplicationModify**](ApplicationsApi.md#applicationmodify) | **PUT** /applications/{application_id} | Change application properties
 [**ApplicationPushToRegistry**](ApplicationsApi.md#applicationpushtoregistry) | **GET** /applications/{application_id}/push_to_registry | Push application to docker registry
-[**ApplicationReseal**](ApplicationsApi.md#applicationreseal) | **GET** /applications/{application_id}/reseal | Cleans id and keys for git repo uploading
-[**ApplicationRun**](ApplicationsApi.md#applicationrun) | **GET** /applications/{application_id}/run | Runs container image
-[**ApplicationRunsdk**](ApplicationsApi.md#applicationrunsdk) | **GET** /applications/{application_id}/sdk/run | Runs SDK containers
+[**ApplicationReseal**](ApplicationsApi.md#applicationreseal) | **GET** /applications/{application_id}/reseal | Clean id and keys from application configuration
+[**ApplicationRun**](ApplicationsApi.md#applicationrun) | **GET** /applications/{application_id}/run | Run container image
+[**ApplicationRunsdk**](ApplicationsApi.md#applicationrunsdk) | **GET** /applications/{application_id}/sdk/run | Run SDK containers
 [**ApplicationSdkContainer**](ApplicationsApi.md#applicationsdkcontainer) | **GET** /applications/{application_id}/sdk/container | Get SDK container
-[**ApplicationStop**](ApplicationsApi.md#applicationstop) | **GET** /applications/{application_id}/stop | Stops running container image
-[**ApplicationSyncfolders**](ApplicationsApi.md#applicationsyncfolders) | **GET** /applications/{application_id}/syncfolders | synchronizes folders
-[**ApplicationUpdated**](ApplicationsApi.md#applicationupdated) | **GET** /applications/{application_id}/updated | Builds container image
+[**ApplicationStop**](ApplicationsApi.md#applicationstop) | **GET** /applications/{application_id}/stop | Stop running container image
+[**ApplicationSyncfolders**](ApplicationsApi.md#applicationsyncfolders) | **GET** /applications/{application_id}/syncfolders | Synchronize folders
+[**ApplicationUpdated**](ApplicationsApi.md#applicationupdated) | **GET** /applications/{application_id}/updated | Check if container image is up to date
 [**ApplicationUpdatesdk**](ApplicationsApi.md#applicationupdatesdk) | **GET** /applications/{application_id}/sdk/update | Update SDK container
-[**ApplicationsCreate**](ApplicationsApi.md#applicationscreate) | **GET** /applications/create | Loads an application configuration
-[**ApplicationsLoad**](ApplicationsApi.md#applicationsload) | **GET** /applications/load | Loads an application configuration
+[**ApplicationsCreate**](ApplicationsApi.md#applicationscreate) | **GET** /applications/create | Create an application configuration
+[**ApplicationsLoad**](ApplicationsApi.md#applicationsload) | **GET** /applications/load | Load an application configuration
 
 
 
@@ -32,9 +32,9 @@ Method | HTTP request | Description
 
 > void ApplicationBuild (string applicationId, string configuration, string progressId = null)
 
-Builds container image
+Build container image
 
-Builds application release or debug container
+Build application release or debug container
 
 ### Example
 
@@ -59,7 +59,7 @@ namespace Example
 
             try
             {
-                // Builds container image
+                // Build container image
                 apiInstance.ApplicationBuild(applicationId, configuration, progressId);
             }
             catch (ApiException e)
@@ -98,7 +98,7 @@ No authorization required
 ### HTTP response details
 | Status code | Description | Response headers |
 |-------------|-------------|------------------|
-| **200** | Successful build |  -  |
+| **200** | OK |  -  |
 | **404** | Application not found |  -  |
 | **500** | Unexpected exception. |  -  |
 | **530** | Local docker exception. |  -  |
@@ -113,6 +113,8 @@ No authorization required
 ## ApplicationDelete
 
 > void ApplicationDelete (string applicationId)
+
+Remove an application
 
 Remove an application and all the associated data and containers
 
@@ -137,7 +139,7 @@ namespace Example
 
             try
             {
-                // Remove an application and all the associated data and containers
+                // Remove an application
                 apiInstance.ApplicationDelete(applicationId);
             }
             catch (ApiException e)
@@ -174,7 +176,7 @@ No authorization required
 ### HTTP response details
 | Status code | Description | Response headers |
 |-------------|-------------|------------------|
-| **204** | Application was correctly deleted |  -  |
+| **204** | OK |  -  |
 | **404** | Application no found |  -  |
 | **500** | Unexpected exception. |  -  |
 | **530** | Local docker exception. |  -  |
@@ -187,11 +189,11 @@ No authorization required
 
 ## ApplicationDeploy
 
-> void ApplicationDeploy (string applicationId, string configuration, string deviceid, string progressId = null)
+> void ApplicationDeploy (string applicationId, string configuration, string deviceId, string progressId = null)
 
-Deploys container image
+Deploy container image
 
-Deploys application release or debug container to target
+Deploy application container to target
 
 ### Example
 
@@ -212,13 +214,13 @@ namespace Example
             var apiInstance = new ApplicationsApi(Configuration.Default);
             var applicationId = applicationId_example;  // string | Id of an application (uuid)
             var configuration = configuration_example;  // string | 
-            var deviceid = deviceid_example;  // string | 
+            var deviceId = deviceId_example;  // string | Target device serial number
             var progressId = progressId_example;  // string | Id of a progress cookie (uuid) (optional) 
 
             try
             {
-                // Deploys container image
-                apiInstance.ApplicationDeploy(applicationId, configuration, deviceid, progressId);
+                // Deploy container image
+                apiInstance.ApplicationDeploy(applicationId, configuration, deviceId, progressId);
             }
             catch (ApiException e)
             {
@@ -238,7 +240,7 @@ Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
  **applicationId** | **string**| Id of an application (uuid) | 
  **configuration** | **string**|  | 
- **deviceid** | **string**|  | 
+ **deviceId** | **string**| Target device serial number | 
  **progressId** | **string**| Id of a progress cookie (uuid) | [optional] 
 
 ### Return type
@@ -257,7 +259,7 @@ No authorization required
 ### HTTP response details
 | Status code | Description | Response headers |
 |-------------|-------------|------------------|
-| **200** | Successful build |  -  |
+| **200** | OK |  -  |
 | **404** | Application not found |  -  |
 | **500** | Unexpected exception. |  -  |
 | **520** | Container image not found on local host. |  -  |
@@ -352,11 +354,11 @@ No authorization required
 
 ## ApplicationGetcontainer
 
-> DockerContainer ApplicationGetcontainer (string applicationId, string configuration, string deviceid)
+> DockerContainer ApplicationGetcontainer (string applicationId, string configuration, string deviceId)
 
 Get container information
 
-Get informations about container
+Get detailed informations about container
 
 ### Example
 
@@ -377,12 +379,12 @@ namespace Example
             var apiInstance = new ApplicationsApi(Configuration.Default);
             var applicationId = applicationId_example;  // string | Id of an application (uuid)
             var configuration = configuration_example;  // string | 
-            var deviceid = deviceid_example;  // string | 
+            var deviceId = deviceId_example;  // string | Target device serial number
 
             try
             {
                 // Get container information
-                DockerContainer result = apiInstance.ApplicationGetcontainer(applicationId, configuration, deviceid);
+                DockerContainer result = apiInstance.ApplicationGetcontainer(applicationId, configuration, deviceId);
                 Debug.WriteLine(result);
             }
             catch (ApiException e)
@@ -403,7 +405,7 @@ Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
  **applicationId** | **string**| Id of an application (uuid) | 
  **configuration** | **string**|  | 
- **deviceid** | **string**|  | 
+ **deviceId** | **string**| Target device serial number | 
 
 ### Return type
 
@@ -421,7 +423,7 @@ No authorization required
 ### HTTP response details
 | Status code | Description | Response headers |
 |-------------|-------------|------------------|
-| **200** | Returns application container |  -  |
+| **200** | Container information |  -  |
 | **404** | Application not found |  -  |
 | **500** | Unexpected exception. |  -  |
 | **520** | Container image not found on local host. |  -  |
@@ -438,9 +440,9 @@ No authorization required
 
 ## ApplicationGetcontainerLogs
 
-> string ApplicationGetcontainerLogs (string applicationId, string configuration, string deviceid, bool? restart = null)
+> string ApplicationGetcontainerLogs (string applicationId, string configuration, string deviceId, bool? restart = null)
 
-Get container log, chunk by chunk
+Get one of more lines from container logs
 
 Return one chunk of log (one or more lines), blocking if no data is available
 
@@ -463,13 +465,13 @@ namespace Example
             var apiInstance = new ApplicationsApi(Configuration.Default);
             var applicationId = applicationId_example;  // string | Id of an application (uuid)
             var configuration = configuration_example;  // string | 
-            var deviceid = deviceid_example;  // string | 
+            var deviceId = deviceId_example;  // string | Target device serial number
             var restart = true;  // bool? | when true reads the lock back from beginning (optional)  (default to false)
 
             try
             {
-                // Get container log, chunk by chunk
-                string result = apiInstance.ApplicationGetcontainerLogs(applicationId, configuration, deviceid, restart);
+                // Get one of more lines from container logs
+                string result = apiInstance.ApplicationGetcontainerLogs(applicationId, configuration, deviceId, restart);
                 Debug.WriteLine(result);
             }
             catch (ApiException e)
@@ -490,7 +492,7 @@ Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
  **applicationId** | **string**| Id of an application (uuid) | 
  **configuration** | **string**|  | 
- **deviceid** | **string**|  | 
+ **deviceId** | **string**| Target device serial number | 
  **restart** | **bool?**| when true reads the lock back from beginning | [optional] [default to false]
 
 ### Return type
@@ -509,7 +511,7 @@ No authorization required
 ### HTTP response details
 | Status code | Description | Response headers |
 |-------------|-------------|------------------|
-| **200** | Returns a chunk of logs |  -  |
+| **200** | Log entries as text |  -  |
 | **204** | No content |  -  |
 | **404** | Application not found |  -  |
 | **500** | Unexpected exception. |  -  |
@@ -526,9 +528,9 @@ No authorization required
 
 > string ApplicationGetdockerCommandline (string applicationId, string configuration)
 
-Get docker command line used to run the container
+Get docker command line to run the application/json
 
-returns full command line
+Return the full docker command line that can be used to run the application container
 
 ### Example
 
@@ -552,7 +554,7 @@ namespace Example
 
             try
             {
-                // Get docker command line used to run the container
+                // Get docker command line to run the application/json
                 string result = apiInstance.ApplicationGetdockerCommandline(applicationId, configuration);
                 Debug.WriteLine(result);
             }
@@ -591,7 +593,7 @@ No authorization required
 ### HTTP response details
 | Status code | Description | Response headers |
 |-------------|-------------|------------------|
-| **200** | Returns command line |  -  |
+| **200** | Command line |  -  |
 | **404** | Application not found |  -  |
 | **500** | Unexpected exception. |  -  |
 | **525** | Remote docker exception. |  -  |
@@ -609,7 +611,7 @@ No authorization required
 
 Get docker compose file
 
-returns docker compose file that can be used to run the container and its dependencies
+Return docker-compose file that can be used to run the application container and its dependencies
 
 ### Example
 
@@ -672,7 +674,7 @@ No authorization required
 ### HTTP response details
 | Status code | Description | Response headers |
 |-------------|-------------|------------------|
-| **200** | Docker-compose file as string with *nix line ending |  -  |
+| **200** | Docker-compose file (string with *nix line endings) |  -  |
 | **404** | Application not found |  -  |
 | **500** | Unexpected exception. |  -  |
 | **525** | Remote docker exception. |  -  |
@@ -688,9 +690,9 @@ No authorization required
 
 > string ApplicationGetprivatekey (string applicationId)
 
-Retrieves the path of the RSA private key
+Get the path of the RSA private key
 
-The application stores the public key inside the container if ssh is enabled, this key will allow passwordless connections to a running instance
+Retrieve the path of the private key that allows passwordless connection to the container. The application stores the public key inside the container if ssh is enabled (usually for debug builds only)
 
 ### Example
 
@@ -713,7 +715,7 @@ namespace Example
 
             try
             {
-                // Retrieves the path of the RSA private key
+                // Get the path of the RSA private key
                 string result = apiInstance.ApplicationGetprivatekey(applicationId);
                 Debug.WriteLine(result);
             }
@@ -751,7 +753,7 @@ No authorization required
 ### HTTP response details
 | Status code | Description | Response headers |
 |-------------|-------------|------------------|
-| **200** | key returned |  -  |
+| **200** | Key path |  -  |
 | **404** | Application not found |  -  |
 | **500** | Unexpected exception. |  -  |
 
@@ -767,7 +769,7 @@ No authorization required
 
 Change application properties
 
-Changes specified properties on an applicaton
+Changes specified properties on an application
 
 ### Example
 
@@ -830,7 +832,7 @@ No authorization required
 ### HTTP response details
 | Status code | Description | Response headers |
 |-------------|-------------|------------------|
-| **200** | Returns application |  -  |
+| **200** | Application information |  -  |
 | **404** | Application not found |  -  |
 | **500** | Unexpected exception. |  -  |
 | **531** | Object Does not have a valid id. |  -  |
@@ -848,7 +850,7 @@ No authorization required
 
 Push application to docker registry
 
-Push application to a docker registry, using authentication
+Push application's container to a docker registry, using authentication
 
 ### Example
 
@@ -916,7 +918,7 @@ No authorization required
 ### HTTP response details
 | Status code | Description | Response headers |
 |-------------|-------------|------------------|
-| **200** | Push completed |  -  |
+| **200** | OK |  -  |
 | **404** | Application not found |  -  |
 | **500** | Unexpected exception. |  -  |
 | **520** | Container image not found on local host. |  -  |
@@ -934,9 +936,9 @@ No authorization required
 
 > void ApplicationReseal (string applicationId)
 
-Cleans id and keys for git repo uploading
+Clean id and keys from application configuration
 
-This operation make the application no longer valid, but allow you to upload it to a git repo from where it can be cloned/forked re-generating new ids every time, avoiding that all clones share the same id/keys.
+This operation make the application no longer valid, but allow you to upload it to a git repo from where it can be cloned/forked. Id and keys will be re-generated on next re-opening of the application, leading to different names for the images etc.
 
 ### Example
 
@@ -959,7 +961,7 @@ namespace Example
 
             try
             {
-                // Cleans id and keys for git repo uploading
+                // Clean id and keys from application configuration
                 apiInstance.ApplicationReseal(applicationId);
             }
             catch (ApiException e)
@@ -996,7 +998,7 @@ No authorization required
 ### HTTP response details
 | Status code | Description | Response headers |
 |-------------|-------------|------------------|
-| **200** | key returned |  -  |
+| **200** | OK |  -  |
 | **404** | Application not found |  -  |
 
 [[Back to top]](#)
@@ -1007,11 +1009,11 @@ No authorization required
 
 ## ApplicationRun
 
-> DockerContainer ApplicationRun (string applicationId, string configuration, string deviceid, string progressId = null)
+> DockerContainer ApplicationRun (string applicationId, string configuration, string deviceId, string progressId = null)
 
-Runs container image
+Run container image
 
-Runs application release or debug container on target, if the application is already running, restarts it
+Run the application release or debug container on target, if the application is already running, restarts it
 
 ### Example
 
@@ -1032,13 +1034,13 @@ namespace Example
             var apiInstance = new ApplicationsApi(Configuration.Default);
             var applicationId = applicationId_example;  // string | Id of an application (uuid)
             var configuration = configuration_example;  // string | 
-            var deviceid = deviceid_example;  // string | 
+            var deviceId = deviceId_example;  // string | Target device serial number
             var progressId = progressId_example;  // string | Id of a progress cookie (uuid) (optional) 
 
             try
             {
-                // Runs container image
-                DockerContainer result = apiInstance.ApplicationRun(applicationId, configuration, deviceid, progressId);
+                // Run container image
+                DockerContainer result = apiInstance.ApplicationRun(applicationId, configuration, deviceId, progressId);
                 Debug.WriteLine(result);
             }
             catch (ApiException e)
@@ -1059,7 +1061,7 @@ Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
  **applicationId** | **string**| Id of an application (uuid) | 
  **configuration** | **string**|  | 
- **deviceid** | **string**|  | 
+ **deviceId** | **string**| Target device serial number | 
  **progressId** | **string**| Id of a progress cookie (uuid) | [optional] 
 
 ### Return type
@@ -1078,7 +1080,7 @@ No authorization required
 ### HTTP response details
 | Status code | Description | Response headers |
 |-------------|-------------|------------------|
-| **200** | Returns application container |  -  |
+| **200** | Container information |  -  |
 | **404** | Application not found |  -  |
 | **500** | Unexpected exception. |  -  |
 | **520** | Container image not found on local host. |  -  |
@@ -1098,9 +1100,9 @@ No authorization required
 
 > InlineResponse200 ApplicationRunsdk (string applicationId, string configuration, bool? build = null, string progressId = null)
 
-Runs SDK containers
+Run SDK containers
 
-Runs SDK container and return its IP and SSH port
+Run SDK container and return its IP and SSH port
 
 ### Example
 
@@ -1126,7 +1128,7 @@ namespace Example
 
             try
             {
-                // Runs SDK containers
+                // Run SDK containers
                 InlineResponse200 result = apiInstance.ApplicationRunsdk(applicationId, configuration, build, progressId);
                 Debug.WriteLine(result);
             }
@@ -1167,7 +1169,7 @@ No authorization required
 ### HTTP response details
 | Status code | Description | Response headers |
 |-------------|-------------|------------------|
-| **200** | Container started |  -  |
+| **200** | IP and port of the SSH port exposed by container (if any) |  -  |
 | **404** | Application not found |  -  |
 | **500** | Unexpected exception. |  -  |
 | **520** | Container image not found on local host. |  -  |
@@ -1186,7 +1188,7 @@ No authorization required
 
 Get SDK container
 
-Get SDK container for check if it is running
+Get SDK container information (can be used to check if it's running)
 
 ### Example
 
@@ -1249,7 +1251,7 @@ No authorization required
 ### HTTP response details
 | Status code | Description | Response headers |
 |-------------|-------------|------------------|
-| **200** | Returns application container |  -  |
+| **200** | Container information |  -  |
 | **204** | No content |  -  |
 | **404** | Application not found |  -  |
 | **500** | Unexpected exception. |  -  |
@@ -1265,11 +1267,11 @@ No authorization required
 
 ## ApplicationStop
 
-> void ApplicationStop (string applicationId, string configuration, string deviceid)
+> void ApplicationStop (string applicationId, string configuration, string deviceId)
 
-Stops running container image
+Stop running container image
 
-Stops application release or debug container currently running on target
+Stop application release or debug container currently running on target, operation succeeds even if the container is not running
 
 ### Example
 
@@ -1290,12 +1292,12 @@ namespace Example
             var apiInstance = new ApplicationsApi(Configuration.Default);
             var applicationId = applicationId_example;  // string | Id of an application (uuid)
             var configuration = configuration_example;  // string | 
-            var deviceid = deviceid_example;  // string | 
+            var deviceId = deviceId_example;  // string | Target device serial number
 
             try
             {
-                // Stops running container image
-                apiInstance.ApplicationStop(applicationId, configuration, deviceid);
+                // Stop running container image
+                apiInstance.ApplicationStop(applicationId, configuration, deviceId);
             }
             catch (ApiException e)
             {
@@ -1315,7 +1317,7 @@ Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
  **applicationId** | **string**| Id of an application (uuid) | 
  **configuration** | **string**|  | 
- **deviceid** | **string**|  | 
+ **deviceId** | **string**| Target device serial number | 
 
 ### Return type
 
@@ -1333,7 +1335,7 @@ No authorization required
 ### HTTP response details
 | Status code | Description | Response headers |
 |-------------|-------------|------------------|
-| **200** | Application stopped (returned also if not running) |  -  |
+| **200** | OK |  -  |
 | **500** | Unexpected exception. |  -  |
 | **525** | Remote docker exception. |  -  |
 | **533** | SSH error. |  -  |
@@ -1347,11 +1349,11 @@ No authorization required
 
 ## ApplicationSyncfolders
 
-> void ApplicationSyncfolders (string applicationId, string sourcefolder, string configuration, string deviceid, string destfolder, bool? sourceIsSdk = null, string progressId = null)
+> void ApplicationSyncfolders (string applicationId, string sourcefolder, string configuration, string deviceId, string destfolder, bool? sourceIsSdk = null, string progressId = null)
 
-synchronizes folders
+Synchronize folders
 
-synchronizes folders between host/SDK container and application container
+Synchronizes folders between host/SDK container and the application container
 
 ### Example
 
@@ -1373,15 +1375,15 @@ namespace Example
             var applicationId = applicationId_example;  // string | Id of an application (uuid)
             var sourcefolder = sourcefolder_example;  // string | 
             var configuration = configuration_example;  // string | 
-            var deviceid = deviceid_example;  // string | 
+            var deviceId = deviceId_example;  // string | Target device serial number
             var destfolder = destfolder_example;  // string | 
             var sourceIsSdk = true;  // bool? |  (optional) 
             var progressId = progressId_example;  // string | Id of a progress cookie (uuid) (optional) 
 
             try
             {
-                // synchronizes folders
-                apiInstance.ApplicationSyncfolders(applicationId, sourcefolder, configuration, deviceid, destfolder, sourceIsSdk, progressId);
+                // Synchronize folders
+                apiInstance.ApplicationSyncfolders(applicationId, sourcefolder, configuration, deviceId, destfolder, sourceIsSdk, progressId);
             }
             catch (ApiException e)
             {
@@ -1402,7 +1404,7 @@ Name | Type | Description  | Notes
  **applicationId** | **string**| Id of an application (uuid) | 
  **sourcefolder** | **string**|  | 
  **configuration** | **string**|  | 
- **deviceid** | **string**|  | 
+ **deviceId** | **string**| Target device serial number | 
  **destfolder** | **string**|  | 
  **sourceIsSdk** | **bool?**|  | [optional] 
  **progressId** | **string**| Id of a progress cookie (uuid) | [optional] 
@@ -1423,7 +1425,7 @@ No authorization required
 ### HTTP response details
 | Status code | Description | Response headers |
 |-------------|-------------|------------------|
-| **200** | Sysroot updated |  -  |
+| **200** | OK |  -  |
 | **404** | Application not found |  -  |
 | **500** | Unexpected exception. |  -  |
 | **520** | Container image not found on local host. |  -  |
@@ -1446,9 +1448,9 @@ No authorization required
 
 > bool ApplicationUpdated (string applicationId, string configuration)
 
-Builds container image
+Check if container image is up to date
 
-Builds application release or debug container
+Check if some properties have been changed after the last build of the configuration-specific container image
 
 ### Example
 
@@ -1472,7 +1474,7 @@ namespace Example
 
             try
             {
-                // Builds container image
+                // Check if container image is up to date
                 bool result = apiInstance.ApplicationUpdated(applicationId, configuration);
                 Debug.WriteLine(result);
             }
@@ -1511,7 +1513,7 @@ No authorization required
 ### HTTP response details
 | Status code | Description | Response headers |
 |-------------|-------------|------------------|
-| **200** | Successful build |  -  |
+| **200** | true if container image is up to date |  -  |
 | **404** | Application not found |  -  |
 | **500** | Unexpected exception. |  -  |
 | **530** | Local docker exception. |  -  |
@@ -1528,7 +1530,7 @@ No authorization required
 
 Update SDK container
 
-Updates/rebuilds the SDK container by adding new dev libraries or synchronizing sysroots
+Update the SDK container by adding new dev libraries or synchronizing sysroots
 
 ### Example
 
@@ -1592,7 +1594,7 @@ No authorization required
 ### HTTP response details
 | Status code | Description | Response headers |
 |-------------|-------------|------------------|
-| **200** | SDK updated |  -  |
+| **200** | OK |  -  |
 | **404** | Application not found |  -  |
 | **500** | Unexpected exception. |  -  |
 | **520** | Container image not found on local host. |  -  |
@@ -1610,9 +1612,9 @@ No authorization required
 
 > Application ApplicationsCreate (string platformId, string path, string username = null)
 
-Loads an application configuration
+Create an application configuration
 
-Returns data about an application
+Create a new application configuration
 
 ### Example
 
@@ -1637,7 +1639,7 @@ namespace Example
 
             try
             {
-                // Loads an application configuration
+                // Create an application configuration
                 Application result = apiInstance.ApplicationsCreate(platformId, path, username);
                 Debug.WriteLine(result);
             }
@@ -1677,7 +1679,7 @@ No authorization required
 ### HTTP response details
 | Status code | Description | Response headers |
 |-------------|-------------|------------------|
-| **200** | Returns an application |  -  |
+| **200** | Application information |  -  |
 | **404** | Platform not found |  -  |
 | **500** | Unexpected exception. |  -  |
 | **531** | Object Does not have a valid id. |  -  |
@@ -1694,9 +1696,9 @@ No authorization required
 
 > Application ApplicationsLoad (string path)
 
-Loads an application configuration
+Load an application configuration
 
-Returns data about an application
+Load an application configuration from the local filesystem
 
 ### Example
 
@@ -1719,7 +1721,7 @@ namespace Example
 
             try
             {
-                // Loads an application configuration
+                // Load an application configuration
                 Application result = apiInstance.ApplicationsLoad(path);
                 Debug.WriteLine(result);
             }

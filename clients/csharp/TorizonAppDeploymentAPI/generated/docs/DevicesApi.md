@@ -4,37 +4,37 @@ All URIs are relative to *http://localhost:5000/api*
 
 Method | HTTP request | Description
 ------------- | ------------- | -------------
-[**ContainerGetlogs**](DevicesApi.md#containergetlogs) | **GET** /devices/{device_id}/containers/{container_id}/logs | return container logs one chunk a time
+[**ContainerGetlogs**](DevicesApi.md#containergetlogs) | **GET** /devices/{device_id}/containers/{container_id}/logs | Return text lines from the container logs
 [**ContainerGetmemory**](DevicesApi.md#containergetmemory) | **GET** /devices/{device_id}/containers/{container_id}/memory | Return container memory information
-[**ContainerGetmountpoints**](DevicesApi.md#containergetmountpoints) | **GET** /devices/{device_id}/containers/{container_id}/storage | return information about storage
-[**ContainerGetprocesses**](DevicesApi.md#containergetprocesses) | **GET** /devices/{device_id}/containers/{container_id}/processes | return processes running in container
-[**ContainerStart**](DevicesApi.md#containerstart) | **GET** /devices/{device_id}/containers/{container_id}/start | starts container
-[**ContainerStop**](DevicesApi.md#containerstop) | **GET** /devices/{device_id}/containers/{container_id}/stop | stops container
-[**ContainersDeletecontainer**](DevicesApi.md#containersdeletecontainer) | **DELETE** /devices/{device_id}/containers/{container_id} | delete a container
-[**ContainersGetcontainer**](DevicesApi.md#containersgetcontainer) | **GET** /devices/{device_id}/containers/{container_id} | get container details
-[**DeviceClosedocker**](DevicesApi.md#deviceclosedocker) | **GET** /devices/{device_id}/docker/close | Disables remote docker
-[**DeviceClosessh**](DevicesApi.md#deviceclosessh) | **GET** /devices/{device_id}/ssh/close | Disables ssh tunneling
-[**DeviceCurrentIp**](DevicesApi.md#devicecurrentip) | **GET** /devices/{device_id}/current_ip | returns current ip of the device
+[**ContainerGetmountpoints**](DevicesApi.md#containergetmountpoints) | **GET** /devices/{device_id}/containers/{container_id}/storage | Return information about storage
+[**ContainerGetprocesses**](DevicesApi.md#containergetprocesses) | **GET** /devices/{device_id}/containers/{container_id}/processes | Get processes running in container
+[**ContainerStart**](DevicesApi.md#containerstart) | **GET** /devices/{device_id}/containers/{container_id}/start | Starts container
+[**ContainerStop**](DevicesApi.md#containerstop) | **GET** /devices/{device_id}/containers/{container_id}/stop | Stop container
+[**ContainersDeletecontainer**](DevicesApi.md#containersdeletecontainer) | **DELETE** /devices/{device_id}/containers/{container_id} | Delete a container
+[**ContainersGetcontainer**](DevicesApi.md#containersgetcontainer) | **GET** /devices/{device_id}/containers/{container_id} | Get information about a container
+[**DeviceClosedocker**](DevicesApi.md#deviceclosedocker) | **GET** /devices/{device_id}/docker/close | Close SSH tunnel for docker API
+[**DeviceClosessh**](DevicesApi.md#deviceclosessh) | **GET** /devices/{device_id}/ssh/close | Close SSH tunnel for shell
+[**DeviceCurrentIp**](DevicesApi.md#devicecurrentip) | **GET** /devices/{device_id}/current_ip | Get current ip of the device
 [**DeviceDelete**](DevicesApi.md#devicedelete) | **DELETE** /devices/{device_id} | Remove a device
 [**DeviceGet**](DevicesApi.md#deviceget) | **GET** /devices/{device_id} | Get device
-[**DeviceGetcontainers**](DevicesApi.md#devicegetcontainers) | **GET** /devices/{device_id}/containers | list containers
-[**DeviceGetdockerport**](DevicesApi.md#devicegetdockerport) | **GET** /devices/{device_id}/docker/port | remote docker local port
-[**DeviceGetimages**](DevicesApi.md#devicegetimages) | **GET** /devices/{device_id}/images | list images
-[**DeviceGetmemory**](DevicesApi.md#devicegetmemory) | **GET** /devices/{device_id}/memory | Return memory information
-[**DeviceGetmountpoints**](DevicesApi.md#devicegetmountpoints) | **GET** /devices/{device_id}/storage | return storage information for a device
-[**DeviceGetprivatekey**](DevicesApi.md#devicegetprivatekey) | **GET** /devices/{device_id}/privatekey | return the path of the device private key
-[**DeviceGetprocesses**](DevicesApi.md#devicegetprocesses) | **GET** /devices/{device_id}/processes | list running processes on a device
-[**DeviceGetsshport**](DevicesApi.md#devicegetsshport) | **GET** /devices/{device_id}/ssh/port | remote ssh local port
+[**DeviceGetcontainers**](DevicesApi.md#devicegetcontainers) | **GET** /devices/{device_id}/containers | List containers
+[**DeviceGetdockerport**](DevicesApi.md#devicegetdockerport) | **GET** /devices/{device_id}/docker/port | Get local port for remote docker tunnel
+[**DeviceGetimages**](DevicesApi.md#devicegetimages) | **GET** /devices/{device_id}/images | List container images on the device
+[**DeviceGetmemory**](DevicesApi.md#devicegetmemory) | **GET** /devices/{device_id}/memory | Get device memory information
+[**DeviceGetmountpoints**](DevicesApi.md#devicegetmountpoints) | **GET** /devices/{device_id}/storage | Get storage information for a device
+[**DeviceGetprivatekey**](DevicesApi.md#devicegetprivatekey) | **GET** /devices/{device_id}/privatekey | Return the path of the device private key
+[**DeviceGetprocesses**](DevicesApi.md#devicegetprocesses) | **GET** /devices/{device_id}/processes | Get list of processes
+[**DeviceGetsshport**](DevicesApi.md#devicegetsshport) | **GET** /devices/{device_id}/ssh/port | Get local port for shell
 [**DeviceModify**](DevicesApi.md#devicemodify) | **PUT** /devices/{device_id} | Change device properties
 [**DeviceOpendocker**](DevicesApi.md#deviceopendocker) | **GET** /devices/{device_id}/docker/open | Expose remote docker
-[**DeviceOpenssh**](DevicesApi.md#deviceopenssh) | **GET** /devices/{device_id}/ssh/open | Expose remote ssh
-[**DeviceSyncfolders**](DevicesApi.md#devicesyncfolders) | **GET** /devices/{device_id}/syncfolders | synchronizes folders
-[**DeviceUpdate**](DevicesApi.md#deviceupdate) | **GET** /devices/{device_id}/update | update information for a specific device
+[**DeviceOpenssh**](DevicesApi.md#deviceopenssh) | **GET** /devices/{device_id}/ssh/open | Expose shell via SSH
+[**DeviceSyncfolders**](DevicesApi.md#devicesyncfolders) | **GET** /devices/{device_id}/syncfolders | Synchronize folders
+[**DeviceUpdate**](DevicesApi.md#deviceupdate) | **GET** /devices/{device_id}/update | Update device information
 [**DevicesGet**](DevicesApi.md#devicesget) | **GET** /devices | Get all devices
-[**DevicesNetworkdetect**](DevicesApi.md#devicesnetworkdetect) | **GET** /devices/network_detect | Finds a network device
-[**DevicesSerialdetect**](DevicesApi.md#devicesserialdetect) | **GET** /devices/serial_detect | Finds a device connected to serial port
-[**ImagesDeleteimage**](DevicesApi.md#imagesdeleteimage) | **DELETE** /devices/{device_id}/images/{image_id} | delete an image
-[**ImagesGetimage**](DevicesApi.md#imagesgetimage) | **GET** /devices/{device_id}/images/{image_id} | get image details
+[**DevicesNetworkdetect**](DevicesApi.md#devicesnetworkdetect) | **GET** /devices/network_detect | Detect a network device
+[**DevicesSerialdetect**](DevicesApi.md#devicesserialdetect) | **GET** /devices/serial_detect | Detect a serial device
+[**ImagesDeleteimage**](DevicesApi.md#imagesdeleteimage) | **DELETE** /devices/{device_id}/images/{image_id} | Delete a container image
+[**ImagesGetimage**](DevicesApi.md#imagesgetimage) | **GET** /devices/{device_id}/images/{image_id} | Get information about an image
 
 
 
@@ -42,9 +42,9 @@ Method | HTTP request | Description
 
 > string ContainerGetlogs (string deviceId, string containerId, bool? restart = null)
 
-return container logs one chunk a time
+Return text lines from the container logs
 
-return one or more lines of the log, waiting until it's available, this will allow clients to show logs in almost real time
+Return one or more lines from the log, waiting until it's available, this will allow clients to show logs in almost real time
 
 ### Example
 
@@ -69,7 +69,7 @@ namespace Example
 
             try
             {
-                // return container logs one chunk a time
+                // Return text lines from the container logs
                 string result = apiInstance.ContainerGetlogs(deviceId, containerId, restart);
                 Debug.WriteLine(result);
             }
@@ -109,7 +109,7 @@ No authorization required
 ### HTTP response details
 | Status code | Description | Response headers |
 |-------------|-------------|------------------|
-| **200** | Returns list of storage informations |  -  |
+| **200** | Text from the logs |  -  |
 | **204** | No content, container is no longer running and log has ben fully read |  -  |
 | **404** | Device or container not found |  -  |
 | **500** | Unexpected exception. |  -  |
@@ -129,7 +129,7 @@ No authorization required
 
 Return container memory information
 
-Return total/free/available memory on a specific container
+Return total/free/available memory on a specific container running on a device
 
 ### Example
 
@@ -192,7 +192,7 @@ No authorization required
 ### HTTP response details
 | Status code | Description | Response headers |
 |-------------|-------------|------------------|
-| **200** | Returns memory information |  -  |
+| **200** | Memory information |  -  |
 | **404** | Device or container not found |  -  |
 | **500** | Unexpected exception. |  -  |
 | **533** | SSH error. |  -  |
@@ -208,9 +208,9 @@ No authorization required
 
 > List&lt;MountPoint&gt; ContainerGetmountpoints (string deviceId, string containerId)
 
-return information about storage
+Return information about storage
 
-returns a list of storages available inside the container
+Return a list of mount points available inside the container
 
 ### Example
 
@@ -234,7 +234,7 @@ namespace Example
 
             try
             {
-                // return information about storage
+                // Return information about storage
                 List<MountPoint> result = apiInstance.ContainerGetmountpoints(deviceId, containerId);
                 Debug.WriteLine(result);
             }
@@ -273,7 +273,7 @@ No authorization required
 ### HTTP response details
 | Status code | Description | Response headers |
 |-------------|-------------|------------------|
-| **200** | Returns list of storage informations |  -  |
+| **200** | List of mount point information |  -  |
 | **404** | Device or container not found |  -  |
 | **500** | Unexpected exception. |  -  |
 | **525** | Remote docker exception. |  -  |
@@ -290,9 +290,9 @@ No authorization required
 
 > List&lt;Process&gt; ContainerGetprocesses (string deviceId, string containerId)
 
-return processes running in container
+Get processes running in container
 
-returns a list of processes running in the specified container
+Return a list of processes running in the specified container on a device
 
 ### Example
 
@@ -316,7 +316,7 @@ namespace Example
 
             try
             {
-                // return processes running in container
+                // Get processes running in container
                 List<Process> result = apiInstance.ContainerGetprocesses(deviceId, containerId);
                 Debug.WriteLine(result);
             }
@@ -355,7 +355,7 @@ No authorization required
 ### HTTP response details
 | Status code | Description | Response headers |
 |-------------|-------------|------------------|
-| **200** | Returns list of processes |  -  |
+| **200** | List of processes |  -  |
 | **404** | Device or container not found |  -  |
 | **500** | Unexpected exception. |  -  |
 | **525** | Remote docker exception. |  -  |
@@ -372,9 +372,9 @@ No authorization required
 
 > DockerContainer ContainerStart (string deviceId, string containerId)
 
-starts container
+Starts container
 
-Start specified container
+Start a specified container on a device
 
 ### Example
 
@@ -398,7 +398,7 @@ namespace Example
 
             try
             {
-                // starts container
+                // Starts container
                 DockerContainer result = apiInstance.ContainerStart(deviceId, containerId);
                 Debug.WriteLine(result);
             }
@@ -437,7 +437,7 @@ No authorization required
 ### HTTP response details
 | Status code | Description | Response headers |
 |-------------|-------------|------------------|
-| **200** | Returns container |  -  |
+| **200** | Container information |  -  |
 | **404** | Device or container not found |  -  |
 | **500** | Unexpected exception. |  -  |
 | **525** | Remote docker exception. |  -  |
@@ -454,9 +454,9 @@ No authorization required
 
 > DockerContainer ContainerStop (string deviceId, string containerId)
 
-stops container
+Stop container
 
-Stops specified container
+Stop a specified container running on a device
 
 ### Example
 
@@ -480,7 +480,7 @@ namespace Example
 
             try
             {
-                // stops container
+                // Stop container
                 DockerContainer result = apiInstance.ContainerStop(deviceId, containerId);
                 Debug.WriteLine(result);
             }
@@ -536,9 +536,9 @@ No authorization required
 
 > void ContainersDeletecontainer (string deviceId, string containerId)
 
-delete a container
+Delete a container
 
-Executes rm command on container
+Stops and removes a container running on a device
 
 ### Example
 
@@ -562,7 +562,7 @@ namespace Example
 
             try
             {
-                // delete a container
+                // Delete a container
                 apiInstance.ContainersDeletecontainer(deviceId, containerId);
             }
             catch (ApiException e)
@@ -617,9 +617,9 @@ No authorization required
 
 > DockerContainer ContainersGetcontainer (string deviceId, string containerId)
 
-get container details
+Get information about a container
 
-Get detailed information on a specific container
+Get detailed information on a specific container running on a device
 
 ### Example
 
@@ -643,7 +643,7 @@ namespace Example
 
             try
             {
-                // get container details
+                // Get information about a container
                 DockerContainer result = apiInstance.ContainersGetcontainer(deviceId, containerId);
                 Debug.WriteLine(result);
             }
@@ -682,7 +682,7 @@ No authorization required
 ### HTTP response details
 | Status code | Description | Response headers |
 |-------------|-------------|------------------|
-| **200** | Returns container |  -  |
+| **200** | Container information |  -  |
 | **404** | Device or container not found |  -  |
 | **500** | Unexpected exception. |  -  |
 | **525** | Remote docker exception. |  -  |
@@ -699,7 +699,7 @@ No authorization required
 
 > void DeviceClosedocker (string deviceId)
 
-Disables remote docker
+Close SSH tunnel for docker API
 
 Stop exposing remote docker port on localhost
 
@@ -724,7 +724,7 @@ namespace Example
 
             try
             {
-                // Disables remote docker
+                // Close SSH tunnel for docker API
                 apiInstance.DeviceClosedocker(deviceId);
             }
             catch (ApiException e)
@@ -775,9 +775,9 @@ No authorization required
 
 > void DeviceClosessh (string deviceId)
 
-Disables ssh tunneling
+Close SSH tunnel for shell
 
-Stop exposing remote ssh port on localhost
+Stop exposing remote shell port on localhost
 
 ### Example
 
@@ -800,7 +800,7 @@ namespace Example
 
             try
             {
-                // Disables ssh tunneling
+                // Close SSH tunnel for shell
                 apiInstance.DeviceClosessh(deviceId);
             }
             catch (ApiException e)
@@ -851,9 +851,9 @@ No authorization required
 
 > string DeviceCurrentIp (string deviceId)
 
-returns current ip of the device
+Get current ip of the device
 
-Returns current ip of the device using local DNS and mDNS
+Return current ip of the device using local DNS and mDNS
 
 ### Example
 
@@ -876,7 +876,7 @@ namespace Example
 
             try
             {
-                // returns current ip of the device
+                // Get current ip of the device
                 string result = apiInstance.DeviceCurrentIp(deviceId);
                 Debug.WriteLine(result);
             }
@@ -931,6 +931,8 @@ No authorization required
 > void DeviceDelete (string deviceId)
 
 Remove a device
+
+Permanently remove a device from the list of configured ones
 
 ### Example
 
@@ -990,7 +992,7 @@ No authorization required
 ### HTTP response details
 | Status code | Description | Response headers |
 |-------------|-------------|------------------|
-| **204** | Device was correctly deleted |  -  |
+| **204** | Device was correctly removed |  -  |
 | **404** | Device not found |  -  |
 | **500** | Unexpected exception. |  -  |
 
@@ -1006,7 +1008,7 @@ No authorization required
 
 Get device
 
-Returns a specified device, knowing its id
+Return a specific configured device, knowing its id
 
 ### Example
 
@@ -1067,7 +1069,7 @@ No authorization required
 ### HTTP response details
 | Status code | Description | Response headers |
 |-------------|-------------|------------------|
-| **200** | Returns device |  -  |
+| **200** | Device Information |  -  |
 | **404** | Device not found |  -  |
 | **500** | Unexpected exception. |  -  |
 
@@ -1081,9 +1083,9 @@ No authorization required
 
 > List&lt;DockerContainer&gt; DeviceGetcontainers (string deviceId)
 
-list containers
+List containers
 
-Get containers running on a specified device
+Get a list of the containers on a specific device
 
 ### Example
 
@@ -1106,7 +1108,7 @@ namespace Example
 
             try
             {
-                // list containers
+                // List containers
                 List<DockerContainer> result = apiInstance.DeviceGetcontainers(deviceId);
                 Debug.WriteLine(result);
             }
@@ -1144,7 +1146,7 @@ No authorization required
 ### HTTP response details
 | Status code | Description | Response headers |
 |-------------|-------------|------------------|
-| **200** | Returns list of containers |  -  |
+| **200** | List of containers |  -  |
 | **404** | Device not found |  -  |
 | **500** | Unexpected exception. |  -  |
 | **525** | Remote docker exception. |  -  |
@@ -1161,9 +1163,9 @@ No authorization required
 
 > int DeviceGetdockerport (string deviceId)
 
-remote docker local port
+Get local port for remote docker tunnel
 
-Get local port where docker is tunneled
+Get local port where docker is tunneled via SSH
 
 ### Example
 
@@ -1186,7 +1188,7 @@ namespace Example
 
             try
             {
-                // remote docker local port
+                // Get local port for remote docker tunnel
                 int result = apiInstance.DeviceGetdockerport(deviceId);
                 Debug.WriteLine(result);
             }
@@ -1224,7 +1226,7 @@ No authorization required
 ### HTTP response details
 | Status code | Description | Response headers |
 |-------------|-------------|------------------|
-| **200** | Returns port |  -  |
+| **200** | Local port for docker interface |  -  |
 | **404** | Device not found |  -  |
 | **500** | Unexpected exception. |  -  |
 | **533** | SSH error. |  -  |
@@ -1240,9 +1242,9 @@ No authorization required
 
 > List&lt;DockerImage&gt; DeviceGetimages (string deviceId)
 
-list images
+List container images on the device
 
-Get images available on a specified device
+Get list of all container images available on a specified device
 
 ### Example
 
@@ -1265,7 +1267,7 @@ namespace Example
 
             try
             {
-                // list images
+                // List container images on the device
                 List<DockerImage> result = apiInstance.DeviceGetimages(deviceId);
                 Debug.WriteLine(result);
             }
@@ -1303,7 +1305,7 @@ No authorization required
 ### HTTP response details
 | Status code | Description | Response headers |
 |-------------|-------------|------------------|
-| **200** | Returns list of images |  -  |
+| **200** | List of container images |  -  |
 | **404** | Device not found |  -  |
 | **500** | Unexpected exception. |  -  |
 | **525** | Remote docker exception. |  -  |
@@ -1320,7 +1322,7 @@ No authorization required
 
 > MemInfo DeviceGetmemory (string deviceId)
 
-Return memory information
+Get device memory information
 
 Return total/free/available memory on the device
 
@@ -1345,7 +1347,7 @@ namespace Example
 
             try
             {
-                // Return memory information
+                // Get device memory information
                 MemInfo result = apiInstance.DeviceGetmemory(deviceId);
                 Debug.WriteLine(result);
             }
@@ -1383,7 +1385,7 @@ No authorization required
 ### HTTP response details
 | Status code | Description | Response headers |
 |-------------|-------------|------------------|
-| **200** | Returns memory information |  -  |
+| **200** | Memory information |  -  |
 | **404** | Device not found |  -  |
 | **500** | Unexpected exception. |  -  |
 | **533** | SSH error. |  -  |
@@ -1399,9 +1401,9 @@ No authorization required
 
 > List&lt;MountPoint&gt; DeviceGetmountpoints (string deviceId)
 
-return storage information for a device
+Get storage information for a device
 
-Get a list of storages for the specified device
+Return a list with information about every mountpoint
 
 ### Example
 
@@ -1424,7 +1426,7 @@ namespace Example
 
             try
             {
-                // return storage information for a device
+                // Get storage information for a device
                 List<MountPoint> result = apiInstance.DeviceGetmountpoints(deviceId);
                 Debug.WriteLine(result);
             }
@@ -1462,7 +1464,7 @@ No authorization required
 ### HTTP response details
 | Status code | Description | Response headers |
 |-------------|-------------|------------------|
-| **200** | Returns list of storage information |  -  |
+| **200** | List of mount point information |  -  |
 | **404** | Device not found |  -  |
 | **500** | Unexpected exception. |  -  |
 | **533** | SSH error. |  -  |
@@ -1478,9 +1480,9 @@ No authorization required
 
 > string DeviceGetprivatekey (string deviceId)
 
-return the path of the device private key
+Return the path of the device private key
 
-returns the key that can be used to activate passowordless connections to the device
+Returns the file containing the key that can be used to activate passowordless connections to the device
 
 ### Example
 
@@ -1503,7 +1505,7 @@ namespace Example
 
             try
             {
-                // return the path of the device private key
+                // Return the path of the device private key
                 string result = apiInstance.DeviceGetprivatekey(deviceId);
                 Debug.WriteLine(result);
             }
@@ -1541,7 +1543,7 @@ No authorization required
 ### HTTP response details
 | Status code | Description | Response headers |
 |-------------|-------------|------------------|
-| **200** | Path of the private key file |  -  |
+| **200** | Path of the key file |  -  |
 | **404** | Device not found |  -  |
 | **500** | Unexpected exception. |  -  |
 
@@ -1555,9 +1557,9 @@ No authorization required
 
 > List&lt;Process&gt; DeviceGetprocesses (string deviceId)
 
-list running processes on a device
+Get list of processes
 
-Get processes running on a specified device
+Get list of processes running on a specified device
 
 ### Example
 
@@ -1580,7 +1582,7 @@ namespace Example
 
             try
             {
-                // list running processes on a device
+                // Get list of processes
                 List<Process> result = apiInstance.DeviceGetprocesses(deviceId);
                 Debug.WriteLine(result);
             }
@@ -1618,7 +1620,7 @@ No authorization required
 ### HTTP response details
 | Status code | Description | Response headers |
 |-------------|-------------|------------------|
-| **200** | Returns list of processes |  -  |
+| **200** | List of processes |  -  |
 | **404** | Device not found |  -  |
 | **500** | Unexpected exception. |  -  |
 | **533** | SSH error. |  -  |
@@ -1634,9 +1636,9 @@ No authorization required
 
 > int DeviceGetsshport (string deviceId)
 
-remote ssh local port
+Get local port for shell
 
-Get local port where ssh is tunneled
+Get local port where remote shell is tunneled via SSH
 
 ### Example
 
@@ -1659,7 +1661,7 @@ namespace Example
 
             try
             {
-                // remote ssh local port
+                // Get local port for shell
                 int result = apiInstance.DeviceGetsshport(deviceId);
                 Debug.WriteLine(result);
             }
@@ -1697,7 +1699,7 @@ No authorization required
 ### HTTP response details
 | Status code | Description | Response headers |
 |-------------|-------------|------------------|
-| **200** | Returns port |  -  |
+| **200** | Local port for SSH shell |  -  |
 | **404** | Device not found |  -  |
 | **500** | Unexpected exception. |  -  |
 | **533** | SSH error. |  -  |
@@ -1715,7 +1717,7 @@ No authorization required
 
 Change device properties
 
-Changes specified properties on a device
+Changes specified properties on a configured device
 
 ### Example
 
@@ -1778,7 +1780,7 @@ No authorization required
 ### HTTP response details
 | Status code | Description | Response headers |
 |-------------|-------------|------------------|
-| **200** | Returns device |  -  |
+| **200** | Device information |  -  |
 | **404** | Device not found |  -  |
 | **500** | Unexpected exception. |  -  |
 | **531** | Object Does not have a valid id. |  -  |
@@ -1796,7 +1798,7 @@ No authorization required
 
 Expose remote docker
 
-Expose remote docker port on localhost
+Expose remote docker port on localhost via SSH tunnel
 
 ### Example
 
@@ -1859,7 +1861,7 @@ No authorization required
 ### HTTP response details
 | Status code | Description | Response headers |
 |-------------|-------------|------------------|
-| **200** | Returns port |  -  |
+| **200** | Local port for docker interface |  -  |
 | **404** | Device not found |  -  |
 | **500** | Unexpected exception. |  -  |
 | **533** | SSH error. |  -  |
@@ -1875,9 +1877,9 @@ No authorization required
 
 > int DeviceOpenssh (string deviceId, int? port = null)
 
-Expose remote ssh
+Expose shell via SSH
 
-Expose remote ssh port on localhost
+Expose remote shell on local port via SSH
 
 ### Example
 
@@ -1901,7 +1903,7 @@ namespace Example
 
             try
             {
-                // Expose remote ssh
+                // Expose shell via SSH
                 int result = apiInstance.DeviceOpenssh(deviceId, port);
                 Debug.WriteLine(result);
             }
@@ -1940,7 +1942,7 @@ No authorization required
 ### HTTP response details
 | Status code | Description | Response headers |
 |-------------|-------------|------------------|
-| **200** | Returns port |  -  |
+| **200** | Local port for SSH shell |  -  |
 | **404** | Device not found |  -  |
 | **500** | Unexpected exception. |  -  |
 | **533** | SSH error. |  -  |
@@ -1956,9 +1958,9 @@ No authorization required
 
 > void DeviceSyncfolders (string deviceId, string sourcefolder, string destfolder, string progressId = null)
 
-synchronizes folders
+Synchronize folders
 
-synchronizes folders between host and target
+Synchronize folders between host and target
 
 ### Example
 
@@ -1984,7 +1986,7 @@ namespace Example
 
             try
             {
-                // synchronizes folders
+                // Synchronize folders
                 apiInstance.DeviceSyncfolders(deviceId, sourcefolder, destfolder, progressId);
             }
             catch (ApiException e)
@@ -2024,7 +2026,7 @@ No authorization required
 ### HTTP response details
 | Status code | Description | Response headers |
 |-------------|-------------|------------------|
-| **200** | Sysroot updated |  -  |
+| **200** | OK |  -  |
 | **404** | Device not found |  -  |
 | **500** | Unexpected exception. |  -  |
 | **520** | Container image not found on local host. |  -  |
@@ -2043,9 +2045,9 @@ No authorization required
 
 > TargetDevice DeviceUpdate (string deviceId)
 
-update information for a specific device
+Update device information
 
-Returns a specified device, with updated info if available
+Checks for updates on the remote device and return up-to-date information
 
 ### Example
 
@@ -2068,7 +2070,7 @@ namespace Example
 
             try
             {
-                // update information for a specific device
+                // Update device information
                 TargetDevice result = apiInstance.DeviceUpdate(deviceId);
                 Debug.WriteLine(result);
             }
@@ -2106,7 +2108,7 @@ No authorization required
 ### HTTP response details
 | Status code | Description | Response headers |
 |-------------|-------------|------------------|
-| **200** | Returns device |  -  |
+| **200** | Device information |  -  |
 | **500** | Unexpected exception. |  -  |
 | **531** | Object Does not have a valid id. |  -  |
 | **532** | Object cannot be saved because it&#39;s in an invalid state. |  -  |
@@ -2183,7 +2185,7 @@ No authorization required
 ### HTTP response details
 | Status code | Description | Response headers |
 |-------------|-------------|------------------|
-| **200** | Successful |  -  |
+| **200** | Devices list |  -  |
 | **500** | Unexpected exception. |  -  |
 
 [[Back to top]](#)
@@ -2196,9 +2198,9 @@ No authorization required
 
 > TargetDevice DevicesNetworkdetect (string hostname, string username, string password)
 
-Finds a network device
+Detect a network device
 
-Returns a new device detected from network
+Detect a device using its ip or hostname
 
 ### Example
 
@@ -2223,7 +2225,7 @@ namespace Example
 
             try
             {
-                // Finds a network device
+                // Detect a network device
                 TargetDevice result = apiInstance.DevicesNetworkdetect(hostname, username, password);
                 Debug.WriteLine(result);
             }
@@ -2263,7 +2265,7 @@ No authorization required
 ### HTTP response details
 | Status code | Description | Response headers |
 |-------------|-------------|------------------|
-| **200** | Returns device |  -  |
+| **200** | Device information |  -  |
 | **500** | Unexpected exception. |  -  |
 | **524** | User is not enable to execute commands as root. |  -  |
 | **531** | Object Does not have a valid id. |  -  |
@@ -2284,9 +2286,9 @@ No authorization required
 
 > TargetDevice DevicesSerialdetect (string port, string username, string password)
 
-Finds a device connected to serial port
+Detect a serial device
 
-Returns a new device detected from serial port
+Detect a device connected to a local serial port
 
 ### Example
 
@@ -2311,7 +2313,7 @@ namespace Example
 
             try
             {
-                // Finds a device connected to serial port
+                // Detect a serial device
                 TargetDevice result = apiInstance.DevicesSerialdetect(port, username, password);
                 Debug.WriteLine(result);
             }
@@ -2351,7 +2353,7 @@ No authorization required
 ### HTTP response details
 | Status code | Description | Response headers |
 |-------------|-------------|------------------|
-| **200** | Returns device |  -  |
+| **200** | Device information |  -  |
 | **500** | Unexpected exception. |  -  |
 | **524** | User is not enable to execute commands as root. |  -  |
 | **531** | Object Does not have a valid id. |  -  |
@@ -2374,9 +2376,9 @@ No authorization required
 
 > void ImagesDeleteimage (string deviceId, string imageId)
 
-delete an image
+Delete a container image
 
-Executes rmi command on and image
+Delete a specific container image from the device
 
 ### Example
 
@@ -2400,7 +2402,7 @@ namespace Example
 
             try
             {
-                // delete an image
+                // Delete a container image
                 apiInstance.ImagesDeleteimage(deviceId, imageId);
             }
             catch (ApiException e)
@@ -2455,9 +2457,9 @@ No authorization required
 
 > DockerImage ImagesGetimage (string deviceId, string imageId)
 
-get image details
+Get information about an image
 
-Get detailed information on an image
+Get detailed information on a specific container image stored on a device
 
 ### Example
 
@@ -2481,7 +2483,7 @@ namespace Example
 
             try
             {
-                // get image details
+                // Get information about an image
                 DockerImage result = apiInstance.ImagesGetimage(deviceId, imageId);
                 Debug.WriteLine(result);
             }
@@ -2520,7 +2522,7 @@ No authorization required
 ### HTTP response details
 | Status code | Description | Response headers |
 |-------------|-------------|------------------|
-| **200** | Returns image |  -  |
+| **200** | Container image information |  -  |
 | **404** | Device or Image not found |  -  |
 | **500** | Unexpected exception. |  -  |
 | **525** | Remote docker exception. |  -  |
