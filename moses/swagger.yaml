@@ -1,7 +1,7 @@
 swagger: "2.0"
 info:
   description: Toradex API to build and deploy applications running as containers on Torizon
-  version: 1.0.14
+  version: 1.1.0
   title: Torizon IDE-backend API
 consumes:
   - application/json
@@ -1133,11 +1133,7 @@ paths:
       description: Check if some properties have been changed after the last build of the configuration-specific container image
       parameters:
         - $ref: "#/parameters/application_id"
-        - name: configuration
-          in: query
-          type: string
-          required: true
-          pattern: "(?:debug|release)"
+        - $ref: "#/parameters/configuration"
       responses:
         200:
           description: true if container image is up to date
@@ -1161,11 +1157,7 @@ paths:
       description: Build application release or debug container
       parameters:
         - $ref: "#/parameters/application_id"
-        - name: configuration
-          in: query
-          type: string
-          required: true
-          pattern: "(?:debug|release)"
+        - $ref: "#/parameters/configuration"
         - $ref: "#/parameters/progress_id"
       responses:
         200:
@@ -1190,16 +1182,8 @@ paths:
       description: Deploy application container to target
       parameters:
         - $ref: "#/parameters/application_id"
-        - name: configuration
-          in: query
-          type: string
-          required: true
-          pattern: "(?:debug|release)"
-        - name: deviceid
-          in: query
-          type: string
-          required: true
-          pattern: "^[-0-9a-zA-Z.]*$"
+        - $ref: "#/parameters/configuration"
+        - $ref: "#/parameters/device_id_qs"
         - $ref: "#/parameters/progress_id"
       responses:
         200:
@@ -1232,16 +1216,8 @@ paths:
       description: Run the application release or debug container on target, if the application is already running, restarts it
       parameters:
         - $ref: "#/parameters/application_id"
-        - name: configuration
-          in: query
-          type: string
-          required: true
-          pattern: "(?:debug|release)"
-        - name: deviceid
-          in: query
-          type: string
-          required: true
-          pattern: "^[-0-9a-zA-Z.]*$"
+        - $ref: "#/parameters/configuration"
+        - $ref: "#/parameters/device_id_qs"
         - $ref: "#/parameters/progress_id"
       responses:
         200:
@@ -1276,16 +1252,8 @@ paths:
       description: Stop application release or debug container currently running on target, operation succeeds even if the container is not running
       parameters:
         - $ref: "#/parameters/application_id"
-        - name: configuration
-          in: query
-          type: string
-          required: true
-          pattern: "(?:debug|release)"
-        - name: deviceid
-          in: query
-          type: string
-          required: true
-          pattern: "^[-0-9a-zA-Z.]*$"
+        - $ref: "#/parameters/configuration"
+        - $ref: "#/parameters/device_id_qs"
       responses:
         200:
           description: OK
@@ -1308,16 +1276,8 @@ paths:
       description: Get detailed informations about container
       parameters:
         - $ref: "#/parameters/application_id"
-        - name: configuration
-          in: query
-          type: string
-          required: true
-          pattern: "(?:debug|release)"
-        - name: deviceid
-          in: query
-          type: string
-          required: true
-          pattern: "^[-0-9a-zA-Z.]*$"
+        - $ref: "#/parameters/configuration"
+        - $ref: "#/parameters/device_id_qs"
       responses:
         200:
           description: Container information
@@ -1348,16 +1308,8 @@ paths:
       description: Return one chunk of log (one or more lines), blocking if no data is available
       parameters:
         - $ref: "#/parameters/application_id"
-        - name: configuration
-          in: query
-          type: string
-          required: true
-          pattern: "(?:debug|release)"
-        - name: deviceid
-          in: query
-          type: string
-          required: true
-          pattern: "^[-0-9a-zA-Z.]*$"
+        - $ref: "#/parameters/configuration"
+        - $ref: "#/parameters/device_id_qs"
         - name: restart
           type: boolean
           in: query
@@ -1390,11 +1342,7 @@ paths:
       description: Return the full docker command line that can be used to run the application container
       parameters:
         - $ref: "#/parameters/application_id"
-        - name: configuration
-          in: query
-          type: string
-          required: true
-          pattern: "(?:debug|release)"
+        - $ref: "#/parameters/configuration"
       responses:
         200:
           description: Command line
@@ -1419,11 +1367,7 @@ paths:
       description: Return docker-compose file that can be used to run the application container and its dependencies
       parameters:
         - $ref: "#/parameters/application_id"
-        - name: configuration
-          in: query
-          type: string
-          required: true
-          pattern: "(?:debug|release)"
+        - $ref: "#/parameters/configuration"
       responses:
         200:
           description: Docker-compose file (string with *nix line endings)
@@ -1448,11 +1392,7 @@ paths:
       description: Push application's container to a docker registry, using authentication
       parameters:
         - $ref: "#/parameters/application_id"
-        - name: configuration
-          in: query
-          type: string
-          required: true
-          pattern: "(?:debug|release)"
+        - $ref: "#/parameters/configuration"
         - name: username
           in: query
           type: string
@@ -1489,11 +1429,7 @@ paths:
       description: Run SDK container and return its IP and SSH port
       parameters:
         - $ref: "#/parameters/application_id"
-        - name: configuration
-          in: query
-          type: string
-          required: true
-          pattern: "(?:debug|release)"
+        - $ref: "#/parameters/configuration"
         - name: build
           in: query
           type: boolean
@@ -1534,11 +1470,7 @@ paths:
       description: Update the SDK container by adding new dev libraries or synchronizing sysroots
       parameters:
         - $ref: "#/parameters/application_id"
-        - name: configuration
-          in: query
-          type: string
-          required: true
-          pattern: "(?:debug|release)"
+        - $ref: "#/parameters/configuration"
         - $ref: "#/parameters/progress_id"
       responses:
         200:
@@ -1566,11 +1498,7 @@ paths:
       description: Get SDK container information (can be used to check if it's running)
       parameters:
         - $ref: "#/parameters/application_id"
-        - name: configuration
-          in: query
-          type: string
-          required: true
-          pattern: "(?:debug|release)"
+        - $ref: "#/parameters/configuration"
       responses:
         200:
           description: Container information
@@ -1603,16 +1531,8 @@ paths:
           in: query
           type: string
           required: true
-        - name: configuration
-          in: query
-          type: string
-          required: true
-          pattern: "(?:debug|release)"
-        - name: deviceid
-          in: query
-          type: string
-          required: true
-          pattern: "^[-0-9a-zA-Z.]*$"
+        - $ref: "#/parameters/configuration"
+        - $ref: "#/parameters/device_id_qs"
         - name: destfolder
           in: query
           type: string
@@ -1792,6 +1712,14 @@ parameters:
     required: true
     pattern: "^[-0-9a-zA-Z.]*$"
 
+  device_id_qs:
+    name: device_id
+    description: Target device serial number
+    in: query
+    type: string
+    required: true
+    pattern: "^[-0-9a-zA-Z.]*$"
+
   eula_id:
     name: eula_id
     description: Id of an Eula
@@ -1840,6 +1768,12 @@ parameters:
     required: false
     pattern: "^$|[0-9,a-f,A-F]{8}-[0-9,a-f,A-F]{4}-[0-9,a-f,A-F]{4}-[0-9,a-f,A-F]{4}-[0-9,a-f,A-F]{12}$"
 
+  configuration:
+    name: configuration
+    in: query
+    type: string
+    required: true
+    pattern: "(?:debug|release)"
 
 definitions:
 

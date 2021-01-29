@@ -5,7 +5,6 @@ splitted in feature-specific modules.
 This is why sometimes you see calls with self explicitely passed
 as first parameter.
 """
-from api import eulas_eula_get
 import os
 import logging
 import yaml
