@@ -4,6 +4,7 @@ import io
 import logging
 import os
 import pathlib
+import re
 import docker
 import paramiko
 import sshtunnel
@@ -15,9 +16,9 @@ import serialconsole
 import sshconsole
 import singleton
 import sharedssh
+import nameresolution
 import rsync
 import logs
-import re
 import progresscookie
 from typing import Optional, List, Dict, Any, Iterable
 
@@ -596,7 +597,7 @@ class TargetDevice(config.ConfigurableKeysObject):
         :rtype: str
 
         """
-        ip, _ = sharedssh.resolve_hostname(self.hostname)
+        ip, _ = nameresolution.resolve_hostname(self.hostname)
 
         return ip
 
@@ -1035,7 +1036,7 @@ class TargetDevices(Dict[str, TargetDevice], metaclass=singleton.Singleton):
         with sshconsole.SSHConsole(hostname) as console:
             dev = self._setup_device(console, username, password, timeout)
 
-            ip, mdns = sharedssh.resolve_hostname(dev.hostname)
+            ip, mdns = nameresolution.resolve_hostname(dev.hostname)
 
             if ip == dev.hostname:
                 dev.hostname = hostname
