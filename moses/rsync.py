@@ -10,7 +10,7 @@ import subprocess
 import exceptions
 import targetdevice
 import socket
-import sharedssh
+import nameresolution
 import progresscookie
 from typing import Optional, List
 
@@ -49,11 +49,11 @@ def translate_path(originalpath: str) -> str:
 
 def create_tmp_key(keypath: str) -> str:
     """Create a temporary dummy key.
-    
+
     Create the file and set access rights to be able to use it with ssh/rsync.
 
     :param keypath: Linux path of the key file
-    :type keypath: str 
+    :type keypath: str
     :returns: path of temp key
     :rtype: str
 
@@ -119,7 +119,7 @@ def run_rsync(
     device = targetdevice.TargetDevices()[device_id]
 
     try:
-        ip, mdns = sharedssh.resolve_hostname(device.hostname)
+        ip, _ = nameresolution.resolve_hostname(device.hostname)
     except socket.gaierror:
         raise exceptions.DNSError(device.hostname)
 
@@ -192,4 +192,3 @@ def run_rsync(
 
         if should_create_tmp_key:
             remove_tmp_key(keypath)
-
