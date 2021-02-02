@@ -4,9 +4,11 @@ docker==4.4.1
 mypy==0.800
 pydocstyle==5.1.1
 pyinstaller==4.2
+pylint==2.6.0
 pyserial==3.5
 python-dateutil==2.8.1
 PyYAML==5.4.1
+radon==4.3.2
 sshtunnel==0.4.0
 swagger-ui-bundle==0.0.8
 tabulate==0.8.7

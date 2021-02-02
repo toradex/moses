@@ -1,10 +1,12 @@
 """Functions used to use tags and teplates.
 
-This is used to convert platform templates into actual dockerfiles and to 
+This is used to convert platform templates into actual dockerfiles and to
 expand tags into property values.
 """
 import re
 from typing import Any, Callable
+
+TAG = re.compile("#%.*?%#")
 
 
 def _replace_tag(
@@ -36,10 +38,11 @@ def _replace_tag(
     return tagstr
 
 
-tag = re.compile("#%.*?%#")
-
-
-def replace_tags(text: str, tagfn: Callable[[str, str, Any], str], args: Any) -> str:
+# regular expression does not change and having
+# it as global gives a performance improvment
+# pylint: disable = global-statement
+def replace_tags(text: str, tagfn: Callable[[
+                 str, str, Any], str], args: Any) -> str:
     """Replace tags marked with #%<tag>%# in the source string.
 
     :param text: source string
@@ -52,12 +55,12 @@ def replace_tags(text: str, tagfn: Callable[[str, str, Any], str], args: Any) ->
     :rtype: str
 
     """
-    global tag
+    global TAG
 
     newtext = text
 
     while "#%" and "%#" in newtext:
-        newtext = re.sub(tag, lambda m: _replace_tag(m, tagfn, args), newtext)
+        newtext = re.sub(TAG, lambda m: _replace_tag(m, tagfn, args), newtext)
 
     return newtext
 

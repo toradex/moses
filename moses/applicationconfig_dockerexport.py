@@ -1,30 +1,31 @@
 """Docker export features of ApplicationConfig class.
 
-The class is too complex to stay in a single file, code has been 
+The class is too complex to stay in a single file, code has been
 splitted in feature-specific modules.
 This is why sometimes you see calls with self explicitely passed
 as first parameter.
 """
 import os
 import logging
+from typing import Optional, Dict, Callable, Tuple, Any
 import yaml
 import docker
 import docker.models.containers
 import platformconfig
-import exceptions
 import tags
 import progresscookie
 import dockerapi
-from typing import Optional, Dict, Callable, Tuple, Any
 from applicationconfig_base import ApplicationConfigBase
+from moses_exceptions import (NoTagError, ImageNotFoundError)
 
 
 def _blkio_weight_device_cmdline_helper(devices: list) -> str:
     """Translate parameters in command line-compatible format."""
     cmdline = ""
 
-    for v in devices:
-        cmdline += "--blkio-weight-device " + v["Path"] + ":" + str(v["Weight"]) + " "
+    for device in devices:
+        cmdline += "--blkio-weight-device " + \
+            device["Path"] + ":" + str(device["Weight"]) + " "
 
     return cmdline
 
@@ -33,8 +34,9 @@ def _device_read_bps_cmdline_helper(limits: list) -> str:
     """Translate parameters in command line-compatible format."""
     cmdline = ""
 
-    for v in limits:
-        cmdline += "--device-read-bps " + v["Path"] + ":" + str(v["Rate"]) + " "
+    for limit in limits:
+        cmdline += "--device-read-bps " + \
+            limit["Path"] + ":" + str(limit["Rate"]) + " "
 
     return cmdline
 
@@ -43,8 +45,9 @@ def _device_write_bps_cmdline_helper(limits: list) -> str:
     """Translate parameters in command line-compatible format."""
     cmdline = ""
 
-    for v in limits:
-        cmdline += "--device-write-bps " + v["Path"] + ":" + str(v["Rate"]) + " "
+    for limit in limits:
+        cmdline += "--device-write-bps " + \
+            limit["Path"] + ":" + str(limit["Rate"]) + " "
 
     return cmdline
 
@@ -53,8 +56,9 @@ def _device_read_iops_cmdline_helper(limits: list) -> str:
     """Translate parameters in command line-compatible format."""
     cmdline = ""
 
-    for v in limits:
-        cmdline += "--device-read-iops " + v["Path"] + ":" + str(v["Rate"]) + " "
+    for limit in limits:
+        cmdline += "--device-read-iops " + \
+            limit["Path"] + ":" + str(limit["Rate"]) + " "
 
     return cmdline
 
@@ -63,8 +67,9 @@ def _device_write_iops_cmdline_helper(limits: list) -> str:
     """Translate parameters in command line-compatible format."""
     cmdline = ""
 
-    for v in limits:
-        cmdline += "--device-write-iops " + +v["Path"] + ":" + str(v["Rate"]) + " "
+    for limit in limits:
+        cmdline += "--device-write-iops " + + \
+            limit["Path"] + ":" + str(limit["Rate"]) + " "
 
     return cmdline
 
@@ -73,8 +78,8 @@ def _log_config_cmdline_helper(value: dict) -> str:
     """Translate parameters in command line-compatible format."""
     cmdline = "--log-driver " + value["type"]
 
-    for v in value["config"].items():
-        cmdline += " --log-opt " + v[0] + "=" + v[1] + " "
+    for limit in value["config"].items():
+        cmdline += " --log-opt " + limit[0] + "=" + limit[1] + " "
 
     return cmdline
 
@@ -83,12 +88,12 @@ def _mounts_cmdline_helper(mounts: dict) -> str:
     """Translate parameters in command line-compatible format."""
     cmdline = ""
 
-    for m in mounts:
+    for mount in mounts:
         cmdline += "--mount "
-        cmdline += "type=" + m["type"]
-        cmdline += ",source=" + m["source"]
-        cmdline += ",target=" + m["target"]
-        cmdline += ",readonly=" + ("1" if m["read_only"] else "0") + " "
+        cmdline += "type=" + mount["type"]
+        cmdline += ",source=" + mount["source"]
+        cmdline += ",target=" + mount["target"]
+        cmdline += ",readonly=" + ("1" if mount["read_only"] else "0") + " "
 
     return cmdline
 
@@ -97,16 +102,17 @@ def _ports_cmdline_helper(ports: dict) -> str:
     """Translate parameters in command line-compatible format."""
     cmdline = ""
 
-    for p in ports.items():
+    for port in ports.items():
         cmdline += "--publish "
-        containerport = p[0]
+        containerport = port[0]
 
-        if p[1] is None:
+        if port[1] is None:
             cmdline += containerport + " "
-        elif isinstance(p[1], int):
-            cmdline += str(p[1]) + ":" + containerport + " "
-        elif isinstance(p[1], tuple):
-            cmdline += p[1][0] + ":" + p[1][1] + ":" + containerport + " "
+        elif isinstance(port[1], int):
+            cmdline += str(port[1]) + ":" + containerport + " "
+        elif isinstance(port[1], tuple):
+            cmdline += port[1][0] + ":" + \
+                port[1][1] + ":" + containerport + " "
 
     return cmdline
 
@@ -125,8 +131,9 @@ def _ulimits_cmdline_helper(ulimits: list) -> str:
     """Translate parameters in command line-compatible format."""
     cmdline = ""
 
-    for u in ulimits:
-        cmdline += "--ulimit " + u.name + "=" + str(u.soft) + ":" + str(u.hard) + " "
+    for ulimit in ulimits:
+        cmdline += "--ulimit " + ulimit.name + "=" + \
+            str(ulimit.soft) + ":" + str(ulimit.hard) + " "
 
     return cmdline
 
@@ -135,8 +142,9 @@ def _volumes_cmdline_helper(volumes: dict) -> str:
     """Translate parameters in command line-compatible format."""
     cmdline = ""
 
-    for v in volumes.items():
-        cmdline += " --volume " + v[0] + v[1]["bind"] + "," + v[1]["mode"]
+    for volume in volumes.items():
+        cmdline += " --volume " + volume[0] + \
+            volume[1]["bind"] + "," + volume[1]["mode"]
 
     return cmdline
 
@@ -194,7 +202,6 @@ _int_parms: Dict[str, str] = {
     "kernel_memory": "--kernel-memory",
     "mem_limit": "--memory",
     "mem_reservation": "--memory-reservation",
-    "mem_limit": "--memory",
     "mem_swappiness": "--memory-swappiness",
     "memswap_limit": "--memory-swap",
     "oom_score_adj": "--oom-score-adj",
@@ -255,50 +262,48 @@ def _process_extra_parameter(parm: str, value: Any) -> Optional[str]:
     :return: string to be appended to the command line
     :rtype: str | None
     """
+    retvalue = None
     if parm in _boolean_parms and value:
-        return _boolean_parms[parm]
-
-    if isinstance(value, str) and parm in _str_parms:
-        return _str_parms[parm] + " '" + value + "'"
-
-    if isinstance(value, int) and parm in _int_parms:
-        return _int_parms[parm] + " " + str(value)
-
-    if isinstance(value, list):
+        retvalue = _boolean_parms[parm]
+    elif isinstance(value, str) and parm in _str_parms:
+        retvalue = _str_parms[parm] + " '" + value + "'"
+    elif isinstance(value, int) and parm in _int_parms:
+        retvalue = _int_parms[parm] + " " + str(value)
+    elif isinstance(value, list):
         if parm in _repeated_list_parms:
             cmdline = ""
-            for v in value:
-                cmdline += " " + _repeated_list_parms[parm] + " '" + v + "' "
-            return cmdline
-
-        if parm in _joined_list_parms:
+            for val in value:
+                cmdline += " " + _repeated_list_parms[parm] + " '" + val + "' "
+            retvalue = cmdline
+        elif parm in _joined_list_parms:
             cmdline = _repeated_list_parms[parm][0] + " '"
-            for v in value:
-                cmdline += v + _repeated_list_parms[parm][1]
+            for val in value:
+                cmdline += val + _repeated_list_parms[parm][1]
             cmdline += "'"
-            return cmdline
-
-    if isinstance(value, dict):
+            retvalue = cmdline
+    elif isinstance(value, dict):
         if parm in _key_val_dict_parms:
             cmdline = ""
-            for v in value.items():
+            for val in value.items():
                 cmdline += (
                     _key_val_dict_parms[parm][0]
                     + " "
-                    + v[0]
+                    + val[0]
                     + _key_val_dict_parms[parm][1]
-                    + v[1]
+                    + val[1]
                     + " "
                 )
-            return cmdline
+            retvalue = cmdline
+    elif parm in _special_parms:
+        retvalue = _special_parms[parm](value)
 
-    if parm in _special_parms:
-        return _special_parms[parm](value)
+    return retvalue
 
-    return None
+# pylint: disable = too-many-locals
 
 
-def get_docker_commandline(self: ApplicationConfigBase, configuration: str) -> str:
+def get_docker_commandline(self: ApplicationConfigBase,
+                           configuration: str) -> str:
     """Return a docker command line that can be used to run the application's container.
 
     :param configuration: debug/release
@@ -307,31 +312,34 @@ def get_docker_commandline(self: ApplicationConfigBase, configuration: str) -> s
     :rtype: str
 
     """
+    # this function will be part of ApplicationConfig via import
+    # members of base class ApplicationConfigBase are accessed
+    # pylint: disable=protected-access
     plat = platformconfig.PlatformConfigs().get_platform(self.platformid)
 
-    if plat is None:
-        return None
+    assert plat is not None
 
     ports = self._merge_props(plat, configuration, "ports")
     volumes = self._merge_props(plat, configuration, "volumes")
     devices = self._append_props(plat, configuration, "devices")
     extraparms = self._merge_props(plat, configuration, "extraparms")
-    networks = list(dict.fromkeys(self._append_props(plat, configuration, "networks")))
+    networks = list(dict.fromkeys(
+        self._append_props(plat, configuration, "networks")))
 
     cmdline = "docker run"
 
     # parse extraparms
     for parm in extraparms:
-        rawvalue = extraparms[parm]
+        parmvalue = extraparms[parm]
 
-        rawvalue = tags.replace_tags(
-            rawvalue,
-            lambda obj, tag, args: self._get_value(obj, tag, args),
+        parmvalue = tags.replace_tags(
+            parmvalue,
+            self._get_value,
             configuration,
         )
-        value = yaml.full_load(rawvalue)
+        parmvalue = yaml.full_load(parmvalue)
 
-        parmvalue = _process_extra_parameter(parm, value)
+        parmvalue = _process_extra_parameter(parm, parmvalue)
 
         if parmvalue is None:
             logging.warning(
@@ -341,23 +349,23 @@ def get_docker_commandline(self: ApplicationConfigBase, configuration: str) -> s
             cmdline += " " + parmvalue
 
     # parse mountpoints
-    for v in volumes.items():
-        cmdline += " --volume " + v[0] + ":" + v[1]
+    for volume in volumes.items():
+        cmdline += " --volume " + volume[0] + ":" + volume[1]
 
     # parse networks
-    for n in networks:
-        cmdline += " --network " + n
+    for network in networks:
+        cmdline += " --network " + network
 
     # parse devices
-    for d in devices:
-        cmdline += " --device " + d + ":" + d
+    for device in devices:
+        cmdline += " --device " + device + ":" + device
 
     # parse ports
-    for p in ports.items():
-        if p[1] is None:
-            cmdline += " --publish " + p[0]
+    for port in ports.items():
+        if port[1] is None:
+            cmdline += " --publish " + port[0]
         else:
-            cmdline += " --publish " + str(p[1]) + ":" + p[0]
+            cmdline += " --publish " + str(port[1]) + ":" + port[0]
 
     cmdline += " " + self._get_image_name(configuration)
 
@@ -427,10 +435,13 @@ _compose_parms: Dict[str, Optional[Callable]] = {
 }
 
 
-def get_docker_composefile(
-    self: ApplicationConfigBase, configuration: str
-) -> Optional[str]:
-    """Return a docker-compose file that can be used to run the application's container and its dependencies.
+# pylint: disable = too-many-locals
+# pylint: disable = too-many-branches
+def get_docker_composefile(self: ApplicationConfigBase,
+                           configuration: str) -> Optional[str]:
+    """Return a docker-compose file that can be used to run the application's container.
+
+    The docker-compose file will start also the dependencies.
 
     :param configuration: debug/release
     :type configuration: str
@@ -438,31 +449,39 @@ def get_docker_composefile(
     :rtype: str | None
 
     """
+    # this function will be part of ApplicationConfig via import
+    # members of base class ApplicationConfigBase are accessed
+    # pylint: disable=protected-access
     plat = platformconfig.PlatformConfigs().get_platform(self.platformid)
 
-    if plat is None:
-        return None
+    assert plat is not None
 
     ports = self._merge_props(plat, configuration, "ports")
     volumes = self._merge_props(plat, configuration, "volumes")
     devices = self._append_props(plat, configuration, "devices")
     extraparms = self._merge_props(plat, configuration, "extraparms")
-    networks = list(dict.fromkeys(self._append_props(plat, configuration, "networks")))
+    networks = list(dict.fromkeys(
+        self._append_props(plat, configuration, "networks")))
 
     composefile = self._get_prop(configuration, "dockercomposefile")
+
+    # if no compose file is specified for the application, check platform
+    if composefile is None or len(composefile) == 0:
+        composefile = plat.get_prop(configuration, "dockercomposefile")
 
     if composefile is not None and len(composefile) > 0:
         assert self.folder is not None
 
-        with open(os.path.join(self.folder, composefile), "r") as f:
-            composeyaml = yaml.load(f, Loader=yaml.FullLoader)
+        with open(os.path.join(self.folder, composefile), "r") as composef:
+            composeyaml = yaml.load(composef, Loader=yaml.FullLoader)
     else:
         composeyaml = yaml.load("services: {}", Loader=yaml.FullLoader)
 
     # create and fill new service
     service = dict()
 
-    # merge volumes, devices, ports into extraparms (we can't have multiple instances of the same parameter)
+    # merge volumes, devices, ports into extraparms
+    # (we can't have multiple instances of the same parameter)
     if not "ports" in extraparms:
         extraparms["ports"] = dict()
 
@@ -472,30 +491,30 @@ def get_docker_composefile(
     if not "volumes" in extraparms:
         extraparms["volumes"] = dict()
 
-    for p in ports.items():
-        if p[1] == "":
-            extraparms["ports"][p[0]] = None
+    for port in ports.items():
+        if port[1] == "":
+            extraparms["ports"][port[0]] = None
         else:
-            extraparms["ports"][p[0]] = p[1]
+            extraparms["ports"][port[0]] = port[1]
 
-    for v in volumes.items():
-        bind, mode = (v[1] + ",rw").split(",")[0:2]
-        extraparms["volumes"][v[0]] = {"bind": bind, "mode": mode}
+    for volume in volumes.items():
+        bind, mode = (volume[1] + ",rw").split(",")[0:2]
+        extraparms["volumes"][volume[0]] = {"bind": bind, "mode": mode}
 
     extraparms["devices"].extend(devices)
 
     # process extraparms and add them to the dictionary
-    for ep in extraparms.keys():
-        if ep in _compose_parms:
-            if _compose_parms[ep] is None:
-                service[ep] = extraparms[ep]
+    for extraparm in extraparms.keys():
+        if extraparm in _compose_parms:
+            if _compose_parms[extraparm] is None:
+                service[extraparm] = extraparms[extraparm]
             else:
 
-                helperfn = _compose_parms[ep]
+                helperfn = _compose_parms[extraparm]
 
                 assert helperfn is not None
 
-                parm, value = helperfn((ep, extraparms[ep]))
+                parm, value = helperfn((extraparm, extraparms[extraparm]))
                 service[parm] = value
 
     service["image"] = self._get_image_name(configuration)
@@ -507,16 +526,14 @@ def get_docker_composefile(
 
     composeyaml["services"][self._get_image_name(configuration)] = service
 
+    for network in networks:
+        composeyaml["networks"][network] = {}
+
     return yaml.dump(composeyaml)
 
 
-def push_to_registry(
-    self: ApplicationConfigBase,
-    configuration: str,
-    username: str,
-    password: str,
-    progress: Optional[progresscookie.ProgressCookie],
-) -> None:
+def push_to_registry(self: ApplicationConfigBase, configuration: str, username: str,
+                     password: str, progress: Optional[progresscookie.ProgressCookie]) -> None:
     """Push the application container to a docker registry.
 
     :param configuration: debug/release
@@ -532,10 +549,13 @@ def push_to_registry(
     configuration.
 
     """
-    tag = self._get_custom_prop(configuration, "tag")
+    # this function will be part of ApplicationConfig via import
+    # members of base class ApplicationConfigBase are accessed
+    # pylint: disable=protected-access
+    tag = self.get_custom_prop(configuration, "tag")
 
     if tag is None:
-        raise exceptions.NoTagError()
+        raise NoTagError()
 
     repository = None
 
@@ -549,22 +569,24 @@ def push_to_registry(
     imgid = self.images[configuration]
 
     if imgid is None or imgid == "":
-        logging.error("Image has never been build for application %s.", self.folder)
-        raise exceptions.ImageNotFoundError("")
+        logging.error(
+            "Image has never been build for application %s.", self.folder)
+        raise ImageNotFoundError("")
 
     localdocker = docker.from_env()
 
     try:
         limg = localdocker.images.get(imgid)
-    except docker.errors.ImageNotFound:
+    except docker.errors.ImageNotFound as exception:
         logging.error(
             "Image %s not found when deploying application %s.",
             imgid,
             self.folder,
         )
-        raise exceptions.ImageNotFoundError(imgid)
+        raise ImageNotFoundError(imgid) from exception
 
     # ensure that the image is correctly tagged
     limg.tag(repository, tag)
 
-    dockerapi.push_image(localdocker, repository, tag, username, password, progress)
+    dockerapi.push_image(localdocker, repository, tag,
+                         username, password, progress)

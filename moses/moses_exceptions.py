@@ -6,10 +6,9 @@ that can then be pasted inside the API definition file.
 import os
 import logging
 import json
+from typing import Any, Optional, List, Dict
 import flask
 import docker
-
-from typing import Any, Optional, List, Dict
 
 
 class MosesError(Exception):
@@ -97,8 +96,12 @@ class IncompatibleDeviceError(MosesError):
         :type device: Any
         """
         super().__init__(
-            "Device " + str(device) + " is not compatible with selected platform."
+            "Device " + str(device) +
+            " is not compatible with selected platform."
         )
+
+# Name is generic, but using package name as prefix this is not an issue
+# pylint: disable = redefined-builtin
 
 
 class ConnectionError(MosesError):
@@ -116,7 +119,8 @@ class ConnectionError(MosesError):
         :type e: Exception
         """
         super().__init__(
-            "Error communicating with device " + str(device) + " exception: " + str(e)
+            "Error communicating with device " +
+            str(device) + " exception: " + str(e)
         )
 
 
@@ -155,7 +159,8 @@ class SudoError(MosesError):
         :type username: str
         """
         super().__init__(
-            "User " + str(username) + " is not enabled to execute commands as root."
+            "User " + str(username) +
+            " is not enabled to execute commands as root."
         )
 
 
@@ -255,7 +260,8 @@ class PlatformDoesNotRequireSDKError(MosesError):
         :type platform_id: str
         """
         super().__init__(
-            "Platform " + str(platform_id) + " does not require an SDK container."
+            "Platform " + str(platform_id) +
+            " does not require an SDK container."
         )
 
 
@@ -289,7 +295,8 @@ class RemoteCommandError(MosesError):
         :type errorcode: Any
         """
         super().__init__(
-            "Remote command " + str(command) + " returned error " + str(errorcode)
+            "Remote command " + str(command) +
+            " returned error " + str(errorcode)
         )
 
 
@@ -358,6 +365,8 @@ class SSHError(MosesError):
         super().__init__("SSH error: " + str(e), exception=e)
 
 
+# Name is generic, but using package name as prefix this is not an issue
+# pylint: disable = redefined-builtin
 class OSError(MosesError):
     """OS specific error."""
 
@@ -399,6 +408,8 @@ class SerialError(MosesError):
         super().__init__("Serial port error: " + str(e), exception=e)
 
 
+# Name is generic, but using package name as prefix this is not an issue
+# pylint: disable = redefined-builtin
 class TimeoutError(MosesError):
     """Timeout during an operation/command."""
 
@@ -508,7 +519,8 @@ class LocalCommandError(MosesError):
     def __init__(self, result: Any) -> None:
         """Generate error message.
 
-        :param result: information about failed process execution (can be subprocess.CompletedProcess or subprocess.Popen)
+        :param result: information about failed process execution
+            (can be subprocess.CompletedProcess or subprocess.Popen)
         :type result: Any
         """
         message = (
@@ -619,35 +631,45 @@ class AbortError(MosesError):
         super().__init__("Operation has been aborted.")
 
 
-def encode_error(e: MosesError) -> flask.Response:
+def encode_error(exception: MosesError) -> flask.Response:
     """Encode an error into a Flaskk response object.
 
-    :param e: exception/error to be encoded
+    :param exception: exception/error to be encoded
     :type e: MosesError
 
     """
-    fields = {"code": (e).code, "description": (e).description, "message": str(e)}
+    fields = {
+        "code": exception.code,
+        "description": exception.description,
+        "message": str(exception)}
 
-    logging.error("Error: %d %s %s", (e).code, (e).description, str(e))
+    logging.error(
+        "Error: %d %s %s",
+        exception.code,
+        exception.description,
+        str(exception))
 
-    if e.exception is not None:
-        logging.error("Exception: %s", str(e))
-        logging.error(e.exception)
+    if exception.exception is not None:
+        logging.error("Exception: %s", str(exception))
+        logging.error(exception.exception)
 
     return flask.Response(
-        response=json.dumps(fields), status=(e).code, mimetype="application/json"
+        response=json.dumps(fields), status=exception.code, mimetype="application/json"
     )
 
 
-def encode_exception(e: Exception) -> flask.Response:
+def encode_exception(exception: Exception) -> flask.Response:
     """Encode a generic exception into a Flask response object.
 
-    :param e: exception or object that can be converted to string
+    :param exception: exception or object that can be converted to string
 
     """
-    fields = {"code": 500, "description": "Internal server error", "message": str(e)}
+    fields = {
+        "code": 500,
+        "description": "Internal server error",
+        "message": str(exception)}
 
-    logging.error(e, exc_info=True)
+    logging.error(exception, exc_info=True)
 
     return flask.Response(
         response=json.dumps(fields), status=500, mimetype="application/json"

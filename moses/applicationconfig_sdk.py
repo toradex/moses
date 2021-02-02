@@ -1,30 +1,30 @@
 """SDK-related features of ApplicationConfig class.
 
-The class is too complex to stay in a single file, code has been 
+The class is too complex to stay in a single file, code has been
 splitted in feature-specific modules.
 This is why sometimes you see calls with self explicitely passed
 as first parameter.
 """
 import os
 import shutil
-import platform as platform_module
+import socket
+import time
 import logging
+import platform as platform_module
+from typing import Optional
 import docker
 import docker.models.containers
 import paramiko
 import platformconfig
-import exceptions
-import socket
+import moses_exceptions
 import tags
-import time
-import socket
 import progresscookie
 import dockerapi
 from applicationconfig_base import ApplicationConfigBase
-from typing import Optional
 
 
-def _get_sdk_container_name(self: ApplicationConfigBase, configuration: str) -> str:
+def _get_sdk_container_name(self: ApplicationConfigBase,
+                            configuration: str) -> str:
     """Return the name of the SDK container for this application.
 
     :param configuration: debug/release
@@ -34,6 +34,9 @@ def _get_sdk_container_name(self: ApplicationConfigBase, configuration: str) -> 
     :rtype: str
 
     """
+    # this function will be part of ApplicationConfig via import,
+    # members of base class ApplicationConfigBase are accessed
+    # pylint: disable=protected-access
     assert self.id is not None
 
     platform = platformconfig.PlatformConfigs().get_platform(self.platformid)
@@ -41,9 +44,9 @@ def _get_sdk_container_name(self: ApplicationConfigBase, configuration: str) -> 
     assert platform.id is not None
 
     if not platform.usesdk:
-        raise exceptions.PlatformDoesNotRequireSDKError(self.platformid)
+        raise moses_exceptions.PlatformDoesNotRequireSDKError(self.platformid)
 
-    appname = self._get_custom_prop(configuration, "appname")
+    appname = self.get_custom_prop(configuration, "appname")
 
     if appname is None:
         instance = ""
@@ -62,7 +65,8 @@ def _get_sdk_container_name(self: ApplicationConfigBase, configuration: str) -> 
     return instance
 
 
-def _get_sdk_image_name(self: ApplicationConfigBase, configuration: str) -> str:
+def _get_sdk_image_name(self: ApplicationConfigBase,
+                        configuration: str) -> str:
     """Return the name of the SDK container image for the application.
 
     :param configuration: debug/release
@@ -72,6 +76,9 @@ def _get_sdk_image_name(self: ApplicationConfigBase, configuration: str) -> str:
     :rtype: str
 
     """
+    # this function will be part of ApplicationConfig via import,
+    # members of base class ApplicationConfigBase are accessed
+    # pylint: disable=protected-access
     assert self.id is not None
 
     platform = platformconfig.PlatformConfigs().get_platform(self.platformid)
@@ -79,9 +86,9 @@ def _get_sdk_image_name(self: ApplicationConfigBase, configuration: str) -> str:
     assert platform.id is not None
 
     if not platform.usesdk:
-        raise exceptions.PlatformDoesNotRequireSDKError(self.platformid)
+        raise moses_exceptions.PlatformDoesNotRequireSDKError(self.platformid)
 
-    appname = self._get_custom_prop(configuration, "appname")
+    appname = self.get_custom_prop(configuration, "appname")
 
     if appname is None:
         imagename = ""
@@ -101,11 +108,10 @@ def _get_sdk_image_name(self: ApplicationConfigBase, configuration: str) -> str:
     return imagename
 
 
-def _build_sdk_image(
-    self: ApplicationConfigBase,
-    configuration: str,
-    progress: Optional[progresscookie.ProgressCookie],
-) -> None:
+# pylint: disable=too-many-locals
+def _build_sdk_image(self: ApplicationConfigBase,
+                     configuration: str,
+                     progress: Optional[progresscookie.ProgressCookie]) -> None:
     """Generate Dockerfile and build SDK image.
 
     If the SDK container is running it wil be stopped and restarted
@@ -116,6 +122,10 @@ def _build_sdk_image(
     :type progress: progresscookie.ProgressCookie, optional
 
     """
+    # this function will be part of ApplicationConfig via import,
+    # members of base class ApplicationConfigBase are accessed
+    # pylint: disable=protected-access
+
     assert self.folder is not None
 
     containerwasrunning = False
@@ -131,6 +141,7 @@ def _build_sdk_image(
     try:
 
         # if an instance is running, stop and remove it
+        # pylint: disable = broad-except
         try:
             sdkcontainer = localdocker.containers.get(instance)
 
@@ -143,7 +154,7 @@ def _build_sdk_image(
             sdkcontainer.remove()
         except docker.errors.NotFound:
             pass
-        except:
+        except Exception:
             # on some Windows PCs an internal server errror is generated instead.
             # see TIE-260
             if platform_module.system() == "Windows":
@@ -162,7 +173,7 @@ def _build_sdk_image(
         tags.apply_template(
             str(dockertemplatefull),
             str(dockerfile),
-            lambda obj, tag, args: self._get_value(obj, tag, args),
+            self._get_value,
             configuration,
         )
 
@@ -190,7 +201,7 @@ def _build_sdk_image(
         )
 
         if sdkimage is None:
-            raise exceptions.ImageNotFoundError(
+            raise moses_exceptions.ImageNotFoundError(
                 _get_sdk_image_name(self, configuration)
             )
 
@@ -202,13 +213,12 @@ def _build_sdk_image(
         if containerwasrunning:
             start_sdk_container(self, configuration, False, progress)
 
-    except docker.errors.DockerException as e:
-        raise exceptions.LocalDockerError(e)
+    except docker.errors.DockerException as exception:
+        raise moses_exceptions.LocalDockerError(exception)
 
 
-def get_sdk_container(
-    self: ApplicationConfigBase, configuration: str
-) -> docker.models.containers.Container:
+def get_sdk_container(self: ApplicationConfigBase,
+                      configuration: str) -> docker.models.containers.Container:
     """Return SDK container object.
 
     :param configuration: debug/release
@@ -220,27 +230,25 @@ def get_sdk_container(
     """
     instance = _get_sdk_container_name(self, configuration)
 
+    # pylint: disable=broad-except
     try:
         localdocker = docker.from_env()
         cnt = localdocker.containers.get(instance)
 
         return cnt
-    except docker.errors.DockerException as e:
-        raise exceptions.SDKContainerNotFoundError(e)
-    except Exception as e:
+    except docker.errors.DockerException as exception:
+        raise moses_exceptions.SDKContainerNotFoundError(exception)
+    except Exception as exception:
         # on some Windows PCs an internal server errror is generated instead.
         # see TIE-260
         if platform_module.system() == "Windows":
-            raise exceptions.SDKContainerNotFoundError(e)
-        else:
-            raise
+            raise moses_exceptions.SDKContainerNotFoundError(exception)
+        raise
 
 
-def update_sdk(
-    self: ApplicationConfigBase,
-    configuration: str,
-    progress: Optional[progresscookie.ProgressCookie],
-) -> None:
+def update_sdk(self: ApplicationConfigBase,
+               configuration: str,
+               progress: Optional[progresscookie.ProgressCookie]) -> None:
     """Update the application SDK.
 
     :param configuration: debug/release
@@ -252,19 +260,19 @@ def update_sdk(
     platform = platformconfig.PlatformConfigs().get_platform(self.platformid)
 
     if not platform.usesdk:
-        raise exceptions.PlatformDoesNotRequireSDKError(self.platformid)
+        raise moses_exceptions.PlatformDoesNotRequireSDKError(self.platformid)
 
     if configuration is None:
-        raise exceptions.SDKRequiresConfiguration()
+        raise moses_exceptions.SDKRequiresConfiguration()
     _build_sdk_image(self, configuration, progress)
 
 
-def start_sdk_container(
-    self: ApplicationConfigBase,
-    configuration: str,
-    build: bool,
-    progress: Optional[progresscookie.ProgressCookie],
-) -> None:
+# pylint: disable = too-many-branches
+# pylint: disable = too-many-statements
+def start_sdk_container(self: ApplicationConfigBase,
+                        configuration: str,
+                        build: bool,
+                        progress: Optional[progresscookie.ProgressCookie]) -> None:
     """Run an instance of the application's SDK container.
 
     :param configuration: debug/release
@@ -275,11 +283,8 @@ def start_sdk_container(
     :type progress: progresscookie.ProgressCookie, optional
 
     """
-    if self.sdksshaddress is not None:
-        ports = {"22/tcp": int(self.sdksshaddress["HostPort"])}
-    else:
-        # None is a valid value when you want host-assigned port
-        ports = {"22/tcp": None}  # type: ignore
+    ports = {"22/tcp": int(self.sdksshaddress["HostPort"])
+             if self.sdksshaddress is not None else None}
 
     self.sdksshaddress = None
 
@@ -288,6 +293,7 @@ def start_sdk_container(
 
     localdocker = docker.from_env()
 
+    # pylint: disable = broad-except
     try:
         container = localdocker.containers.get(instance)
 
@@ -295,12 +301,12 @@ def start_sdk_container(
             try:
                 container.stop()
                 container.remove()
-            except:
+            except Exception:
                 pass
             container = None
     except docker.errors.NotFound:
         container = None
-    except:
+    except Exception:
         # on some Windows PCs an internal server errror is generated instead.
         # see TIE-260
         if platform_module.system() == "Windows":
@@ -308,18 +314,22 @@ def start_sdk_container(
         else:
             raise
 
-    if container is None:
+    if container is not None:
+        self.sdksshaddress = container.attrs["NetworkSettings"]["Ports"]["22/tcp"][0]
+    else:
         if platform.usesdk and not platform.usesysroots:
             try:
-                _ = localdocker.images.get(_get_sdk_image_name(self, configuration))
-            except docker.errors.NotFound:
+                _ = localdocker.images.get(
+                    _get_sdk_image_name(
+                        self, configuration))
+            except docker.errors.NotFound as exception:
                 if build:
                     logging.info("SDK - SDK image not found, building it.")
                     _build_sdk_image(self, configuration, progress)
                 else:
-                    raise exceptions.ImageNotFoundError(
+                    raise moses_exceptions.ImageNotFoundError(
                         _get_sdk_image_name(self, configuration)
-                    )
+                    ) from exception
 
         try:
             container = localdocker.containers.run(
@@ -328,44 +338,44 @@ def start_sdk_container(
                 detach=True,
                 ports=ports,
             )
-        except Exception as e:
+        except docker.errors.DockerException:
             self.sdksshaddress = None
             self.save()
-            raise e
+            raise
 
         while container.status == "created":
             container = localdocker.containers.get(instance)
 
         starttime = time.time()
 
-        try:
-            # check that ssh server is active
-            self.sdksshaddress = container.attrs["NetworkSettings"]["Ports"]["22/tcp"][
-                0
-            ]
-            self.save()
+        while time.time() < starttime + 60:
+            try:
+                # check that ssh server is active
+                self.sdksshaddress = container.attrs["NetworkSettings"]["Ports"]["22/tcp"][
+                    0
+                ]
+                self.save()
 
-            port = int(self.sdksshaddress["HostPort"])
-            sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-            result = sock.connect_ex(("127.0.0.1", port))
-            sock.close()
+                port = int(self.sdksshaddress["HostPort"])
+                sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+                result = sock.connect_ex(("127.0.0.1", port))
+                sock.close()
 
-            if result != 0:
+                if result != 0:
+                    return
+
+                ssh = paramiko.SSHClient()
+
+                ssh.connect(
+                    "127.0.0.1",
+                    port=port,
+                    username=platform.sdkcontainerusername,
+                    password=platform.sdkcontainerpassword,
+                )
+
                 return
+            # pylint: disable = broad-except
+            except Exception:
+                pass
 
-            ssh = paramiko.SSHClient()
-
-            ssh.connect(
-                "127.0.0.1",
-                port=port,
-                username=platform.sdkcontainerusername,
-                password=platform.sdkcontainerpassword,
-            )
-
-            return
-
-        except:
-            if time.time() > starttime + 60:
-                raise exceptions.TimeoutError()
-    else:
-        self.sdksshaddress = container.attrs["NetworkSettings"]["Ports"]["22/tcp"][0]
+            raise moses_exceptions.TimeoutError()

@@ -1,16 +1,16 @@
 """Base classes for objects that store configuration information."""
-import yaml
 import shutil
 import os
 import io
 import logging
-import paramiko
-import pathlib
-import exceptions
 import platform
 import subprocess
-import singleton
+from pathlib import Path
 from typing import Optional, Dict, Any
+import yaml
+import paramiko
+import moses_exceptions
+import singleton
 
 APP_NAME: str = "moses"
 
@@ -40,13 +40,15 @@ class ConfigurableObject:
                 if prop["readOnly"]:
                     cls.readonlyfields.add(key)
 
-    def __init__(self, folder: Optional[pathlib.Path]):
+    def __init__(self, folder: Optional[Path]):
         """Initialize the object.
 
         :param folder: folder where configuration is going to be stored.
-        :type folder: pathlib.Path,optional
+        :type folder: Path,optional
         """
         self.folder = folder
+        # id is a good name for an... id
+        # pylint: disable = invalid-name
         self.id: Optional[str] = None
 
         if self.folder is not None:
@@ -55,7 +57,8 @@ class ConfigurableObject:
     def load(self) -> None:
         """Load object data from YAML file.
 
-        Objects store their data in a folder with a file named config.yaml with all the serializable properties
+        Objects store their data in a folder with a file
+        named config.yaml with all the serializable properties
 
         """
         if self.folder is None:
@@ -71,11 +74,11 @@ class ConfigurableObject:
 
         self.__setstate__(fields)
 
-    def _build_folder_path(self) -> pathlib.Path:
+    def _build_folder_path(self) -> Path:
         """Create full folder path from id and other info.
 
         :returns: path where configuration is stored
-        :rtype: pathlib.Path
+        :rtype: Path
 
         """
         raise NotImplementedError()
@@ -88,10 +91,10 @@ class ConfigurableObject:
 
         """
         if self.id is None:
-            raise exceptions.InvalidObjectIdError()
+            raise moses_exceptions.InvalidObjectIdError()
 
         if not self.is_valid():
-            raise exceptions.InvalidObjectStateError(self.id)
+            raise moses_exceptions.InvalidObjectStateError(self.id)
 
         if self.folder is None:
             self.folder = self._build_folder_path()
@@ -102,6 +105,10 @@ class ConfigurableObject:
         with open(self.folder / "config.yaml", "w") as out:
             yaml.dump(self.__getstate__(), out, indent=4, sort_keys=True)
 
+    # This method provides the default implementation, it can be overridden
+    # by derived classes and there self and the argument will be used
+    # pylint: disable = unused-argument
+    # pylint: disable = no-self-use
     def is_valid(self, fields: dict = None) -> bool:
         """Validate fields of current object.
 
@@ -111,7 +118,7 @@ class ConfigurableObject:
         :rtype: bool
 
         """
-        pass
+        return True
 
     def destroy(self) -> None:
         """Remove permanently all stored information about the object."""
@@ -121,11 +128,15 @@ class ConfigurableObject:
 
         try:
             shutil.rmtree(self.folder)
-        except:
+        # pylint: disable = broad-except
+        except BaseException:
             pass
 
     def check_readonly(self, fields: dict) -> dict:
-        """Remove all read-only fields after checking that the required value is matching the current one.
+        """Remove all read-only fields.
+
+        During object updates read-only field are removed,
+        after checking that the required value is matching the current one.
 
         :param fields: properties that need to be updated
         :tpye fields: dict
@@ -143,7 +154,9 @@ class ConfigurableObject:
                     )
                 readonlyitems.append(key)
 
-        [fields.pop(key) for key in readonlyitems]
+        for key in readonlyitems:
+            fields.pop(key)
+
         return fields
 
     def import_data(self, fields: Dict[str, Any]) -> None:
@@ -175,7 +188,7 @@ class ConfigurableObject:
         """Support deserialization from a dictionary."""
         self.__dict__.update(fields)
 
-    def _to_json(self) -> Dict[str, Any]:
+    def to_json(self) -> Dict[str, Any]:
         """Convert object to an array of json-compatible key-value pairs.
 
         :return: properties as a dictionary
@@ -191,17 +204,26 @@ class ConfigurableObject:
 class ConfigurableKeysObject(ConfigurableObject):
     """Implement a ConfigurableObject that manages a public/private key pair."""
 
-    def __init__(self, folder: Optional[pathlib.Path]):
+    def __init__(self, folder: Optional[Path]):
         """Initialize the object.
 
         :param folder: folder where configuration data is stored
-        :type folder: pathlib.Path, optional
+        :type folder: Path, optional
         """
         self.publickey: Optional[str] = None
         self.privatekey: Optional[str] = None
         self.username: Optional[str] = None
 
         super().__init__(folder)
+
+    def _build_folder_path(self) -> Path:
+        """Create full folder path from id and other info.
+
+        :returns: path where configuration is stored
+        :rtype: Path
+
+        """
+        raise NotImplementedError()
 
     def save(self) -> None:
         """Save object data.
@@ -234,7 +256,9 @@ class ConfigurableKeysObject(ConfigurableObject):
         self.publickey = "ssh-rsa " + key.get_base64()
 
         if platform.system() == "Windows":
-            subprocess.run(["icacls.exe", keypath, "/c", "/t", "/Inheritance:d"])
+            # pylint: disable = subprocess-run-check
+            subprocess.run(
+                ["icacls.exe", keypath, "/c", "/t", "/Inheritance:d"])
             subprocess.run(
                 [
                     "icacls.exe",
@@ -257,7 +281,7 @@ class ConfigurableKeysObject(ConfigurableObject):
         else:
             os.chmod(keypath, 0o600)
 
-    def _to_json(self) -> Dict[str, Any]:
+    def to_json(self) -> Dict[str, Any]:
         """Convert object to an array of json-compatible key-value pairs.
 
         Remove keys from json serialization
@@ -266,7 +290,7 @@ class ConfigurableKeysObject(ConfigurableObject):
         :rtype: Dict[str, Any]
 
         """
-        fields = super()._to_json()
+        fields = super().to_json()
         del fields["privatekey"]
         del fields["publickey"]
         return fields
@@ -282,6 +306,8 @@ class ConfigurableKeysObject(ConfigurableObject):
         return os.path.join(self.folder, "id_rsa")
 
 
+# pylint: disable = too-many-instance-attributes
+# pylint: disable = too-few-public-methods
 class ServerConfig(metaclass=singleton.Singleton):
     """Class used to store application parameters."""
 
@@ -313,8 +339,8 @@ class ServerConfig(metaclass=singleton.Singleton):
         folders
         """
         self.commandtimeout: int = 30
-        self.apppath = pathlib.Path(os.path.dirname(os.path.abspath(__file__)))
-        self.datapath = pathlib.Path.home() / ("." + APP_NAME)
+        self.apppath = Path(os.path.dirname(os.path.abspath(__file__)))
+        self.datapath = Path.home() / ("." + APP_NAME)
 
         self.devicespath = self.datapath / "devices"
 

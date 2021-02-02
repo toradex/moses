@@ -2,21 +2,21 @@
 """Main entry point and initialization of all global objects."""
 import sys
 import os
+import argparse
 import logging
 import logging.handlers
+from typing import Any
+import requests
 import connexion
-import api
-import exceptions
 import waitress
-from flask import request
-from connexion.json_schema import Draft4RequestValidator
 import yaml
+from connexion.json_schema import Draft4RequestValidator
+from flask import request
+import api
+import moses_exceptions
 import targetdevice
 import applicationconfig
 import eula
-import argparse
-import requests
-from typing import Any
 
 if getattr(sys, "frozen", False):
     options = {"swagger_path": os.path.dirname(sys.executable) + "/api/ui"}
@@ -73,6 +73,7 @@ if __name__ == "__main__":
                 args.logfile, "a", 1024 * 1024, 4)
         )
 
+    # pylint: disable = broad-except
     try:
         proxies = {
             "http": None,
@@ -85,7 +86,7 @@ if __name__ == "__main__":
 
         if r.status_code != 200:
             logging.error(
-                "Port " + args.port + " already used by an incompatible REST server."
+                f"Port {args.port} already used by an incompatible REST server."
             )
             sys.exit(-1)
 
@@ -102,11 +103,10 @@ if __name__ == "__main__":
             logging.warning("back-end server already running.")
 
         sys.exit(0)
-
-    except requests.exceptions.ConnectionError as e:
+    except requests.exceptions.ConnectionError as exception:
         pass
-    except Exception as e:
-        logging.exception(e)
+    except Exception as exception:
+        logging.exception(exception)
 
     with open("swagger.yaml", "r") as inp:
         schema = yaml.full_load(inp)

@@ -1,12 +1,13 @@
 """Classes used to manage End User License Agreements."""
-import config
+import os
 import logging
+from typing import Dict, Any
 from pathlib import Path
 import singleton
-import os
-from typing import Dict, Any
+import config
 
 
+# pylint: disable = too-many-instance-attributes
 class EULA(config.ConfigurableObject):
     """Class that stores information about a specific eula and it's acceptance status."""
 
@@ -19,7 +20,8 @@ class EULA(config.ConfigurableObject):
 
         :param folder: root folder for the object
         :type folder: pathlib.Path
-        :param standard: if true the Eula has been loaded from the install path and must be saved to a different location
+        :param standard: if true the Eula has been loaded from the install path
+            and must be saved to a different location
         :type standard: bool
 
         """
@@ -47,16 +49,27 @@ class EULA(config.ConfigurableObject):
         """
         return True
 
-    def _to_json(self) -> Dict[str, Any]:
+    def to_json(self) -> Dict[str, Any]:
         """Convert object to an array of json-compatible key-value pairs.
 
         :return: properties as a dictionary
         :rtype: Dict[str, Any]
 
         """
-        fields = super()._to_json()
+        fields = super().to_json()
         del fields["standard"]
         return fields
+
+    def _build_folder_path(self) -> Path:
+        """Create full folder path from id and other info.
+
+        :returns: path where configuration is stored
+        :rtype: Path
+
+        """
+        assert self.id is not None
+
+        return config.ServerConfig().eulaspath / self.id
 
     def save(self) -> None:
         """Save object data.
@@ -73,7 +86,8 @@ class EULA(config.ConfigurableObject):
                 assert self.folder is not None
 
                 os.mkdir(self.folder)
-            except:
+            # pylint: disable = broad-except
+            except BaseException:
                 pass
 
             self.standard = False
@@ -81,6 +95,7 @@ class EULA(config.ConfigurableObject):
         super().save()
 
 
+# pylint: disable = too-few-public-methods
 class EULAs(Dict[str, EULA], metaclass=singleton.Singleton):
     """Class to manage eulas for the different platforms.
 
@@ -95,30 +110,38 @@ class EULAs(Dict[str, EULA], metaclass=singleton.Singleton):
 
         subfolders = [dir for dir in path.iterdir() if dir.is_dir()]
 
-        for dir in subfolders:
+        for subfolder in subfolders:
             try:
-                eula = EULA(dir, True)
+                eula = EULA(subfolder, True)
 
                 assert eula.id is not None
 
+                # pylint false positive, self is a dict, so we can add items
+                # pylint: disable=unsupported-assignment-operation
                 self[eula.id] = eula
-            except Exception as e:
+            # pylint: disable = broad-except
+            except Exception as exception:
                 logging.exception(
-                    "Can't create eula from folder %s." "Error: %s", str(dir), str(e)
+                    "Can't create eula from folder %s." "Error: %s", str(
+                        subfolder), str(exception)
                 )
 
         path = config.ServerConfig().eulaspath
 
         subfolders = [dir for dir in path.iterdir() if dir.is_dir()]
 
-        for dir in subfolders:
+        for subfolder in subfolders:
             try:
-                eula = EULA(dir, False)
+                eula = EULA(subfolder, False)
 
                 assert eula.id is not None
 
+                # pylint false positive, self is a dict, so we can add items
+                # pylint: disable=unsupported-assignment-operation
                 self[eula.id] = eula
-            except Exception as e:
+            # pylint: disable = broad-except
+            except Exception as exception:
                 logging.exception(
-                    "Can't create eula from folder %s." "Error: %s", str(dir), str(e)
+                    "Can't create eula from folder %s." "Error: %s", str(
+                        subfolder), str(exception)
                 )

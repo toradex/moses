@@ -1,17 +1,23 @@
 """Implementation of API entry points and management of global objects."""
 import logging
+import pathlib
+from typing import Any, Optional, Dict
 import docker
 import docker.models.containers
 import connexion
-import pathlib
 import targetdevice
 import applicationconfig
 import eula
 import platformconfig
 import config
-import exceptions
+import moses_exceptions
 import progresscookie
-from typing import Any, Optional, Dict, Union
+
+# This module has many lines, but mostly wrappers between API calls
+# and the internal object, so it makes sense to keep those together
+# in the same place
+
+# pylint: disable=too-many-lines
 
 APP_VERSION = "1.0"
 API_VERSION = "1.0"
@@ -19,7 +25,11 @@ API_VERSION = "1.0"
 EMULATION_IMAGE_NAME = "torizon/binfmt"
 
 # validation of readonly fields is done internally
-def remove_readonly(validator: Any, ro: Any, instance: Any, schema: Any) -> None:
+
+
+# pylint: disable=unused-argument
+def remove_readonly(validator: Any, readonly: Any, instance: Any,
+                    schema: Any) -> None:
     """Skip validation of readonly fields.
 
     this function is required to avoid that read-only fields passed back during update
@@ -27,7 +37,7 @@ def remove_readonly(validator: Any, ro: Any, instance: Any, schema: Any) -> None
     appropriate object
 
     :param validator:
-    :param ro:
+    :param readonly:
     :param instance:
     :param schema:
 
@@ -35,6 +45,7 @@ def remove_readonly(validator: Any, ro: Any, instance: Any, schema: Any) -> None
     return
 
 
+# pylint: disable=too-few-public-methods
 class CustomJSONEncoder(connexion.apps.flask_app.FlaskJSONEncoder):
     """Object used to encode internal objects to json.
 
@@ -43,23 +54,29 @@ class CustomJSONEncoder(connexion.apps.flask_app.FlaskJSONEncoder):
 
     """
 
-    def default(self, obj: Any) -> Union[str, float, Any]:
-        """Serialize objects using their _to_json method, when available.
+    # flask method does not use type hints
+    # pylint: disable = arguments-differ
+    def default(self, obj: Any) -> Any:
+        """Serialize objects using their to_json method, when available.
 
-        If the object has a _to_json method, it will be used for serialization
+        If the object has a to_json method, it will be used for serialization
 
         :param obj: object to be serialized
 
         """
-        to_json = getattr(obj, "_to_json", None)
+        to_json = getattr(obj, "to_json", None)
         if callable(to_json):
-            return obj._to_json()
+            return obj.to_json()
         return connexion.apps.flask_app.FlaskJSONEncoder.default(self, obj)
 
 
+# This class is passed to connexion and must keep the same interface
 class ApiResolver(connexion.Resolver):
     """Object used to resolve url to a function inside this module."""
 
+    # we don't use self, but we have to keep the interface that
+    # connexion expects
+    # pylint: disable=no-self-use
     def resolve(self, operation: Any) -> connexion.Resolution:
         """Generate a function name from an operation path.
 
@@ -113,7 +130,8 @@ def version_docker_get() -> Any:
         client = docker.from_env()
 
         return (client.version(), 200)
-    except:
+    # pylint: disable=broad-except
+    except Exception:
         return ("Docker not responding", 500)
 
 
@@ -151,7 +169,8 @@ def devices_serial_detect_get(port: str, username: str, password: str) -> Any:
     return (dev, 200)
 
 
-def devices_network_detect_get(hostname: str, username: str, password: str) -> Any:
+def devices_network_detect_get(
+        hostname: str, username: str, password: str) -> Any:
     """Detect a network device.
 
     :param hostname: hostname or ip address
@@ -510,7 +529,8 @@ def devices_device_containers_get(device_id: str) -> Any:
     return (containers, 200)
 
 
-def devices_device_containers_container_get(device_id: str, container_id: str) -> Any:
+def devices_device_containers_container_get(
+        device_id: str, container_id: str) -> Any:
     """Return information about a specific container.
 
     :param device_id: device id
@@ -534,8 +554,7 @@ def devices_device_containers_container_get(device_id: str, container_id: str) -
 
 
 def devices_device_containers_container_delete(
-    device_id: str, container_id: str
-) -> Any:
+        device_id: str, container_id: str) -> Any:
     """Delete a specific container.
 
     :param device_id: device id
@@ -557,8 +576,7 @@ def devices_device_containers_container_delete(
 
 
 def devices_device_containers_container_start_get(
-    device_id: str, container_id: str
-) -> Any:
+        device_id: str, container_id: str) -> Any:
     """Start a specific container.
 
     :param device_id: device id
@@ -580,8 +598,7 @@ def devices_device_containers_container_start_get(
 
 
 def devices_device_containers_container_stop_get(
-    device_id: str, container_id: str
-) -> Any:
+        device_id: str, container_id: str) -> Any:
     """Stop a specific container.
 
     :param device_id: device id
@@ -603,8 +620,7 @@ def devices_device_containers_container_stop_get(
 
 
 def devices_device_containers_container_processes_get(
-    device_id: str, container_id: str
-) -> Any:
+        device_id: str, container_id: str) -> Any:
     """Return list of processes running inside a specific container.
 
     :param device_id: device id
@@ -626,8 +642,7 @@ def devices_device_containers_container_processes_get(
 
 
 def devices_device_containers_container_memory_get(
-    device_id: str, container_id: str
-) -> Any:
+        device_id: str, container_id: str) -> Any:
     """Return memory information about a specific container.
 
     :param device_id: device id
@@ -647,8 +662,7 @@ def devices_device_containers_container_memory_get(
 
 
 def devices_device_containers_container_storage_get(
-    device_id: str, container_id: str
-) -> Any:
+        device_id: str, container_id: str) -> Any:
     """Return information about mountpoints and storage for a specific container.
 
     :param device_id: device id
@@ -670,8 +684,7 @@ def devices_device_containers_container_storage_get(
 
 
 def devices_device_containers_container_logs_get(
-    device_id: str, container_id: str, restart: bool
-) -> Any:
+        device_id: str, container_id: str, restart: bool) -> Any:
     """Return logs for a specific container (line by line).
 
     :param device_id: device id
@@ -714,8 +727,7 @@ def devices_device_privatekey_get(device_id: str) -> Any:
 
 
 def devices_device_syncfolders_get(
-    device_id: str, sourcefolder: str, destfolder: str, progress_id: str = None
-) -> Any:
+        device_id: str, sourcefolder: str, destfolder: str, progress_id: str = None) -> Any:
     """Sync a folder on the host with one on the target device.
 
     :param device_id: device id
@@ -740,16 +752,16 @@ def devices_device_syncfolders_get(
         devices = targetdevice.TargetDevices()
 
         if device_id not in devices:
-            raise exceptions.ObjectNotFound("Device", device_id)
+            raise moses_exceptions.ObjectNotFound("Device", device_id)
 
         devices[device_id].sync_folders(sourcefolder, destfolder, progress)
 
         progresscookie.progress_completed(progress)
 
         return (connexion.NoContent, 200)
-    except Exception as e:
-        progresscookie.progress_report_error(progress, e)
-        raise e
+    except Exception as exception:
+        progresscookie.progress_report_error(progress, exception)
+        raise
 
 
 def devices_device_current_ip_get(device_id: str) -> Any:
@@ -797,11 +809,11 @@ def eulas_eula_get(eula_id: str) -> Any:
     if eula_id not in eulas:
         return ("eula not found", 404)
 
-    e = eulas.get(eula_id)
-    return (e, 200)
+    eula_ = eulas.get(eula_id)
+    return (eula_, 200)
 
 
-def eulas_eula_put(eula_id: str, e: Dict[str, Any]) -> Any:
+def eulas_eula_put(eula_id: str, eula_: Dict[str, Any]) -> Any:
     """Change eula properties.
 
     :param eula_id: eula id
@@ -819,7 +831,7 @@ def eulas_eula_put(eula_id: str, e: Dict[str, Any]) -> Any:
 
     eulaupdated = eulas[eula_id]
 
-    eulaupdated.import_data(e)
+    eulaupdated.import_data(eula_)
     eulaupdated.save()
     return (eulaupdated, 200)
 
@@ -827,7 +839,8 @@ def eulas_eula_put(eula_id: str, e: Dict[str, Any]) -> Any:
 def platforms_get(runtime: Optional[str] = None) -> Any:
     """Return a list of platforms.
 
-    API returns the list of all platform (when runtime is none) or platforms supporting the specified runtime
+    API returns the list of all platform (when runtime is none)
+    or platforms supporting the specified runtime
 
     :param runtime: runtime id or None  (Default value = None)
     :type runtime: str
@@ -937,8 +950,7 @@ def applications_application_get(application_id: str) -> Any:
 
 
 def applications_application_put(
-    application_id: str, application: Dict[str, Any]
-) -> Any:
+        application_id: str, application: Dict[str, Any]) -> Any:
     """Change application properties.
 
     :param application_id: application id
@@ -984,8 +996,7 @@ def applications_application_delete(application_id: str) -> Any:
 
 
 def applications_application_updated_get(
-    application_id: str, configuration: str
-) -> Any:
+        application_id: str, configuration: str) -> Any:
     """Delete a specific application.
 
     :param application_id: application id
@@ -1007,8 +1018,7 @@ def applications_application_updated_get(
 
 
 def applications_application_build_get(
-    application_id: str, configuration: str, progress_id: str = None
-) -> Any:
+        application_id: str, configuration: str, progress_id: str = None) -> Any:
     """Build the application container.
 
     :param application_id: application id
@@ -1031,21 +1041,21 @@ def applications_application_build_get(
         applications = applicationconfig.ApplicationConfigs()
 
         if application_id not in applications:
-            raise exceptions.ObjectNotFound("Application", application_id)
+            raise moses_exceptions.ObjectNotFound(
+                "Application", application_id)
 
         applications[application_id].build_image(configuration, progress)
 
         progresscookie.progress_completed(progress)
 
         return (connexion.NoContent, 200)
-    except Exception as e:
-        progresscookie.progress_report_error(progress, e)
-        raise e
+    except Exception as exception:
+        progresscookie.progress_report_error(progress, exception)
+        raise
 
 
 def applications_application_deploy_get(
-    application_id: str, configuration: str, device_id: str, progress_id: str = None
-) -> Any:
+        application_id: str, configuration: str, device_id: str, progress_id: str = None) -> Any:
     """Deploy the application container.
 
     :param application_id: application id
@@ -1084,14 +1094,13 @@ def applications_application_deploy_get(
         progresscookie.progress_completed(progress)
 
         return (connexion.NoContent, 200)
-    except Exception as e:
-        progresscookie.progress_report_error(progress, e)
-        raise e
+    except Exception as exception:
+        progresscookie.progress_report_error(progress, exception)
+        raise
 
 
 def applications_application_run_get(
-    application_id: str, configuration: str, device_id: str, progress_id: str = None
-) -> Any:
+        application_id: str, configuration: str, device_id: str, progress_id: str = None) -> Any:
     """Run the application container.
 
     :param application_id: application id
@@ -1130,14 +1139,13 @@ def applications_application_run_get(
         progresscookie.progress_completed(progress)
 
         return (container, 200)
-    except Exception as e:
-        progresscookie.progress_report_error(progress, e)
-        raise e
+    except Exception as exception:
+        progresscookie.progress_report_error(progress, exception)
+        raise
 
 
 def applications_application_stop_get(
-    application_id: str, configuration: str, device_id: str
-) -> Any:
+        application_id: str, configuration: str, device_id: str) -> Any:
     """Stop the application container.
 
     :param application_id: application id
@@ -1167,8 +1175,7 @@ def applications_application_stop_get(
 
 
 def applications_application_container_get(
-    application_id: str, configuration: str, device_id: str
-) -> Any:
+        application_id: str, configuration: str, device_id: str) -> Any:
     """Return the application's container properties.
 
     :param application_id: application id
@@ -1202,8 +1209,7 @@ def applications_application_container_get(
 
 
 def applications_application_sdk_container_get(
-    application_id: str, configuration: str
-) -> Any:
+        application_id: str, configuration: str) -> Any:
     """Return the application's SDK container instance.
 
     :param application_id: application id
@@ -1229,8 +1235,7 @@ def applications_application_sdk_container_get(
 
 
 def applications_application_container_logs_get(
-    application_id: str, configuration: str, device_id: str, restart: bool
-) -> Any:
+        application_id: str, configuration: str, device_id: str, restart: bool) -> Any:
     """Return one line from the container's log.
 
     :param application_id: application id
@@ -1265,8 +1270,7 @@ def applications_application_container_logs_get(
 
 
 def applications_application_docker_commandline_get(
-    application_id: str, configuration: str
-) -> Any:
+        application_id: str, configuration: str) -> Any:
     """Return docker command line for the application's container.
 
     :param application_id: application id
@@ -1290,8 +1294,7 @@ def applications_application_docker_commandline_get(
 
 
 def applications_application_docker_composefile_get(
-    application_id: str, configuration: str
-) -> Any:
+        application_id: str, configuration: str) -> Any:
     """Return docker-compose YAML for the application's container.
 
     :param application_id: application id
@@ -1315,12 +1318,8 @@ def applications_application_docker_composefile_get(
 
 
 def applications_application_push_to_registry_get(
-    application_id: str,
-    configuration: str,
-    username: str,
-    password: str,
-    progress_id: str = None,
-) -> Any:
+        application_id: str, configuration: str,
+        username: str, password: str, progress_id: str = None) -> Any:
     """Push application's container to docker registry.
 
     :param application_id: application id
@@ -1356,14 +1355,13 @@ def applications_application_push_to_registry_get(
         progresscookie.progress_completed(progress)
 
         return (connexion.NoContent, 200)
-    except Exception as e:
-        progresscookie.progress_report_error(progress, e)
-        raise e
+    except Exception as exception:
+        progresscookie.progress_report_error(progress, exception)
+        raise
 
 
 def applications_application_sdk_run_get(
-    application_id: str, configuration: str, build: bool, progress_id: str = None
-) -> Any:
+        application_id: str, configuration: str, build: bool, progress_id: str = None) -> Any:
     """Run the SDK container and return SSH address for connection.
 
     :param application_id: application id
@@ -1388,7 +1386,8 @@ def applications_application_sdk_run_get(
         applications = applicationconfig.ApplicationConfigs()
 
         if application_id not in applications:
-            raise exceptions.ObjectNotFound("Application", application_id)
+            raise moses_exceptions.ObjectNotFound(
+                "Application", application_id)
 
         app = applications[application_id]
 
@@ -1406,14 +1405,13 @@ def applications_application_sdk_run_get(
         progresscookie.progress_completed(progress)
 
         return (app.sdksshaddress, 200)
-    except Exception as e:
-        progresscookie.progress_report_error(progress, e)
-        raise e
+    except Exception as exception:
+        progresscookie.progress_report_error(progress, exception)
+        raise
 
 
 def applications_application_sdk_update_get(
-    application_id: str, configuration: str, progress_id: str = None
-) -> Any:
+        application_id: str, configuration: str, progress_id: str = None) -> Any:
     """Update/build the SDK for an application.
 
     :param application_id: application id
@@ -1436,7 +1434,8 @@ def applications_application_sdk_update_get(
         applications = applicationconfig.ApplicationConfigs()
 
         if application_id not in applications:
-            raise exceptions.ObjectNotFound("Application", application_id)
+            raise moses_exceptions.ObjectNotFound(
+                "Application", application_id)
 
         cookies = progresscookie.ProgressCookies()
         progress = None
@@ -1450,20 +1449,16 @@ def applications_application_sdk_update_get(
         progresscookie.progress_completed(progress)
 
         return (connexion.NoContent, 200)
-    except Exception as e:
-        progresscookie.progress_report_error(progress, e)
-        raise e
+    except Exception as exception:
+        progresscookie.progress_report_error(progress, exception)
+        raise
 
 
-def applications_application_syncfolders_get(
-    application_id: str,
-    sourcefolder: str,
-    configuration: str,
-    device_id: str,
-    destfolder: str,
-    source_is_sdk: bool,
-    progress_id: str = None,
-) -> Any:
+# pylint: disable=too-many-arguments
+def applications_application_syncfolders_get(application_id: str,
+                                             sourcefolder: str, configuration: str,
+                                             device_id: str, destfolder: str, source_is_sdk: bool,
+                                             progress_id: str = None,) -> Any:
     """Syncronize a folder between the SDK container and the target.
 
     :param application_id: application id
@@ -1494,7 +1489,8 @@ def applications_application_syncfolders_get(
         applications = applicationconfig.ApplicationConfigs()
 
         if application_id not in applications:
-            raise exceptions.ObjectNotFound("Application", application_id)
+            raise moses_exceptions.ObjectNotFound(
+                "Application", application_id)
 
         app = applications[application_id]
 
@@ -1508,9 +1504,9 @@ def applications_application_syncfolders_get(
         progresscookie.progress_completed(progress)
 
         return (connexion.NoContent, 200)
-    except Exception as e:
-        progresscookie.progress_report_error(progress, e)
-        raise e
+    except Exception as exception:
+        progresscookie.progress_report_error(progress, exception)
+        raise
 
 
 def applications_application_privatekey_get(application_id: str) -> Any:
@@ -1550,6 +1546,9 @@ def applications_application_reseal_get(application_id: str) -> Any:
     return (connexion.NoContent, 200)
 
 
+# pylint: disable=too-many-nested-blocks
+# pylint: disable=too-many-branches
+# pylint: disable=too-many-statements
 def setup_pullcontainers_get(progress_id: str = None) -> Any:
     """Pull all base containers needed for the different applications.
 
@@ -1571,7 +1570,7 @@ def setup_pullcontainers_get(progress_id: str = None) -> Any:
         failed = []
 
         counter = 0
-        max = len(platformconfig.PlatformConfigs()) + 1
+        platforms_count = len(platformconfig.PlatformConfigs()) + 1
 
         try:
             progresscookie.progress_message(
@@ -1579,7 +1578,8 @@ def setup_pullcontainers_get(progress_id: str = None) -> Any:
             )
 
             dockerclient.images.pull(EMULATION_IMAGE_NAME)
-        except:
+        # pylint: disable=broad-except
+        except Exception:
             logging.exception(
                 f"PULL - Pull operation failed for image {EMULATION_IMAGE_NAME}"
             )
@@ -1587,52 +1587,70 @@ def setup_pullcontainers_get(progress_id: str = None) -> Any:
 
         counter = 1
 
-        for p in platformconfig.PlatformConfigs():
+        for platform in platformconfig.PlatformConfigs():
 
-            plat = platformconfig.PlatformConfigs()[p]
+            plat = platformconfig.PlatformConfigs()[platform]
 
             if progress is not None:
-                progress.set_progress(int(counter * 100 / max))
+                progress.set_progress(int(counter * 100 / platforms_count))
                 counter += 1
 
-            for k, v in plat.baseimage.items():
-                if v is not None:
-                    logging.info("PULL - Pulling container %s:%s", v[0], v[1])
+            for _, baseimage in plat.baseimage.items():
+                if baseimage is not None:
+                    logging.info(
+                        "PULL - Pulling container %s:%s",
+                        baseimage[0],
+                        baseimage[1])
                     try:
-                        progresscookie.progress_message(f"Downloading {v[0]}:{v[1]}")
+                        progresscookie.progress_message(
+                            progress,
+                            f"Downloading {baseimage[0]}:{baseimage[1]}")
 
                         if plat.architecture is not None and plat.architecture != "":
                             dockerclient.images.pull(
-                                v[0], v[1], platform=plat.architecture
+                                baseimage[0], baseimage[1], platform=plat.architecture
                             )
                         else:
-                            dockerclient.images.pull(v[0], v[1])
-                    except:
+                            dockerclient.images.pull(
+                                baseimage[0], baseimage[1])
+                    # pylint: disable=broad-except
+                    except Exception:
                         logging.exception(
-                            "PULL - Pull operation failed for image %s:%s.", v[0], v[1]
+                            "PULL - Pull operation failed for image %s:%s.",
+                            baseimage[0], baseimage[1]
                         )
-                        failed.append(str(v[0]) + ":" + str(v[1]))
+                        failed.append(
+                            str(baseimage[0]) + ":" + str(baseimage[1]))
 
-            for k, v in plat.sdkbaseimage.items():
-                if v is not None:
-                    logging.info("PULL - Pulling container %s:%s", v[0], v[1])
+            for _, baseimage in plat.sdkbaseimage.items():
+                if baseimage is not None:
+                    logging.info(
+                        "PULL - Pulling container %s:%s",
+                        baseimage[0],
+                        baseimage[1])
                     try:
-                        progresscookie.progress_message(f"Downloading {v[0]}:{v[1]}")
+                        progresscookie.progress_message(
+                            progress,
+                            f"Downloading {baseimage[0]}:{baseimage[1]}")
 
                         if plat.architecture is not None and plat.architecture != "":
                             dockerclient.images.pull(
-                                v[0], v[1], platform=plat.architecture
+                                baseimage[0], baseimage[1], platform=plat.architecture
                             )
                         else:
-                            dockerclient.images.pull(v[0], v[1])
-                    except:
+                            dockerclient.images.pull(
+                                baseimage[0], baseimage[1])
+                    # pylint: disable=broad-except
+                    except Exception:
                         logging.exception(
-                            "PULL - Pull operation failed for image %s:%s.", v[0], v[1]
+                            "PULL - Pull operation failed for image %s:%s.",
+                            baseimage[0], baseimage[1]
                         )
-                        failed.append(str(v[0]) + ":" + str(v[1]))
+                        failed.append(
+                            str(baseimage[0]) + ":" + str(baseimage[1]))
 
         if len(failed) != 0:
-            raise exceptions.PullImageError(failed)
+            raise moses_exceptions.PullImageError(failed)
 
         if progress is not None:
             progress.set_progress(100)
@@ -1671,8 +1689,8 @@ def setup_enableemulation_get(progress_id: str = None) -> Any:
         if progress is not None:
             outputstr = output.decode("utf-8")
 
-            for l in outputstr.split("\n"):
-                progress.append_message(l)
+            for line in outputstr.split("\n"):
+                progress.append_message(line)
 
             progress.completed()
 

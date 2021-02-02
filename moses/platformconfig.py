@@ -2,17 +2,19 @@
 
 Platforms define containers that will run on a device.
 """
-import config
 import logging
 from pathlib import Path
+from typing import Optional, List, Dict
+import config
+import properties
 import singleton
 import targetdevice
-import exceptions
 import eula
-from typing import Optional, List, Dict, Any
+from moses_exceptions import PlatformDoesNotExistError
 
 
-class PlatformConfig(config.ConfigurableObject):
+# pylint: disable = too-many-instance-attributes
+class PlatformConfig(config.ConfigurableObject, properties.PropertiesObject):
     """Class used to manage a platform."""
 
     def __init__(self, folder: Path = None, standard: bool = False) -> None:
@@ -25,7 +27,8 @@ class PlatformConfig(config.ConfigurableObject):
         :type standard: bool
 
         """
-        super().__init__(folder)
+        properties.PropertiesObject.__init__(self)
+        config.ConfigurableObject.__init__(self, folder)
 
         self.standard = standard
         self.version = ""
@@ -50,51 +53,7 @@ class PlatformConfig(config.ConfigurableObject):
         self.sdkcontainerpassword = "build"
 
         self.privileged = False
-        self.ports: Dict[str, Dict[str, str]] = {
-            "common": {},
-            "debug": {},
-            "release": {},
-        }
-        self.volumes: Dict[str, Dict[str, str]] = {
-            "common": {},
-            "debug": {},
-            "release": {},
-        }
-        self.devices: Dict[str, List[str]] = {"common": [], "debug": [], "release": []}
-
-        self.extraparms: Dict[str, Dict[str, Any]] = {
-            "common": {},
-            "debug": {},
-            "release": {},
-        }
-
-        self.dockercompose: Dict[str, Optional[str]] = {
-            "common": None,
-            "debug": None,
-            "release": None,
-        }
-
-        self.startupscript: Dict[str, Optional[str]] = {
-            "common": None,
-            "debug": None,
-            "release": None,
-        }
-
-        self.shutdownscript: Dict[str, Optional[str]] = {
-            "common": None,
-            "debug": None,
-            "release": None,
-        }
-
-        self.props: Dict[str, Dict[str, str]] = {
-            "common": {},
-            "debug": {},
-            "release": {},
-        }
-
         self.runtimes: List[str] = []
-
-        self.networks: Dict[str, List[str]] = {"common": [], "debug": [], "release": []}
 
         self.tags: List[str] = []
         self.eulas: List[str] = []
@@ -110,8 +69,7 @@ class PlatformConfig(config.ConfigurableObject):
         assert self.id is not None
         if not self.standard:
             return config.ServerConfig().platformspath / self.id
-        else:
-            return config.ServerConfig().standardplatformspath / self.id
+        return config.ServerConfig().standardplatformspath / self.id
 
     def destroy(self) -> None:
         """Remove the platform (can't be done on standard ones)."""
@@ -126,10 +84,16 @@ class PlatformConfig(config.ConfigurableObject):
 
         super().save()
 
+    # validation function is checking multiple things and returning
+    # after each failed check, I think it's ok to have many return
+    # statements there rather than a state variable since code paths
+    # are simple and readable
+    # pylint: disable = too-many-return-statements
     def is_valid(self, fields: dict = None) -> bool:
         """Validate the fields of current object.
 
-        :param fields: object properties as a dictionary, if None is passed then self.__dict__ is used
+        :param fields: object properties as a dictionary,
+            if None is passed then self.__dict__ is used
         :type fields: dict
         :returns: true if all fields contain valid values
         :rtype: bool
@@ -142,14 +106,18 @@ class PlatformConfig(config.ConfigurableObject):
             fields["container"]["common"] is None
             and fields["container"]["release"] is None
         ):
-            logging.error("Release container not defined in plaform %s.", self.id)
+            logging.error(
+                "Release container not defined in plaform %s.",
+                self.id)
             return False
 
         if (
             fields["container"]["common"] is None
             and fields["container"]["debug"] is None
         ):
-            logging.error("Debug container not defined in plaform %s.", self.id)
+            logging.error(
+                "Debug container not defined in plaform %s.",
+                self.id)
             return False
 
         if fields["usesdk"]:
@@ -173,26 +141,26 @@ class PlatformConfig(config.ConfigurableObject):
                 return False
 
             if fields["usesysroot"]:
-                logging.error("sysroots are no longer supported by the ide-backend.")
+                logging.error(
+                    "sysroots are no longer supported by the ide-backend.")
                 return False
-            else:
-                if (
-                    fields["sdkcontainer"]["common"] is None
-                    and fields["sdkcontainer"]["release"] is None
-                ):
-                    logging.error(
-                        "Release sdk container not defined in plaform %s.", self.id
-                    )
-                    return False
+            if (
+                fields["sdkcontainer"]["common"] is None
+                and fields["sdkcontainer"]["release"] is None
+            ):
+                logging.error(
+                    "Release sdk container not defined in plaform %s.", self.id
+                )
+                return False
 
-                if (
-                    fields["sdkcontainer"]["common"] is None
-                    and fields["sdkcontainer"]["debug"] is None
-                ):
-                    logging.error(
-                        "Debug sdk container not defined in plaform %s.", self.id
-                    )
-                    return False
+            if (
+                fields["sdkcontainer"]["common"] is None
+                and fields["sdkcontainer"]["debug"] is None
+            ):
+                logging.error(
+                    "Debug sdk container not defined in plaform %s.", self.id
+                )
+                return False
 
         return True
 
@@ -232,7 +200,7 @@ class PlatformConfig(config.ConfigurableObject):
             return None
 
         # those properties are used to generate a tag
-        if prop == "baseimage" or prop == "sdkbaseimage":
+        if prop in ("baseimage", "sdkbaseimage"):
             if self.__dict__[prop][configuration] is not None:
                 return ":".join(self.__dict__[prop][configuration])
             if self.__dict__[prop]["common"] is not None:
@@ -247,28 +215,7 @@ class PlatformConfig(config.ConfigurableObject):
             return str(self.__dict__[prop])
         return None
 
-    def get_custom_prop(self, configuration: str, property: str) -> Optional[str]:
-        """Return value for a custom property.
-
-        If there is a configuration-specific value, it's returned, otherwise the function
-        checks for a common value, if even this one has not been configured, then it will
-        return None.
-
-        :param configuration: debug/release
-        :type configuration: str
-        :param prop: property name
-        :type prop: str
-        :returns: property value or None
-        :rtype: str | None
-
-        """
-        if property in self.props[configuration]:
-            return str(self.props[configuration][property])
-        if property in self.props["common"]:
-            return str(self.props["common"][property])
-        return None
-
-    def _get_value(self, obj: str, tag: str, configuration: str) -> str:
+    def get_value(self, obj: str, tag: str, configuration: str) -> str:
         """Return value for a tag checking base and custom properties.
 
         This function is used to replace values in templates.
@@ -299,7 +246,8 @@ class PlatformConfig(config.ConfigurableObject):
 
         return value
 
-    def check_device_compatibility(self, device: targetdevice.TargetDevice) -> bool:
+    def check_device_compatibility(
+            self, device: targetdevice.TargetDevice) -> bool:
         """Check if a device is compatible with this platform.
 
         :param device: target device
@@ -333,7 +281,8 @@ class PlatformConfig(config.ConfigurableObject):
         ]
 
 
-class PlatformConfigs(Dict[str, PlatformConfig], metaclass=singleton.Singleton):
+class PlatformConfigs(Dict[str, PlatformConfig],
+                      metaclass=singleton.Singleton):
     """Class used to manage the collection of platforms."""
 
     def __init__(self) -> None:
@@ -342,29 +291,34 @@ class PlatformConfigs(Dict[str, PlatformConfig], metaclass=singleton.Singleton):
 
         subfolders = [dir for dir in path.iterdir() if dir.is_dir()]
 
-        for dir in subfolders:
+        for subfolder in subfolders:
             try:
-                plat = PlatformConfig(dir, True)
+                plat = PlatformConfig(subfolder, True)
                 assert plat.id is not None
+                # pylint false positive
+                # pylint: disable = unsupported-assignment-operation
                 self[plat.id] = plat
-            except Exception as e:
+            # pylint: disable = broad-except
+            except Exception:
                 logging.exception(
-                    "Can't create platform from folder %s." "Error: %s",
-                    str(dir),
-                    str(e),
-                )
+                    "Can't create platform from folder %s.",
+                    str(subfolder))
 
         path = config.ServerConfig().platformspath
 
         subfolders = [dir for dir in path.iterdir() if dir.is_dir()]
 
-        for dir in subfolders:
+        for subfolder in subfolders:
             try:
-                plat = PlatformConfig(dir, False)
+                plat = PlatformConfig(subfolder, False)
                 assert plat.id is not None
+                # pylint false positive
+                # pylint: disable = unsupported-assignment-operation
                 self[plat.id] = plat
-            except:
-                logging.exception("Can't create platform from folder %s.", str(dir))
+            # pylint: disable = broad-except
+            except Exception:
+                logging.exception(
+                    "Can't create platform from folder %s.", str(subfolder))
 
     def __delitem__(self, platform_id: str) -> None:
         """Remove a platform given its id.
@@ -373,6 +327,8 @@ class PlatformConfigs(Dict[str, PlatformConfig], metaclass=singleton.Singleton):
         :type platform_id: str
 
         """
+        # pylint false positive
+        # pylint: disable = unsupported-membership-test
         if platform_id not in self:
             return
 
@@ -388,8 +344,10 @@ class PlatformConfigs(Dict[str, PlatformConfig], metaclass=singleton.Singleton):
         :rtype: PlatformConfig
 
         """
+        # pylint false positive
+        # pylint: disable = unsupported-membership-test
         if platform_id not in self:
-            raise exceptions.PlatformDoesNotExistError(platform_id)
+            raise PlatformDoesNotExistError(platform_id)
 
         return self[platform_id]
 
@@ -407,6 +365,8 @@ class PlatformConfigs(Dict[str, PlatformConfig], metaclass=singleton.Singleton):
         platformslist = []
         eulas = eula.EULAs()
 
+        # pylint false positive
+        # pylint: disable = no-member
         for plat in self.values():
 
             if plat.disabled:
@@ -414,13 +374,13 @@ class PlatformConfigs(Dict[str, PlatformConfig], metaclass=singleton.Singleton):
 
             eulaaccepted = True
 
-            for e in plat.eulas:
-                if e in eulas:
-                    if not eulas[e].accepted:
+            for eula_ in plat.eulas:
+                if eula_ in eulas:
+                    if not eulas[eula_].accepted:
                         logging.warning(
                             "Platform %s can't be used because EULA %s has not been accepted.",
                             plat.id,
-                            e,
+                            eula_,
                         )
                         eulaaccepted = False
                         break

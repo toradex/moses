@@ -1,6 +1,6 @@
 """Image build features of ApplicationConfig class.
 
-The class is too complex to stay in a single file, code has been 
+The class is too complex to stay in a single file, code has been
 splitted in feature-specific modules.
 This is why sometimes you see calls with self explicitely passed
 as first parameter.
@@ -8,15 +8,15 @@ as first parameter.
 import os
 import shutil
 import logging
+from typing import Optional
 import docker
 import docker.models.containers
 import platformconfig
-import exceptions
+import moses_exceptions
 import tags
 import progresscookie
 import dockerapi
 from applicationconfig_base import ApplicationConfigBase
-from typing import Optional
 
 
 def check_image(self: ApplicationConfigBase, configuration: str) -> bool:
@@ -53,15 +53,13 @@ def check_image(self: ApplicationConfigBase, configuration: str) -> bool:
 
         logging.info("Image is up to date.")
         return True
-    except docker.errors.DockerException as e:
-        raise exceptions.LocalDockerError(e)
+    except docker.errors.DockerException as exception:
+        raise moses_exceptions.LocalDockerError(exception)
 
 
-def build_image(
-    self: ApplicationConfigBase,
-    configuration: str,
-    progress: Optional[progresscookie.ProgressCookie],
-) -> None:
+# pylint: disable=too-many-locals
+def build_image(self: ApplicationConfigBase, configuration: str,
+                progress: Optional[progresscookie.ProgressCookie]) -> None:
     """Generate Dockerfile and build the image.
 
     :param configuration: debug/release
@@ -70,6 +68,9 @@ def build_image(
     :type progress: progresscookie.ProgressCookie, optional
 
     """
+    # this function will be part of ApplicationConfig via import
+    # members of base class ApplicationConfigBase are accessed
+    # pylint: disable=protected-access
     assert self.folder is not None
 
     try:
@@ -86,7 +87,8 @@ def build_image(
                 pass
 
             if oldimg is not None:
-                localdocker.images.remove(image=oldimg.id, force=True, noprune=False)
+                localdocker.images.remove(
+                    image=oldimg.id, force=True, noprune=False)
 
         platform = platformconfig.PlatformConfigs().get_platform(self.platformid)
 
@@ -101,7 +103,7 @@ def build_image(
         tags.apply_template(
             str(dockertemplatefull),
             str(dockerfile),
-            lambda obj, tag, args: self._get_value(obj, tag, args),
+            self._get_value,
             configuration,
         )
 
@@ -139,9 +141,10 @@ def build_image(
             )
 
         if img is None:
-            raise exceptions.ImageNotFoundError(self._get_image_name(configuration))
+            raise moses_exceptions.ImageNotFoundError(
+                self._get_image_name(configuration))
 
-        tag = self._get_custom_prop(configuration, "tag")
+        tag = self.get_custom_prop(configuration, "tag")
 
         if tag is not None:
             parts = tag.split(":")
@@ -156,5 +159,5 @@ def build_image(
 
         localdocker.containers.prune()
 
-    except docker.errors.DockerException as e:
-        raise exceptions.LocalDockerError(e)
+    except docker.errors.DockerException as exception:
+        raise moses_exceptions.LocalDockerError(exception)
