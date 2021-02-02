@@ -7,14 +7,17 @@ a server or router configuration.
 
 """
 import socket
-import dns.resolver
 from typing import Tuple
+import dns.resolver
 
 resolver = dns.resolver.Resolver()
 resolver.nameservers = ["224.0.0.251"]
 resolver.port = 5353
 
 
+# resolver is global to avoid re-initialization at every call
+# pylint: disable = global-statement
+# pylint: disable = invalid-name
 def resolve_hostname(hostname: str) -> Tuple[str, bool]:
     """Convert a hostname to ip using dns first and then mdns.
 
@@ -29,11 +32,12 @@ def resolve_hostname(hostname: str) -> Tuple[str, bool]:
     """
     global resolver
 
-    ip = hostname
+    ipaddress = hostname
     mdns = False
 
+    # pylint: disable = broad-except
     try:
-        ip = socket.gethostbyname(hostname)
+        ipaddress = socket.gethostbyname(hostname)
     except socket.gaierror:
         if not hostname.endswith(".local"):
             hostname += ".local"
@@ -42,10 +46,10 @@ def resolve_hostname(hostname: str) -> Tuple[str, bool]:
             addr = resolver.query(hostname, "A")
 
             if addr is not None and len(addr) > 0:
-                ip = addr[0].to_text()
+                ipaddress = addr[0].to_text()
                 mdns = True
-        except:
+        except Exception:
             pass
-    except:
+    except Exception:
         pass
-    return ip, mdns
+    return ipaddress, mdns

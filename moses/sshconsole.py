@@ -1,13 +1,15 @@
 """Implements console functions over SSH connection."""
-from types import TracebackType
-import console
+import io
 import socket
 import time
-import paramiko
-import io
-import exceptions
-import sharedssh
+from types import TracebackType
 from typing import Optional, Type
+import paramiko
+import console
+import sharedssh
+# pylint: disable = redefined-builtin
+from moses_exceptions import SSHError, TimeoutError, OSError
+# pylint: enable = redefined-builtin
 
 
 class SSHConsole(console.GenericConsole):
@@ -20,6 +22,7 @@ class SSHConsole(console.GenericConsole):
         :type device: str
 
         """
+        super().__init__(device)
         if ":" in device:
             self.hostname, portstr = device.split(":")[0:2]
             self.port = int(portstr)
@@ -53,19 +56,20 @@ class SSHConsole(console.GenericConsole):
             output = stdout.read().decode("utf-8")
             error = stderr.read().decode("utf-8")
 
-        except paramiko.SSHException as e:
-            raise exceptions.SSHError(e)
+        except paramiko.SSHException as exception:
+            raise SSHError(exception) from exception
         except socket.timeout:
             pass
 
         return (output + error).strip()
 
+    # pylint: disable = no-self-use
     def wait_for_prompt(
-        self, channel: paramiko.Channel, prompt: str, timeout: int = 30
-    ) -> None:
+            self, channel: paramiko.Channel, prompt: str, timeout: int = 30) -> None:
         """Wait until the specific string is received.
 
-        :param prompt: prompt or None to use the one configured by set_prompt  (Default value = None)
+        :param prompt: prompt or None to use the one configured by set_prompt
+            (Default value = None)
         :type prompt: str, optional
         :param timeout: timeout in seconds  (Default value = 30)
         :type timeout: int
@@ -79,13 +83,12 @@ class SSHConsole(console.GenericConsole):
 
         while not output.endswith(prompt):
             if time.time() - start > timeout:
-                raise exceptions.TimeoutError()
+                raise TimeoutError()
 
             try:
                 output += channel.recv(4096).decode("utf-8")
             except UnicodeDecodeError:
                 continue
-        return
 
     def login(self, username: str, password: str, timeout: int = 60) -> None:
         """Try to login user and configures prompt.
@@ -100,7 +103,6 @@ class SSHConsole(console.GenericConsole):
         :type timeout: int
 
         """
-        self.password = password
         self.ssh = paramiko.SSHClient()
         self.ssh.set_missing_host_key_policy(sharedssh.IgnorePolicy())
 
@@ -121,7 +123,7 @@ class SSHConsole(console.GenericConsole):
             while not channel.recv_ready():
                 time.sleep(1)
                 if time.time() > start + timeout:
-                    raise exceptions.TimeoutError()
+                    raise TimeoutError()
 
             prompt = channel.recv(4096).decode("utf-8")
 
@@ -170,10 +172,10 @@ class SSHConsole(console.GenericConsole):
                     allow_agent=False,
                 )
 
-        except paramiko.SSHException as e:
-            raise exceptions.SSHError(e)
-        except OSError as e:
-            raise exceptions.OSError(e)
+        except paramiko.SSHException as exception:
+            raise SSHError(exception) from exception
+        except OSError as exception:
+            raise OSError(exception) from exception
 
     def connect(self, username: str, key: str) -> None:
         """Connect to the device using SSH key.
@@ -198,13 +200,14 @@ class SSHConsole(console.GenericConsole):
                 allow_agent=False,
             )
 
-        except paramiko.SSHException as e:
-            raise exceptions.SSHError(e)
+        except paramiko.SSHException as exception:
+            raise SSHError(exception) from exception
 
     def __enter__(self) -> "SSHConsole":
         """Ensure that object state is managed correctly in with statements."""
         return self
 
+    # pylint: disable = useless-return
     def __exit__(
         self,
         etype: Optional[Type[BaseException]],
@@ -217,6 +220,7 @@ class SSHConsole(console.GenericConsole):
                 self.channel.close()
             if self.ssh is not None:
                 self.ssh.close()
-        except:
+        # pylint: disable = broad-except
+        except Exception:
             pass
         return None

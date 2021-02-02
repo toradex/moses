@@ -1,29 +1,29 @@
 """Deployment and remote execution features of ApplicationConfig class.
 
-The class is too complex to stay in a single file, code has been 
+The class is too complex to stay in a single file, code has been
 splitted in feature-specific modules.
 This is why sometimes you see calls with self explicitely passed
 as first parameter.
 """
 import logging
+import stat
+from typing import Optional, Any
 import docker
 import docker.models.containers
 import paramiko
 import platformconfig
 import remotedocker
-import exceptions
+import moses_exceptions
 import targetdevice
 import tags
 import sharedssh
-import stat
 import rsync
 import progresscookie
 from applicationconfig_base import ApplicationConfigBase
 from applicationconfig_sdk import start_sdk_container
-from typing import Optional, Any
 
 
-def _get_container_name(self: ApplicationConfigBase, img: Any) -> str:
+def _get_container_name(img: Any) -> str:
     """Build container name from an image.
 
     :param img: docker image (can be object, dict or list of name and tag)
@@ -33,12 +33,12 @@ def _get_container_name(self: ApplicationConfigBase, img: Any) -> str:
     """
     imagename = ""
 
-    if type(img) is docker.models.images.Image:
+    if isinstance(img, docker.models.images.Image):
         imagename = img.tags[0]
-    elif type(img) is dict:
+    elif isinstance(img, dict):
         assert "RepoTags" in img
         imagename = img["RepoTags"][0]
-    elif type(img) is list:
+    elif isinstance(img, list):
         assert len(img) == 2
         imagename = img[0] + ":" + img[1]
     else:
@@ -49,12 +49,47 @@ def _get_container_name(self: ApplicationConfigBase, img: Any) -> str:
     return imagename + "_instance"
 
 
-def deploy_image(
-    self: ApplicationConfigBase,
-    configuration: str,
-    device: targetdevice.TargetDevice,
-    progress: Optional[progresscookie.ProgressCookie],
-) -> None:
+def _check_image_for_deployment(
+        self: ApplicationConfigBase, configuration: str) -> docker.models.images.Image:
+    """Check that image exists and can be exported/deployed.
+
+    :param configuration: debug/release
+    :type configuration: str
+    :return: local docker image
+    :rtype: docker.models.images.Image
+    """
+    # this function will be part of ApplicationConfig via import,
+    # members of base class ApplicationConfigBase are accessed
+    # pylint: disable=protected-access
+    imgid = self.images[configuration]
+    if imgid is None or imgid == "":
+        logging.error(
+            "Image has never been build for application %s.",
+            self.folder)
+        raise moses_exceptions.ImageNotFoundError("")
+    try:
+        limg = _get_local_image(self, configuration)
+    except docker.errors.ImageNotFound as exception:
+        logging.error(
+            "Image %s not found when deploying application %s.",
+            imgid,
+            self.folder,
+        )
+        raise moses_exceptions.ImageNotFoundError(imgid) from exception
+    if len(limg.tags) == 0:
+        self.images[configuration] = ""
+        self.save()
+        logging.error(
+            "Image %s has no tags when deploying application %s.",
+            imgid,
+            self.folder,
+        )
+        raise moses_exceptions.ImageNotFoundError(imgid)
+    return limg
+
+
+def deploy_image(self: ApplicationConfigBase, configuration: str, device: targetdevice.TargetDevice,
+                 progress: Optional[progresscookie.ProgressCookie]) -> None:
     """Deploy image to a target device.
 
     The function checks if the image is already up-to-date on the target
@@ -68,34 +103,12 @@ def deploy_image(
     :type progress: progresscookie.ProgressCookie, optional
 
     """
+    # this function will be part of ApplicationConfig via import,
+    # members of base class ApplicationConfigBase are accessed
+    # pylint: disable=protected-access
+
     try:
-        imgid = self.images[configuration]
-
-        if imgid is None or imgid == "":
-            logging.error("Image has never been build for application %s.", self.folder)
-            raise exceptions.ImageNotFoundError("")
-
-        ld = docker.from_env()
-
-        try:
-            limg = _get_local_image(self, configuration)
-        except docker.errors.ImageNotFound:
-            logging.error(
-                "Image %s not found when deploying application %s.",
-                imgid,
-                self.folder,
-            )
-            raise exceptions.ImageNotFoundError(imgid)
-
-        if len(limg.tags) == 0:
-            self.images[configuration] = ""
-            self.save()
-            logging.error(
-                "Image %s has no tags when deploying application %s.",
-                imgid,
-                self.folder,
-            )
-            raise exceptions.ImageNotFoundError(imgid)
+        limg = _check_image_for_deployment(self, configuration)
 
         plat = platformconfig.PlatformConfigs().get_platform(self.platformid)
 
@@ -106,11 +119,11 @@ def deploy_image(
                 device.id,
                 self.folder,
             )
-            raise exceptions.IncompatibleDeviceError(device.id)
+            raise moses_exceptions.IncompatibleDeviceError(device.id)
 
-        with remotedocker.RemoteDocker(device) as rd:
+        with remotedocker.RemoteDocker(device) as rdocker:
 
-            rimg = rd.get_image_by_tag(limg.tags[0])
+            rimg = rdocker.get_image_by_tag(limg.tags[0])
 
             if rimg is not None:
                 # image is up to date
@@ -128,8 +141,8 @@ def deploy_image(
                 )
 
                 # we need to stop active containers
-                containers = rd.get_containers(
-                    {"name": _get_container_name(self, rimg)}
+                containers = rdocker.get_containers(
+                    {"name": _get_container_name(rimg)}
                 )
 
                 if len(containers) > 0:
@@ -138,9 +151,10 @@ def deploy_image(
                     logging.warning("DEPLOY - terminating running instance.")
                     containers[0].remove(force=True)
 
-                rd.delete_image(rimg["Id"], True)
+                rdocker.delete_image(rimg["Id"], True)
 
-                progresscookie.progress_message(progress, "Image has been removed.")
+                progresscookie.progress_message(
+                    progress, "Image has been removed.")
 
             else:
                 logging.info("DEPLOY - Image not found on target device.")
@@ -154,16 +168,17 @@ def deploy_image(
                 progress.set_minmax(0, limg.attrs["Size"] * 2)
 
             stream = limg.save()
-            outputpath = str(self._get_work_folder() / (configuration + ".tar"))
+            outputpath = str(self._get_work_folder() /
+                             (configuration + ".tar"))
 
-            with open(outputpath, "wb") as f:
+            with open(outputpath, "wb") as outfile:
                 for chunk in stream:
-                    f.write(chunk)
+                    outfile.write(chunk)
                     if progress is not None:
                         progress.update_progress_minmax(len(chunk))
 
-                f.flush()
-                f.close()
+                outfile.flush()
+                outfile.close()
 
             logging.info("DEPLOY - Image exported.")
 
@@ -171,24 +186,106 @@ def deploy_image(
                 progress, "Image exported, deploying to the target."
             )
 
-            rd.load_image(limg, outputpath, progress)
+            rdocker.load_image(limg, outputpath, progress)
 
             progresscookie.progress_message(progress, "Image deployed.")
 
             logging.info("DEPLOY - Image deployed.")
 
-    except docker.errors.DockerException as e:
-        raise exceptions.LocalDockerError(e)
+    except docker.errors.DockerException as exception:
+        raise moses_exceptions.LocalDockerError(exception)
 
 
-def _runscript(
-    self: ApplicationConfigBase,
-    configuration: str,
-    plat: platformconfig.PlatformConfig,
-    device: targetdevice.TargetDevice,
-    scriptname: str,
-    progress: Optional[progresscookie.ProgressCookie],
-) -> None:
+# pylint: disable = too-many-arguments
+def _transfer_scripts(self: ApplicationConfigBase,
+                      configuration: str,
+                      device: targetdevice.TargetDevice,
+                      script: Optional[str],
+                      platformscript: Optional[str],
+                      ssh: sharedssh.SharedSSHClient) -> None:
+    """Copy application and platform scripts to the target.
+
+    :param configuration: debug/release
+    :type configuration: str
+    :param device: target device
+    :type device: targetdevice.TargetDevice
+    :param script: application script or None
+    :type script: str,optional
+    :param platformscript: platform script or None
+    :type platformscript: str,optional
+    :param ssh: connection to the device
+    :type ssh: sharedssh.SharedSSHClient
+    """
+    # this function will be part of ApplicationConfig via import,
+    # members of base class ApplicationConfigBase are accessed
+    # pylint: disable=protected-access
+
+    assert self.id is not None
+    assert self.folder is not None
+
+    plat = platformconfig.PlatformConfigs().get_platform(self.platformid)
+
+    assert plat is not None
+    assert plat.folder is not None
+
+    transport = ssh.get_transport()
+
+    assert transport is not None
+
+    sftp = paramiko.sftp_client.SFTP.from_transport(transport)
+
+    assert sftp is not None
+
+    sftp.chdir(device.homefolder)
+
+    try:
+        sftp.stat(self.id)
+    # pylint: disable=broad-except
+    except Exception:
+        sftp.mkdir(self.id)
+
+    sftp.chdir(self.id)
+
+    if script is not None:
+
+        fullscriptpath = self.folder / script
+        targetscriptpath = self._get_work_folder() / (script + "." + configuration)
+
+        tags.apply_template(
+            str(fullscriptpath),
+            str(targetscriptpath),
+            self._get_value,
+            configuration,
+        )
+
+        sftp.put(str(targetscriptpath), script, confirm=True)
+        sftp.chmod(script, stat.S_IXUSR | stat.S_IRUSR | stat.S_IWUSR)
+
+    if platformscript is not None:
+
+        fullplatformscript = plat.folder / platformscript
+        targetplatformscript = self._get_work_folder() / (
+            platformscript + "." + configuration
+        )
+
+        tags.apply_template(
+            str(fullplatformscript),
+            str(targetplatformscript),
+            self._get_value,
+            configuration,
+        )
+
+        sftp.put(str(targetplatformscript), platformscript, confirm=True)
+        sftp.chmod(platformscript, stat.S_IXUSR |
+                   stat.S_IRUSR | stat.S_IWUSR)
+
+
+# pylint: disable = too-many-arguments
+def _runscript(self: ApplicationConfigBase,
+               configuration: str,
+               device: targetdevice.TargetDevice,
+               scriptname: str,
+               progress: Optional[progresscookie.ProgressCookie]) -> None:
     """Run a script configured as "scriptname" property in platform and/or application.
 
     :param configuration: debug/release
@@ -203,6 +300,13 @@ def _runscript(
     :type progress: progresscookie.ProgressCookie, optional
 
     """
+    # this function will be part of ApplicationConfig via import,
+    # members of base class ApplicationConfigBase are accessed
+    # pylint: disable=protected-access
+
+    plat = platformconfig.PlatformConfigs().get_platform(self.platformid)
+
+    assert plat is not None
     assert plat.folder is not None
 
     # check scripts for both application and platform, both are deployed
@@ -220,56 +324,17 @@ def _runscript(
 
     if script is not None or platformscript is not None:
 
-        logging.info("Running script:" + scriptname)
+        logging.info(f"Running script: {scriptname}")
 
         ssh = sharedssh.SharedSSHClient.get_connection(device)
 
-        transport = ssh.get_transport()
-
-        assert transport is not None
-
-        sftp = paramiko.sftp_client.SFTP.from_transport(transport)
-
-        assert sftp is not None
-        assert self.id is not None
-
-        sftp.chdir(device.homefolder)
-
-        try:
-            sftp.stat(self.id)
-        except:
-            sftp.mkdir(self.id)
-
-        sftp.chdir(self.id)
-
-        if script is not None:
-
-            assert self.folder is not None
-
-            fullscriptpath = self.folder / script
-            targetscriptpath = self._get_work_folder() / (script + "." + configuration)
-            tags.apply_template(
-                str(fullscriptpath),
-                str(targetscriptpath),
-                lambda obj, tag, args: self._get_value(obj, tag, args),
-                configuration,
-            )
-            sftp.put(str(targetscriptpath), script, confirm=True)
-            sftp.chmod(script, stat.S_IXUSR | stat.S_IRUSR | stat.S_IWUSR)
-
-        if platformscript is not None:
-            fullplatformscript = plat.folder / platformscript
-            targetplatformscript = self._get_work_folder() / (
-                platformscript + "." + configuration
-            )
-            tags.apply_template(
-                str(fullplatformscript),
-                str(targetplatformscript),
-                lambda obj, tag, args: self._get_value(obj, tag, args),
-                configuration,
-            )
-            sftp.put(str(targetplatformscript), platformscript, confirm=True)
-            sftp.chmod(platformscript, stat.S_IXUSR | stat.S_IRUSR | stat.S_IWUSR)
+        _transfer_scripts(
+            self,
+            configuration,
+            device,
+            script,
+            platformscript,
+            ssh)
 
         scriptpath = device.homefolder + "/" + str(self.id)
 
@@ -282,7 +347,8 @@ def _runscript(
 
         assert scriptfile is not None
 
-        progresscookie.progress_message(progress, f"running script {scriptfile}")
+        progresscookie.progress_message(
+            progress, f"running script {scriptfile}")
 
         transport = ssh.get_transport()
 
@@ -303,14 +369,13 @@ def _runscript(
                 progresscookie.progress_message(progress, msg)
 
         if session.recv_exit_status() != 0:
-            logging.error("Error executing " + scriptname + ".")
+            logging.error(f"Error executing {scriptname}.")
 
-        logging.info("Running script:" + scriptname + " done.")
+        logging.info(f"Running script: {scriptname} done.")
 
 
-def _get_local_image(
-    self: ApplicationConfigBase, configuration: str
-) -> docker.models.images.Image:
+def _get_local_image(self: ApplicationConfigBase,
+                     configuration: str) -> docker.models.images.Image:
     """Check that the image exists.
 
     :param configuration: debug/release
@@ -320,25 +385,23 @@ def _get_local_image(
     """
     imgid = self.images[configuration]
     if imgid is None or imgid == "":
-        raise exceptions.ImageNotFoundError("")
-    ld = docker.from_env()
+        raise moses_exceptions.ImageNotFoundError("")
+    localdocker = docker.from_env()
     try:
-        limg = ld.images.get(imgid)
-    except docker.errors.ImageNotFound:
+        limg = localdocker.images.get(imgid)
+    except docker.errors.ImageNotFound as exception:
         logging.error("Image %s not found", imgid)
-        raise exceptions.ImageNotFoundError(imgid)
-    except docker.errors.DockerException as e:
-        raise exceptions.LocalDockerError(e)
+        raise moses_exceptions.ImageNotFoundError(imgid)
+    except docker.errors.DockerException as exception:
+        raise moses_exceptions.LocalDockerError(exception) from exception
     return limg
 
 
-def _run_dockercompose(
-    self: ApplicationConfigBase,
-    configuration: str,
-    device: targetdevice.TargetDevice,
-    progress: Optional[progresscookie.ProgressCookie],
-    plat: platformconfig.PlatformConfig,
-) -> None:
+def _run_dockercompose(self: ApplicationConfigBase,
+                       configuration: str,
+                       device: targetdevice.TargetDevice,
+                       progress: Optional[progresscookie.ProgressCookie],
+                       plat: platformconfig.PlatformConfig) -> None:
     """Execute docker-compose up, if a dockerfile is configured for the application.
 
     :param configuration: debug/release
@@ -353,6 +416,10 @@ def _run_dockercompose(
     If no dockercompose file has been configured for the application, then the system will
     try to run the one configured for the platform.
     """
+    # this function will be part of ApplicationConfig via import,
+    # members of base class ApplicationConfigBase are accessed
+    # pylint: disable=protected-access
+
     dockercomposefile = self._get_prop(configuration, "dockercomposefile")
     dockercomposefilepath = None
 
@@ -378,7 +445,8 @@ def _run_dockercompose(
         sftp.chdir(device.homefolder)
         try:
             sftp.stat(self.id)
-        except:
+        # pylint: disable=broad-except
+        except Exception:
             sftp.mkdir(self.id)
         sftp.chdir(self.id)
         targetdockercomposepath = self._get_work_folder() / (
@@ -387,7 +455,7 @@ def _run_dockercompose(
         tags.apply_template(
             str(dockercomposefilepath),
             str(targetdockercomposepath),
-            lambda obj, tag, args: self._get_value(obj, tag, args),
+            self._get_value,
             configuration,
         )
         sftp.put(str(targetdockercomposepath), "docker-compose.yml")
@@ -409,12 +477,10 @@ def _run_dockercompose(
                 logging.error("Error executing docker-compose.")
 
 
-def run(
-    self: ApplicationConfigBase,
-    configuration: str,
-    device: targetdevice.TargetDevice,
-    progress: Optional[progresscookie.ProgressCookie],
-) -> docker.models.containers.Container:
+def run(self: ApplicationConfigBase,
+        configuration: str,
+        device: targetdevice.TargetDevice,
+        progress: Optional[progresscookie.ProgressCookie]) -> docker.models.containers.Container:
     """Run the application container on the specified device.
 
     :param configuration: debug/release
@@ -428,19 +494,24 @@ def run(
     :rtype: docker.models.containers.Container
 
     """
+    # this function will be part of ApplicationConfig via import,
+    # members of base class ApplicationConfigBase are accessed
+    # pylint: disable=protected-access
+
     assert self.id is not None
 
     plat = platformconfig.PlatformConfigs().get_platform(self.platformid)
 
     limg = _get_local_image(self, configuration)
 
-    with remotedocker.RemoteDocker(device) as rd:
+    with remotedocker.RemoteDocker(device) as rdocker:
 
         container = get_container(self, configuration, device)
 
         if container is not None:
 
-            progresscookie.progress_message(progress, "Stopping current instance...")
+            progresscookie.progress_message(
+                progress, "Stopping current instance...")
 
             stop(self, configuration, device)
 
@@ -456,7 +527,12 @@ def run(
         # the same place)
         progresscookie.progress_message(progress, "running startup script...")
 
-        _runscript(self, configuration, plat, device, "startupscript", progress)
+        _runscript(
+            self,
+            configuration,
+            device,
+            "startupscript",
+            progress)
 
         _run_dockercompose(self, configuration, device, progress, plat)
 
@@ -470,9 +546,9 @@ def run(
 
         progresscookie.progress_message(progress, "Starting new instance...")
 
-        return rd.run_image(
+        return rdocker.run_image(
             limg,
-            _get_container_name(self, limg),
+            _get_container_name(limg),
             ports,
             volumes,
             devices,
@@ -481,10 +557,12 @@ def run(
             networks,
         ).attrs
 
+# pylint: disable=too-many-branches
 
-def stop(
-    self: ApplicationConfigBase, configuration: str, device: targetdevice.TargetDevice
-) -> None:
+
+def stop(self: ApplicationConfigBase,
+         configuration: str,
+         device: targetdevice.TargetDevice) -> None:
     """Stop the application container.
 
     :param configuration: debug/release
@@ -493,6 +571,9 @@ def stop(
     :type device: targetdevice.TargetDevice
 
     """
+    # this function will be part of ApplicationConfig via import,
+    # members of base class ApplicationConfigBase are accessed
+    # pylint: disable=protected-access
     plat = platformconfig.PlatformConfigs().get_platform(self.platformid)
 
     container = get_container(self, configuration, device)
@@ -505,17 +586,21 @@ def stop(
 
             # try to detach from network first
             networks = list(
-                dict.fromkeys(self._append_props(plat, configuration, "networks"))
+                dict.fromkeys(
+                    self._append_props(
+                        plat,
+                        configuration,
+                        "networks"))
             )
 
             if len(networks) > 0:
 
-                with remotedocker.RemoteDocker(device) as rd:
+                with remotedocker.RemoteDocker(device) as rdocker:
                     # collect networks to ensure that they are available
                     nets = []
 
                     for network in networks:
-                        nets.append(rd.get_network(network))
+                        nets.append(rdocker.get_network(network))
 
                     for network in nets:
                         if network is not None:
@@ -524,8 +609,8 @@ def stop(
             container.stop()
 
         container.remove()
-    except docker.errors.DockerException as e:
-        raise exceptions.RemoteDockerError(device, str(e))
+    except docker.errors.DockerException as exception:
+        raise moses_exceptions.RemoteDockerError(device, str(exception))
 
     # check if we need to run docker-compose down
     dockercomposefile = self._get_prop(configuration, "dockercomposefile")
@@ -542,8 +627,6 @@ def stop(
         transport = ssh.get_transport()
 
         assert transport is not None
-
-        sftp = paramiko.SFTPClient.from_transport(transport)
 
         with transport.open_session() as session:
 
@@ -563,15 +646,13 @@ def stop(
                 logging.error("Error executing docker-compose.")
 
     # run shutdown scripts
-    _runscript(self, configuration, plat, device, "shutdownscript", None)
+    _runscript(self, configuration, device, "shutdownscript", None)
 
 
-def get_container(
-    self: ApplicationConfigBase,
-    configuration: str,
-    device: targetdevice.TargetDevice,
-    only_running: bool = True,
-) -> Optional[docker.models.containers.Container]:
+def get_container(self: ApplicationConfigBase,
+                  configuration: str,
+                  device: targetdevice.TargetDevice,
+                  only_running: bool = True) -> Optional[docker.models.containers.Container]:
     """Return the application container instance.
 
     :param configuration: debug/release
@@ -588,33 +669,131 @@ def get_container(
     imgid = self.images[configuration]
 
     if imgid is None or imgid == "":
-        raise exceptions.ImageNotFoundError("")
+        raise moses_exceptions.ImageNotFoundError("")
 
     try:
-        ld = docker.from_env()
-
         limg = _get_local_image(self, configuration)
 
-        with remotedocker.RemoteDocker(device) as rd:
-            if not only_running or rd.is_container_running(
-                _get_container_name(self, limg)
-            ):
-                return rd.get_container(_get_container_name(self, limg))
-    except docker.errors.DockerException as e:
-        raise exceptions.LocalDockerError(e)
+        with remotedocker.RemoteDocker(device) as rdocker:
+            if not only_running or rdocker.is_container_running(
+                    _get_container_name(limg)):
+                return rdocker.get_container(_get_container_name(limg))
+    except docker.errors.DockerException as exception:
+        raise moses_exceptions.LocalDockerError(exception)
 
     return None
 
 
-def sync_folders(
-    self: ApplicationConfigBase,
-    sourcefolder: str,
-    configuration: str,
-    device_id: str,
-    containerfolder: str,
-    source_is_sdk: bool,
-    progress: Optional[progresscookie.ProgressCookie],
-) -> None:
+# pylint reports 18 locals, but those declared in the functions
+# are just 8 (not counting the anonymous _)
+# pylint: disable = too-many-locals
+def _run_rsync_from_sdk(self: ApplicationConfigBase,
+                        sourcefolder: str,
+                        configuration: str,
+                        containerfolder: str,
+                        progress: Optional[progresscookie.ProgressCookie],
+                        device: targetdevice.TargetDevice,
+                        port: str) -> None:
+    """Synchronize folders from the SDK container to the target container.
+
+    :param sourcefolder: source path (inside the SDK container)
+    :type sourcefolder: str
+    :param configuration: debug/release
+    :type configuration: str
+    :param containerfolder: target path (inside target container)
+    :type containerfolder: str
+    :param progress: object used to report operation progress
+    :type progress: progresscookie.ProgressCookie, optional
+    :param device: target device
+    :type device: targetdevice.TargetDevice
+    :param port: port that exposes SSH on the target container
+    :type port: str
+    """
+    # this function will be part of ApplicationConfig via import,
+    # members of base class ApplicationConfigBase are accessed
+    # pylint: disable=protected-access
+
+    assert self.id is not None
+    assert self.folder is not None
+    assert self.username is not None
+
+    plat = platformconfig.PlatformConfigs().get_platform(self.platformid)
+
+    assert plat is not None
+
+    start_sdk_container(self, configuration, True, progress)
+    if self.sdksshaddress is None:
+        raise moses_exceptions.SDKContainerNotRunningError(self.id)
+
+    # connect to SDK container
+    with paramiko.SSHClient() as ssh:
+        ssh.load_system_host_keys()
+        ssh.set_missing_host_key_policy(paramiko.AutoAddPolicy())
+        ssh.connect(
+            "localhost",
+            self.sdksshaddress["HostPort"],
+            username=plat.sdkcontainerusername,
+            password=plat.sdkcontainerpassword,
+        )
+
+        transport = ssh.get_transport()
+
+        assert transport is not None
+
+        sftp = paramiko.sftp_client.SFTP.from_transport(transport)
+
+        assert sftp is not None
+
+        try:
+            sftp.stat(".ssh")
+        except FileNotFoundError:
+            sftp.mkdir(".ssh")
+        try:
+            sftp.stat(".ssh/id_rsa")
+            sftp.remove(".ssh/id_rsa")
+        except FileNotFoundError:
+            pass
+
+        sftp.put(str(self.folder / "id_rsa"), ".ssh/id_rsa", confirm=True)
+        sftp.chmod(".ssh/id_rsa", 0o600)
+        sftp.close()
+
+        rsynccommand = "rsync -rzv "
+        rsynccommand += (
+            '-e "ssh -p ' + port + ' -o \\"StrictHostKeyChecking no\\"" '
+        )
+        rsynccommand += sourcefolder + "/* "
+        rsynccommand += (
+            self.username + "@" + device.get_current_ip() + ":" + containerfolder
+        )
+
+        _, stdout, stderr = ssh.exec_command(rsynccommand)
+
+        output = ""
+        if progress is not None:
+            for line in iter(stdout.readline, ""):
+                progress.append_message(line)
+                output += line
+
+        status = stdout.channel.recv_exit_status()
+        if status != 0:
+            try:
+                output = "".join(stderr.readlines())
+                output += "".join(stdout.readlines())
+                logging.warning(output)
+            # pylint: disable=broad-except
+            except Exception:
+                pass
+            raise moses_exceptions.RemoteCommandError(rsynccommand, status)
+
+
+def sync_folders(self: ApplicationConfigBase,
+                 sourcefolder: str,
+                 configuration: str,
+                 device_id: str,
+                 containerfolder: str,
+                 source_is_sdk: bool,
+                 progress: Optional[progresscookie.ProgressCookie]) -> None:
     """Sync folders from host/SDK container to the app container.
 
     :param sourcefolder: source path (depends on source_is_sdk)
@@ -625,7 +804,8 @@ def sync_folders(
     :type device_id: str
     :param containerfolder: target folder (inside app container)
     :type containerfolder: str
-    :param source_is_sdk: if True source folder will be inside SDK container, otherwise on the local filesystem
+    :param source_is_sdk: if True source folder will be inside SDK container,
+        otherwise on the local filesystem
     :type source_is_sdk: bool
     :param progress: object used to report operation progress
     :type progress: progresscookie.ProgressCookie, optional
@@ -635,105 +815,35 @@ def sync_folders(
     plat = platformconfig.PlatformConfigs().get_platform(self.platformid)
     device = targetdevice.TargetDevices()[device_id]
 
+    assert plat is not None
+    assert device is not None
+    assert self.id is not None
+
     # check that app container is running
     container = get_container(self, configuration, device)
 
-    assert self.id is not None
-
-    if container is None:
-        raise exceptions.ContainerNotRunningError(device, self.id)
-
-    if container.status != "running":
-        raise exceptions.ContainerNotRunningError(device, self.id)
+    if container is None or container.status != "running":
+        raise moses_exceptions.ContainerNotRunningError(device, self.id)
 
     if "host" in container.attrs["NetworkSettings"]["Networks"]:
         port = "2222"
     else:
 
         if not "2222/tcp" in container.attrs["NetworkSettings"]["Ports"]:
-            raise exceptions.ContainerDoesNotSupportSSH()
+            raise moses_exceptions.ContainerDoesNotSupportSSH()
 
         ports = container.attrs["NetworkSettings"]["Ports"]["2222/tcp"]
         port = ports[0]["HostPort"]
 
     if source_is_sdk:
-        start_sdk_container(self, configuration, True, progress)
-
-        if self.sdksshaddress is None:
-            raise exceptions.SDKContainerNotRunningError(self.id)
-
-        # connect to SDK container
-        with paramiko.SSHClient() as ssh:
-            ssh.load_system_host_keys()
-            ssh.set_missing_host_key_policy(paramiko.AutoAddPolicy())
-
-            ssh.connect(
-                "localhost",
-                self.sdksshaddress["HostPort"],
-                username=plat.sdkcontainerusername,
-                password=plat.sdkcontainerpassword,
-            )
-
-            transport = ssh.get_transport()
-
-            assert transport is not None
-
-            sftp = paramiko.sftp_client.SFTP.from_transport(transport)
-
-            assert sftp is not None
-
-            try:
-                sftp.stat(".ssh")
-            except FileNotFoundError:
-                sftp.mkdir(".ssh")
-
-            try:
-                sftp.stat(".ssh/id_rsa")
-                sftp.remove(".ssh/id_rsa")
-            except FileNotFoundError:
-                pass
-
-            assert self.folder is not None
-
-            sftp.put(str(self.folder / "id_rsa"), ".ssh/id_rsa", confirm=True)
-            sftp.chmod(".ssh/id_rsa", 0o600)
-            sftp.close
-
-            rsynccommand = "rsync -rzv "
-            rsynccommand += (
-                '-e "ssh -p ' + port + ' -o \\"StrictHostKeyChecking no\\"" '
-            )
-            # source
-            rsynccommand += sourcefolder + "/* "
-
-            assert self.username is not None
-
-            # destination
-            rsynccommand += (
-                self.username + "@" + device.get_current_ip() + ":" + containerfolder
-            )
-
-            _, stdout, stderr = ssh.exec_command(rsynccommand)
-
-            output = ""
-
-            if progress is not None:
-                for line in iter(stdout.readline, ""):
-                    progress.append_message(line)
-                    output += line
-
-            status = stdout.channel.recv_exit_status()
-
-            if status != 0:
-
-                try:
-                    output = "".join(stderr.readlines())
-                    output += "".join(stdout.readlines())
-
-                    logging.warning(output)
-                except:
-                    pass
-                raise exceptions.RemoteCommandError(rsynccommand, status)
+        _run_rsync_from_sdk(
+            self,
+            sourcefolder,
+            configuration,
+            containerfolder,
+            progress,
+            device,
+            port)
     else:
         rsync.run_rsync(
             sourcefolder,

@@ -16,8 +16,13 @@ moses-validation:
     - python3.9 -m virtualenv .pyenv
     - . ./.pyenv/bin/activate
     - python -m pip install -r requirements.txt
-    - cd moses && mypy *py && cd -
-    - cd moses && pydocstyle *py && cd -
+    - cd moses
+    - pylint *py
+    - mypy *py
+    - pydocstyle *py
+    - if [[ $(radon mi --min B *.py) ]]; then radon mi --min B *.py && false; else true; fi
+    - if [[ $(radon cc --min D *.py) ]]; then radon cc --min D *.py && false; else true; fi
+    - cd -
   tags:
     - docker
 

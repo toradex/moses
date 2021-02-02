@@ -1,26 +1,29 @@
 """Classes used to share SSH connections and SSH tunnels.
 
-Since activating an SSH connection usually takes some time, those are 
+Since activating an SSH connection usually takes some time, those are
 kept active and shared between the different requests.
 """
 import io
 import threading
 import logging
-import paramiko
-import sshtunnel
 import select
 import time
 import socket
-import targetdevice
-import nameresolution
 from typing import Dict, Optional, Type, Any, List
 from types import TracebackType
+import paramiko
+import sshtunnel
+import nameresolution
+# pylance need this to check types
+# pylint: disable = unused-import
+import targetdevice
 
 
 class SharedSSHDockerTunnel(sshtunnel.SSHTunnelForwarder):
     """Class used to manage a SHH tunnels.
 
-    since creating the tunnel is time consuming, all connections to docker on the device will share the same tunnel
+    since creating the tunnel is time consuming, all connections to docker on the device
+    will share the same tunnel
 
     """
 
@@ -30,8 +33,7 @@ class SharedSSHDockerTunnel(sshtunnel.SSHTunnelForwarder):
 
     @classmethod
     def get_tunnel(
-        cls, device: "targetdevice.TargetDevice"
-    ) -> Optional["SharedSSHDockerTunnel"]:
+            cls, device: "targetdevice.TargetDevice") -> Optional["SharedSSHDockerTunnel"]:
         """Return an SharedSSHDockerTunnel object,allocating it if it's required.
 
         :param device: destination device
@@ -48,8 +50,7 @@ class SharedSSHDockerTunnel(sshtunnel.SSHTunnelForwarder):
 
                 if tunnel.is_active and tunnel.is_alive:
                     return tunnel
-                else:
-                    tunnel = None
+                tunnel = None
 
             for _ in range(0, 10):
                 try:
@@ -79,26 +80,29 @@ class SharedSSHDockerTunnel(sshtunnel.SSHTunnelForwarder):
         :type device: targetdevice.TargetDevice
 
         """
-        logging.info("SSH - Creating tunnel to " + str(device.id))
+        assert device.id is not None
+
+        logging.info(f"SSH - Creating tunnel to {device.id}")
 
         self.device_id = device.id
         self.__objlock = threading.RLock()
 
-        k = paramiko.RSAKey.from_private_key(io.StringIO(device.privatekey))
+        privatekey = paramiko.RSAKey.from_private_key(
+            io.StringIO(device.privatekey))
 
-        ip, mdns = nameresolution.resolve_hostname(device.hostname)
+        ipaddress, _ = nameresolution.resolve_hostname(device.hostname)
 
         super().__init__(
-            ssh_address_or_host=ip,
+            ssh_address_or_host=ipaddress,
             ssh_username=device.username,
-            ssh_pkey=k,
+            ssh_pkey=privatekey,
             remote_bind_address=("127.0.0.1", 2375),
             allow_agent=False,
         )
 
         # otherwise first connection always fails
         self.start()
-        logging.info("SSH - Tunnel to " + str(device.id) + " activated")
+        logging.info(f"SSH - Tunnel to {device.id} activated")
 
     def __enter__(self) -> "SharedSSHDockerTunnel":
         """Lock the object when used in with statement."""
@@ -115,12 +119,15 @@ class SharedSSHDockerTunnel(sshtunnel.SSHTunnelForwarder):
         """
         with cls.__lock:
             if device_id in cls.__tunnels:
-                logging.info("SSH - Tunnel to " + device_id + " closed")
+                logging.info(f"SSH - Tunnel to {device_id} closed")
                 connection = cls.__tunnels[device_id]
                 del cls.__tunnels[device_id]
                 thread = threading.Thread(target=connection.stop)
                 thread.start()
 
+    # pylint: disable = arguments-differ
+    # pylint: disable = broad-except
+    # pylint: disable = useless-return
     def __exit__(
         self,
         etype: Optional[Type[BaseException]],
@@ -130,7 +137,7 @@ class SharedSSHDockerTunnel(sshtunnel.SSHTunnelForwarder):
         """Ensure that tunnel is closed when an exception occours during operations."""
         try:
             self.__objlock.release()
-        except:
+        except Exception:
             pass
 
         try:
@@ -140,18 +147,19 @@ class SharedSSHDockerTunnel(sshtunnel.SSHTunnelForwarder):
                 SharedSSHDockerTunnel.remove_tunnel(self.device_id)
                 self.close()
 
-                logging.info("SSH - Tunnel to " + self.device_id + " closed")
+                logging.info(f"SSH - Tunnel to {self.device_id} closed")
                 with SharedSSHDockerTunnel.__lock:
                     if self.device_id in SharedSSHDockerTunnel.__tunnels:
                         del SharedSSHDockerTunnel.__tunnels[self.device_id]
                         thread = threading.Thread(target=self.stop)
                         thread.start()
-        except:
+        except Exception:
             pass
 
         return None
 
 
+#pylint: disable = too-few-public-methods
 class IgnorePolicy(paramiko.MissingHostKeyPolicy):
     """Helper class for SSH implementation.
 
@@ -160,8 +168,9 @@ class IgnorePolicy(paramiko.MissingHostKeyPolicy):
 
     """
 
+    # pylint: disable = unnecessary-pass
     def missing_host_key(self, client: Any, hostname: Any, key: Any) -> None:
-        """Handle missing host key (does nothing, justs n ignore thes n reques -> Nonet to save hostname/key pairs).
+        """Handle missing host key (does nothing).
 
         :param client:
         :param hostname:
@@ -174,7 +183,8 @@ class IgnorePolicy(paramiko.MissingHostKeyPolicy):
 class SharedSSHClient(paramiko.SSHClient):
     """Class used to manage SSH connection to a specific device.
 
-    Since activating SSH connections is time-consuming, all commands are sent on a shared connection.
+    Since activating SSH connections is time-consuming,
+    all commands are sent on a shared connection.
 
     """
 
@@ -182,7 +192,8 @@ class SharedSSHClient(paramiko.SSHClient):
     __lock = threading.RLock()
 
     @classmethod
-    def get_connection(cls, device: "targetdevice.TargetDevice") -> "SharedSSHClient":
+    def get_connection(
+            cls, device: "targetdevice.TargetDevice") -> "SharedSSHClient":
         """Return an SSH connection object,allocating it if it's required.
 
         :param device: destination device
@@ -205,10 +216,12 @@ class SharedSSHClient(paramiko.SSHClient):
                     return ssh
                 try:
                     ssh.close()
-                except:
+                # pylint: disable = broad-except
+                except Exception:
                     pass
 
-            k = paramiko.RSAKey.from_private_key(io.StringIO(device.privatekey))
+            k = paramiko.RSAKey.from_private_key(
+                io.StringIO(device.privatekey))
 
             assert device.id is not None
 
@@ -217,11 +230,16 @@ class SharedSSHClient(paramiko.SSHClient):
             # ssh.load_system_host_keys()
             ssh.set_missing_host_key_policy(IgnorePolicy())
 
-            ip, mdns = nameresolution.resolve_hostname(device.hostname)
+            ipaddress, _ = nameresolution.resolve_hostname(device.hostname)
 
-            ssh.connect(ip, 22, username=device.username, pkey=k, allow_agent=False)
+            ssh.connect(
+                ipaddress,
+                22,
+                username=device.username,
+                pkey=k,
+                allow_agent=False)
 
-            logging.info("SSH - Connected to device " + str(device.id))
+            logging.info(f"SSH - Connected to device {device.id}")
 
             cls.__connections[str(device.id)] = ssh
             return ssh
@@ -235,7 +253,7 @@ class SharedSSHClient(paramiko.SSHClient):
         self.device_id = device_id
         self.__objlock = threading.RLock()
         super().__init__()
-        logging.info("SSH - Connecting to device " + device_id)
+        logging.info(f"SSH - Connecting to device {device_id}")
 
     def __enter__(self) -> "SharedSSHClient":
         """Lock the object when used in with statements."""
@@ -252,7 +270,7 @@ class SharedSSHClient(paramiko.SSHClient):
         """
         with cls.__lock:
             if device_id in cls.__connections:
-                logging.info("SSH - Connection to " + device_id + " closed")
+                logging.info(f"SSH - Connection to {device_id} closed")
                 del cls.__connections[device_id]
 
     def __exit__(
@@ -281,22 +299,22 @@ class SSHForwarder(threading.Thread):
     def __init__(
         self,
         listenthread: "SSHListenThread",
-        socket: socket.socket,
+        fwdsocket: socket.socket,
         device: "targetdevice.TargetDevice",
     ):
         """Create forwarding thread.
 
         :param listenthread: object that accepted the incoming connection
         :type listenthread: SSHListenThread
-        :param socket: socket that has been created during accept
-        :type socket: socket.socket
+        :param fwdsocket: socket that has been created during accept
+        :type fwdsocket: socket.socket
         :param device: target device
         :type device: targetdevice.TargetDevice
 
         """
         super().__init__()
 
-        self.socket = socket
+        self.socket = fwdsocket
         self.parent = listenthread
         self.device = device
         self.ssh: Optional[paramiko.SSHClient] = None
@@ -306,16 +324,19 @@ class SSHForwarder(threading.Thread):
         """Forward data between the local and remote ports."""
         channel = None
 
+        # pylint: disable = broad-except
         try:
-            k = paramiko.RSAKey.from_private_key(io.StringIO(self.device.privatekey))
+            k = paramiko.RSAKey.from_private_key(
+                io.StringIO(self.device.privatekey))
 
             self.ssh = paramiko.SSHClient()
             self.ssh.set_missing_host_key_policy(IgnorePolicy())
 
-            ip, mdns = nameresolution.resolve_hostname(self.device.hostname)
+            ipaddress, _ = nameresolution.resolve_hostname(
+                self.device.hostname)
 
             self.ssh.connect(
-                ip, 22, username=self.device.username, pkey=k, allow_agent=False
+                ipaddress, 22, username=self.device.username, pkey=k, allow_agent=False
             )
 
             channel = self.ssh.invoke_shell()
@@ -328,13 +349,13 @@ class SSHForwarder(threading.Thread):
             while True:
                 ready = select.select(inputs, [], [], None)
 
-                for r in ready[0]:
+                for readyobj in ready[0]:
 
-                    if r == self.socket:
+                    if readyobj == self.socket:
                         data = self.socket.recv(self.MAX_BLOCK_SIZE)
                         channel.send(data)
 
-                    if r == channel:
+                    if readyobj == channel:
                         data = channel.recv(self.MAX_BLOCK_SIZE)
                         self.socket.send(data)
 
@@ -365,10 +386,12 @@ class SSHForwarder(threading.Thread):
 class SSHListenThread(threading.Thread):
     """Class that creates a forward channel for any connection on local port."""
 
-    def __init__(self, port: Optional[int], device: "targetdevice.TargetDevice"):
+    def __init__(self, port: Optional[int],
+                 device: "targetdevice.TargetDevice"):
         """Initialize socket and start listening for connections.
 
-        :param port: destination port on the target, if port is None, then port number will be assigned by the system
+        :param port: destination port on the target, if port is None,
+            then port number will be assigned by the system
         :type port: int, optional
         :param device: target device
         :type device: targetdevices.TargetDevice
@@ -403,6 +426,7 @@ class SSHListenThread(threading.Thread):
 
     def stop(self) -> None:
         """Stop accepting incoming connections and close all pending forward threads."""
+        # pylint: disable = broad-except
         try:
             self.socket.shutdown(socket.SHUT_RDWR)
             self.socket.close()

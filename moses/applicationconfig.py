@@ -1,20 +1,19 @@
 """Classes used to manage applications."""
 import os
-import platform as platform_module
 import logging
+import datetime
+from pathlib import Path
+from typing import Optional, Dict
 import docker
 import docker.models.containers
 import singleton
 import platformconfig
-import exceptions
-import datetime
+import moses_exceptions
 import targetdevice
 import logs
-import pathlib
 from applicationconfig_base import ApplicationConfigBase
-from pathlib import Path
-from typing import Optional, Dict, Any, List, Callable, Tuple
 
+# those imports implement additional methods of the ApplicationConfig class
 import applicationconfig_build
 import applicationconfig_deployrun
 import applicationconfig_sdk
@@ -41,15 +40,6 @@ class ApplicationConfig(ApplicationConfigBase):
     get_docker_composefile = applicationconfig_dockerexport.get_docker_composefile
     push_to_registry = applicationconfig_dockerexport.push_to_registry
 
-    def __init__(self, folder: Optional[pathlib.Path] = None):
-        """Load data from the configuration folder.
-
-        :param folder: path of the folder used to store application configuration
-        :type folder: pathlib.Path, optional
-
-        """
-        super().__init__(folder)
-
     def touch(self) -> None:
         """Set modification date to current time."""
         self.modificationdate = datetime.datetime.utcnow().isoformat()
@@ -57,35 +47,35 @@ class ApplicationConfig(ApplicationConfigBase):
     def destroy(self) -> None:
         """Remove the application and all associated files, containers and images."""
         try:
-            d = docker.from_env()
+            localdocker = docker.from_env()
 
             if self.images["debug"] is not None and self.images["debug"] != "":
-                if d.images.get(self.images["debug"]) is not None:
-                    d.images.remove(
+                if localdocker.images.get(self.images["debug"]) is not None:
+                    localdocker.images.remove(
                         image=self.images["debug"], force=True, prune=True)
 
             if self.images["release"] is not None and self.images["release"] != "":
-                if d.images.get(self.images["release"]) is not None:
-                    d.images.remove(
+                if localdocker.images.get(self.images["release"]) is not None:
+                    localdocker.images.remove(
                         image=self.images["release"], force=True, prune=True
                     )
 
             if self.sdkimages["debug"] is not None and self.sdkimages["debug"] != "":
-                if d.images.get(self.sdkimages["debug"]) is not None:
-                    d.images.remove(
+                if localdocker.images.get(self.sdkimages["debug"]) is not None:
+                    localdocker.images.remove(
                         image=self.sdkimages["debug"], force=True, prune=True
                     )
 
-            if (
-                self.sdkimages["release"] is not None
-                and self.sdkimages["release"] != ""
-            ):
-                if d.images.get(self.sdkimages["release"]) is not None:
-                    d.images.remove(
+            if (self.sdkimages["release"]
+                    is not None and self.sdkimages["release"] != ""):
+                if localdocker.images.get(
+                        self.sdkimages["release"]) is not None:
+                    localdocker.images.remove(
                         image=self.sdkimages["release"], force=True, prune=True
                     )
             super().destroy()
-        except BaseException:
+        # pylint: disable = broad-except
+        except Exception:
             logging.exception("Exception destroying application object")
 
     def reseal(self) -> None:
@@ -109,13 +99,13 @@ class ApplicationConfig(ApplicationConfigBase):
         try:
             os.remove(self.folder / "id_rsa")
             os.remove(self.folder / "id_rsa.pub")
-        except BaseException:
+        # pylint: disable = broad-except
+        except Exception:
             pass
         self.save()
 
-    def get_container_logs(
-        self, configuration: str, device: targetdevice.TargetDevice, restart: bool
-    ) -> Optional[str]:
+    def get_container_logs(self, configuration: str,
+                           device: targetdevice.TargetDevice, restart: bool) -> Optional[str]:
         """Return one line from the container logs.
 
         :param configuration: debug/release
@@ -169,7 +159,7 @@ class ApplicationConfigs(Dict[str, ApplicationConfig],
 
         """
         if not os.path.exists(folder):
-            raise exceptions.InvalidPathError(folder)
+            raise moses_exceptions.InvalidPathError(folder)
 
         app = ApplicationConfig(folder)
 
@@ -181,12 +171,15 @@ class ApplicationConfigs(Dict[str, ApplicationConfig],
 
         assert app.id is not None
 
+        # pylint false positive, self is a dict, so we can add items
+        # pylint: disable=unsupported-assignment-operation
         self[app.id] = app
         return app
 
     def create_new_application(
-        self, rootfolder: Path, platform: platformconfig.PlatformConfig, username: str
-    ) -> ApplicationConfig:
+            self, rootfolder: Path,
+            platform: platformconfig.PlatformConfig,
+            username: str) -> ApplicationConfig:
         """Create a new application.
 
         :param rootfolder: base folder when application folder will be created
@@ -201,15 +194,15 @@ class ApplicationConfigs(Dict[str, ApplicationConfig],
 
         """
         # finds a new folder for the app config
-        c = 0
+        counter = 0
 
         if not os.path.exists(rootfolder):
-            raise exceptions.InvalidPathError(rootfolder)
+            raise moses_exceptions.InvalidPathError(rootfolder)
 
-        while (rootfolder / ("appconfig_" + str(c))).exists():
-            c += 1
+        while (rootfolder / ("appconfig_" + str(counter))).exists():
+            counter += 1
 
-        app = ApplicationConfig(rootfolder / ("appconfig_" + str(c)))
+        app = ApplicationConfig(rootfolder / ("appconfig_" + str(counter)))
 
         assert platform.id is not None
 
@@ -219,5 +212,7 @@ class ApplicationConfigs(Dict[str, ApplicationConfig],
 
         assert app.id is not None
 
+        # pylint false positive, self is a dict, so we can add items
+        # pylint: disable=unsupported-assignment-operation
         self[app.id] = app
         return app

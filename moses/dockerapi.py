@@ -1,28 +1,28 @@
 """This module export some functions that access low-level docker api.
 
-This is required to provide some kind of progress during the operation, 
+This is required to provide some kind of progress during the operation,
 since high-level API is based on REST calls.add()
 """
-import six
 import json
 import re
-import progresscookie
 import io
 import logging
+from typing import Optional, List, Dict, Tuple, Any
+import six
 from docker import DockerClient
 from docker.models.images import Image
-from typing import Optional, List, Dict, Tuple, Any
-from exceptions import LocalDockerError, RemoteDockerError
+import progresscookie
+from moses_exceptions import LocalDockerError, RemoteDockerError
+
+#pylint: disable = too-many-arguments
 
 
-def build_image(
-    client: DockerClient,
-    path: str,
-    dockerfile: str,
-    tag: str,
-    platform: Optional[str],
-    progress: Optional[progresscookie.ProgressCookie],
-) -> Optional[Image]:
+def build_image(client: DockerClient,
+                path: str,
+                dockerfile: str,
+                tag: str,
+                platform: Optional[str],
+                progress: Optional[progresscookie.ProgressCookie]) -> Optional[Image]:
     """Build an image returning messages generated during the operation.
 
     :param client: docker API client
@@ -52,17 +52,18 @@ def build_image(
     if isinstance(resp, six.string_types):
         return client.images.get(resp)
 
-    for r in resp:
+    for responsestring in resp:
 
-        for l in r.decode("utf-8").split("\r\n"):
+        for responseline in responsestring.decode("utf-8").split("\r\n"):
 
-            if len(l) == 0:
+            if len(responseline) == 0:
                 continue
             try:
-                line = json.loads(l)
-            except Exception as e:
-                logging.error(f"Invalid json string {l}")
-                logging.exception(e)
+                line = json.loads(responseline)
+            # pylint: disable = broad-except
+            except Exception as exception:
+                logging.error(f"Invalid json string {responseline}")
+                logging.exception(exception)
                 continue
 
             if "stream" in line:
@@ -81,8 +82,7 @@ def build_image(
 
     if image_id is not None:
         return client.images.get(image_id)
-    else:
-        return None
+    return None
 
 
 class ReadProgress(io.BufferedReader):
@@ -184,22 +184,57 @@ def load_image(
             info = None
             if "errorDetail" in line:
                 info = line["errorDetail"]
-            raise RemoteDockerError(device, line["error"], log=output, info=info)
+            raise RemoteDockerError(
+                device, line["error"], log=output, info=info)
 
     if image_id is not None:
         return client.images.get(image_id)
-    else:
-        return None
+    return None
 
 
-def push_image(
-    client: DockerClient,
-    repository: str,
-    tag: Optional[str],
-    username: str,
-    password: str,
-    progress: Optional[progresscookie.ProgressCookie],
-) -> None:
+def _update_push_progress(progress: progresscookie.ProgressCookie,
+                          ids: Dict[str, Tuple[str, int, int]], line: Dict[str, Any]) -> None:
+    """Sum all progress repos from all the layers and update progress object.
+
+    :param progress: object used to report operation progress
+    :type progress: progresscookie.ProgressCookie
+    :param ids: dictionary with all the layers
+    :type ids: dict
+    :param line: output line (parsed from json)
+    :type line: dict
+    """
+    cur = 0
+    tot = 0
+    if "id" in line:
+        lineid = line["id"]
+        if "progressDetail" in line:
+            detail = line["progressDetail"]
+            if "current" in detail:
+                cur = detail["current"]
+            if "total" in detail:
+                tot = detail["total"]
+        if lineid not in ids or line["status"] != ids[lineid][0]:
+            ids[lineid] = (line["status"], cur, tot)
+            progress.append_message(
+                line["status"] + " " + lineid)
+        if tot != 0:
+            ids[lineid] = (line["status"], cur, tot)
+            current = 0
+            total = 0
+            for i in ids.values():
+                current += i[1]
+                total += i[2]
+            progress.set_minmax(0, total)
+            progress.set_progress_minmax(current)
+
+
+# pylint: disable = too-many-locals
+def push_image(client: DockerClient,
+               repository: str,
+               tag: Optional[str],
+               username: str,
+               password: str,
+               progress: Optional[progresscookie.ProgressCookie]) -> None:
     """Push an image, returning messages generated during the operation via progress.
 
     :param client: client
@@ -220,65 +255,38 @@ def push_image(
 
     auth_config = {"username": username, "password": password}
 
-    resp = apiclient.push(repository, tag, auth_config=auth_config, stream=True)
+    resp = apiclient.push(
+        repository,
+        tag,
+        auth_config=auth_config,
+        stream=True)
 
     output: List[str] = []
     ids: Dict[str, Tuple[str, int, int]] = {}
 
-    for r in resp:
+    for responsestring in resp:
 
-        for l in r.decode("utf-8").split("\r\n"):
+        for responseline in responsestring.decode("utf-8").split("\r\n"):
 
-            if len(l) == 0:
+            if len(responseline) == 0:
                 continue
 
-            print(l)
+            print(responseline)
 
             try:
-                line = json.loads(l)
-            except Exception as e:
-                logging.error(f"Invalid json string {l}")
-                logging.exception(e)
+                line = json.loads(responseline)
+            # pylint: disable = broad-except
+            except Exception as exception:
+                logging.error(f"Invalid json string {responseline}")
+                logging.exception(exception)
                 continue
 
             if "stream" in line:
                 progresscookie.progress_message(progress, line["stream"])
                 output.append(line["stream"])
             if "status" in line:
-
                 if progress is not None:
-
-                    cur = 0
-                    tot = 0
-
-                    if "id" in line:
-                        id = line["id"]
-
-                        if "progressDetail" in line:
-
-                            detail = line["progressDetail"]
-                            if "current" in detail:
-                                cur = detail["current"]
-                            if "total" in detail:
-                                tot = detail["total"]
-
-                        if id not in ids or line["status"] != ids[id][0]:
-                            ids[id] = (line["status"], cur, tot)
-
-                            progress.append_message(line["status"] + " " + id)
-
-                        if tot != 0:
-                            ids[id] = (line["status"], cur, tot)
-
-                            gc = 0
-                            gt = 0
-
-                            for i in ids.values():
-                                gc += i[1]
-                                gt += i[2]
-
-                            progress.set_minmax(0, gt)
-                            progress.set_progress_minmax(gc)
+                    _update_push_progress(progress, ids, line)
             if "error" in line:
                 info = None
                 if "errorDetail" in line:

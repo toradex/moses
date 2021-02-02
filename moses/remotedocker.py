@@ -6,16 +6,23 @@ uses docker APIs over the local socket.
 """
 import logging
 from types import TracebackType
+from typing import Optional, List, Dict, Any, TYPE_CHECKING, Type
 import yaml
 import paramiko
 import docker
-import exceptions
 import sshtunnel
 import sharedssh
-import targetdevice
 import progresscookie
 import dockerapi
-from typing import Optional, List, Dict, Any, Type
+from moses_exceptions import (
+    SSHError,
+    SSHTunnelError,
+    RemoteDockerError,
+    ImageNotFoundError,
+    RemoteImageNotFoundError)
+
+if TYPE_CHECKING:
+    import targetdevice
 
 
 class RemoteDocker:
@@ -35,10 +42,10 @@ class RemoteDocker:
 
             self.sshtunnel = sharedssh.SharedSSHDockerTunnel.get_tunnel(device)
 
-        except paramiko.SSHException as e:
-            raise exceptions.SSHError(e)
-        except sshtunnel.BaseSSHTunnelForwarderError as e:
-            raise exceptions.SSHTunnelError(e)
+        except paramiko.SSHException as exception:
+            raise SSHError(exception) from exception
+        except sshtunnel.BaseSSHTunnelForwarderError as exception:
+            raise SSHTunnelError(exception) from exception
 
     def get_image_by_tag(self, tag: str) -> Optional[dict]:
         """Return information about a specific image.
@@ -54,8 +61,8 @@ class RemoteDocker:
             image = self.remotedocker.images.get(tag)
         except docker.errors.ImageNotFound:
             return None
-        except docker.errors.DockerException as e:
-            raise exceptions.RemoteDockerError(self.dev, str(e))
+        except docker.errors.DockerException as exception:
+            raise RemoteDockerError(self.dev, str(exception)) from exception
 
         return image.attrs
 
@@ -69,10 +76,11 @@ class RemoteDocker:
         """
         try:
 
-            self.remotedocker.images.remove(image=img, force=force, noprune=False)
+            self.remotedocker.images.remove(
+                image=img, force=force, noprune=False)
 
-        except docker.errors.DockerException as e:
-            raise exceptions.RemoteDockerError(self.dev, str(e))
+        except docker.errors.DockerException as exception:
+            raise RemoteDockerError(self.dev, str(exception)) from exception
 
     def load_image(
         self,
@@ -97,24 +105,25 @@ class RemoteDocker:
             )
 
             if rimg is None:
-                raise exceptions.ImageNotFoundError(localpath)
+                raise ImageNotFoundError(localpath)
 
             rimg.tag(limg.tags[0])
 
-        except docker.errors.DockerException as e:
-            raise exceptions.RemoteDockerError(self.dev, str(e))
+        except docker.errors.DockerException as exception:
+            raise RemoteDockerError(self.dev, str(exception)) from exception
 
+    # pylint: disable = too-many-arguments
+    # pylint: disable = too-many-locals
     def run_image(
-        self,
-        img: docker.models.images.Image,
-        name: str,
-        ports: Dict[str, Optional[str]],
-        volumes: Dict[str, str],
-        devices: List[str],
-        privileged: bool,
-        extraparms: Dict[str, str],
-        networks: List[str],
-    ) -> docker.models.containers.Container:
+            self,
+            img: docker.models.images.Image,
+            name: str,
+            ports: Dict[str, Optional[str]],
+            volumes: Dict[str, str],
+            devices: List[str],
+            privileged: bool,
+            extraparms: Dict[str, str],
+            networks: List[str]) -> docker.models.containers.Container:
         """Run a new instance of the specified image.
 
         :param img: docker image to be used for this instance
@@ -141,7 +150,7 @@ class RemoteDocker:
         image = self.remotedocker.images.get(img.id)
 
         if image is None:
-            raise exceptions.RemoteImageNotFoundError(img.id)
+            raise RemoteImageNotFoundError(img.id)
 
         try:
 
@@ -161,7 +170,8 @@ class RemoteDocker:
             # convert volumes from string into docker format
             dockervolumesstr = dict(
                 map(
-                    lambda x: (x[0].strip(), (x[1].strip() + ",rw").split(",")[0:2]),
+                    lambda x: (x[0].strip(),
+                               (x[1].strip() + ",rw").split(",")[0:2]),
                     volumes.items(),
                 )
             )
@@ -174,7 +184,8 @@ class RemoteDocker:
             )
 
             dockerextraparms = dict(
-                map(lambda x: (x[0].strip(), yaml.full_load(x[1])), extraparms.items())
+                map(lambda x: (x[0].strip(), yaml.full_load(
+                    x[1])), extraparms.items())
             )
 
             if "ports" in dockerextraparms:
@@ -219,8 +230,8 @@ class RemoteDocker:
 
             return container
 
-        except docker.errors.DockerException as e:
-            raise exceptions.RemoteDockerError(self.dev, str(e))
+        except docker.errors.DockerException as exception:
+            raise RemoteDockerError(self.dev, str(exception)) from exception
 
     def get_containers(
         self, filters: Optional[Dict[str, Any]]
@@ -235,11 +246,12 @@ class RemoteDocker:
 
         """
         try:
-            containers = self.remotedocker.containers.list(all=True, filters=filters)
+            containers = self.remotedocker.containers.list(
+                all=True, filters=filters)
             return containers
 
-        except docker.errors.DockerException as e:
-            raise exceptions.RemoteDockerError(self.dev, str(e))
+        except docker.errors.DockerException as exception:
+            raise RemoteDockerError(self.dev, str(exception)) from exception
 
     def is_container_running(self, container_id: str) -> bool:
         """Check if a container is running.
@@ -256,12 +268,11 @@ class RemoteDocker:
 
         except docker.errors.NotFound:
             return False
-        except docker.errors.DockerException as e:
-            raise exceptions.RemoteDockerError(self.dev, str(e))
-        except Exception as e:
-            raise e
+        except docker.errors.DockerException as exception:
+            raise RemoteDockerError(self.dev, str(exception)) from exception
 
-    def get_container(self, container_id: str) -> docker.models.containers.Container:
+    def get_container(
+            self, container_id: str) -> docker.models.containers.Container:
         """Return a container given its Id.
 
         :param container_id: container ID (SHA)
@@ -275,8 +286,8 @@ class RemoteDocker:
             return self.remotedocker.containers.get(container_id)
         except docker.errors.NotFound:
             return None
-        except docker.errors.DockerException as e:
-            raise exceptions.RemoteDockerError(self.dev, str(e))
+        except docker.errors.DockerException as exception:
+            raise RemoteDockerError(self.dev, str(exception)) from exception
 
     def get_images(self, filters: Optional[Dict[str, Any]]) -> List[dict]:
         """Return one or more images matching the filters.
@@ -298,53 +309,54 @@ class RemoteDocker:
 
             return jsonimages
 
-        except docker.errors.DockerException as e:
-            raise exceptions.RemoteDockerError(self.dev, str(e))
+        except docker.errors.DockerException as exception:
+            raise RemoteDockerError(self.dev, str(exception)) from exception
 
-    def get_image_by_id(self, id: str) -> docker.models.images.Image:
+    def get_image_by_id(self, image_id: str) -> docker.models.images.Image:
         """Return information about a specific image.
 
-        :param id: image ID (SHA)
-        :type id: str
+        :param image_id: image ID (SHA)
+        :type image_id: str
 
         :returns: Image information
         :rtype: docker.models.images.Image
 
         """
         try:
-            image = self.remotedocker.images.get(id)
+            image = self.remotedocker.images.get(image_id)
         except docker.errors.ImageNotFound:
             return None
-        except docker.errors.DockerException as e:
-            raise exceptions.RemoteDockerError(self.dev, str(e))
+        except docker.errors.DockerException as exception:
+            raise RemoteDockerError(self.dev, str(exception)) from exception
 
         return image
 
-    def remove_image_by_id(self, id: str) -> None:
+    def remove_image_by_id(self, image_id: str) -> None:
         """Remove a remote image.
 
-        :param id: image ID (SHA)
-        :type id: str
+        :param image_id: image ID (SHA)
+        :type image_id: str
 
         """
         try:
-            self.remotedocker.images.remove(image=id, force=True, noprune=False)
+            self.remotedocker.images.remove(
+                image=image_id, force=True, noprune=False)
             return
 
         except docker.errors.ImageNotFound:
             return
-        except docker.errors.DockerException as e:
-            raise exceptions.RemoteDockerError(self.dev, str(e))
+        except docker.errors.DockerException as exception:
+            raise RemoteDockerError(self.dev, str(exception)) from exception
 
-    def remove_container(self, id: str) -> None:
+    def remove_container(self, container_id: str) -> None:
         """Remove a remote container.
 
-        :param id: container ID (SHA)
-        :type id: str
+        :param container_id: container ID (SHA)
+        :type container_id: str
 
         """
         try:
-            container = self.remotedocker.containers.get(id)
+            container = self.remotedocker.containers.get(container_id)
             container.remove(v=True, force=True)
             return
 
@@ -352,8 +364,8 @@ class RemoteDocker:
             return
         except docker.errors.NotFound:
             return
-        except docker.errors.DockerException as e:
-            raise exceptions.RemoteDockerError(self.dev, str(e))
+        except docker.errors.DockerException as exception:
+            raise RemoteDockerError(self.dev, str(exception)) from exception
 
     def get_network(self, network: str) -> docker.models.networks.Network:
         """Return a network given its name.
@@ -365,32 +377,36 @@ class RemoteDocker:
         :rtype: docker.models.networks.Network
 
         """
-        list = self.remotedocker.networks.list(names=[network])
+        networks_list = self.remotedocker.networks.list(names=[network])
 
-        if len(list) == 0:
+        if len(networks_list) == 0:
             return None
 
-        return list[0]
+        return networks_list[0]
 
         # enable object to be used in "with" statements
 
     def __enter__(self) -> "RemoteDocker":
         """Check that connections are OK before starting remote operations."""
         if self.sshtunnel is None:
-            e = exceptions.SSHTunnelError(Exception("Tunnel is not connected."))
-            raise e
+            exception = SSHTunnelError(
+                Exception("Tunnel is not connected."))
+            raise exception
 
         if not (self.sshtunnel.is_active and self.sshtunnel.is_alive):
-            e = exceptions.SSHTunnelError(Exception("Tunnel is not connected."))
-            self.sshtunnel.__exit__(type(e), e, None)
-            raise e
+            exception = SSHTunnelError(
+                Exception("Tunnel is not connected."))
+            self.sshtunnel.__exit__(type(exception), exception, None)
+            raise exception
 
         try:
-            localdocker = "tcp://127.0.0.1:" + str(self.sshtunnel.local_bind_port)
-            self.remotedocker = docker.DockerClient(base_url=localdocker, timeout=1800)
-        except Exception as e:
-            self.sshtunnel.__exit__(type(e), e, None)
-            raise e
+            localdocker = "tcp://127.0.0.1:" + \
+                str(self.sshtunnel.local_bind_port)
+            self.remotedocker = docker.DockerClient(
+                base_url=localdocker, timeout=1800)
+        except Exception as exception:
+            self.sshtunnel.__exit__(type(exception), exception, None)
+            raise exception
 
         self.sshtunnel.__enter__()
         return self

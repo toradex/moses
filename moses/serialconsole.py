@@ -1,10 +1,10 @@
 """Implements console functions over serial connection."""
 import time
-import serial
-import console
-import exceptions
 from typing import Optional, Type
 from types import TracebackType
+import serial
+import console
+from moses_exceptions import SerialError, LoginFailedError
 
 
 class SerialConsole(console.GenericConsole):
@@ -17,10 +17,12 @@ class SerialConsole(console.GenericConsole):
         :type device: str
 
         """
+        super().__init__(device)
         try:
-            self.ser = serial.Serial(device, 115200, 8, serial.PARITY_NONE, 1, 5)
-        except serial.SerialException as e:
-            raise exceptions.SerialError(e)
+            self.ser = serial.Serial(
+                device, 115200, 8, serial.PARITY_NONE, 1, 5)
+        except serial.SerialException as exception:
+            raise SerialError(exception) from exception
         self._prompt = ""
 
     def set_prompt(self, prompt: str) -> None:
@@ -56,7 +58,7 @@ class SerialConsole(console.GenericConsole):
 
             while not output.endswith(self._prompt):
                 if time.time() - start > timeout:
-                    raise exceptions.TimeoutError()
+                    raise TimeoutError()
 
                 try:
                     output += self.ser.read_all().decode("utf-8")
@@ -64,15 +66,17 @@ class SerialConsole(console.GenericConsole):
                     continue
 
             return output[: len(output) - len(self._prompt)].strip()
-        except serial.SerialException as e:
-            raise exceptions.SerialError(e)
-        except OSError as e:
-            raise exceptions.OSError(e)
+        except serial.SerialException as exception:
+            raise SerialError(exception) from exception
+        except OSError as exception:
+            raise OSError(exception) from exception
 
-    def wait_for_prompt(self, prompt: Optional[str] = None, timeout: int = 30) -> None:
+    def wait_for_prompt(
+            self, prompt: Optional[str] = None, timeout: int = 30) -> None:
         """Wait until the specific string is received.
 
-        :param prompt: prompt or None to use the one configured by set_prompt  (Default value = None)
+        :param prompt: prompt or None to use the one configured by set_prompt
+            (Default value = None)
         :type prompt: str, optional
         :param timeout: timeout in seconds  (Default value = 30)
         :type timeout: int
@@ -89,13 +93,42 @@ class SerialConsole(console.GenericConsole):
 
         while not output.endswith(prompt):
             if time.time() - start > timeout:
-                raise exceptions.TimeoutError()
+                raise TimeoutError()
 
             try:
                 output += self.ser.read_all().decode("utf-8")
             except UnicodeDecodeError:
                 continue
-        return
+
+    def _change_password(self, password: str) -> None:
+        """Configure a temporary password on 1st login.
+
+        :param password: password
+        :type password: str
+
+        """
+        self.ser.write(password.encode("utf-8"))
+        # write a dummy new passwordself.wait_for_prompt("New password: ")
+        self.ser.write("thispasswordwontlast".encode("utf-8"))
+        self.wait_for_prompt("Retype new password: ")
+        # 2nd one requires \n because there is no waif_for_prompt,
+        # # afterwardsself.ser.write("thispasswordwontlast\n".encode("utf-8"))
+        time.sleep(5)
+
+    def _restore_password(self, password: str) -> None:
+        """Restores old password.
+
+        :param password: password
+        :type password: str
+        """
+        self.ser.write("passwd".encode("utf-8"))
+        self.wait_for_prompt("Current password: ")
+        self.ser.write("thispasswordwontlast".encode("utf-8"))
+        self.wait_for_prompt("New password: ")
+        self.ser.write(password.encode("utf-8"))
+        self.wait_for_prompt("Retype new password: ")
+        self.ser.write(password.encode("utf-8"))
+        self.wait_for_prompt()
 
     def login(self, username: str, password: str, timeout: int = 60) -> None:
         """Try to login user and configures prompt.
@@ -142,42 +175,32 @@ class SerialConsole(console.GenericConsole):
 
                     loggedin = True
 
-                except exceptions.TimeoutError:
+                except TimeoutError:
                     continue
 
                 break
 
             if not loggedin:
-                raise exceptions.LoginFailedError()
+                raise LoginFailedError()
 
             # wait for any prompt
             start = time.time()
 
             while self.ser.in_waiting == 0:
                 if time.time() - start > timeout:
-                    raise exceptions.TimeoutError()
+                    raise TimeoutError()
 
             time.sleep(10)
             prompt = self.ser.read_all().decode("utf-8")
 
             if "Login incorrect" in prompt:
-                raise exceptions.LoginFailedError()
+                raise LoginFailedError()
 
             changepwd = False
 
             if "Current password:" in prompt:
-                # write password
-                self.ser.write(password.encode("utf-8"))
-
-                # write a dummy new password
-                self.wait_for_prompt("New password: ")
-                self.ser.write("thispasswordwontlast".encode("utf-8"))
-                self.wait_for_prompt("Retype new password: ")
-                # 2nd one requires \n because there is no waif_for_prompt afterwards
-                self.ser.write("thispasswordwontlast\n".encode("utf-8"))
-
+                self._change_password(password)
                 changepwd = True
-                time.sleep(5)
 
             # we reached the prompt
             # send command to configure it to a known state
@@ -191,29 +214,23 @@ class SerialConsole(console.GenericConsole):
             self.wait_for_prompt()
 
             if changepwd:
-                self.ser.write("passwd".encode("utf-8"))
-                self.wait_for_prompt("Current password: ")
-                self.ser.write("thispasswordwontlast".encode("utf-8"))
-                self.wait_for_prompt("New password: ")
-                self.ser.write(password.encode("utf-8"))
-                self.wait_for_prompt("Retype new password: ")
-                self.ser.write(password.encode("utf-8"))
-                self.wait_for_prompt()
+                self._restore_password(password)
 
             time.sleep(5)
             self.ser.flush()
             self.ser.read_all()
 
-        except serial.SerialException as e:
-            raise exceptions.SerialError(e)
-        except OSError as e:
-            raise exceptions.OSError(e)
+        except serial.SerialException as exception:
+            raise SerialError(exception) from exception
+        except OSError as exception:
+            raise OSError(exception) from exception
 
     def __enter__(self) -> "SerialConsole":
         """Ensure that serial object is managed correctly in with statements."""
         self.ser.__enter__()
         return self
 
+    # pylint: disable = useless-return
     def __exit__(
         self,
         etype: Optional[Type[BaseException]],
@@ -224,6 +241,7 @@ class SerialConsole(console.GenericConsole):
         try:
             self.ser.write("exit\n".encode("utf-8"))
             self.ser.__exit__(etype, value, traceback)
-        except:
+        # pylint: disable = broad-except
+        except Exception:
             pass
         return None

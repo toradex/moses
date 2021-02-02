@@ -21,7 +21,7 @@ class GenericConsole:
         :returns: output of the command (till next prompt)
 
         """
-        pass
+        raise NotImplementedError()
 
     def login(self, username: str, password: str, timeout: int = 60) -> None:
         """Try to login user and configure shell to send further commands.
@@ -34,4 +34,4 @@ class GenericConsole:
         :type timeout: int
 
         """
-        pass
+        raise NotImplementedError()

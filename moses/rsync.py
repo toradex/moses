@@ -2,26 +2,29 @@
 
 Rsync is used to deploy files between local PC and the device.
 Files can be on the local filesystems or in containers.
-Functions work also on Windows, translating paths and relying on 
+Functions work also on Windows, translating paths and relying on
 rsync provided by WSL.
 """
 import platform
 import subprocess
-import exceptions
-import targetdevice
 import socket
+from typing import Optional, List
+import targetdevice
 import nameresolution
 import progresscookie
-from typing import Optional, List
+from moses_exceptions import LocalCommandError, DNSError
 
-should_translate_path: bool = False
-should_create_tmp_key: bool = False
-rsync_cmd: List[str] = ["rsync"]
+SHOULD_TRANSLATE_PATH: bool = False
+SHOULD_CREATE_TMP_KEY: bool = False
+RSYNC_CMD: List[str] = ["rsync"]
 
 if platform.system() == "Windows":
-    should_translate_path = True
-    should_create_tmp_key = True
-    rsync_cmd = ["wsl.exe", "rsync"]
+    SHOULD_TRANSLATE_PATH = True
+    SHOULD_CREATE_TMP_KEY = True
+    RSYNC_CMD = ["wsl.exe", "rsync"]
+
+# we check return code to encapsulate exception
+# pylint: disable = subprocess-run-check
 
 
 def translate_path(originalpath: str) -> str:
@@ -42,7 +45,7 @@ def translate_path(originalpath: str) -> str:
     )
 
     if result.returncode != 0:
-        raise exceptions.LocalCommandError(result)
+        raise LocalCommandError(result)
 
     return result.stdout.decode("utf-8").rstrip("\n")
 
@@ -63,21 +66,22 @@ def create_tmp_key(keypath: str) -> str:
     )
 
     if result.returncode != 0:
-        raise exceptions.LocalCommandError(result)
+        raise LocalCommandError(result)
 
     tmppath = result.stdout.decode("utf-8").strip("\n")
 
-    result = subprocess.run(["wsl.exe", "cp", keypath, tmppath], stderr=subprocess.PIPE)
+    result = subprocess.run(
+        ["wsl.exe", "cp", keypath, tmppath], stderr=subprocess.PIPE)
 
     if result.returncode != 0:
-        raise exceptions.LocalCommandError(result)
+        raise LocalCommandError(result)
 
     result = subprocess.run(
         ["wsl.exe", "chmod", "600", tmppath], stderr=subprocess.PIPE
     )
 
     if result.returncode != 0:
-        raise exceptions.LocalCommandError(result)
+        raise LocalCommandError(result)
 
     return tmppath
 
@@ -92,14 +96,15 @@ def remove_tmp_key(keypath: str) -> None:
     subprocess.run(["wsl.exe", "rm", keypath], stderr=subprocess.PIPE)
 
 
+# pylint: disable = too-many-arguments
+# pylint: disable = too-many-branches
 def run_rsync(
-    sourcefolder: str,
-    device_id: str,
-    targetfolder: str,
-    keypath: Optional[str] = None,
-    port: int = None,
-    progress: Optional[progresscookie.ProgressCookie] = None,
-) -> None:
+        sourcefolder: str,
+        device_id: str,
+        targetfolder: str,
+        keypath: Optional[str] = None,
+        port: int = None,
+        progress: Optional[progresscookie.ProgressCookie] = None) -> None:
     """Sync a folder from the host PC to target.
 
     :param sourcefolder: source folder
@@ -118,31 +123,27 @@ def run_rsync(
     """
     device = targetdevice.TargetDevices()[device_id]
 
+    assert device is not None
+
     try:
-        ip, _ = nameresolution.resolve_hostname(device.hostname)
-    except socket.gaierror:
-        raise exceptions.DNSError(device.hostname)
-
-    if device is None:
-        raise exceptions.InvalidDeviceIdError()
-
-    if should_translate_path:
-        sourcefolder = translate_path(sourcefolder)
+        ipaddress, _ = nameresolution.resolve_hostname(device.hostname)
+    except socket.gaierror as exception:
+        raise DNSError(device.hostname) from exception
 
     if keypath is None:
         keypath = device.get_privatekeypath()
 
     assert keypath is not None
 
-    if port is None:
-        port = 22
+    port = 22 if port is None else port
 
     try:
 
-        if should_translate_path:
+        if SHOULD_TRANSLATE_PATH:
+            sourcefolder = translate_path(sourcefolder)
             keypath = translate_path(keypath)
 
-        if should_create_tmp_key:
+        if SHOULD_CREATE_TMP_KEY:
             keypath = create_tmp_key(keypath)
 
         if not sourcefolder.endswith("/"):
@@ -153,7 +154,7 @@ def run_rsync(
 
         assert device.username is not None
 
-        rsync_args = rsync_cmd + [
+        rsync_args = RSYNC_CMD + [
             "-r",
             "-z",
             "-l",
@@ -169,7 +170,7 @@ def run_rsync(
             + keypath
             + "' -o 'StrictHostKeyChecking no' -o 'UserKnownHostsFile /dev/null'",
             sourcefolder,
-            device.username + "@" + ip + ":" + targetfolder,
+            device.username + "@" + ipaddress + ":" + targetfolder,
         ]
 
         process = subprocess.Popen(
@@ -181,14 +182,15 @@ def run_rsync(
             assert process.stdout is not None
 
             while process.poll() is None:
-                progress.append_message(process.stdout.readline().decode("utf-8"))
+                progress.append_message(
+                    process.stdout.readline().decode("utf-8"))
         else:
             process.wait()
 
         if process.returncode != 0:
-            raise exceptions.LocalCommandError(process)
+            raise LocalCommandError(process)
 
     finally:
 
-        if should_create_tmp_key:
+        if SHOULD_CREATE_TMP_KEY:
             remove_tmp_key(keypath)

@@ -1,7 +1,7 @@
 """Functions used to manage containers logs.
 
-Since user can access logs from device or application objects shared code 
-will be in this module.add()
+Since user can access logs from device or application objects shared code
+will be in this module.
 """
 from typing import Generator, Optional
 
@@ -20,9 +20,9 @@ def get_log_chunk(log: Generator) -> Optional[str]:
 
     try:
 
-        for b in log:
-            c = b.decode("utf-8")
-            line += c
+        for logbyte in log:
+            logchar = logbyte.decode("utf-8")
+            line += logchar
             emptylog = False
             if "\n" in line:
                 break
