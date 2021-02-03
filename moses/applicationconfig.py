@@ -2002,7 +2002,7 @@ class ApplicationConfig(config.ConfigurableKeysObject):
             configuration (str): debug/release
 
         Returns:
-            str: command line for Linux target            
+            str: command line for Linux target
         """
 
         plat = platformconfig.PlatformConfigs().get_platform(self.platformid)
@@ -2202,6 +2202,9 @@ class ApplicationConfig(config.ConfigurableKeysObject):
         )
 
         composefile = self.get_prop(configuration, "dockercomposefile")
+
+        if composefile is None or len(composefile) == 0:
+            composefile = plat.get_prop(configuration, "dockercomposefile")
 
         if composefile is not None and len(composefile) > 0:
             assert self.folder is not None
