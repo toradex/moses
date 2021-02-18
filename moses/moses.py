@@ -126,8 +126,10 @@ if __name__ == "__main__":
         swagger_yaml["host"] = "localhost:" + str(args.port)
 
     app.add_api(swagger_yaml, resolver=api.ApiResolver())
-    app.add_error_handler(exceptions.MosesError, exceptions.encode_error)
-    app.add_error_handler(Exception, exceptions.encode_exception)
+    app.add_error_handler(
+        moses_exceptions.MosesError,
+        moses_exceptions.encode_error)
+    app.add_error_handler(Exception, moses_exceptions.encode_exception)
 
     Draft4RequestValidator.VALIDATORS["readOnly"] = api.remove_readonly
 
