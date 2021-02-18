@@ -2,7 +2,7 @@
 # set to true for platforms that are provided by Toradex
 standard: true
 # descriptive information
-name: .NET core 5.0 arm64v8 bullseye
+name: .NET 5.0 arm64v8 bullseye
 version: "1.0"
 description: Platform for console applications using .NET core 5.0 for arm64v8 on debian-buster
 # supported modules (using product id),* means all modules except unsupported ones
