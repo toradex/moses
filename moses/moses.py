@@ -20,11 +20,8 @@ import paramiko
 if getattr(sys, "frozen", False):
     options = {"swagger_path": os.path.dirname(sys.executable) + "/api/ui"}
 else:
-    options = {
-        "swagger_path": os.path.dirname(sys.executable)
-        + "/../lib/python3.8/site-packages/swagger_ui_bundle/vendor/swagger-ui-3.30.0"
-    }
-
+    from swagger_ui_bundle import swagger_ui_3_path
+    options = {'swagger_path': swagger_ui_3_path}
 
 app = connexion.App("moses", options=options)
 
@@ -42,7 +39,8 @@ def log_rest_out(response):
 
 # If we're running in stand alone mode, run the application
 if __name__ == "__main__":
-    parser = argparse.ArgumentParser(description="backend for Toradex IDEs support")
+    parser = argparse.ArgumentParser(
+        description="backend for Toradex IDEs support")
     parser.add_argument(
         "--port",
         type=int,
@@ -64,7 +62,8 @@ if __name__ == "__main__":
 
     if args.logfile is not None:
         logging.getLogger().addHandler(
-            logging.handlers.RotatingFileHandler(args.logfile, "a", 1024 * 1024, 4)
+            logging.handlers.RotatingFileHandler(
+                args.logfile, "a", 1024 * 1024, 4)
         )
 
     try:
@@ -105,14 +104,20 @@ if __name__ == "__main__":
     with open("swagger.yaml", "r") as inp:
         schema = yaml.full_load(inp)
 
-    targetdevice.TargetDevice.parse_schema(schema["definitions"]["TargetDevice"])
+    targetdevice.TargetDevice.parse_schema(
+        schema["definitions"]["TargetDevice"])
     applicationconfig.ApplicationConfig.parse_schema(
         schema["definitions"]["Application"]
     )
 
     app.app.json_encoder = api.CustomJSONEncoder
     api.init_api()
-    app.add_api("swagger.yaml", resolver=api.ApiResolver())
+
+    with open("swagger.yaml") as swagger_file:
+        swagger_yaml = yaml.load(swagger_file, Loader=yaml.FullLoader)
+        swagger_yaml["host"] = "localhost:" + str(args.port)
+
+    app.add_api(swagger_yaml, resolver=api.ApiResolver())
     app.add_error_handler(exceptions.MosesError, exceptions.encode_error)
     app.add_error_handler(Exception, exceptions.encode_exception)
 
