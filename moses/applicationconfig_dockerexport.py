@@ -560,8 +560,10 @@ def push_to_registry(self: ApplicationConfigBase, configuration: str, username: 
     repository = None
 
     parts = tag.split(":")
-    if len(parts) > 1:
-        repository, tag = parts
+    parts_count = len(parts)
+    if parts_count > 1:
+        repository = ":".join(parts[0:parts_count - 1])
+        tag = parts[parts_count - 1]
     else:
         repository = tag
         tag = None

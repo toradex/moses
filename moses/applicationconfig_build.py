@@ -148,8 +148,10 @@ def build_image(self: ApplicationConfigBase, configuration: str,
 
         if tag is not None:
             parts = tag.split(":")
-            if len(parts) > 1:
-                repository, tag = parts
+            parts_count = len(parts)
+            if parts_count > 1:
+                repository = ":".join(parts[0:parts_count - 1])
+                tag = parts[parts_count - 1]
                 img.tag(repository, tag)
             else:
                 img.tag(tag)
