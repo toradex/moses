@@ -21,9 +21,8 @@ RUN apt-get -q -y update \
     && apt-get -q -y install \
     gdbserver \
     procps \
-    libxdamage \
+    libxdamage1 \
     libxfixes3 \
-    libext6 \
     #%application.extrapackages%#\
     && rm -rf /var/lib/apt/lists/*
 
