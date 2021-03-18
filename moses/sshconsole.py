@@ -44,8 +44,6 @@ class SSHConsole(console.GenericConsole):
         :rtype: str
 
         """
-        super().send_cmd(command, timeout)
-
         output = error = ""
 
         try:

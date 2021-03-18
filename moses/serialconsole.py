@@ -49,7 +49,6 @@ class SerialConsole(console.GenericConsole):
         output = ""
 
         try:
-            super().send_cmd(command, timeout)
             self.ser.flush()
             self.ser.write(command.encode("utf-8"))
             self.ser.write("\n".encode("utf-8"))
