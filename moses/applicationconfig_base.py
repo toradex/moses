@@ -225,7 +225,7 @@ class ApplicationConfigBase(
                     configuration,
                 )
                 if newvalue != value:
-                    merged[key] = value
+                    merged[key] = newvalue
 
         return merged
 
