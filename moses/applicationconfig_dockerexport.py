@@ -350,7 +350,10 @@ def get_docker_commandline(self: ApplicationConfigBase,
 
     # parse mountpoints
     for volume in volumes.items():
-        cmdline += " --volume " + volume[0] + ":" + volume[1]
+        destvolume = volume[1]
+        destvolume=destvolume.replace(",", ":")
+
+        cmdline += " --volume " + volume[0] + ":" + destvolume
 
     # parse networks
     for network in networks:
@@ -424,7 +427,7 @@ _compose_parms: Dict[str, Optional[Callable]] = {
                     lambda y: str(y[0])
                     + ":"
                     + str(y[1]["bind"])
-                    + ","
+                    + ":"
                     + str(y[1]["mode"]),
                     x[1].items(),
                 )
