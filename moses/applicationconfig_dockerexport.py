@@ -7,7 +7,7 @@ as first parameter.
 """
 import os
 import logging
-from typing import Optional, Dict, Callable, Tuple, Any
+from typing import Optional, Dict, Callable, Tuple, Any, List
 import yaml
 import docker
 import docker.models.containers
@@ -83,6 +83,12 @@ def _log_config_cmdline_helper(value: dict) -> str:
 
     return cmdline
 
+_mount_parms: Dict[str, str] = {
+    "type":"type",
+    "source":"source",
+    "target":"target",
+    "propagation":"bind-propagation"
+    }
 
 def _mounts_cmdline_helper(mounts: dict) -> str:
     """Translate parameters in command line-compatible format."""
@@ -90,10 +96,15 @@ def _mounts_cmdline_helper(mounts: dict) -> str:
 
     for mount in mounts:
         cmdline += "--mount "
-        cmdline += "type=" + mount["type"]
-        cmdline += ",source=" + mount["source"]
-        cmdline += ",target=" + mount["target"]
-        cmdline += ",readonly=" + ("1" if mount["read_only"] else "0") + " "
+        firstparm = True
+        for key,value in _mount_parms.items():
+            if key in mount:
+                cmdline+=("" if firstparm else ",")+value+"="+mount[key]
+                firstparm=False
+
+        if "readonly" in mount and mount["readonly"]:
+            cmdline += ("" if firstparm else ",") + \
+                "readonly=" + ("1" if mount["read_only"] else "0") + " "
 
     return cmdline
 
@@ -263,7 +274,9 @@ def _process_extra_parameter(parm: str, value: Any) -> Optional[str]:
     :rtype: str | None
     """
     retvalue = None
-    if parm in _boolean_parms and value:
+    if parm in _special_parms:
+        retvalue = _special_parms[parm](value)
+    elif parm in _boolean_parms and value:
         retvalue = _boolean_parms[parm]
     elif isinstance(value, str) and parm in _str_parms:
         retvalue = _str_parms[parm] + " '" + value + "'"
@@ -294,8 +307,6 @@ def _process_extra_parameter(parm: str, value: Any) -> Optional[str]:
                     + " "
                 )
             retvalue = cmdline
-    elif parm in _special_parms:
-        retvalue = _special_parms[parm](value)
 
     return retvalue
 
@@ -383,6 +394,39 @@ def get_docker_commandline(self: ApplicationConfigBase,
 
     return cmdline
 
+_compose_mount_map : Dict[str,List[str]]= {
+    "type" : [ "type" ],
+    "source" : [ "source" ],
+    "target" : [ "target" ],
+    "read_only": [ "read_only" ],
+    "consistency": [ "consistency" ],
+    "propagation": [ "bind", "propagation" ],
+    "no_copy": ["volume", "nocopy"],
+    "tmpfs_size": ["tmpfs", "size"]
+}
+
+def _translate_mounts(mounts: List[Dict[str,Any]]) -> list:
+    compose_mounts = []
+
+    for mount in mounts:
+
+        compose_mount : Dict[str,Any]= {}
+
+        for field in _compose_mount_map.items():
+            if not field[0] in mount:
+                continue
+
+            target_dict = compose_mount
+
+            for k in field[1][:-1]:
+                target_dict[k]={}
+                target_dict=target_dict[k]
+
+            target_dict[field[1][-1]]=mount[field[0]]
+
+        compose_mounts.append(compose_mount)
+
+    return compose_mounts
 
 _compose_parms: Dict[str, Optional[Callable]] = {
     "cap_add": None,
@@ -405,12 +449,23 @@ _compose_parms: Dict[str, Optional[Callable]] = {
     "isolation": None,
     "labels": None,
     "log_config": None,
+    "mounts": (
+        lambda x: (
+            "volumes",
+            _translate_mounts(
+                yaml.load(x[1], Loader=yaml.FullLoader),
+            )
+        )
+    ),
     "name": lambda x: ("container_name", x),
     "network_mode": None,
     "pid_mode": lambda x: ("pid", x),
     "ports": lambda x: (
         "ports",
-        list(map(lambda y: str(y[0]) + ":" + str(y[1]), x[1].items())),
+        list(map(lambda y:
+            (str(y[1])+":" if y[1] is not None else "")+ \
+            str(y[0])
+            , x[1].items())),
     ),
     "privileged": None,
     "read_only": None,
@@ -419,6 +474,7 @@ _compose_parms: Dict[str, Optional[Callable]] = {
     "stdin_open": None,
     "tty": None,
     "user": None,
+    "version": None,
     "volumes": (
         lambda x: (
             "volumes",
@@ -466,22 +522,26 @@ def get_docker_composefile(self: ApplicationConfigBase,
     networks = list(dict.fromkeys(
         self._append_props(plat, configuration, "networks")))
 
+    composeyaml = yaml.load("services: {}", Loader=yaml.FullLoader)
+
     composefile = self._get_prop(configuration, "dockercomposefile")
+    composefilepath = self.folder
 
     # if no compose file is specified for the application, check platform
     if composefile is None or len(composefile) == 0:
         composefile = plat.get_prop(configuration, "dockercomposefile")
+        composefilepath = plat.folder
 
     if composefile is not None and len(composefile) > 0:
-        assert self.folder is not None
+        assert composefilepath is not None
 
-        with open(os.path.join(self.folder, composefile), "r") as composef:
+        with open(os.path.join(composefilepath, composefile), "r") as composef:
             composeyaml = yaml.load(composef, Loader=yaml.FullLoader)
-    else:
-        composeyaml = yaml.load("services: {}", Loader=yaml.FullLoader)
+
+    composeyaml["version"]="2.4"
 
     # create and fill new service
-    service = dict()
+    service : Dict[str,Any] = dict()
 
     # merge volumes, devices, ports into extraparms
     # (we can't have multiple instances of the same parameter)
@@ -507,17 +567,21 @@ def get_docker_composefile(self: ApplicationConfigBase,
     extraparms["devices"].extend(devices)
 
     # process extraparms and add them to the dictionary
-    for extraparm in extraparms.keys():
+    for extraparm,value in extraparms.items():
         if extraparm in _compose_parms:
-            if _compose_parms[extraparm] is None:
-                service[extraparm] = extraparms[extraparm]
+            helperfn = _compose_parms[extraparm]
+
+            if helperfn is None:
+                service[extraparm] = value
+                continue
+
+            parm, value = helperfn((extraparm, value))
+
+            # special case since we have two parameters (mounts and volumes)
+            # that generate the same yaml tag
+            if parm=="volumes" and "volumes" in service:
+                service[parm].extend(value)
             else:
-
-                helperfn = _compose_parms[extraparm]
-
-                assert helperfn is not None
-
-                parm, value = helperfn((extraparm, extraparms[extraparm]))
                 service[parm] = value
 
     service["image"] = self._get_image_name(configuration)
