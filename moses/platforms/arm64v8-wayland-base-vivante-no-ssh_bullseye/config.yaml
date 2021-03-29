@@ -31,7 +31,7 @@ unsupportedmodels: []
 architecture: linux/arm64
 baseimage:
   common:
-    - "torizon/wayland-base"
+    - "torizon/wayland-base-vivante"
     - "2"
   debug:
   release:
