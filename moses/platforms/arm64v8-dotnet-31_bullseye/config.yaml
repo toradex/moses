@@ -47,6 +47,7 @@ runtimes:
   - dotnet
 tags:
   - .net3
+  - console
 
 # information about how containers should run
 ports:
