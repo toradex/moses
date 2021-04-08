@@ -76,20 +76,6 @@ def build_image(self: ApplicationConfigBase, configuration: str,
     try:
         localdocker = docker.from_env()
 
-        # we must remove the old image first
-        if self.images[configuration] is not None and self.images[configuration] != "":
-
-            oldimg = None
-
-            try:
-                oldimg = localdocker.images.get(self.images[configuration])
-            except docker.errors.ImageNotFound:
-                pass
-
-            if oldimg is not None:
-                localdocker.images.remove(
-                    image=oldimg.id, force=True, noprune=False)
-
         platform = platformconfig.PlatformConfigs().get_platform(self.platformid)
 
         assert platform is not None
@@ -155,6 +141,19 @@ def build_image(self: ApplicationConfigBase, configuration: str,
                 img.tag(repository, tag)
             else:
                 img.tag(tag)
+
+        if self.images[configuration] is not None and self.images[configuration] != "":
+
+            oldimg = None
+
+            try:
+                oldimg = localdocker.images.get(self.images[configuration])
+            except docker.errors.ImageNotFound:
+                pass
+
+            if oldimg is not None:
+                localdocker.images.remove(
+                    image=oldimg.id, force=True, noprune=False)
 
         self.images[configuration] = str(img.id)
         self.save()
