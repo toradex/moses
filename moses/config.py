@@ -255,6 +255,18 @@ class ConfigurableKeysObject(ConfigurableObject):
 
         self.publickey = "ssh-rsa " + key.get_base64()
 
+        self._set_key_permissions()
+
+    def _set_key_permissions(self) -> None:
+        """Set the right access mask for the key file.
+
+        This allows clients to use this file to estabilish a connection
+        using a standard SSH client.
+        """
+        assert self.folder is not None
+
+        keypath = self.folder / "id_rsa"
+
         if platform.system() == "Windows":
             # pylint: disable = subprocess-run-check
             subprocess.run(
@@ -303,6 +315,8 @@ class ConfigurableKeysObject(ConfigurableObject):
         """
         if self.folder is None:
             return None
+
+        self._set_key_permissions()
         return os.path.join(self.folder, "id_rsa")
 
 
