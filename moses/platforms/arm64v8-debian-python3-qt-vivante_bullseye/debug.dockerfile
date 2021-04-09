@@ -15,6 +15,7 @@ ENV DEBIAN_FRONTEND="noninteractive"
 
 RUN apt-get update \
     && apt-get install -y --no-install-recommends \
+    dos2unix \
     python3-minimal \
     python3-pip \
     python3-setuptools \
@@ -39,7 +40,10 @@ COPY work/cleanup.sh /cleanup.sh
 COPY work/requirements.txt /requirements.txt
 
 WORKDIR /
-RUN chmod a+x /setup.sh &&\
+RUN dos2unix /requirements.txt &&\
+    dos2unix /setup.sh &&\
+    dos2unix /cleanup.sh &&\
+    chmod a+x /setup.sh &&\
     chmod a+x /cleanup.sh &&\
     /setup.sh debug &&\
     pip install -r /requirements.txt &&\
