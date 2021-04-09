@@ -18,6 +18,8 @@ Name | Type | Description | Notes
 **username** | **str** | user account used to run the application inside the container | [optional] 
 **images** | **dict(str, str)** | SHA-ids of the debug and release images | [optional] 
 **sdkimages** | **dict(str, str)** | SHA-ids of the debug and release SDK images | [optional] 
+**imagetags** | **dict(str, str)** | unique tag used for the images | [optional] 
+**sdkimagetags** | **dict(str, str)** | unique tag used for the SDK images (if application uses an SDK) | [optional] 
 
 [[Back to Model list]](../README.md#documentation-for-models) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to README]](../README.md)
 
