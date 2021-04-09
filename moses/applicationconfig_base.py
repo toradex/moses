@@ -9,7 +9,7 @@ import logging
 import uuid
 import datetime
 from pathlib import Path
-from typing import Optional, Dict, Any
+from typing import Optional, Dict, Any, Callable, Mapping
 import docker
 import docker.models.containers
 import config
@@ -366,3 +366,64 @@ class ApplicationConfigBase(
 
         imagename += self.platformid + "_" + configuration + "_" + self.id
         return imagename
+
+    def get_sdk_image_name(self, configuration: str) -> str:
+        """Return the name of the SDK container image for the application.
+
+        :param configuration: debug/release
+        :type configuration: str
+
+        :returns: sdk image name
+        :rtype: str
+
+        """
+        # this function will be part of ApplicationConfig via import,
+        # members of base class ApplicationConfigBase are accessed
+        # pylint: disable=protected-access
+        assert self.id is not None
+
+        platform = platformconfig.PlatformConfigs().get_platform(self.platformid)
+
+        assert platform.id is not None
+
+        if not platform.usesdk:
+            return ""
+
+        appname = self.get_custom_prop(configuration, "appname")
+
+        if appname is None:
+            imagename = ""
+        else:
+            imagename = appname.lower() + "_"
+
+        imagename += platform.id
+        imagename += "_"
+        imagename += configuration
+        imagename += "_"
+        imagename += self.id
+        imagename += "_sdk_image"
+
+        imagename = imagename.replace(":", "_")
+        imagename = imagename.replace("/", "_")
+
+        return imagename
+
+    def _get_image_tags(self:Any) -> Dict[str,Any]:
+        image_tags={}
+
+        image_tags["debug"]=self._get_image_name("debug")
+        image_tags["release"]=self._get_image_name("release")
+        return image_tags
+
+    def _get_sdkimage_tags(self:Any) -> Dict[str,Any]:
+        sdkimage_tags={}
+
+        sdkimage_tags["debug"]=self.get_sdk_image_name("debug")
+        sdkimage_tags["release"]=self.get_sdk_image_name("release")
+        return sdkimage_tags
+
+    generatedfields : Mapping[str,Callable[[Any],Dict[str,Any]]] = dict(
+        imagetags=_get_image_tags,
+        sdkimagetags=_get_sdkimage_tags,
+        **config.ConfigurableKeysObject.generatedfields)
+    

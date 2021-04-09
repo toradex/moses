@@ -17,6 +17,7 @@ import moses_exceptions
 import targetdevice
 import applicationconfig
 import eula
+import platformconfig
 
 if getattr(sys, "frozen", False):
     options = {"swagger_path": os.path.dirname(sys.executable) + "/api/ui"}
@@ -117,6 +118,7 @@ if __name__ == "__main__":
         schema["definitions"]["Application"]
     )
     eula.EULA.parse_schema(schema["definitions"]["Eula"])
+    platformconfig.PlatformConfig.parse_schema(schema["definitions"]["Platform"])
 
     app.app.json_encoder = api.CustomJSONEncoder
     api.init_api()
