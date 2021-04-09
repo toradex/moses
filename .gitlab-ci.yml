@@ -85,7 +85,7 @@ build-csharp-apis:
 
 build-typescript-client:
   variables:
-    API_VERSION: 1.1.0
+    API_VERSION: 1.1.1
   image: node
   stage: build
   script:
