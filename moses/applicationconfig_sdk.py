@@ -64,50 +64,6 @@ def _get_sdk_container_name(self: ApplicationConfigBase,
     instance = instance.replace("/", "_")
     return instance
 
-
-def _get_sdk_image_name(self: ApplicationConfigBase,
-                        configuration: str) -> str:
-    """Return the name of the SDK container image for the application.
-
-    :param configuration: debug/release
-    :type configuration: str
-
-    :returns: sdk image name
-    :rtype: str
-
-    """
-    # this function will be part of ApplicationConfig via import,
-    # members of base class ApplicationConfigBase are accessed
-    # pylint: disable=protected-access
-    assert self.id is not None
-
-    platform = platformconfig.PlatformConfigs().get_platform(self.platformid)
-
-    assert platform.id is not None
-
-    if not platform.usesdk:
-        raise moses_exceptions.PlatformDoesNotRequireSDKError(self.platformid)
-
-    appname = self.get_custom_prop(configuration, "appname")
-
-    if appname is None:
-        imagename = ""
-    else:
-        imagename = appname.lower() + "_"
-
-    imagename += platform.id
-    imagename += "_"
-    imagename += configuration
-    imagename += "_"
-    imagename += self.id
-    imagename += "_sdk_image"
-
-    imagename = imagename.replace(":", "_")
-    imagename = imagename.replace("/", "_")
-
-    return imagename
-
-
 # pylint: disable=too-many-locals
 def _build_sdk_image(self: ApplicationConfigBase,
                      configuration: str,
@@ -195,14 +151,14 @@ def _build_sdk_image(self: ApplicationConfigBase,
             localdocker,
             str(self.folder),
             dockerfilerelpath,
-            _get_sdk_image_name(self, configuration),
+            self.get_sdk_image_name(configuration),
             None,
             progress,
         )
 
         if sdkimage is None:
             raise moses_exceptions.ImageNotFoundError(
-                _get_sdk_image_name(self, configuration)
+                self.get_sdk_image_name(configuration)
             )
 
         localdocker.containers.prune()
@@ -320,20 +276,19 @@ def start_sdk_container(self: ApplicationConfigBase,
         if platform.usesdk and not platform.usesysroots:
             try:
                 _ = localdocker.images.get(
-                    _get_sdk_image_name(
-                        self, configuration))
+                    self.get_sdk_image_name(configuration))
             except docker.errors.NotFound as exception:
                 if build:
                     logging.info("SDK - SDK image not found, building it.")
                     _build_sdk_image(self, configuration, progress)
                 else:
                     raise moses_exceptions.ImageNotFoundError(
-                        _get_sdk_image_name(self, configuration)
+                        self.get_sdk_image_name(configuration)
                     ) from exception
 
         try:
             container = localdocker.containers.run(
-                _get_sdk_image_name(self, configuration),
+                self.get_sdk_image_name(configuration),
                 name=instance,
                 detach=True,
                 ports=ports,

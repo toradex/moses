@@ -6,7 +6,7 @@ import logging
 import platform
 import subprocess
 from pathlib import Path
-from typing import Optional, Dict, Any
+from typing import Optional, Dict, Any, Callable, Mapping
 import yaml
 import paramiko
 import moses_exceptions
@@ -23,6 +23,7 @@ class ConfigurableObject:
     """
 
     readonlyfields: set = {"folder"}
+    generatedfields: Mapping[str,Callable[[Any],Dict[str,Any]]] = {}
 
     @classmethod
     def parse_schema(cls, schema: dict) -> None:
@@ -153,6 +154,8 @@ class ConfigurableObject:
                         "REST - Attempt to change value of property %s", key
                     )
                 readonlyitems.append(key)
+            if key in self.generatedfields:
+                readonlyitems.append(key)
 
         for key in readonlyitems:
             fields.pop(key)
@@ -182,6 +185,8 @@ class ConfigurableObject:
         fields = self.__dict__.copy()
         del fields["id"]
         del fields["folder"]
+        for key,function in self.generatedfields.items():
+            fields[key]=function(self)
         return fields
 
     def __setstate__(self, fields: Dict[str, Any]) -> None:

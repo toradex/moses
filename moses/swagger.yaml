@@ -1,7 +1,7 @@
 swagger: "2.0"
 info:
   description: Toradex API to build and deploy applications running as containers on Torizon
-  version: 1.1.0
+  version: 1.1.1
   title: Torizon IDE-backend API
 consumes:
   - application/json
@@ -2065,12 +2065,22 @@ definitions:
         type: object
         additionalProperties:
           type: string
-        description: SHA-ids of the debug and release images
+        description: SHA-ids of the debug and release images        
       sdkimages:
         type: object
         additionalProperties:
           type: string
         description: SHA-ids of the debug and release SDK images
+      imagetags:
+        type: object
+        additionalProperties:
+          type: string
+        description: unique tag used for the images
+      sdkimagetags:
+        type: object
+        additionalProperties:
+          type: string
+        description: unique tag used for the SDK images (if application uses an SDK)
 
   ErrorInfo:
     properties:
