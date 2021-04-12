@@ -24,6 +24,16 @@ from moses_exceptions import (
 if TYPE_CHECKING:
     import targetdevice
 
+def _get_mount_info(infostr:str) -> dict:
+    """Parse string into docker mount info."""
+    modeinfo={ "bind":infostr, "mode":"rw" }
+    elements=infostr.split(",")
+
+    if elements[-1] in {"ro","rw"}:
+        modeinfo["mode"]=elements[-1]
+        modeinfo["bind"]=",".join(elements[:-1])
+
+    return modeinfo
 
 class RemoteDocker:
     """Manages docker instance running on a device."""
@@ -168,19 +178,10 @@ class RemoteDocker:
             )
 
             # convert volumes from string into docker format
-            dockervolumesstr = dict(
-                map(
-                    lambda x: (x[0].strip(),
-                               (x[1].strip() + ",rw").split(",")[0:2]),
-                    volumes.items(),
-                )
-            )
-
             dockervolumes = dict(
                 map(
-                    lambda x: (x[0], {"bind": x[1][0], "mode": x[1][1]}),
-                    dockervolumesstr.items(),
-                )
+                    lambda x: (x[0], _get_mount_info(x[1])),
+                    volumes.items())
             )
 
             dockerextraparms = dict(
