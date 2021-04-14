@@ -167,15 +167,19 @@ class RemoteDocker:
             # collect networks to ensure that they are available
             nets = map(self.remotedocker.networks.get, networks)
 
-            # convert ports from string into docker format
-            dockerports = dict(
-                map(
-                    lambda x: (x[0], int(x[1]))
-                    if (x[1] is not None and x[1] != "")
-                    else (x[0], None),
-                    ports.items(),
+            if "network_mode" in extraparms and extraparms["network_mode"] == "host":
+                dockerports={}
+                logging.warning("Network mode is set to host, ignoring port settings.")
+            else:
+                # convert ports from string into docker format
+                dockerports = dict(
+                    map(
+                        lambda x: (x[0], int(x[1]))
+                        if (x[1] is not None and x[1] != "")
+                        else (x[0], None),
+                        ports.items(),
+                    )
                 )
-            )
 
             # convert volumes from string into docker format
             dockervolumes = dict(
