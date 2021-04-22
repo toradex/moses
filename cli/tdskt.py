@@ -4,12 +4,19 @@ import sys
 import os
 import logging
 import argparse
-import moses_client
-import moses_client.models
 import tabulate
 import json
 import threading
 import signal
+import yaml
+import moses_client.api.applications_api
+import moses_client.api.devices_api
+import moses_client.api.eulas_api
+import moses_client.api.platforms_api
+import moses_client.api.progress_api
+import moses_client.api.setup_api
+import moses_client.api.version_api
+import moses_client.models
 
 from typing import Optional
 
@@ -50,14 +57,32 @@ def handle_progress(args) -> Optional[str]:
     if not args.progress:
         return ""
 
-    api = moses_client.ProgressApi()
+    api = moses_client.api.progress_api.ProgressApi()
     progress = api.progress_create()
 
-    thread = threading.Thread(target=progress_function, args=(api, progress.id))
+    thread = threading.Thread(
+        target=progress_function, args=(
+            api, progress.id))
 
     thread.start()
 
     return progress.id
+
+def generate_dict_list(obj: dict) -> list:
+    """Converts a dictionary into a table
+
+    Arguments:
+        obj -- dictionary to dump
+
+    Returns:
+        list -- list of name-value sub-elements
+    """
+    l = []
+
+    for key, value in obj.items():
+        l.append([key, value])
+
+    return l
 
 
 def generate_prop_list(obj) -> list:
@@ -84,7 +109,7 @@ def generate_prop_list(obj) -> list:
                         v = tabulate.tabulate(
                             generate_prop_list(value), tablefmt="plain"
                         )
-                except:
+                except BaseException:
                     pass
 
                 newvalue += str(v) + "\n"
@@ -100,7 +125,7 @@ def generate_prop_list(obj) -> list:
                     value = tabulate.tabulate(
                         generate_prop_list(value), tablefmt="plain"
                     )
-            except:
+            except BaseException:
                 pass
 
         l.append([k, value])
@@ -109,10 +134,10 @@ def generate_prop_list(obj) -> list:
 
 
 def generate_eula_list_item(e: moses_client.models.Eula) -> dict:
-    """Convert platform into dump table row
+    """Convert eula into dump table row
 
     Arguments:
-        p {moses_client.models.Platform} -- object from the API
+        p {moses_client.models.Eula} -- object from the API
 
     Returns:
         dict -- name-value dict
@@ -135,10 +160,46 @@ def cmd_handler_eulas(args) -> int:
     Returns:
         int -- 0 for success
     """
-    api = moses_client.EulasApi()
+    api = moses_client.api.eulas_api.EulasApi()
     eulas = api.eulas_get()
     eulalist = map(generate_eula_list_item, eulas)
     logging.info(tabulate.tabulate(eulalist, headers="keys", tablefmt="plain"))
+    return 0
+
+def cmd_handler_eula_info(args) -> int:
+    """Dump information about a specific platform, given its id
+
+    Arguments:
+        args -- parsed command line arguments
+
+    Returns:
+        int -- 0 for success
+    """
+    api = moses_client.api.eulas_api.EulasApi()
+    eula = api.eula_get(args.eula_id)
+    logging.info(
+        tabulate.tabulate(
+            generate_prop_list(eula),
+            headers=["Property", "Value"],
+            tablefmt="plain",
+        )
+    )
+    return 0
+
+def cmd_handler_eula_setprop(args) -> int:
+    """Return backend and docker information
+
+    Arguments:
+        args {[type]} -- command line arguments
+
+    Returns:
+        int -- 0 for success
+    """
+    api = moses_client.api.eulas_api.EulasApi()
+    eula = api.eula_get(args.eula_id)
+
+    setattr(eula,args.property,yaml.full_load(args.value))
+    api.eula_modify(args.eula_id,e=eula)
     return 0
 
 
@@ -169,7 +230,7 @@ def cmd_handler_platforms(args) -> int:
     Returns:
         int -- 0 for success
     """
-    api = moses_client.PlatformsApi()
+    api = moses_client.api.platforms_api.PlatformsApi()
     platforms = api.platforms_get()
     platlist = map(generate_platform_list_item, platforms)
     logging.info(tabulate.tabulate(platlist, headers="keys", tablefmt="plain"))
@@ -185,7 +246,7 @@ def cmd_handler_platform_info(args) -> int:
     Returns:
         int -- 0 for success
     """
-    api = moses_client.PlatformsApi()
+    api = moses_client.api.platforms_api.PlatformsApi()
     platform = api.platform_get(args.platform_id)
     logging.info(
         tabulate.tabulate(
@@ -206,10 +267,14 @@ def cmd_handler_platform_compatible(args) -> int:
     Returns:
         int -- 0 for success
     """
-    api = moses_client.PlatformsApi()
+    api = moses_client.api.platforms_api.PlatformsApi()
     devices = api.platform_compatibledevices_get(args.platform_id)
     deviceslist = map(generate_device_list_item, devices)
-    logging.info(tabulate.tabulate(deviceslist, headers="keys", tablefmt="plain"))
+    logging.info(
+        tabulate.tabulate(
+            deviceslist,
+            headers="keys",
+            tablefmt="plain"))
     return 0
 
 
@@ -240,10 +305,14 @@ def cmd_handler_devices(args) -> int:
     Returns:
         int -- 0 for success
     """
-    api = moses_client.DevicesApi()
+    api = moses_client.api.devices_api.DevicesApi()
     devices = api.devices_get()
     deviceslist = map(generate_device_list_item, devices)
-    logging.info(tabulate.tabulate(deviceslist, headers="keys", tablefmt="plain"))
+    logging.info(
+        tabulate.tabulate(
+            deviceslist,
+            headers="keys",
+            tablefmt="plain"))
     return 0
 
 
@@ -256,7 +325,7 @@ def cmd_handler_device_info(args) -> int:
     Returns:
         int -- 0 for success
     """
-    api = moses_client.DevicesApi()
+    api = moses_client.api.devices_api.DevicesApi()
     device = api.device_get(args.device_id)
     logging.info(
         tabulate.tabulate(
@@ -275,7 +344,7 @@ def cmd_handler_device_delete(args) -> int:
     Returns:
         int -- 0 for success
     """
-    api = moses_client.DevicesApi()
+    api = moses_client.api.devices_api.DevicesApi()
     device = api.device_delete(args.device_id)
     logging.info("Device %s has been successfully deleted.", args.device_id)
     return 0
@@ -290,7 +359,7 @@ def cmd_handler_device_mem(args) -> int:
     Returns:
         int -- 0 for success
     """
-    api = moses_client.DevicesApi()
+    api = moses_client.api.devices_api.DevicesApi()
     meminfo = api.device_getmemory(args.device_id)
     logging.info(
         tabulate.tabulate(
@@ -327,10 +396,14 @@ def cmd_handler_device_storage(args) -> int:
     Returns:
         int -- 0 for success
     """
-    api = moses_client.DevicesApi()
+    api = moses_client.api.devices_api.DevicesApi()
     mountpoints = api.device_getmountpoints(args.device_id)
     mountpointslist = map(generate_mountpoint_list_item, mountpoints)
-    logging.info(tabulate.tabulate(mountpointslist, headers="keys", tablefmt="plain"))
+    logging.info(
+        tabulate.tabulate(
+            mountpointslist,
+            headers="keys",
+            tablefmt="plain"))
     return 0
 
 
@@ -364,10 +437,14 @@ def cmd_handler_device_ps(args) -> int:
     Returns:
         int -- 0 for success
     """
-    api = moses_client.DevicesApi()
+    api = moses_client.api.devices_api.DevicesApi()
     processes = api.device_getprocesses(args.device_id)
     processeslist = map(generate_process_list_item, processes)
-    logging.info(tabulate.tabulate(processeslist, headers="keys", tablefmt="plain"))
+    logging.info(
+        tabulate.tabulate(
+            processeslist,
+            headers="keys",
+            tablefmt="plain"))
     return 0
 
 
@@ -397,10 +474,14 @@ def cmd_handler_device_images(args) -> int:
     Returns:
         int -- 0 for success
     """
-    api = moses_client.DevicesApi()
+    api = moses_client.api.devices_api.DevicesApi()
     images = api.device_getimages(args.device_id)
     imageslist = map(generate_image_list_item, images)
-    logging.info(tabulate.tabulate(imageslist, headers="keys", tablefmt="plain"))
+    logging.info(
+        tabulate.tabulate(
+            imageslist,
+            headers="keys",
+            tablefmt="plain"))
     return 0
 
 
@@ -413,7 +494,7 @@ def cmd_handler_device_image_info(args) -> int:
     Returns:
         int -- 0 for success
     """
-    api = moses_client.DevicesApi()
+    api = moses_client.api.devices_api.DevicesApi()
     image = api.images_getimage(args.device_id, args.image_id)
     logging.info(
         tabulate.tabulate(
@@ -432,13 +513,14 @@ def cmd_handler_device_image_delete(args) -> int:
     Returns:
         int -- 0 for success
     """
-    api = moses_client.DevicesApi()
+    api = moses_client.api.devices_api.DevicesApi()
     api.images_deleteimage(args.device_id, args.image_id)
     logging.info("Image %s has been successfully deleted.", args.image_id)
     return 0
 
 
-def generate_container_list_item(c: moses_client.models.DockerContainer) -> dict:
+def generate_container_list_item(
+        c: moses_client.models.DockerContainer) -> dict:
     """Convert image into dump table row
     """
     item = dict()
@@ -458,10 +540,14 @@ def cmd_handler_device_containers(args) -> int:
     Returns:
         int -- 0 for success
     """
-    api = moses_client.DevicesApi()
+    api = moses_client.api.devices_api.DevicesApi()
     containers = api.device_getcontainers(args.device_id)
     containerslist = map(generate_container_list_item, containers)
-    logging.info(tabulate.tabulate(containerslist, headers="keys", tablefmt="plain"))
+    logging.info(
+        tabulate.tabulate(
+            containerslist,
+            headers="keys",
+            tablefmt="plain"))
     return 0
 
 
@@ -474,7 +560,7 @@ def cmd_handler_device_container_info(args) -> int:
     Returns:
         int -- 0 for success
     """
-    api = moses_client.DevicesApi()
+    api = moses_client.api.devices_api.DevicesApi()
     container = api.containers_getcontainer(args.device_id, args.container_id)
     logging.info(
         tabulate.tabulate(
@@ -495,9 +581,11 @@ def cmd_handler_device_container_delete(args) -> int:
     Returns:
         int -- 0 for success
     """
-    api = moses_client.DevicesApi()
+    api = moses_client.api.devices_api.DevicesApi()
     api.containers_deletecontainer(args.device_id, args.container_id)
-    logging.info("Container %s has been successfully deleted.", args.container_id)
+    logging.info(
+        "Container %s has been successfully deleted.",
+        args.container_id)
     return 0
 
 
@@ -510,9 +598,11 @@ def cmd_handler_device_container_start(args) -> int:
     Returns:
         int -- 0 for success
     """
-    api = moses_client.DevicesApi()
+    api = moses_client.api.devices_api.DevicesApi()
     api.container_start(args.device_id, args.container_id)
-    logging.info("Container %s has been successfully started.", args.container_id)
+    logging.info(
+        "Container %s has been successfully started.",
+        args.container_id)
     return 0
 
 
@@ -525,9 +615,11 @@ def cmd_handler_device_container_stop(args) -> int:
     Returns:
         int -- 0 for success
     """
-    api = moses_client.DevicesApi()
+    api = moses_client.api.devices_api.DevicesApi()
     api.container_stop(args.device_id, args.container_id)
-    logging.info("Container %s has been successfully started.", args.container_id)
+    logging.info(
+        "Container %s has been successfully stopped.",
+        args.container_id)
     return 0
 
 
@@ -540,7 +632,7 @@ def cmd_handler_device_container_mem(args) -> int:
     Returns:
         int -- 0 for success
     """
-    api = moses_client.DevicesApi()
+    api = moses_client.api.devices_api.DevicesApi()
     meminfo = api.container_getmemory(args.device_id, args.container_id)
     logging.info(
         tabulate.tabulate(
@@ -559,10 +651,15 @@ def cmd_handler_device_container_storage(args) -> int:
     Returns:
         int -- 0 for success
     """
-    api = moses_client.DevicesApi()
-    mountpoints = api.container_getmountpoints(args.device_id, args.container_id)
+    api = moses_client.api.devices_api.DevicesApi()
+    mountpoints = api.container_getmountpoints(
+        args.device_id, args.container_id)
     mountpointslist = map(generate_mountpoint_list_item, mountpoints)
-    logging.info(tabulate.tabulate(mountpointslist, headers="keys", tablefmt="plain"))
+    logging.info(
+        tabulate.tabulate(
+            mountpointslist,
+            headers="keys",
+            tablefmt="plain"))
     return 0
 
 
@@ -575,10 +672,14 @@ def cmd_handler_device_container_ps(args) -> int:
     Returns:
         int -- 0 for success
     """
-    api = moses_client.DevicesApi()
+    api = moses_client.api.devices_api.DevicesApi()
     processes = api.container_getprocesses(args.device_id, args.container_id)
     processeslist = map(generate_process_list_item, processes)
-    logging.info(tabulate.tabulate(processeslist, headers="keys", tablefmt="plain"))
+    logging.info(
+        tabulate.tabulate(
+            processeslist,
+            headers="keys",
+            tablefmt="plain"))
     return 0
 
 
@@ -591,13 +692,19 @@ def cmd_handler_device_container_logs(args) -> int:
     Returns:
         int -- 0 for success
     """
-    api = moses_client.DevicesApi()
+    api = moses_client.api.devices_api.DevicesApi()
 
     restart = True
 
     while True:
-        line = api.container_getlogs(args.device_id, args.container_id, restart=restart)
+        line = api.container_getlogs(
+            args.device_id,
+            args.container_id,
+            restart=restart)
         restart = False
+        if len(line) == 0:
+            break
+
         logging.info(line)
 
     return 0
@@ -612,7 +719,7 @@ def cmd_handler_device_key(args) -> int:
     Returns:
         int -- 0 for success
     """
-    api = moses_client.DevicesApi()
+    api = moses_client.api.devices_api.DevicesApi()
     keypath = api.device_getprivatekey(args.device_id)
     logging.info(keypath)
     return 0
@@ -627,7 +734,7 @@ def cmd_handler_device_sync(args) -> int:
     Returns:
         int -- 0 for success
     """
-    api = moses_client.DevicesApi()
+    api = moses_client.api.devices_api.DevicesApi()
 
     progress_id = handle_progress(args)
 
@@ -649,7 +756,7 @@ def cmd_handler_device_ip(args) -> int:
     Returns:
         int -- 0 for success
     """
-    api = moses_client.DevicesApi()
+    api = moses_client.api.devices_api.DevicesApi()
     ip = api.device_current_ip(args.device_id)
     logging.info(ip)
     return 0
@@ -664,7 +771,7 @@ def cmd_handler_application_info(args) -> int:
     Returns:
         int -- 0 for success
     """
-    api = moses_client.ApplicationsApi()
+    api = moses_client.api.applications_api.ApplicationsApi()
 
     application = api.application_get(args.application_id)
     logging.info(
@@ -686,7 +793,7 @@ def cmd_handler_application_build(args) -> int:
     Returns:
         int -- 0 for success
     """
-    api = moses_client.ApplicationsApi()
+    api = moses_client.api.applications_api.ApplicationsApi()
 
     progress_id = handle_progress(args)
 
@@ -708,7 +815,7 @@ def cmd_handler_application_deploy(args) -> int:
     Returns:
         int -- 0 for success
     """
-    api = moses_client.ApplicationsApi()
+    api = moses_client.api.applications_api.ApplicationsApi()
     progress_id = handle_progress(args)
 
     logging.info("Deploying application, this may take a few minutes...")
@@ -729,7 +836,7 @@ def cmd_handler_application_run(args) -> int:
     Returns:
         int -- 0 for success
     """
-    api = moses_client.ApplicationsApi()
+    api = moses_client.api.applications_api.ApplicationsApi()
     progress_id = handle_progress(args)
 
     logging.info("Starting application...")
@@ -750,11 +857,66 @@ def cmd_handler_application_stop(args) -> int:
     Returns:
         int -- 0 for success
     """
-    api = moses_client.ApplicationsApi()
+    api = moses_client.api.applications_api.ApplicationsApi()
 
     container = api.application_stop(
         args.application_id, args.configuration, args.device_id
     )
+    return 0
+
+
+def cmd_handler_application_container(args) -> int:
+    """Returns information about the application container running
+    on a selected device
+
+    Arguments:
+        args {[type]} -- command line arguments
+
+    Returns:
+        int -- 0 for success
+    """
+    api = moses_client.api.applications_api.ApplicationsApi()
+
+    container = api.application_getcontainer(
+        args.application_id, args.configuration, args.device_id
+    )
+
+    logging.info(
+        tabulate.tabulate(
+            generate_prop_list(container),
+            headers=["Property", "Value"],
+            tablefmt="plain",
+        )
+    )
+    return 0
+
+
+def cmd_handler_application_logs(args) -> int:
+    """Stops the container for a specific configuration of the app
+    on a selected device
+
+    Arguments:
+        args {[type]} -- command line arguments
+
+    Returns:
+        int -- 0 for success
+    """
+    api = moses_client.api.applications_api.ApplicationsApi()
+
+    restart = True
+
+    while True:
+        line = api.application_getcontainer_logs(
+            args.application_id,
+            args.configuration,
+            args.device_id,
+            restart=restart)
+        restart = False
+
+        if len(line) == 0:
+            break
+        logging.info(line)
+
     return 0
 
 
@@ -767,7 +929,7 @@ def cmd_handler_application_key(args) -> int:
     Returns:
         int -- 0 for success
     """
-    api = moses_client.ApplicationsApi()
+    api = moses_client.api.applications_api.ApplicationsApi()
 
     keypath = api.application_getprivatekey(args.application_id)
     logging.info(keypath)
@@ -783,7 +945,7 @@ def cmd_handler_application_reseal(args) -> int:
     Returns:
         int -- 0 for success
     """
-    api = moses_client.ApplicationsApi()
+    api = moses_client.api.applications_api.ApplicationsApi()
 
     api.application_reseal(args.application_id)
     logging.warning(
@@ -801,7 +963,7 @@ def cmd_handler_application_sync(args) -> int:
     Returns:
         int -- 0 for success
     """
-    api = moses_client.ApplicationsApi()
+    api = moses_client.api.applications_api.ApplicationsApi()
 
     progress_id = handle_progress(args)
 
@@ -826,7 +988,7 @@ def cmd_handler_application_cmdline(args) -> int:
     Returns:
         int -- 0 for success
     """
-    api = moses_client.ApplicationsApi()
+    api = moses_client.api.applications_api.ApplicationsApi()
 
     cmdline = api.application_getdocker_commandline(
         args.application_id, args.configuration
@@ -844,7 +1006,7 @@ def cmd_handler_application_composefile(args) -> int:
     Returns:
         int -- 0 for success
     """
-    api = moses_client.ApplicationsApi()
+    api = moses_client.api.applications_api.ApplicationsApi()
 
     composefile = api.application_getdocker_composefile(
         args.application_id, args.configuration
@@ -862,7 +1024,7 @@ def cmd_handler_application_push(args) -> int:
     Returns:
         int -- 0 for success
     """
-    api = moses_client.ApplicationsApi()
+    api = moses_client.api.applications_api.ApplicationsApi()
 
     progress_id = handle_progress(args)
 
@@ -876,6 +1038,35 @@ def cmd_handler_application_push(args) -> int:
     logging.info(composefile)
     return 0
 
+def cmd_handler_application_setprop(args) -> int:
+    """Return backend and docker information
+
+    Arguments:
+        args {[type]} -- command line arguments
+
+    Returns:
+        int -- 0 for success
+    """
+    api = moses_client.api.applications_api.ApplicationsApi()
+    application = api.application_get(args.application_id)
+
+    value=yaml.full_load(args.value)
+
+    if args.property.startswith("props."):
+        if args.configuration is None:
+            raise argparse.ArgumentError(None,"Custom properties require configuration parameter.")
+
+        propertyname=args.property[len("props."):]
+        application.props[args.configuration][propertyname]="" if value is None else value
+    else:
+        if args.configuration is None:
+            setattr(application,args.property,value)
+        else:
+            dictionary=getattr(application,args.property)
+            dictionary[args.configuration]=value
+
+    api.application_modify(args.application_id,application=application)
+    return 0
 
 def cmd_handler_detect(args) -> int:
     """Detects a new serial or network device
@@ -886,7 +1077,7 @@ def cmd_handler_detect(args) -> int:
     Returns:
         int -- 0 for success
     """
-    api = moses_client.DevicesApi()
+    api = moses_client.api.devices_api.DevicesApi()
 
     device = None
 
@@ -898,7 +1089,8 @@ def cmd_handler_detect(args) -> int:
             "Check that your device is turned on and connected to the network."
         )
         logging.info("At the end of detection your device will reboot.")
-        device = api.devices_networkdetect(args.target, args.username, args.password)
+        device = api.devices_networkdetect(
+            args.target, args.username, args.password)
     else:
         logging.info(
             "Attepting to detect serial device, this may take a couple of minutes, after detection the device will reboot."
@@ -907,7 +1099,8 @@ def cmd_handler_detect(args) -> int:
             "Check that your device is powered on an connected to your PC via serial/USB cable."
         )
         logging.info("At the end of detection your device will reboot.")
-        device = api.devices_serialdetect(args.target, args.username, args.password)
+        device = api.devices_serialdetect(
+            args.target, args.username, args.password)
 
     logging.info("Device successfully detected.")
     logging.info(
@@ -928,7 +1121,7 @@ def cmd_handler_create(args) -> int:
     Returns:
         int -- 0 for success
     """
-    api = moses_client.ApplicationsApi()
+    api = moses_client.api.applications_api.ApplicationsApi()
 
     # the api requires absolute paths
     path = os.path.abspath(args.path)
@@ -950,7 +1143,7 @@ def cmd_handler_load(args) -> int:
     Returns:
         int -- 0 for success
     """
-    api = moses_client.ApplicationsApi()
+    api = moses_client.api.applications_api.ApplicationsApi()
 
     # the api requires absolute paths
     path = os.path.abspath(args.path)
@@ -969,7 +1162,7 @@ def cmd_handler_application_updatesdk(args) -> int:
     Returns:
         int -- 0 for success
     """
-    api = moses_client.ApplicationsApi()
+    api = moses_client.api.applications_api.ApplicationsApi()
 
     progress_id = handle_progress(args)
 
@@ -977,7 +1170,9 @@ def cmd_handler_application_updatesdk(args) -> int:
     api.application_updatesdk(
         args.application_id, args.configuration, progress_id=progress_id
     )
-    logging.info("SDK for application %s successfully updated.", args.application_id)
+    logging.info(
+        "SDK for application %s successfully updated.",
+        args.application_id)
     return 0
 
 
@@ -990,7 +1185,7 @@ def cmd_handler_application_runsdk(args) -> int:
     Returns:
         int -- 0 for success
     """
-    api = moses_client.ApplicationsApi()
+    api = moses_client.api.applications_api.ApplicationsApi()
 
     progress_id = handle_progress(args)
 
@@ -1017,7 +1212,7 @@ def cmd_handler_pull(args) -> int:
     Returns:
         int -- 0 for success
     """
-    api = moses_client.SetupApi()
+    api = moses_client.api.setup_api.SetupApi()
 
     progress_id = handle_progress(args)
     api.setup_pullcontainers(progress_id=progress_id)
@@ -1033,12 +1228,49 @@ def cmd_handler_enableemulation(args) -> int:
     Returns:
         int -- 0 for success
     """
-    api = moses_client.SetupApi()
+    api = moses_client.api.setup_api.SetupApi()
 
     progress_id = handle_progress(args)
     api.setup_enableemulation(progress_id=progress_id)
     return 0
 
+def cmd_handler_version(args) -> int:
+    """Return backend and docker information
+
+    Arguments:
+        args {[type]} -- command line arguments
+
+    Returns:
+        int -- 0 for success
+    """
+    api = moses_client.api.version_api.VersionApi()
+    backend_version = api.version_get()
+
+    logging.info(
+        tabulate.tabulate(
+            generate_dict_list(backend_version), headers=["Property", "Value"], tablefmt="plain"
+        )
+    )
+    return 0
+
+def cmd_handler_dockerversion(args) -> int:
+    """Return backend and docker information
+
+    Arguments:
+        args {[type]} -- command line arguments
+
+    Returns:
+        int -- 0 for success
+    """
+    api = moses_client.api.version_api.VersionApi()
+    docker_version = api.version_docker()
+
+    logging.info(
+        tabulate.tabulate(
+            generate_prop_list(docker_version), headers=["Property", "Value"], tablefmt="plain"
+        )
+    )
+    return 0
 
 def create_parser() -> argparse.ArgumentParser:
     """Creates a parser for the command line arguments
@@ -1071,6 +1303,7 @@ def create_parser() -> argparse.ArgumentParser:
     device_parser = subparsers.add_parser("devices")
     device_parser = subparsers.add_parser("device")
     eulas_parser = subparsers.add_parser("eulas")
+    eula_parser = subparsers.add_parser("eula")
     platforms_parser = subparsers.add_parser("platforms")
     platform_parser = subparsers.add_parser("platform")
     application_parser = subparsers.add_parser("application")
@@ -1079,7 +1312,8 @@ def create_parser() -> argparse.ArgumentParser:
     load_parser = subparsers.add_parser("load")
     pullcontainers_parser = subparsers.add_parser("pull")
     enableemulation_parser = subparsers.add_parser("enableemulation")
-
+    version_parser = subparsers.add_parser("version")
+    dockerversion_parser = subparsers.add_parser("dockerversion")
     device_parser.add_argument(
         "device_id", help="Device serial number", metavar="device-id"
     )
@@ -1103,7 +1337,8 @@ def create_parser() -> argparse.ArgumentParser:
     device_image_parser.add_argument(
         "image_id", help="Image SHA-id", metavar="image-id"
     )
-    device_image_subparsers = device_image_parser.add_subparsers(dest="subsubcommand")
+    device_image_subparsers = device_image_parser.add_subparsers(
+        dest="subsubcommand")
 
     device_image_subparsers.add_parser("info")
     device_image_subparsers.add_parser("delete")
@@ -1160,61 +1395,67 @@ def create_parser() -> argparse.ArgumentParser:
     application_parser.add_argument(
         "application_id", help="Application unique identifier", metavar="application-id"
     )
-    application_subparsers = application_parser.add_subparsers(dest="subcommand")
+    application_subparsers = application_parser.add_subparsers(
+        dest="subcommand")
 
     application_subparsers.add_parser("info")
     application_build_parser = application_subparsers.add_parser("build")
     application_deploy_parser = application_subparsers.add_parser("deploy")
     application_run_parser = application_subparsers.add_parser("run")
     application_stop_parser = application_subparsers.add_parser("stop")
-    application_container_parser = application_subparsers.add_parser("container")
-    application_updatesdk_parser = application_subparsers.add_parser("updatesdk")
+    application_container_parser = application_subparsers.add_parser(
+        "container")
+    application_updatesdk_parser = application_subparsers.add_parser(
+        "updatesdk")
     application_runsdk_parser = application_subparsers.add_parser("runsdk")
     application_key_parser = application_subparsers.add_parser("key")
     application_reseal_parser = application_subparsers.add_parser("reseal")
     application_sync_parser = application_subparsers.add_parser("sync")
     application_cmdline_parser = application_subparsers.add_parser("cmdline")
-    application_composefile_parser = application_subparsers.add_parser("composefile")
+    application_composefile_parser = application_subparsers.add_parser(
+        "composefile")
     application_push_parser = application_subparsers.add_parser("push")
+    application_setprop_parser = application_subparsers.add_parser("setprop")
+    application_logs_parser = application_subparsers.add_parser("logs")
 
     application_build_parser.add_argument(
-        "configuration", help="Build/release or other app-specific configuration"
+        "configuration", help="debug/release or other app-specific configuration"
     )
 
     application_deploy_parser.add_argument(
-        "configuration", help="Build/release or other app-specific configuration"
+        "configuration", help="debug/release or other app-specific configuration"
     )
     application_deploy_parser.add_argument(
         "device_id", help="Device serial number", metavar="device-id"
     )
 
     application_run_parser.add_argument(
-        "configuration", help="Build/release or other app-specific configuration"
+        "configuration", help="debug/release or other app-specific configuration"
     )
     application_run_parser.add_argument(
         "device_id", help="Device serial number", metavar="device-id"
     )
 
     application_stop_parser.add_argument(
-        "configuration", help="Build/release or other app-specific configuration"
+        "configuration", help="debug/release or other app-specific configuration"
     )
     application_stop_parser.add_argument(
         "device_id", help="Device serial number", metavar="device-id"
     )
 
     application_container_parser.add_argument(
-        "configuration", help="Build/release or other app-specific configuration"
+        "configuration", help="debug/release or other app-specific configuration"
     )
     application_container_parser.add_argument(
         "device_id", help="Device serial number", metavar="device-id"
     )
 
     application_updatesdk_parser.add_argument(
-        "configuration", help="Build/release or other app-specific configuration"
+        "configuration", help="debug/release or other app-specific configuration"
     )
 
     application_runsdk_parser.add_argument(
-        "configuration", help="Build/release or other app-specific configuration"
+        "configuration", help="debug/release or other app-specific configuration"
     )
 
     application_sync_parser.add_argument(
@@ -1222,7 +1463,7 @@ def create_parser() -> argparse.ArgumentParser:
     )
 
     application_sync_parser.add_argument(
-        "configuration", help="Build/release or other app-specific configuration"
+        "configuration", help="debug/release or other app-specific configuration"
     )
     application_sync_parser.add_argument(
         "device_id", help="Device serial number", metavar="device-id"
@@ -1242,21 +1483,57 @@ def create_parser() -> argparse.ArgumentParser:
     )
 
     application_cmdline_parser.add_argument(
-        "configuration", help="Build/release or other app-specific configuration"
+        "configuration", help="debug/release or other app-specific configuration"
     )
 
     application_composefile_parser.add_argument(
-        "configuration", help="Build/release or other app-specific configuration"
+        "configuration", help="debug/release or other app-specific configuration"
     )
 
     application_push_parser.add_argument(
-        "configuration", help="Build/release or other app-specific configuration"
+        "configuration", help="debug/release or other app-specific configuration"
     )
     application_push_parser.add_argument(
         "username", help="Username for docker registry login"
     )
     application_push_parser.add_argument(
         "password", help="password/token used for authentication"
+    )
+
+    application_setprop_parser.add_argument(
+        "property", help="property name (use props.name for custom properties)"
+    )
+
+    application_setprop_parser.add_argument(
+        "value", help="property value"
+    )
+
+    application_setprop_parser.add_argument(
+        "configuration", help="debug/release/common or other app-specific configuration", default=None
+    )
+
+    application_logs_parser.add_argument(
+        "configuration", help="debug/release or other app-specific configuration"
+    )
+    application_logs_parser.add_argument(
+        "device_id", help="Device serial number", metavar="device-id"
+    )
+
+    eula_parser.add_argument(
+        "eula_id", help="Id of a specific eula", metavar="eula-id"
+    )
+
+    eula_subparsers = eula_parser.add_subparsers(
+        dest="subcommand")
+    eula_subparsers.add_parser("info")
+    eula_setprop_parser=eula_subparsers.add_parser("setprop")
+
+    eula_setprop_parser.add_argument(
+        "property", help="property name"
+    )
+
+    eula_setprop_parser.add_argument(
+        "value", help="property value"
     )
 
     # add command to create application
@@ -1288,7 +1565,7 @@ def abort_handler(sig, frame):
     global progress
 
     if progress is not None:
-        api = moses_client.ProgressApi()
+        api = moses_client.api.progress_api.ProgressApi()
 
         api.progress_delete(progress_id=progress.id)
 
@@ -1299,7 +1576,8 @@ def abort_handler(sig, frame):
 # If we're running in stand alone mode, run the application
 if __name__ == "__main__":
 
-    # configures logging: errors and warnings on stderr, regular messages on stdout
+    # configures logging: errors and warnings on stderr, regular messages on
+    # stdout
     logger = logging.getLogger()
 
     logger.setLevel(logging.INFO)
@@ -1350,12 +1628,21 @@ if __name__ == "__main__":
                     logging.error(ex["message"])
                 if "code" in ex:
                     code = ex["code"]
-            except:
+            except BaseException:
                 pass
             logging.error(e.__dict__["body"].strip('"\n'))
+
+            if code == -1 and "status" in e.__dict__:
+                code = e.status
         elif "args" in e.__dict__:
             logging.error(e.__dict__["args"])
         else:
             logging.error(e)
 
+        if code == 404:
+            code = 2  # not found
+        elif code == 500:
+            code = -1
+        elif code > 500:
+            code = code - 500
         sys.exit(code)
