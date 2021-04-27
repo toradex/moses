@@ -251,7 +251,7 @@ class PlatformDoesNotRequireSDKError(MosesError):
     """SDK API called on a platform that does not have an SDK."""
 
     code = 527
-    description = "Image not found on remote device."
+    description = "Platform does not have an SDK."
 
     def __init__(self, platform_id: str):
         """Generate error message.
