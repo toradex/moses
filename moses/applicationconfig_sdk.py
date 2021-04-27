@@ -247,6 +247,9 @@ def start_sdk_container(self: ApplicationConfigBase,
     instance = _get_sdk_container_name(self, configuration)
     platform = platformconfig.PlatformConfigs().get_platform(self.platformid)
 
+    if not platform.usesdk:
+        raise moses_exceptions.PlatformDoesNotRequireSDKError(self.platformid)
+
     localdocker = docker.from_env()
 
     # pylint: disable = broad-except
@@ -271,7 +274,10 @@ def start_sdk_container(self: ApplicationConfigBase,
             raise
 
     if container is not None:
-        self.sdksshaddress = container.attrs["NetworkSettings"]["Ports"]["22/tcp"][0]
+        if platform.usessh:
+            self.sdksshaddress = container.attrs["NetworkSettings"]["Ports"]["22/tcp"][0]
+        else:
+            self.sdksshaddress = None
     else:
         if platform.usesdk and not platform.usesysroots:
             try:
@@ -301,36 +307,42 @@ def start_sdk_container(self: ApplicationConfigBase,
         while container.status == "created":
             container = localdocker.containers.get(instance)
 
-        starttime = time.time()
+        if not platform.usessh:
+            self.sdksshaddress = None
+        else:
+            starttime = time.time()
 
-        while time.time() < starttime + 60:
-            try:
-                # check that ssh server is active
-                self.sdksshaddress = container.attrs["NetworkSettings"]["Ports"]["22/tcp"][
-                    0
-                ]
-                self.save()
+            while time.time() < starttime + 60:
+                try:
+                    # check that ssh server is active
+                    self.sdksshaddress = container.attrs["NetworkSettings"]["Ports"]["22/tcp"][
+                        0
+                    ]
+                    self.save()
 
-                port = int(self.sdksshaddress["HostPort"])
-                sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-                result = sock.connect_ex(("127.0.0.1", port))
-                sock.close()
+                    if self.sdksshaddress is None:
+                        raise moses_exceptions.InternalServerError(None)
 
-                if result != 0:
+                    port = int(self.sdksshaddress["HostPort"])
+                    sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+                    result = sock.connect_ex(("127.0.0.1", port))
+                    sock.close()
+
+                    if result != 0:
+                        continue
+
+                    ssh = paramiko.SSHClient()
+
+                    ssh.connect(
+                        "127.0.0.1",
+                        port=port,
+                        username=platform.sdkcontainerusername,
+                        password=platform.sdkcontainerpassword,
+                    )
+
                     return
+                # pylint: disable = broad-except
+                except Exception:
+                    pass
 
-                ssh = paramiko.SSHClient()
-
-                ssh.connect(
-                    "127.0.0.1",
-                    port=port,
-                    username=platform.sdkcontainerusername,
-                    password=platform.sdkcontainerpassword,
-                )
-
-                return
-            # pylint: disable = broad-except
-            except Exception:
-                pass
-
-            raise moses_exceptions.TimeoutError()
+                raise moses_exceptions.TimeoutError()

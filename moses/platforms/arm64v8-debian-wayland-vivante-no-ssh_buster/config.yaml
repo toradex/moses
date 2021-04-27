@@ -68,8 +68,7 @@ extraparms:
   release: {}
 # information about the SDK (if required)
 usesdk: true
-
-usesysroot: false
+usessh: false
 # base image for the container/template
 sdkbaseimage:
   common:
