@@ -38,6 +38,7 @@ class PlatformConfig(config.ConfigurableObject, properties.PropertiesObject):
         self.description = ""
         self.usesysroots = False
         self.usesdk = False
+        self.usessh = False
         self.supportedmodels = ["*"]
         self.unsupportedmodels: List[str] = []
         self.container = {"common": None, "debug": None, "release": None}
@@ -142,7 +143,7 @@ class PlatformConfig(config.ConfigurableObject, properties.PropertiesObject):
                 )
                 return False
 
-            if fields["usesysroot"]:
+            if "usesysroot" in fields and fields["usesysroot"]:
                 logging.error(
                     "sysroots are no longer supported by the ide-backend.")
                 return False
