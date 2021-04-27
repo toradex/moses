@@ -13,13 +13,11 @@ ENV DEBIAN_FRONTEND="noninteractive"
 
 # your regular RUN statements here
 # Install required packages
-RUN if [ ! -z "#%application.extrapackages%#" ]; then \
-    apt-get -q -y update \
+RUN apt-get -q -y update \
     && apt-get -q -y install #%application.extrapackages%# \
     libqt5gui5 \
     libqt5widgets5 \
-    && rm -rf /var/lib/apt/lists/* ; \
-    fi
+    && rm -rf /var/lib/apt/lists/*
 
 # commands that should be run after all packages have been installed (RUN/COPY/ADD)
 #%application.buildfiles%#
