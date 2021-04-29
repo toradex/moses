@@ -813,7 +813,10 @@ def eulas_eula_get(eula_id: str) -> Any:
     return (eula_, 200)
 
 
-def eulas_eula_put(eula_id: str, eula_: Dict[str, Any]) -> Any:
+# e is a bad name, but it's what we used in the API definition since
+# re-using eula was generating issues.
+# pylint: disable=invalid-name
+def eulas_eula_put(eula_id: str, e: Dict[str, Any]) -> Any:
     """Change eula properties.
 
     :param eula_id: eula id
@@ -831,7 +834,7 @@ def eulas_eula_put(eula_id: str, eula_: Dict[str, Any]) -> Any:
 
     eulaupdated = eulas[eula_id]
 
-    eulaupdated.import_data(eula_)
+    eulaupdated.import_data(e)
     eulaupdated.save()
     return (eulaupdated, 200)
 
