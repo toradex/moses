@@ -17,6 +17,7 @@ import progresscookie
 import dockerapi
 from applicationconfig_base import ApplicationConfigBase
 from moses_exceptions import (NoTagError, ImageNotFoundError)
+from remotedocker import get_mount_info
 
 
 def _blkio_weight_device_cmdline_helper(devices: list) -> str:
@@ -561,8 +562,7 @@ def get_docker_composefile(self: ApplicationConfigBase,
             extraparms["ports"][port[0]] = port[1]
 
     for volume in volumes.items():
-        bind, mode = (volume[1] + ",rw").split(",")[0:2]
-        extraparms["volumes"][volume[0]] = {"bind": bind, "mode": mode}
+        extraparms["volumes"][volume[0]] = get_mount_info(volume[1])
 
     extraparms["devices"].extend(devices)
 
