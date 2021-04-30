@@ -105,7 +105,7 @@ def _build_sdk_image(self: ApplicationConfigBase,
             if sdkcontainer.status == "running":
                 sdkcontainer.stop()
             else:
-                self.sdksshaddress = None
+                self.sdksshaddress[configuration] = None
 
             sdkcontainer.remove()
         except docker.errors.NotFound:
@@ -239,10 +239,14 @@ def start_sdk_container(self: ApplicationConfigBase,
     :type progress: progresscookie.ProgressCookie, optional
 
     """
-    ports = {"22/tcp": int(self.sdksshaddress["HostPort"])
-             if self.sdksshaddress is not None else None}
+    ports = {}
 
-    self.sdksshaddress = None
+    if self.sdksshaddress[configuration] is not None:
+        ports["22/tcp"] = self.sdksshaddress[configuration]["HostPort"] # type: ignore
+    else:
+        ports["22/tcp"] = None
+
+    self.sdksshaddress[configuration] = None
 
     instance = _get_sdk_container_name(self, configuration)
     platform = platformconfig.PlatformConfigs().get_platform(self.platformid)
@@ -275,9 +279,10 @@ def start_sdk_container(self: ApplicationConfigBase,
 
     if container is not None:
         if platform.usessh:
-            self.sdksshaddress = container.attrs["NetworkSettings"]["Ports"]["22/tcp"][0]
+            self.sdksshaddress[configuration] = \
+                container.attrs["NetworkSettings"]["Ports"]["22/tcp"][0]
         else:
-            self.sdksshaddress = None
+            self.sdksshaddress[configuration] = None
     else:
         if platform.usesdk and not platform.usesysroots:
             try:
@@ -300,7 +305,7 @@ def start_sdk_container(self: ApplicationConfigBase,
                 ports=ports,
             )
         except docker.errors.DockerException:
-            self.sdksshaddress = None
+            self.sdksshaddress[configuration] = None
             self.save()
             raise
 
@@ -308,22 +313,22 @@ def start_sdk_container(self: ApplicationConfigBase,
             container = localdocker.containers.get(instance)
 
         if not platform.usessh:
-            self.sdksshaddress = None
+            self.sdksshaddress[configuration] = None
         else:
             starttime = time.time()
 
             while time.time() < starttime + 60:
                 try:
                     # check that ssh server is active
-                    self.sdksshaddress = container.attrs["NetworkSettings"]["Ports"]["22/tcp"][
-                        0
-                    ]
+                    self.sdksshaddress[configuration] = \
+                        container.attrs["NetworkSettings"]["Ports"]["22/tcp"][0]
                     self.save()
 
-                    if self.sdksshaddress is None:
+                    if self.sdksshaddress[configuration] is None:
                         raise moses_exceptions.InternalServerError(None)
 
-                    port = int(self.sdksshaddress["HostPort"])
+                    strport = self.sdksshaddress[configuration]["HostPort"] # type: ignore
+                    port = int(strport)
                     sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
                     result = sock.connect_ex(("127.0.0.1", port))
                     sock.close()
@@ -345,4 +350,4 @@ def start_sdk_container(self: ApplicationConfigBase,
                 except Exception:
                     pass
 
-                raise moses_exceptions.TimeoutError()
+            raise moses_exceptions.TimeoutError()

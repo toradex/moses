@@ -722,7 +722,7 @@ def _run_rsync_from_sdk(self: ApplicationConfigBase,
     assert plat is not None
 
     start_sdk_container(self, configuration, True, progress)
-    if self.sdksshaddress is None:
+    if self.sdksshaddress[configuration] is None:
         raise moses_exceptions.SDKContainerNotRunningError(self.id)
 
     # connect to SDK container
@@ -731,7 +731,7 @@ def _run_rsync_from_sdk(self: ApplicationConfigBase,
         ssh.set_missing_host_key_policy(paramiko.AutoAddPolicy())
         ssh.connect(
             "localhost",
-            self.sdksshaddress["HostPort"],
+            self.sdksshaddress[configuration]["HostPort"], # type: ignore
             username=plat.sdkcontainerusername,
             password=plat.sdkcontainerpassword,
         )

@@ -74,7 +74,10 @@ class ApplicationConfigBase(
         self.privatekey: Optional[str] = None
         self.modificationdate = datetime.datetime.utcnow().isoformat()
 
-        self.sdksshaddress: Optional[Dict[str, Any]] = None
+        self.sdksshaddress: Dict[str, Optional[Dict[str,Any]]] = {
+            "debug": None,
+            "release": None,
+        }
 
         if self.folder is not None and self.folder.exists():
             self.load()
@@ -122,6 +125,14 @@ class ApplicationConfigBase(
                 except docker.errors.ImageNotFound:
                     logging.error(f"Image {imgid} not found")
                     self.__dict__[field][configuration] = ""
+
+        # this just cleans up old format of the sdksshaddress field
+        if self.sdksshaddress is None or \
+            not isinstance(self.sdksshaddress,dict) or \
+            not "debug" in self.sdksshaddress or \
+            not "release" in self.sdksshaddress:
+            self.sdksshaddress = {"debug" : None, "release" : None }
+
 
     def _generate_keys(self) -> None:
         """Generate keys for SSH connectivity.
@@ -429,4 +440,3 @@ class ApplicationConfigBase(
         imagetags=_get_image_tags,
         sdkimagetags=_get_sdkimage_tags,
         **config.ConfigurableKeysObject.generatedfields)
-    
