@@ -579,7 +579,7 @@ def get_docker_composefile(self: ApplicationConfigBase,
 
             # special case since we have two parameters (mounts and volumes)
             # that generate the same yaml tag
-            if parm=="volumes" and "volumes" in service:
+            if parm == "volumes" and "volumes" in service:
                 service[parm].extend(value)
             else:
                 service[parm] = value
