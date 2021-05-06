@@ -354,16 +354,44 @@ class ServerConfig(metaclass=singleton.Singleton):
         """
         self.commandtimeout: int = 30
         self.apppath = Path(os.path.dirname(os.path.abspath(__file__)))
+
+        self.standardplatformspath = self.apppath / "platforms"
+        self.standardeulaspath = self.apppath / "eulas"
+
         self.datapath = Path.home() / ("." + APP_NAME)
+
+        if "TIE_DATAPATH" in os.environ:
+            datapath=os.environ["TIE_DATAPATH"]
+            if os.path.isdir(datapath):
+                self.datapath = Path(datapath)
+            else:
+                logging.warning(f"TIE_DATAPATH ({datapath}) must be a valid directory")
 
         self.devicespath = self.datapath / "devices"
 
+        if "TIE_DEVICESPATH" in os.environ:
+            devicespath=os.environ["TIE_DEVICESPATH"]
+            if os.path.isdir(devicespath):
+                self.devicespath = Path(devicespath)
+            else:
+                logging.warning(f"TIE_DEVICESPATH ({devicespath}) must be a valid directory")
+
         self.platformspath = self.datapath / "platforms"
 
-        self.standardplatformspath = self.apppath / "platforms"
-
-        self.standardeulaspath = self.apppath / "eulas"
+        if "TIE_PLATFORMSPATH" in os.environ:
+            platformspath=os.environ["TIE_PLATFORMSPATH"]
+            if os.path.isdir(platformspath):
+                self.platformspath = Path(platformspath)
+            else:
+                logging.warning(f"TIE_PLATFORMSPATH ({platformspath}) must be a valid directory")
 
         self.eulaspath = self.datapath / "eulas"
+
+        if "TIE_EULASPATH" in os.environ:
+            eulaspath=os.environ["TIE_EULASPATH"]
+            if os.path.isdir(eulaspath):
+                self.eulaspath = Path(eulaspath)
+            else:
+                logging.warning(f"TIE_EULASPATH ({eulaspath}) must be a valid directory")
 
         self._create_folders()
