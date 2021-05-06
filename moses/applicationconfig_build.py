@@ -142,7 +142,11 @@ def build_image(self: ApplicationConfigBase, configuration: str,
             else:
                 img.tag(tag)
 
-        if self.images[configuration] is not None and self.images[configuration] != "":
+        imgid=str(img.id)
+
+        if self.images[configuration] is not None \
+            and self.images[configuration] != "" \
+            and self.images[configuration] != imgid:
 
             oldimg = None
 
@@ -155,7 +159,7 @@ def build_image(self: ApplicationConfigBase, configuration: str,
                 localdocker.images.remove(
                     image=oldimg.id, force=True, noprune=False)
 
-        self.images[configuration] = str(img.id)
+        self.images[configuration] = imgid
         self.save()
 
         localdocker.containers.prune()
