@@ -11,7 +11,7 @@ import socket
 import time
 import logging
 import platform as platform_module
-from typing import Optional
+from typing import Optional, Dict
 import docker
 import docker.models.containers
 import paramiko
@@ -20,6 +20,7 @@ import moses_exceptions
 import tags
 import progresscookie
 import dockerapi
+import sharedssh
 from applicationconfig_base import ApplicationConfigBase
 
 
@@ -222,9 +223,95 @@ def update_sdk(self: ApplicationConfigBase,
         raise moses_exceptions.SDKRequiresConfiguration()
     _build_sdk_image(self, configuration, progress)
 
+#pylint: disable = too-many-arguments
+def _start_sdk_container(self: ApplicationConfigBase,
+                         configuration: str,
+                         platform: platformconfig.PlatformConfig,
+                         build: bool,
+                         progress: Optional[progresscookie.ProgressCookie],
+                         ports: Dict[str,str]) -> docker.models.containers.Container:
 
-# pylint: disable = too-many-branches
-# pylint: disable = too-many-statements
+    localdocker = docker.from_env()
+    instance = _get_sdk_container_name(self, configuration)
+
+    if platform.usesdk and not platform.usesysroots:
+        try:
+            _ = localdocker.images.get(
+                self.get_sdk_image_name(configuration))
+        except docker.errors.NotFound as exception:
+            if build:
+                logging.info("SDK - SDK image not found, building it.")
+                _build_sdk_image(self, configuration, progress)
+            else:
+                raise moses_exceptions.ImageNotFoundError(
+                    self.get_sdk_image_name(configuration)
+                ) from exception
+
+    try:
+        container = localdocker.containers.run(
+            self.get_sdk_image_name(configuration),
+            name=instance,
+            detach=True,
+            ports=ports,
+        )
+    except docker.errors.DockerException:
+        self.sdksshaddress[configuration] = None
+        self.save()
+        raise
+
+    while container.status == "created":
+        container = localdocker.containers.get(instance)
+    return container
+
+def _check_container_startup(self: ApplicationConfigBase,
+                        configuration: str,
+                        platform: platformconfig.PlatformConfig,
+                        container: docker.models.containers.Container
+                        ) -> None:
+
+    if not platform.usessh:
+        self.sdksshaddress[configuration] = None
+    else:
+        starttime = time.time()
+
+        while time.time() < starttime + 60:
+            try:
+                # check that ssh server is active
+                self.sdksshaddress[configuration] = \
+                    container.attrs["NetworkSettings"]["Ports"]["22/tcp"][0]
+                self.save()
+
+                if self.sdksshaddress[configuration] is None:
+                    raise moses_exceptions.InternalServerError(None)
+
+                strport = self.sdksshaddress[configuration]["HostPort"] # type: ignore
+                port = int(strport)
+                sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+                result = sock.connect_ex(("127.0.0.1", port))
+                sock.close()
+
+                if result != 0:
+                    continue
+
+                ssh = paramiko.SSHClient()
+
+                ssh.set_missing_host_key_policy(sharedssh.IgnorePolicy())
+
+                ssh.connect(
+                    "127.0.0.1",
+                    port=port,
+                    username=platform.sdkcontainerusername,
+                    password=platform.sdkcontainerpassword,
+                    allow_agent=False,
+                )
+
+                return
+            # pylint: disable = broad-except
+            except Exception:
+                pass
+
+        raise moses_exceptions.TimeoutError()
+
 def start_sdk_container(self: ApplicationConfigBase,
                         configuration: str,
                         build: bool,
@@ -244,17 +331,25 @@ def start_sdk_container(self: ApplicationConfigBase,
     if self.sdksshaddress[configuration] is not None:
         ports["22/tcp"] = self.sdksshaddress[configuration]["HostPort"] # type: ignore
     else:
-        ports["22/tcp"] = None
+        if platform_module.system() == "Windows":
+            tcp = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+            tcp.bind(('', 0))
+            _, ports["22/tcp"] = tcp.getsockname()
+            tcp.close()
+        else:
+            ports["22/tcp"] = None
 
     self.sdksshaddress[configuration] = None
 
-    instance = _get_sdk_container_name(self, configuration)
     platform = platformconfig.PlatformConfigs().get_platform(self.platformid)
 
     if not platform.usesdk:
         raise moses_exceptions.PlatformDoesNotRequireSDKError(self.platformid)
 
     localdocker = docker.from_env()
+    instance = _get_sdk_container_name(self, configuration)
+
+    container = None
 
     # pylint: disable = broad-except
     try:
@@ -268,86 +363,18 @@ def start_sdk_container(self: ApplicationConfigBase,
                 pass
             container = None
     except docker.errors.NotFound:
-        container = None
+        pass
     except Exception:
         # on some Windows PCs an internal server errror is generated instead.
         # see TIE-260
-        if platform_module.system() == "Windows":
-            container = None
-        else:
+        if not platform_module.system() == "Windows":
             raise
 
     if container is not None:
         if platform.usessh:
             self.sdksshaddress[configuration] = \
                 container.attrs["NetworkSettings"]["Ports"]["22/tcp"][0]
-        else:
-            self.sdksshaddress[configuration] = None
     else:
-        if platform.usesdk and not platform.usesysroots:
-            try:
-                _ = localdocker.images.get(
-                    self.get_sdk_image_name(configuration))
-            except docker.errors.NotFound as exception:
-                if build:
-                    logging.info("SDK - SDK image not found, building it.")
-                    _build_sdk_image(self, configuration, progress)
-                else:
-                    raise moses_exceptions.ImageNotFoundError(
-                        self.get_sdk_image_name(configuration)
-                    ) from exception
+        container = _start_sdk_container(self, configuration, platform, build, progress, ports)
 
-        try:
-            container = localdocker.containers.run(
-                self.get_sdk_image_name(configuration),
-                name=instance,
-                detach=True,
-                ports=ports,
-            )
-        except docker.errors.DockerException:
-            self.sdksshaddress[configuration] = None
-            self.save()
-            raise
-
-        while container.status == "created":
-            container = localdocker.containers.get(instance)
-
-        if not platform.usessh:
-            self.sdksshaddress[configuration] = None
-        else:
-            starttime = time.time()
-
-            while time.time() < starttime + 60:
-                try:
-                    # check that ssh server is active
-                    self.sdksshaddress[configuration] = \
-                        container.attrs["NetworkSettings"]["Ports"]["22/tcp"][0]
-                    self.save()
-
-                    if self.sdksshaddress[configuration] is None:
-                        raise moses_exceptions.InternalServerError(None)
-
-                    strport = self.sdksshaddress[configuration]["HostPort"] # type: ignore
-                    port = int(strport)
-                    sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-                    result = sock.connect_ex(("127.0.0.1", port))
-                    sock.close()
-
-                    if result != 0:
-                        continue
-
-                    ssh = paramiko.SSHClient()
-
-                    ssh.connect(
-                        "127.0.0.1",
-                        port=port,
-                        username=platform.sdkcontainerusername,
-                        password=platform.sdkcontainerpassword,
-                    )
-
-                    return
-                # pylint: disable = broad-except
-                except Exception:
-                    pass
-
-            raise moses_exceptions.TimeoutError()
+        _check_container_startup(self, configuration, platform, container)
