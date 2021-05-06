@@ -20,7 +20,9 @@ class SerialConsole(console.GenericConsole):
         super().__init__(device)
         try:
             self.ser = serial.Serial(
-                device, 115200, 8, serial.PARITY_NONE, 1, 5)
+                device, 115200,
+                serial.EIGHTBITS, serial.PARITY_NONE,
+                serial.STOPBITS_ONE, 5)
         except serial.SerialException as exception:
             raise SerialError(exception) from exception
         self._prompt = ""
@@ -67,6 +69,8 @@ class SerialConsole(console.GenericConsole):
             return output[: len(output) - len(self._prompt)].strip()
         except serial.SerialException as exception:
             raise SerialError(exception) from exception
+        except TimeoutError as exception:
+            raise TimeoutError(exception) from exception
         except OSError as exception:
             raise OSError(exception) from exception
 
@@ -107,11 +111,13 @@ class SerialConsole(console.GenericConsole):
 
         """
         self.ser.write(password.encode("utf-8"))
-        # write a dummy new passwordself.wait_for_prompt("New password: ")
+        self.wait_for_prompt("New password: ")
+
         self.ser.write("thispasswordwontlast".encode("utf-8"))
         self.wait_for_prompt("Retype new password: ")
-        # 2nd one requires \n because there is no waif_for_prompt,
-        # # afterwardsself.ser.write("thispasswordwontlast\n".encode("utf-8"))
+
+        # 2nd one requires \n because there is no waif_for_prompt
+        self.ser.write("thispasswordwontlast\n".encode("utf-8"))
         time.sleep(5)
 
     def _restore_password(self, password: str) -> None:
@@ -143,65 +149,54 @@ class SerialConsole(console.GenericConsole):
 
         """
         try:
-
             loggedin = False
+            changepwd = False
             start = time.time()
-            count = 0
+            self.ser.flush()
 
             while time.time() - start < timeout:
 
-                if count % 2:
-                    self.ser.write("\n\n\n\n".encode("utf-8"))
-                else:
-                    # just in case we are already at the shell prompt
-                    self.ser.write("exit\n".encode("utf-8"))
-
-                count = count + 1
-
                 try:
-                    # we need to figure out if we are at login prompt
-                    self.wait_for_prompt("login: ")
+                    # <ENTER>
+                    self.ser.write("\n".encode("utf-8"))
+                    self.wait_for_prompt("login")
 
-                    # write username
+                    # input username
                     self.ser.write(username.encode("utf-8"))
-
-                    # wait for prompt sends the EOL
                     self.wait_for_prompt("Password: ")
 
-                    # write password
+                    # input password
                     self.ser.write(password.encode("utf-8"))
                     self.ser.write("\n".encode("utf-8"))
 
-                    loggedin = True
+                    # wait for get response
+                    start = time.time()
+                    while self.ser.in_waiting == 0:
+                        if time.time() - start > timeout:
+                            raise TimeoutError()
+
+                    time.sleep(10)
+                    output = self.ser.read_all().decode("utf-8")
+
+                    # succes?
+                    if "Last login" in output:
+                        loggedin = True
+                    # we need to change passwd
+                    elif "Current password: " in output:
+                        self._change_password(password)
+                        changepwd = True
+                        loggedin = True
+
+                    break
 
                 except TimeoutError:
+                    self.ser.write("exit\n".encode("utf-8"))
                     continue
-
-                break
 
             if not loggedin:
                 raise LoginFailedError()
 
-            # wait for any prompt
-            start = time.time()
-
-            while self.ser.in_waiting == 0:
-                if time.time() - start > timeout:
-                    raise TimeoutError()
-
-            time.sleep(10)
-            prompt = self.ser.read_all().decode("utf-8")
-
-            if "Login incorrect" in prompt:
-                raise LoginFailedError()
-
-            changepwd = False
-
-            if "Current password:" in prompt:
-                self._change_password(password)
-                changepwd = True
-
-            # we reached the prompt
+            # wait for prompt
             # send command to configure it to a known state
             self.ser.write("PS1=__$".encode("utf-8"))
             self.set_prompt("__$")
@@ -221,6 +216,8 @@ class SerialConsole(console.GenericConsole):
 
         except serial.SerialException as exception:
             raise SerialError(exception) from exception
+        except TimeoutError as exception:
+            raise TimeoutError(exception) from exception
         except OSError as exception:
             raise OSError(exception) from exception
 
