@@ -33,12 +33,12 @@ class SSHConsole(console.GenericConsole):
         self.ssh: Optional[paramiko.SSHClient] = None
         self.channel: Optional[paramiko.Channel] = None
 
-    def send_cmd(self, command: str, timeout: int = 30) -> str:
+    def send_cmd(self, command: str, timeout: int = 5) -> str:
         """Send a command to the device and returns its output.
 
         :param command: command to send
         :type command: str
-        :param timeout: timeout in seconds (Default value = 30)
+        :param timeout: timeout in seconds (Default value = 5)
         :param timeout: int
         :returns: output of the command (till next prompt)
         :rtype: str
@@ -49,7 +49,7 @@ class SSHConsole(console.GenericConsole):
         try:
             assert self.ssh is not None
 
-            _, stdout, stderr = self.ssh.exec_command(command, timeout=5)
+            _, stdout, stderr = self.ssh.exec_command(command, timeout)
 
             output = stdout.read().decode("utf-8")
             error = stderr.read().decode("utf-8")
