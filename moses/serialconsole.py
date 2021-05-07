@@ -60,17 +60,16 @@ class SerialConsole(console.GenericConsole):
             while not output.endswith(self._prompt):
                 if time.time() - start > timeout:
                     raise TimeoutError()
-
                 try:
                     output += self.ser.read_all().decode("utf-8")
                 except UnicodeDecodeError:
                     continue
 
             return output[: len(output) - len(self._prompt)].strip()
+        except (TimeoutError,UnicodeDecodeError):
+            raise
         except serial.SerialException as exception:
             raise SerialError(exception) from exception
-        except TimeoutError as exception:
-            raise TimeoutError(exception) from exception
         except OSError as exception:
             raise OSError(exception) from exception
 
