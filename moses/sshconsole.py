@@ -172,6 +172,8 @@ class SSHConsole(console.GenericConsole):
 
         except paramiko.SSHException as exception:
             raise SSHError(exception) from exception
+        except socket.gaierror as exception:
+            raise SSHError(exception) from exception
         except OSError as exception:
             raise OSError(exception) from exception
 
