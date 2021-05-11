@@ -102,8 +102,8 @@ class ConfigurableObject:
         if self.folder is None:
             self.folder = self._build_folder_path()
 
-            if not self.folder.exists():
-                self.folder.mkdir()
+        if not self.folder.exists():
+            os.makedirs(self.folder)
 
         with open(self.folder / "config.yaml", "w") as out:
             yaml.dump(self.__getstate__(), out, indent=4, sort_keys=True)
