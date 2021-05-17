@@ -42,6 +42,7 @@ build-moses-linux:
     - python -m pip install -r requirements.txt
     - cd clients/python && python3.9 -m setup install && cd -
     - cd moses && export PYTHONOPTIMIZE=1 && pyinstaller -y moses.linux.spec && pyinstaller -y ../cli/tdskt.linux.spec && cp -R dist/tdskt-linux/* dist/moses-linux/ && cd dist/moses-linux && rm $(ls -1 lib*.so* | grep -v libffi | grep -v libpython | tr "\n" " ") && cd -
+    - cd dist/moses-linux && rm -fr $(find -maxdepth 3 -type d | grep testfiles) && cd -
   artifacts:
     paths:
       - moses/dist/moses-linux/
@@ -64,6 +65,8 @@ build-moses-windows:
     - pyinstaller -y moses.windows.spec
     - pyinstaller -y ..\cli\tdskt.windows.spec
     - xcopy /sy dist\tdskt-windows dist\moses-windows
+    - cd dist\moses-windows\platforms
+    -  get-childitem -path .\*\testfiles\*\* -recurse -filter *DeleteMe* | remove-item -force -recurse
   artifacts:
     paths:
       - moses/dist/moses-windows/
