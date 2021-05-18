@@ -170,16 +170,16 @@ class SerialConsole(console.GenericConsole):
                     self.ser.write("\n".encode("utf-8"))
 
                     # wait for get response
-                    start = time.time()
+                    start2 = time.time()
                     while self.ser.in_waiting == 0:
-                        if time.time() - start > timeout:
+                        if time.time() - start2 > timeout:
                             raise TimeoutError()
 
                     time.sleep(10)
                     output = self.ser.read_all().decode("utf-8")
 
                     # succes?
-                    if "Last login" in output:
+                    if "~$" in output:
                         loggedin = True
                     # we need to change passwd
                     elif "Current password: " in output:
