@@ -7,7 +7,7 @@ import json
 import re
 import io
 import logging
-from typing import Optional, List, Dict, Tuple, Any
+from typing import Optional, List, Any
 import six
 from docker import DockerClient
 from docker.models.images import Image
@@ -191,49 +191,63 @@ def load_image(
         return client.images.get(image_id)
     return None
 
+def _process_pushpull_stream(
+    stream: Any,
+    progress: Optional[progresscookie.ProgressCookie]) -> None:
+    states = {}
+    output : List[str] = []
 
-def _update_push_progress(progress: progresscookie.ProgressCookie,
-                          ids: Dict[str, Tuple[str, int, int]], line: Dict[str, Any]) -> None:
-    """Sum all progress repos from all the layers and update progress object.
+    for item in stream:
+        if "error" in item:
+            info = item.get("errorDetail")
+            raise LocalDockerError(item["error"], log=output, info=info)
 
-    :param progress: object used to report operation progress
-    :type progress: progresscookie.ProgressCookie
-    :param ids: dictionary with all the layers
-    :type ids: dict
-    :param line: output line (parsed from json)
-    :type line: dict
-    """
-    cur = 0
-    tot = 0
-    if "id" in line:
-        lineid = line["id"]
-        if "progressDetail" in line:
-            detail = line["progressDetail"]
-            if "current" in detail:
-                cur = detail["current"]
-            if "total" in detail:
-                tot = detail["total"]
-        if lineid not in ids or line["status"] != ids[lineid][0]:
-            ids[lineid] = (line["status"], cur, tot)
-            progress.append_message(
-                line["status"] + " " + lineid)
-        if tot != 0:
-            ids[lineid] = (line["status"], cur, tot)
-            current = 0
-            total = 0
-            for i in ids.values():
-                current += i[1]
-                total += i[2]
-            progress.set_minmax(0, total)
-            progress.set_progress_minmax(current)
+        if not "status" in item:
+            continue
 
+        status = item["status"]
 
-# pylint: disable = too-many-locals
+        if not "id" in item:
+            progresscookie.progress_message(progress,status)
+            output.append(status)
+            continue
+
+        layer_id = item["id"]
+
+        if not layer_id in states:
+            states[layer_id]={ "status" : None, "current": 0, "total": 0 }
+
+        if status != states[layer_id]["status"]:
+            states[layer_id]["status"]=status
+            message = f"{layer_id}: {status}"
+            progresscookie.progress_message(progress,message)
+            output.append(message)
+
+        if "progressDetail" in item and progress is not None:
+            progress_detail=item["progressDetail"]
+
+            if "current" in progress_detail and "total" in progress_detail:
+                states[layer_id]["current"]=progress_detail["current"]
+                states[layer_id]["total"]=progress_detail["total"]
+
+                current = 0.0
+                total = 0.0
+
+                for state in states.values():
+
+                    assert state["total"] is not None and state["current"] is not None
+
+                    total += state["total"]
+                    current += state["current"]
+
+                progress.set_minmax(0,total)
+                progress.set_progress_minmax(current)
+
 def push_image(client: DockerClient,
                repository: str,
                tag: Optional[str],
-               username: str,
-               password: str,
+               username: Optional[str],
+               password: Optional[str],
                progress: Optional[progresscookie.ProgressCookie]) -> None:
     """Push an image, returning messages generated during the operation via progress.
 
@@ -253,42 +267,38 @@ def push_image(client: DockerClient,
     """
     apiclient = client.api
 
-    auth_config = {"username": username, "password": password}
+    auth_config = None
 
-    resp = apiclient.push(
+    if username is not None:
+        auth_config = {"username": username, "password": password}
+
+    stream = apiclient.push(
         repository,
         tag,
         auth_config=auth_config,
-        stream=True)
+        stream=True,
+        decode=True)
 
-    output: List[str] = []
-    ids: Dict[str, Tuple[str, int, int]] = {}
+    _process_pushpull_stream(stream,progress)
 
-    for responsestring in resp:
+def pull_image( client: DockerClient,
+                repository: str,
+                tag: Optional[str],
+                progress: Optional[progresscookie.ProgressCookie]
+                ) -> None:
+    """Pull an image from registry providing progress information.
 
-        for responseline in responsestring.decode("utf-8").split("\r\n"):
+    :param client: client
+    :type client: DockerClient
+    :param repository: full path to docker registry
+    :type repository: str
+    :param tag: tag to be assigned to the newly built image
+    :type tag: str
+    :param progress: progress object or None
+    :type progress: progresscookie.ProgressCookie, optional
+    """
+    apiclient = client.api
 
-            if len(responseline) == 0:
-                continue
+    stream = apiclient.pull(repository, tag = tag, stream = True, decode = True)
 
-            print(responseline)
-
-            try:
-                line = json.loads(responseline)
-            # pylint: disable = broad-except
-            except Exception as exception:
-                logging.error(f"Invalid json string {responseline}")
-                logging.exception(exception)
-                continue
-
-            if "stream" in line:
-                progresscookie.progress_message(progress, line["stream"])
-                output.append(line["stream"])
-            if "status" in line:
-                if progress is not None:
-                    _update_push_progress(progress, ids, line)
-            if "error" in line:
-                info = None
-                if "errorDetail" in line:
-                    info = line["errorDetail"]
-                raise LocalDockerError(line["error"], log=output, info=info)
+    _process_pushpull_stream(stream, progress)

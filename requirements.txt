@@ -5,6 +5,7 @@ mypy==0.800
 pydocstyle==5.1.1
 pyinstaller==4.2
 pylint==2.6.0
+pyOpenSSL==20.0.1
 pyserial==3.5
 python-dateutil==2.8.1
 PyYAML==5.4.1

@@ -331,6 +331,50 @@ class ConfigurableKeysObject(ConfigurableObject):
 class ServerConfig(metaclass=singleton.Singleton):
     """Class used to store application parameters."""
 
+    def __init__(self, config_file:Optional[str]=None) -> None:
+        """Initialize configuration.
+
+        Assigns default values to parameter, then loads configuration
+        from a json file passed as argument and creates required
+        folders
+        """
+        self.commandtimeout: int = 30
+        self.apppath = Path(os.path.dirname(os.path.abspath(__file__)))
+
+        self.standardplatformspath = self.apppath / "platforms"
+        self.standardeulaspath = self.apppath / "eulas"
+
+        self.datapath = Path.home() / ("." + APP_NAME)
+
+        self.use_ssh_deployments = True
+        self.use_local_registry = False
+        self.registry : Optional[str]= None
+        self.use_proxy = False
+
+        self._set_folder_from_env("datapath","TIE_DATAPATH")
+
+        self.devicespath = self.datapath / "devices"
+        self._set_folder_from_env("devicespath","TIE_DEVICESPATH")
+
+        self.platformspath = self.datapath / "platforms"
+        self._set_folder_from_env("platformspath","TIE_PLATFORMSPATH")
+
+        self.eulaspath = self.datapath / "eulas"
+        self._set_folder_from_env("eulaspath","TIE_EULASPATH")
+
+        self.certspath = self.datapath / "certs"
+        self._set_folder_from_env("certspath","TIE_CERTSPATH")
+
+        if config_file is None:
+            config_file=str(self.datapath / "server.yaml")
+
+        assert config_file is not None
+
+        if os.path.isfile(config_file):
+            self._load_parms(config_file)
+
+        self._create_folders()
+
     def _create_folders(self) -> None:
         """Create the different folders required by the application."""
         if not self.datapath.exists():
@@ -351,53 +395,34 @@ class ServerConfig(metaclass=singleton.Singleton):
         if not self.eulaspath.exists():
             self.eulaspath.mkdir()
 
-    def __init__(self) -> None:
-        """Initialize configuration.
+        if self.use_local_registry:
+            if not self.certspath.exists():
+                self.certspath.mkdir()
 
-        Assigns default values to parameter, then loads configuration
-        from a json file passed as argument and creates required
-        folders
-        """
-        self.commandtimeout: int = 30
-        self.apppath = Path(os.path.dirname(os.path.abspath(__file__)))
 
-        self.standardplatformspath = self.apppath / "platforms"
-        self.standardeulaspath = self.apppath / "eulas"
+    def _load_parms(self, config_file:str) -> None:
+        with open(config_file,"r") as config_f:
+            parms = yaml.full_load(config_f)
 
-        self.datapath = Path.home() / ("." + APP_NAME)
+        if "deployment" in parms:
+            if "registry" in parms["deployment"]:
+                self.registry = str(parms["deployment"]["registry"]).lower()
+            if "proxy" in parms["deployment"] and not self.use_local_registry:
+                self.use_proxy = bool(parms["deployment"]["proxy"])
 
-        if "TIE_DATAPATH" in os.environ:
-            datapath=os.environ["TIE_DATAPATH"]
-            if os.path.isdir(datapath):
-                self.datapath = Path(datapath)
+        if self.registry is not None:
+            self.use_ssh_deployments = False
+            if self.registry == "local":
+                self.use_local_registry = True
+                self.use_proxy = False
+
+        if self.use_local_registry:
+            self.use_ssh_deployments = False
+
+    def _set_folder_from_env(self, folder_attr: str, env_var: str) -> None:
+        if env_var in os.environ:
+            attr_value=os.environ[env_var]
+            if os.path.isdir(attr_value):
+                setattr(self,folder_attr,Path(attr_value))
             else:
-                logging.warning(f"TIE_DATAPATH ({datapath}) must be a valid directory")
-
-        self.devicespath = self.datapath / "devices"
-
-        if "TIE_DEVICESPATH" in os.environ:
-            devicespath=os.environ["TIE_DEVICESPATH"]
-            if os.path.isdir(devicespath):
-                self.devicespath = Path(devicespath)
-            else:
-                logging.warning(f"TIE_DEVICESPATH ({devicespath}) must be a valid directory")
-
-        self.platformspath = self.datapath / "platforms"
-
-        if "TIE_PLATFORMSPATH" in os.environ:
-            platformspath=os.environ["TIE_PLATFORMSPATH"]
-            if os.path.isdir(platformspath):
-                self.platformspath = Path(platformspath)
-            else:
-                logging.warning(f"TIE_PLATFORMSPATH ({platformspath}) must be a valid directory")
-
-        self.eulaspath = self.datapath / "eulas"
-
-        if "TIE_EULASPATH" in os.environ:
-            eulaspath=os.environ["TIE_EULASPATH"]
-            if os.path.isdir(eulaspath):
-                self.eulaspath = Path(eulaspath)
-            else:
-                logging.warning(f"TIE_EULASPATH ({eulaspath}) must be a valid directory")
-
-        self._create_folders()
+                logging.warning(f"{env_var} value ({attr_value}) must be a valid directory")

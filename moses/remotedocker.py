@@ -377,6 +377,19 @@ class RemoteDocker:
         except docker.errors.DockerException as exception:
             raise RemoteDockerError(self.dev, str(exception)) from exception
 
+    def pull_image(self,registry: str,tag: str) -> None:
+        """Pull an image from remote registry.
+
+        :param registry: remote registry
+        :type registry: str
+        :param tag: image tag
+        :type tag: str
+        """
+        try:
+            self.remotedocker.images.pull(registry,tag=tag)
+        except docker.errors.DockerException as exception:
+            raise RemoteDockerError(self.dev, str(exception)) from exception
+
     def get_network(self, network: str) -> docker.models.networks.Network:
         """Return a network given its name.
 
