@@ -19,6 +19,10 @@ import tags
 import sharedssh
 import rsync
 import progresscookie
+import config
+import localregistry
+import dockerproxy
+import dockerapi
 from applicationconfig_base import ApplicationConfigBase
 from applicationconfig_sdk import start_sdk_container
 
@@ -86,6 +90,115 @@ def _check_image_for_deployment(
         )
         raise moses_exceptions.ImageNotFoundError(imgid)
     return limg
+
+
+def _deploy_image_via_ssh(self: ApplicationConfigBase,
+                          configuration: str,
+                          limg: docker.models.images.Image,
+                          rdocker: remotedocker.RemoteDocker,
+                          progress: Optional[progresscookie.ProgressCookie]) -> None:
+    # this function will be part of ApplicationConfig via import,
+    # members of base class ApplicationConfigBase are accessed
+    # pylint: disable=protected-access
+
+    if progress is not None:
+        progress.append_message("Exporting local image.")
+        progress.set_minmax(0, limg.attrs["Size"] * 2)
+
+    stream = limg.save()
+    outputpath = str(self._get_work_folder() /
+                     (configuration + ".tar"))
+
+    with open(outputpath, "wb") as outfile:
+        for chunk in stream:
+            outfile.write(chunk)
+            if progress is not None:
+                progress.update_progress_minmax(len(chunk))
+
+        outfile.flush()
+        outfile.close()
+
+    progresscookie.progress_message(
+        progress, "Image exported, deploying to the target."
+    )
+
+    rdocker.load_image(limg, outputpath, progress)
+
+    progresscookie.progress_message(progress, "Image deployed.")
+
+
+def _deploy_image_via_registry(device: targetdevice.TargetDevice,
+                               limg: docker.models.images.Image,
+                               rdocker: remotedocker.RemoteDocker,
+                               progress: Optional[progresscookie.ProgressCookie]) -> None:
+    tag = limg.tags[0]
+
+    assert tag is not None
+
+    parts = tag.split(":")
+    if len(parts) > 1:
+        imagename = ":".join(parts[:-1])
+        tag = parts[-1:][0]
+    else:
+        imagename = tag
+        tag = None
+
+    if not config.ServerConfig().use_local_registry and not config.ServerConfig().use_proxy:
+        registry = config.ServerConfig().registry
+        assert registry is not None
+    else:
+        progresscookie.progress_message(
+            progress, "Setting up proxy on client."
+        )
+
+        if config.ServerConfig().use_local_registry:
+            port = localregistry.LocalRegistry().setup_client(device)
+        else:
+            port = dockerproxy.DockerProxy().setup_client(device)
+
+        progresscookie.progress_message(
+            progress, f"Proxy running on port {port}."
+        )
+
+        registry = "localhost:"+str(port)
+
+    repository  = registry + "/" + imagename
+    limg.tag(repository,tag)
+
+    progresscookie.progress_message(
+        progress, "Pushing image to the registry."
+    )
+
+    client = docker.from_env()
+
+    if not config.ServerConfig().use_local_registry and not config.ServerConfig().use_proxy:
+        dockerapi.push_image(client,repository,tag,None,None,progress)
+    else:
+        localurl = localregistry.LocalRegistry().localurl \
+            if config.ServerConfig().use_local_registry \
+            else dockerproxy.DockerProxy().localurl
+        localrepository = localurl+"/"+imagename
+        limg.tag(localrepository,tag)
+        dockerapi.push_image(client,localrepository,tag,None,None,progress)
+
+    progresscookie.progress_message(
+        progress, "Pulling image on target."
+    )
+
+    dockerapi.pull_image(rdocker.remotedocker, repository, tag, progress)
+
+    remoteimage = rdocker.get_image_by_id(limg.id)
+
+    # set base tag for the image
+    remoteimage.tag(imagename,tag)
+
+    # remove the temp tag used for pull
+    imagetag = repository if tag is None else repository+":"+tag
+    rdocker.delete_image(imagetag,False)
+
+    progresscookie.progress_message(
+        progress, "Image deployed."
+    )
 
 
 def deploy_image(self: ApplicationConfigBase, configuration: str, device: targetdevice.TargetDevice,
@@ -163,37 +276,13 @@ def deploy_image(self: ApplicationConfigBase, configuration: str, device: target
                     progress, "Image not found on target device."
                 )
 
-            if progress is not None:
-                progress.append_message("Exporting local image.")
-                progress.set_minmax(0, limg.attrs["Size"] * 2)
-
-            stream = limg.save()
-            outputpath = str(self._get_work_folder() /
-                             (configuration + ".tar"))
-
-            with open(outputpath, "wb") as outfile:
-                for chunk in stream:
-                    outfile.write(chunk)
-                    if progress is not None:
-                        progress.update_progress_minmax(len(chunk))
-
-                outfile.flush()
-                outfile.close()
-
-            logging.info("DEPLOY - Image exported.")
-
-            progresscookie.progress_message(
-                progress, "Image exported, deploying to the target."
-            )
-
-            rdocker.load_image(limg, outputpath, progress)
-
-            progresscookie.progress_message(progress, "Image deployed.")
-
-            logging.info("DEPLOY - Image deployed.")
+            if config.ServerConfig().use_ssh_deployments:
+                _deploy_image_via_ssh(self, configuration, limg, rdocker, progress)
+            else:
+                _deploy_image_via_registry(device, limg,  rdocker, progress)
 
     except docker.errors.DockerException as exception:
-        raise moses_exceptions.LocalDockerError(exception)
+        raise moses_exceptions.LocalDockerError(exception) from exception
 
 
 # pylint: disable = too-many-arguments

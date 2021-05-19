@@ -18,6 +18,9 @@ import targetdevice
 import applicationconfig
 import eula
 import platformconfig
+import config
+import localregistry
+import dockerproxy
 
 if getattr(sys, "frozen", False):
     options = {"swagger_path": os.path.dirname(sys.executable) + "/api/ui"}
@@ -58,8 +61,11 @@ if __name__ == "__main__":
     )
     parser.add_argument("--logfile", type=str, default=None)
     parser.add_argument("--debug", action="store_true")
+    parser.add_argument("--configfile", type=str, default=None)
 
     args = parser.parse_args()
+
+    config.ServerConfig(args.configfile)
 
     if not args.debug:
         logging.basicConfig(level=logging.INFO)
@@ -108,6 +114,11 @@ if __name__ == "__main__":
         pass
     except Exception as exception:
         logging.exception(exception)
+
+    if config.ServerConfig().use_local_registry:
+        localregistry.LocalRegistry()
+    elif config.ServerConfig().use_proxy:
+        dockerproxy.DockerProxy()
 
     with open("swagger.yaml", "r") as inp:
         schema = yaml.full_load(inp)
