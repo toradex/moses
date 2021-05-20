@@ -74,7 +74,4 @@ networks:
   common: []
   debug: []
   release: []
-images:
-  debug: null
-  release: null
 deprecated: true
