@@ -71,7 +71,7 @@ if __name__ == "__main__":
     if args.logfile is not None:
         logging.getLogger().addHandler(
             logging.handlers.RotatingFileHandler(
-                args.logfile, "a", 1024 * 1024, 4)
+                args.logfile, mode="a", maxBytes=1024 * 1024, backupCount=4)
         )
 
     # pylint: disable = broad-except
