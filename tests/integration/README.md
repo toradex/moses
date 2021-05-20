@@ -22,6 +22,8 @@ First you need to initialize the environment and install the BATS framework. To 
 . ./setup.sh
 ```
 
+On Windows the scripts use wslvar command, check if it's available and if not, install it as documented [here](https://github.com/wslutilities/wslu).
+
 Then you can run the test suite by typing:
 
 ```
