@@ -1,0 +1,3 @@
+workdir/**
+samples/**/*.tar
+samples/**/Dockerfile*.*
