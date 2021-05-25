@@ -1,0 +1,137 @@
+devices:
+    common:
+    - /dev/gpiochip0
+    debug: []
+    release: []
+dockercomposefile:
+    common: ''
+    debug: ''
+    release: ''
+extraparms:
+    common:
+        network_mode: '"host"'
+    debug: {}
+    release: {}
+id: e3d3a479-fdb0-4448-8740-5c690cf2c2fb
+images:
+    debug: sha256:a86389c1ce56e2d44401a4c1976fbef1418503fb6bf91671143472185c79aaa2
+    release: sha256:a565a7a82a03a76beb583f916806626236efa95c76a5f8c22eca2e010f00af0b
+imagetags:
+    debug: dotnet5console_arm64v8-dotnet-50_bullseye_debug_e3d3a479-fdb0-4448-8740-5c690cf2c2fb
+    release: dotnet5console_arm64v8-dotnet-50_bullseye_release_e3d3a479-fdb0-4448-8740-5c690cf2c2fb
+modificationdate: '2020-12-22T01:04:17.713241'
+networks:
+    common: []
+    debug: []
+    release: []
+platformid: arm64v8-dotnet-50_bullseye
+ports:
+    common: {}
+    debug: {}
+    release: {}
+privatekey: '-----BEGIN RSA PRIVATE KEY-----
+
+    MIIEpQIBAAKCAQEAtz1cqujHdGZGCX7L42l24CEnm2le2X109LthtdhzszLuaqvQ
+
+    FT1PzSE5WG9+LrBKY8rJXU1ESdq5muhQgYv54hDSOGdUUxU0GxdtwLJS42iHf3Xq
+
+    qLZMSz5JuiH6vwrmD6JvtM643QH3fgXbHUaUYPjwS5L5nWFGQIkI7RSHNhMNPz/c
+
+    kGUYICBOqtJbsYcu9vp8GvlWsLwZHSde6+DMPZMcFvyhrw3u6GucptAtxUxq/+Yl
+
+    1iNq50ZHa1akEDEJiVvzXl4kDYkvGqoTt7eoDOLcc9LccCDpmFO8VDCX5h+M2z89
+
+    MZt4fzLe4f9X2XadZhOt1c9EDqrXHl3MdlH86wIDAQABAoIBAQCT53i8D2anQsI3
+
+    edxS9FbatIhGvner78MOo41L/anuNCcTfRlZe4LFXZLvGhds0ilJgW6l2+9J+b2l
+
+    Fu2ck4KggdldY7JB2bSURYX2aznSixYLwP8nLPZKKb3S+whtWfu3FPM7qzy2T5cY
+
+    ZtulNsoft/Al4D2RVeohvzqwOsik0L/bygv+O5F3tId94NLI3uOJXmZMIsTM/Jmv
+
+    A3JxP8V5EvXbJ5OggV9cSohEpzU17R87NErC3CLbdjOlBP7x68NAgAuiv+z7/71D
+
+    b0zo9RVvm4tZnoiHAd9xnqpP5l5lIq1fwWFVfi4zHq2iTaMHe3W1TNrffNeVrQCl
+
+    b6h3nsOpAoGBAOQg0tLB9FPCCHUB4kihk4W1wUrm3h5fMWF5naaLdLCBrG3ID7Bs
+
+    zhuzowHuDRV/ho0i/WJnoJtzVRNmMLo6sZm9KeyFan3VHCkPf4opEbsf70EyC/jo
+
+    RgQ70NlXDc/ieHU+R4hGFuwDkXN0EUA/gF/+01nOdedePr2qZIaW2SDvAoGBAM2g
+
+    juLd/dyNuQBtLKQtqZtEg7dFoSflDgqLbWmMiFGQQddZzW3iBcCzsCD3UaA0w/90
+
+    37bAbtqfy/GuLkfq2IoC7rvsuQ4UUgN6VtcpJ/Lp1wZuA7gvsY41+/RdSW1rBa0S
+
+    SSnK2WjJNjQk4faIfAFNyJh00WOHkeh+07lzhKvFAoGBAKBRENdbxkA2U4smz8cL
+
+    BYkpubTRmbbuXt2JgejQiCiieHKN7bimPhHpo9xvVnKNNBlrRXYqLQwRePAxGH1H
+
+    Uhggf53gBH55jVits4t8YSGHx7OhYBiD4vCGuLaEHwjAtrZuFgcGeoVR3J2uK5Fj
+
+    DuxnQFAUb3cxHBZd8FdFG0GxAoGBAIE8llGUQIesM0hHVbViVaUWrMo1YxJV7jtG
+
+    Yl/iSZMp3ZfiAzE6y27QALTXfF/6ie02oZyU2Zdis6WUWdYtjic/rJhEMhLdRqaU
+
+    75uPbGJKAjEyV/gdUbUVzONK9mlkyE58nas8qOQpAn5HaBWwtm+DWb4oPaoWfOfp
+
+    Plzic9IZAoGAMWj3KnEdffd3KjzW7rHEJ8nuY3eBJdvHm+ozZFUBGpzk526k4OUa
+
+    9/TrlxLioeBqNO8w6URBmJDCanIxMvK4QYVtGOrzlivD+agsbvRBvpNKwIA+QWYw
+
+    9/Ffdr9SNpyojK96AVQcKDxdDknTigTnBawJ0br/Fiia/jAXJd3PlG0=
+
+    -----END RSA PRIVATE KEY-----
+
+    '
+props:
+    common:
+        appargs: 1 2 3 4 5 6
+        appname: dotnet5Console
+        arg: ''
+        buildcommands: RUN usermod -a -G gpio torizon
+        buildfiles: ''
+        command: ''
+        devpackages: ''
+        env: ENV GPIOBank=0
+        expose: ''
+        extrapackages: libgpiod-dev
+        language: dotnet
+        preinstallcommands: ''
+        runtime: dotnet
+        sdkpostinstallcommands: ''
+        sdkpreinstallcommands: ''
+        targetcommands: ''
+        targetfiles: ''
+    debug:
+        arg: 'ARG SSHUSERNAME=#%application.username%#
+
+            '
+    release:
+        appargs: ''
+        main: main.py
+publickey: ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQC3PVyq6Md0ZkYJfsvjaXbgISebaV7ZfXT0u2G12HOzMu5qq9AVPU/NITlYb34usEpjysldTURJ2rma6FCBi/niENI4Z1RTFTQbF23AslLjaId/deqotkxLPkm6Ifq/CuYPom+0zrjdAfd+BdsdRpRg+PBLkvmdYUZAiQjtFIc2Ew0/P9yQZRggIE6q0luxhy72+nwa+VawvBkdJ17r4Mw9kxwW/KGvDe7oa5ym0C3FTGr/5iXWI2rnRkdrVqQQMQmJW/NeXiQNiS8aqhO3t6gM4txz0txwIOmYU7xUMJfmH4zbPz0xm3h/Mt7h/1fZdp1mE63Vz0QOqtceXcx2Ufzr
+sdkimages:
+    debug: ''
+    release: ''
+sdkimagetags:
+    debug: ''
+    release: ''
+sdksshaddress:
+    debug: null
+    release: null
+shutdownscript:
+    common: ''
+    debug: ''
+    release: ''
+startupscript:
+    common: ''
+    debug: ''
+    release: ''
+username: torizon
+volumes:
+    common:
+        /etc/os-release: /etc/os-release
+    debug:
+        /home/torizon/dotnet5Console: /dotnet5Console,rw
+    release: {}
