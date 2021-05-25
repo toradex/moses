@@ -7,6 +7,7 @@ Cookies can be created, passed to the operation and used to retrieve state while
 call is still pending.add()
 
 """
+import logging
 import uuid
 import threading
 from typing import cast, Dict, Optional, List, Any
@@ -319,6 +320,7 @@ def progress_message(progress: Optional[ProgressCookie], message: str) -> None:
     """
     if progress is not None:
         progress.append_message(message)
+    logging.info(message)
 
 
 def progress_completed(progress: Optional[ProgressCookie]) -> None:
