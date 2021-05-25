@@ -1,0 +1,133 @@
+devices:
+    common:
+    - /dev/gpiochip1
+    debug: []
+    release: []
+dockercomposefile:
+    common: ''
+    debug: ''
+    release: ''
+extraparms:
+    common: {}
+    debug: {}
+    release: {}
+id: ebd633aa-c3fe-4371-bb14-5e44bb217011
+images:
+    debug: sha256:fcd3029f51d07631234ece99c214824c0d542e847286d99310e94769decd3530
+    release: sha256:1a24daaecc5456a49e70e7634361df5b5bc8ecd8133bff441ade37625d929541
+imagetags:
+    debug: ccppautotools_arm32v7-debian-no-ssh_bullseye_debug_ebd633aa-c3fe-4371-bb14-5e44bb217011
+    release: ccppautotools_arm32v7-debian-no-ssh_bullseye_release_ebd633aa-c3fe-4371-bb14-5e44bb217011
+modificationdate: '2021-05-07T13:59:41.113901'
+networks:
+    common: []
+    debug: []
+    release: []
+platformid: arm32v7-debian-no-ssh_bullseye
+ports:
+    common: {}
+    debug: {}
+    release: {}
+privatekey: '-----BEGIN RSA PRIVATE KEY-----
+
+    MIIEowIBAAKCAQEA2PJ/YxboglXlhXB3vD//yDok2st2Or2uD+LoyM0oOUVj+H6T
+
+    sik2aF8HkZyEPibGzhMMRjdl/Ik9as7xJFPB2FlkrSBmzn3RO9Ry+4a/EkdPxBYk
+
+    SWH2YCG7s3CF6jygypSBybdKIUkPJjvZqNehLoS+zf+flBj5SgdLIsP8g75MfANr
+
+    4/Sgux/i/OHSA35E+L9CPWvdvvE7qFFnn7dZ5P23puunsLDZpkEgj239vcjwzydT
+
+    ktSNGxs6jzWTccndE4E2soKzqhtR+/fiPmRGz0zoFIE8HyGMlngs0QojM4lrChvN
+
+    ZpX0D5tNQNKRaGrpV5sS5sz1emwRJXbul/FrnwIDAQABAoIBAHFCOCrc/Ml+WnLN
+
+    glTu/HPllvP6oGCOQd7dUTXzlPpBNa23Nxgd19+pLORh19AyojtXSmMl7MJoS34F
+
+    R3L1nw95q8uOTN2kZaVchiK19+5s+EGgZZVB5UPOmJVXOzJMMI1R9mf+nl6+K4CE
+
+    Yl95IxaMCqi0uPSyDQMOx7UAqEWGD04AGJfGt3sopm+8u4t/v1u2h0GKuB1BlK97
+
+    iNJ4vAMWY6FAa+bgAEvUmp/sEOHLtQjhsFCC6WENzFLT8CcUxr1084m1Of43KMCD
+
+    ZRgA0gutkL0CXKXXqP4Lq/BC5o2l50qAt3lhd4urZV7ulIH4PyMUfyLp/UyRcoqM
+
+    +FSkk2ECgYEA9kg+MIHLHA7s4GMxjp2RCkq5jSfyLC74VAo/27g5xI4SjAAWCg0k
+
+    DWfnJMzmTJ9gGovlImTLwinq0gMpTm0AyfzVBca4+3fGpSUAHSvAp5/WGkL4LQ12
+
+    w/lbsrCG+5Fj1u/jgKITORTC1fQ5sPyhXnts0XApL0jJT57uLzL6MtkCgYEA4YHv
+
+    aa9a3Lm57zA1g4UWnW94kZKBTFd/f0LXrQ0Gcj+wxey/suyA2Oenli0O4FkkLEo9
+
+    277HMEhskiThOVax5UuHr1ZcQWWEIr+fNkjmzDXTs4lK+SEbuv+DgjkuxzJ6Lnl8
+
+    Fv+70EQa+dz58QNA79yHEbc3+3qRW9dBzwU3FzcCgYA3IOi61vLuLvEbMVkQgXjM
+
+    AvoR/NUaytDPjxPITS6xLtQ7/nDwgwyE67Mz66HJmQtcJeB+mG174wIrTIXchk3c
+
+    6PmON3OE5sTShrvFy9tuKjs02bTP8Oma6KB8GUO94Eem/z+/tYf0CQ+r8OVRFtvQ
+
+    WHR9VUwCx5o4dmz+p7yV0QKBgFNWzb/lClNgYBLBYkWEveLY+1nxJs+r1naVoVdW
+
+    5Pb8Crxazk21kbiXhBu/8yt+RhwII+w+CScS3Oz1rDagj4YJ788gv197wOWGo7RQ
+
+    JNt7WQ2Uw5xmW/Uz0Mojj+IWCYl7ZByrziEdykplHAmyBiGfAlvNtma92VJzruJv
+
+    LvjpAoGBAK4XxQe28TemhQLK2TIIdxheQ/kYBEUPLNoSGWUDE29Oe/v7k9qyiu3N
+
+    lUbaax9XAwpc1wly57PWmPOXMw1+TJZPczHne8RzHJLDKTeXjy1B+n4TiFWxPFZ4
+
+    /Pw/HFmQLDI9//tPVbPw+Jyply9bCQ2KsLrPEoisbwODtay0Pb50
+
+    -----END RSA PRIVATE KEY-----
+
+    '
+props:
+    common:
+        appname: ccppAutoTools
+        arg: ''
+        buildcommands: ''
+        buildfiles: ''
+        command: ''
+        devpackages: libgpiod-dev:#%platform.debian-arch%#
+        env: ''
+        exename: bin/ccppAutoTools
+        expose: ''
+        extrapackages: gpiod
+        language: c-cpp-nossh
+        preinstallcommands: ''
+        sdkpostinstallcommands: ''
+        sdkpreinstallcommands: ''
+        targetcommands: ''
+        targetfiles: ''
+    debug:
+        arg: 'ARG SSHUSERNAME=#%application.username%#
+
+            '
+    release: {}
+publickey: ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQDY8n9jFuiCVeWFcHe8P//IOiTay3Y6va4P4ujIzSg5RWP4fpOyKTZoXweRnIQ+JsbOEwxGN2X8iT1qzvEkU8HYWWStIGbOfdE71HL7hr8SR0/EFiRJYfZgIbuzcIXqPKDKlIHJt0ohSQ8mO9mo16EuhL7N/5+UGPlKB0siw/yDvkx8A2vj9KC7H+L84dIDfkT4v0I9a92+8TuoUWeft1nk/bem66ewsNmmQSCPbf29yPDPJ1OS1I0bGzqPNZNxyd0TgTaygrOqG1H79+I+ZEbPTOgUgTwfIYyWeCzRCiMziWsKG81mlfQPm01A0pFoaulXmxLmzPV6bBEldu6X8Wuf
+sdkimages:
+    debug: sha256:62a92a0f2c1307f3cfd7ea2984d737605f9518b2967bd7845a019a6e39c3ee8d
+    release: sha256:62a92a0f2c1307f3cfd7ea2984d737605f9518b2967bd7845a019a6e39c3ee8d
+sdkimagetags:
+    debug: ccppautotools_arm32v7-debian-no-ssh_bullseye_debug_ebd633aa-c3fe-4371-bb14-5e44bb217011_sdk_image
+    release: ccppautotools_arm32v7-debian-no-ssh_bullseye_release_ebd633aa-c3fe-4371-bb14-5e44bb217011_sdk_image
+sdksshaddress:
+    debug: null
+    release: null
+shutdownscript:
+    common: ''
+    debug: ''
+    release: ''
+startupscript:
+    common: ''
+    debug: ''
+    release: ''
+username: torizon
+volumes:
+    common:
+        /etc/os-release: /etc/os-release
+    debug:
+        /home/torizon/ccppAutoTools: /ccppAutoTools,rw
+    release: {}
