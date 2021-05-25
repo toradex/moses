@@ -1,0 +1,135 @@
+devices:
+    common:
+    - /dev/gpiochip0
+    debug: []
+    release: []
+dockercomposefile:
+    common: ''
+    debug: ''
+    release: ''
+extraparms:
+    common: {}
+    debug: {}
+    release: {}
+id: 1693ee28-53f5-47c7-a4a9-7c80db96cb0e
+images:
+    debug: sha256:ffa50e310fd0aaf33275a33081de78fc3f64d578bf140070e4c98929724275d9
+    release: sha256:0333f6b2ef2926f3bb89c0c717de77879e6e084f5eeb6ae350c65ad3df067e15
+imagetags:
+    debug: vs2019torizonapp_arm32v7-debian_bullseye_debug_1693ee28-53f5-47c7-a4a9-7c80db96cb0e
+    release: vs2019torizonapp_arm32v7-debian_bullseye_release_1693ee28-53f5-47c7-a4a9-7c80db96cb0e
+modificationdate: '2020-12-21T03:16:47.418219'
+networks:
+    common: []
+    debug: []
+    release: []
+platformid: arm32v7-debian_bullseye
+ports:
+    common: {}
+    debug: {}
+    release: {}
+privatekey: '-----BEGIN RSA PRIVATE KEY-----
+
+    MIIEpAIBAAKCAQEAqxtHRWm8QSdCpXou3CRRkFyfa80IcumAXA2jayKcFBG1Lo8J
+
+    H8o6EeVdngRBKMo+SIyAa9WHnnmWTwvb2BsA1C/Lc5wNS5MOSBgD1bwBv6Wd3iRL
+
+    GkVpTxOXD0cofzqCnL40kHfYJHXYD+qma0PlWLOSMOTP8FQpVwHr8pk2aHRvr+e6
+
+    pW/AUwoVL0/vjJlfMkgVvQXS3uxUGh1LBjHkjhC+17BakdhIb5BIALK5V4AamIb/
+
+    lywgUMw579KUwqMQZw1t9pNkVAmBO7GZ8nBRo7mKuzCc6/zj1yXMEXOZs/Ve7m/z
+
+    BQX/BOGTyJDItIFO5njb2oWb1g2/Uu/l7kyI8QIDAQABAoIBACHEwm4ajgK1wttx
+
+    n6nmqQo6nWPjFRXIq4J/Vo8gR3lWfVFw/TX+7TL292DmKg3ozB35TKb7f0ZxbI6x
+
+    InQl8CXwQNDSLXWK0ji8NJWMAzRVdTCQLRpENKJclWV4f6+MVpakmy8f19JqR3fs
+
+    sWdeAPdeiS2JGtitY3M+d9hrEGfQsEgAhdulVJAW6zIOTfv3W/kitZ4sfy7wHwDp
+
+    oE+zyLLkBB6PFWRKiv2Sy/00u6bwxTU8Qm+JKTc/02mr5rUkj5vJxUzcwLYB6eZ7
+
+    fuywZWOgk47+2PwXZv+kiNG654KAaLo4PT8OKjIKZ7u7lmQbx992vZqaHljcEYBG
+
+    T0UBYrkCgYEA2P0P+u5XPbPA2dBlzU1hA5GPymCyG9AVPgx6swbVYhaZrbuH+3hz
+
+    xxT7nAEguwMb3MiCXK89yzLbZ6rJ6V3xdLeqFwiSkdXvsQn0TXvs07MDxLG6psTS
+
+    y67BU6MLvNK9GCIWyuyU8ELp2OX/9b+xQIPKZj27X/s6q3pMUv07XmsCgYEAyd59
+
+    YLTa/XfAFP43hdbES08Kk/Fxk0imHrO5SqkaPESfgNlGGep8JvAjqeZ1b26g4jYe
+
+    sK+Rr/Uvv9UtttAanSSS3D3OhHRPkoMZi3rDQ0Yi7Vqaa5W4JT1r8WZLz8nn0Hbn
+
+    R4pXTWDF75IaBnaSJQsbI+u6qGsvWCoH2nJhVRMCgYEAkYMbLU6aCJG7uRWsv0Gt
+
+    1kPOJowzxL0FEcgynE3v2MiJJF2HMlczZQUoOhTzixXpoGSCL3+BM/wV8G4y2yGZ
+
+    o4jrMmkYSV4rUBD52OBLECiTVVtObTm+lsLJeLn1TBoSntV1bX2732cwBLkwre9w
+
+    AXCf0XKCbjo+vPHVry2Mm6MCgYBpWZ2hDIGE6ivqSMl9JZoHm1Zv4v9c1/sp5q16
+
+    k0nHziBXxAxblg343DYggs8iul9n7sqRdu7XH2Qt/vj+gRiCjgW+vtq6MWEdmyGH
+
+    syeYQlAUAsa4Asi5Vpawwqwp4rsCBiupID9zeF+UKXE/kj2u617cnjcpkdaBcl3q
+
+    2OqG1QKBgQCH9a1BM2hgVYrgGa1Hewj/w9ru7lIGVXQqrabHxiuDuwALgPilLyIr
+
+    2LGPIfhVjcia22hL8QfCodJEVz2vPPLibEHg+ZgYZh5XiGkBYNojwoEXScShu5Ah
+
+    DGzqpFHCAREpR4Pqvpk/wDUsuF7h94fWm9QWqTGzdbCTAwNKEi83nQ==
+
+    -----END RSA PRIVATE KEY-----
+
+    '
+props:
+    common:
+        appargs: 1 2 3 4 5 6
+        appname: VS2019TorizonApp
+        arg: ''
+        buildcommands: RUN usermod -a -G gpio torizon
+        buildfiles: ''
+        command: ''
+        devpackages: libgpiod-dev:armhf
+        env: ENV GPIOBank=0
+        expose: ''
+        extrapackages: libgpiod-dev
+        preinstallcommands: ''
+        sdkpostinstallcommands: ''
+        sdkpreinstallcommands: ''
+        targetcommands: ''
+        targetfiles: ''
+    debug:
+        arg: 'ARG SSHUSERNAME=#%application.username%#
+
+            '
+    release: {}
+publickey: ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQCrG0dFabxBJ0Klei7cJFGQXJ9rzQhy6YBcDaNrIpwUEbUujwkfyjoR5V2eBEEoyj5IjIBr1YeeeZZPC9vYGwDUL8tznA1Lkw5IGAPVvAG/pZ3eJEsaRWlPE5cPRyh/OoKcvjSQd9gkddgP6qZrQ+VYs5Iw5M/wVClXAevymTZodG+v57qlb8BTChUvT++MmV8ySBW9BdLe7FQaHUsGMeSOEL7XsFqR2EhvkEgAsrlXgBqYhv+XLCBQzDnv0pTCoxBnDW32k2RUCYE7sZnycFGjuYq7MJzr/OPXJcwRc5mz9V7ub/MFBf8E4ZPIkMi0gU7meNvahZvWDb9S7+XuTIjx
+sdkimages:
+    debug: sha256:fd5c65835e6032922704c6c8eb428dbdb2feb9b45c6605eda869a2509aa92f9b
+    release: sha256:fd5c65835e6032922704c6c8eb428dbdb2feb9b45c6605eda869a2509aa92f9b
+sdkimagetags:
+    debug: vs2019torizonapp_arm32v7-debian_bullseye_debug_1693ee28-53f5-47c7-a4a9-7c80db96cb0e_sdk_image
+    release: vs2019torizonapp_arm32v7-debian_bullseye_release_1693ee28-53f5-47c7-a4a9-7c80db96cb0e_sdk_image
+sdksshaddress:
+    debug:
+        HostIp: 0.0.0.0
+        HostPort: '49211'
+    release:
+        HostIp: 0.0.0.0
+        HostPort: '49212'
+shutdownscript:
+    common: ''
+    debug: ''
+    release: ''
+startupscript:
+    common: ''
+    debug: ''
+    release: ''
+username: torizon
+volumes:
+    common:
+        /etc/os-release: /etc/os-release
+    debug: {}
+    release: {}
