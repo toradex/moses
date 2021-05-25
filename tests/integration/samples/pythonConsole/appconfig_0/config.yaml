@@ -1,0 +1,135 @@
+devices:
+    common:
+    - /dev/gpiochip1
+    debug: []
+    release: []
+dockercomposefile:
+    common: ''
+    debug: ''
+    release: ''
+extraparms:
+    common: {}
+    debug: {}
+    release: {}
+id: 3ceb53ce-bc32-49b5-97ee-df7a4001ee19
+images:
+    debug: sha256:892349651ecc2573ecf6b7669a3d82a39b313d2a4db6ed87275ffaa4f6898847
+    release: sha256:a47e193110b4d8c007fd632caa5836dfe39abf9904ba91fcdb3194a1df320a16
+imagetags:
+    debug: pythonconsole_arm32v7-debian-python3_bullseye_debug_3ceb53ce-bc32-49b5-97ee-df7a4001ee19
+    release: pythonconsole_arm32v7-debian-python3_bullseye_release_3ceb53ce-bc32-49b5-97ee-df7a4001ee19
+modificationdate: '2020-12-18T16:37:30.724435'
+networks:
+    common: []
+    debug: []
+    release: []
+platformid: arm32v7-debian-python3_bullseye
+ports:
+    common: {}
+    debug: {}
+    release: {}
+privatekey: '-----BEGIN RSA PRIVATE KEY-----
+
+    MIIEpAIBAAKCAQEA3LMLj5AWo1hFm61roAq0RRInf5Go/N+5P4wBuY8cf/NjsTK8
+
+    dCA3briDeQ6WXd17xBya7fUHulCZ+MhKEMkRLHX50z6xvyAyhLbM67OQP2Ed019h
+
+    c4+RvoZZnoPBsVaLJ4zbXv4wJnHoIH3jL1xPgj22J46ya7JWQiwbTp2GXI3ZIBnw
+
+    H78Wc0FmjBA8KN6VjxAKIgaQicoLhLrd8kI1DfWeCqW1J8oVvvDicEOJDIdVW44m
+
+    QNJmg8VwKXdgRYY7FqzuKyPUY8r/hjWmEFxJRlXpBunw1zs08OnKlFceUUSVyXI/
+
+    6DOxziFBrlI2cwN1TMuvlVEpCSNLgrTSk/s3HwIDAQABAoIBAGNi+dzPzXIHyWj+
+
+    4s2ypFXKhCENrmUaNukoGoq+qN3x9D4TFAzTiUMCMqqsaAijOh4pp5drVeyQaZZA
+
+    VCJU+bfk9PktbYwdasKbM5MdTONNz8mlVVReHgsHo4of2XUL/SR1aUDRBUv61cb0
+
+    CgAE+QU01zffKfgX2oJ4LF/tzlkU7b7e6due2KKHpCPJOGbwxMwuie1V5T1A+6NO
+
+    sP7ql2i4YgR6JfWpee+QjXjzBEcxqtBUtwvUzOmXaBEdAMhKL6VFYNrwk1t3D7aG
+
+    AQpbOQQGE+ha3zp9oDu9TH05bp62uRByGlmXo2ouHm7QVPQT1fywBxqCb+Vs62cT
+
+    vTnHH/ECgYEA9AwpCIyS+cie6mnt1h88TlqMcKtLpgXKKvHZ2mnGKgkvisC38wyP
+
+    IcYWYTuXNkzW15vI6ZX51QKCgbQzz1jwlPKbOXrSdVwwcYDLrdoNP4Y0siKgaZLJ
+
+    +OkzkPaFy05AQi20QNtJ//dDi3iojc8O4AYb9IZig85ycFJ98zfMTmkCgYEA54Im
+
+    I+GvPtbjRmJ3pXzTNhUyjlYBDxNqd098lzJNROytw5VSrZf6YKQyxcDO8JTotVDQ
+
+    nTtbyMyX95Hwpp/TzL7b6pZM5IzpuxZAvsKaIH3x+cLkyCWUu0JhDTnxu3J8P6Fe
+
+    yDBqjsV2CrAMWuzdCEGK5LcwRT4MoVCBx5+GuEcCgYEAhunqDUXZQqj74U8qIkMm
+
+    TZKVLPwlV+S/fLoy2yG6YSau15/ukTiSL/OYD6ynzWbxJkSC707vzCgVCasbMTdT
+
+    2KO92CrkCekrBrRS5Qs0Y7fHjerCj1qMuUQCM9N0542czHkDuw7/e7ev6XyMgcjD
+
+    ymjWL3nTIFaSwTF5W2mvUnECgYBWcmr7ixJ9TJChf7NdwDa+QzwVmlfa4U0oMC49
+
+    5zKjQh3Aosm0uMNtwuKSpWSgwXoD+qFrlPa5DGzSrVRHY/caxUopVuZvkY7VpYGX
+
+    ueMDrwPkV7pGYoIfSrIi1jhF3oI24HMcHbgsh9+ELiju6vO+WXsb3KvRr1HYCs/r
+
+    Us5jkQKBgQCH5Y9NOMsnsgZXQKasA+Ya86oKUNANUfr20aBFyg0JSsxloyUYbim6
+
+    xFlUQtMN9zSLHAr8D/ONc1oUjRfyqRTbhLErLycfhbVsWoowGBQd0Q3MIu4kyN2Z
+
+    lKfunK0H0a+crc7lKYg+SS/ERLjQTW7jPoqw2HybEn8uBHfIjJtxCQ==
+
+    -----END RSA PRIVATE KEY-----
+
+    '
+props:
+    common:
+        appargs: ''
+        appname: pythonConsole
+        arg: ''
+        buildcommands: RUN usermod -a -G gpio torizon
+        buildfiles: ''
+        command: ''
+        devpackages: ''
+        env: ENV TORIZON=true
+        expose: ''
+        extrapackages: ''
+        language: python
+        main: main.py
+        preinstallcommands: ''
+        runtime: python3
+        sdkpostinstallcommands: ''
+        sdkpreinstallcommands: ''
+        targetcommands: ''
+        targetfiles: ''
+    debug:
+        arg: 'ARG SSHUSERNAME=#%application.username%#
+
+            '
+    release: {}
+publickey: ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQDcswuPkBajWEWbrWugCrRFEid/kaj837k/jAG5jxx/82OxMrx0IDduuIN5DpZd3XvEHJrt9Qe6UJn4yEoQyREsdfnTPrG/IDKEtszrs5A/YR3TX2Fzj5G+hlmeg8GxVosnjNte/jAmceggfeMvXE+CPbYnjrJrslZCLBtOnYZcjdkgGfAfvxZzQWaMEDwo3pWPEAoiBpCJyguEut3yQjUN9Z4KpbUnyhW+8OJwQ4kMh1VbjiZA0maDxXApd2BFhjsWrO4rI9Rjyv+GNaYQXElGVekG6fDXOzTw6cqUVx5RRJXJcj/oM7HOIUGuUjZzA3VMy6+VUSkJI0uCtNKT+zcf
+sdkimages:
+    debug: ''
+    release: ''
+sdkimagetags:
+    debug: ''
+    release: ''
+sdksshaddress:
+    debug: null
+    release: null
+shutdownscript:
+    common: ''
+    debug: ''
+    release: ''
+startupscript:
+    common: ''
+    debug: ''
+    release: ''
+username: torizon
+volumes:
+    common:
+        /etc/os-release: /etc/os-release
+    debug:
+        /home/torizon/pythonConsole: /pythonConsole,rw
+    release: {}
