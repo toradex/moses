@@ -1607,10 +1607,6 @@ def setup_pullcontainers_get(progress_id: str = None) -> Any:
 
             for _, baseimage in plat.baseimage.items():
                 if baseimage is not None:
-                    logging.info(
-                        "PULL - Pulling container %s:%s",
-                        baseimage[0],
-                        baseimage[1])
                     try:
                         progresscookie.progress_message(
                             progress,
@@ -1634,10 +1630,6 @@ def setup_pullcontainers_get(progress_id: str = None) -> Any:
 
             for _, baseimage in plat.sdkbaseimage.items():
                 if baseimage is not None:
-                    logging.info(
-                        "PULL - Pulling container %s:%s",
-                        baseimage[0],
-                        baseimage[1])
                     try:
                         progresscookie.progress_message(
                             progress,
