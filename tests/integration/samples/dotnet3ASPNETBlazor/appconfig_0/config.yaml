@@ -1,0 +1,135 @@
+devices:
+    common:
+    - /dev/gpiochip0
+    debug: []
+    release: []
+dockercomposefile:
+    common: ''
+    debug: ''
+    release: ''
+extraparms:
+    common: {}
+    debug: {}
+    release: {}
+id: 9020ed0f-010d-428e-a983-af1532bd4e34
+images:
+    debug: sha256:96904a827f383f20d2104dfa8d40b49668d6a8812921f2d5f0451c723ae0af05
+    release: sha256:d717618478bcedf7552165316f57276bb40ea99a521fcedbefe8807a4e1aac91
+imagetags:
+    debug: dotnet3aspnetblazor_arm32v7-apsnet-31_bullseye_debug_9020ed0f-010d-428e-a983-af1532bd4e34
+    release: dotnet3aspnetblazor_arm32v7-apsnet-31_bullseye_release_9020ed0f-010d-428e-a983-af1532bd4e34
+modificationdate: '2020-11-19T06:14:29.832435'
+networks:
+    common: []
+    debug: []
+    release: []
+platformid: arm32v7-apsnet-31_bullseye
+ports:
+    common:
+        8841/tcp: '8841'
+    debug: {}
+    release: {}
+privatekey: '-----BEGIN RSA PRIVATE KEY-----
+
+    MIIEpAIBAAKCAQEAze+71ep0+1OkrsJ+8yT/FfUFJYdXCKTGuP5osw5q8iuAzmv0
+
+    zRh4q6MBrDoiVt+cNOm8WqZObwpaN2L/MHjHzna9Rm9zZbx0fmvmV5XUshZyZJ4o
+
+    vMvSfa5YfI1DwpWmxB2P8QIBsqNTAocNQLH90q7V7WtIR2nzMjKcCcQvssfyRCVS
+
+    e1nJS8RX4D/t1m+WsQCyrjBTgl5XJp3hXeKXr9Y1MO4e4uY431m0ylKgZ53Q92gF
+
+    bexBZ2piY+SiuHJek7KkPNv2iC9b8v2DlmBNo00GUOvwE1Toakqr7qdmp4xcveNx
+
+    ap5Svi03JA3X0r538cN4PMZkhTi+DCg1IG8WfQIDAQABAoIBAAsNK3peW6rFIVhT
+
+    jbaErL/D52PNMImBNjzlQj8hrfGTDhWFy5xaDNfBJqzUbdVVqK9aP8ZpmFnzJ0ZD
+
+    pMg4IxjcXGn0PzAdfe7u4Wyf2Ms50ye9KRiAo6ok+hCtEA7YMxvhLkFTxz2L8D95
+
+    eeeX5bQxt79G+5kBgZCXELKheaHRanQkeI+v2A4C+SSydOhT1aZ1Tq3cNnt0cXG0
+
+    X/0xdVjt7lWdUKWiTSSrYOF17w13L6MHQwtJPNfmBS4zNdLNCtK0mw9K4v2HQxs6
+
+    Lnr5ThzGcTQAGvmmdLNV8zdp7WOxnu/f73QVXNJ9kdk2gQtEJxBwBlgbSlIScwck
+
+    YazCp80CgYEA6ZWyVYALYsBKvKafLl6qfRNE0JOIy1EInRnxhd8c0ggYNzpdjmvo
+
+    r2RDlBxpTAfpxKh/Oomkqn0j1QRvDNhfSqY7j3gBnWiKsfWy6/QWUrYSXfYskR1f
+
+    dKCA1tjWSffq7o/rB3KS2W5q2q2mgUlEeGP9pb+hvcV6KB9Bz1L61w8CgYEA4bLS
+
+    b8JIYLtw7uJPU1GTBcvQCS4GNLpByjKutX6FiFaidV7ltXILYhqaReLqYlIAZYhG
+
+    UlAPYwGmoN1ImZY0AYe/TiJkHiJRa22C89jAQawK1i31rG0oA+0d3SNrAMM1zUd0
+
+    ttVD0dWEdzEnxjZo3mRGv3s0V78IiEVPJ6FR2bMCgYEAkKUBXM7AvjMDVNT9R5KZ
+
+    koBHIb3qfLS+V8KD/HlP+IPIsxJycspBubKl4mbBkbJowT3yI0au8GAzuypWtiaa
+
+    w7gys8IFhfsBv/e9Bz4MQMW8k/DoYihFPwxRHDoEYKOkGHyIdwEtDHXCt43GyNKd
+
+    Eswgeu4y8zgBUC0i7IafDGMCgYA1TNq/g9094uY/s/hRz+DtrH07vb+/cgEZdDCo
+
+    MfHtCbCiEUAkQoOHroqiWH1LrNvlHnKk+702f2xPbxK3Gq67cchu9lY4e5hIy3ry
+
+    hUyZ9bw1anMrPjgF/VhhIf0iF/e7u9VHXEQA6PC4iUZAXBcV9g5zJ/BrjHTCYcPY
+
+    sxM2WwKBgQCwcF7OaU2V7ysgGKtKVVKkYRuTiUyrDNOdH2vsQhes+0A9pJJQOmVX
+
+    SmZfHqVvyPh0MeE6D1XXKCw9+I2D8UQuZ47xvJ4lNomoVk51coAGTfFDWuDivvc6
+
+    JyPS3KL5qIY0G0hvoePcld/wQFvxhOwVTnzdJcJT3NfBbCKu4cH0ug==
+
+    -----END RSA PRIVATE KEY-----
+
+    '
+props:
+    common:
+        appargs: ''
+        appname: dotnet3ASPNETBlazor
+        arg: ''
+        buildcommands: RUN usermod -a -G gpio torizon
+        buildfiles: ''
+        command: ''
+        devpackages: ''
+        env: ENV LEDBank=1 LEDPin=5
+        expose: ''
+        extrapackages: libgpiod-dev gpiod
+        language: dotnet
+        preinstallcommands: ''
+        runtime: aspdotnet
+        sdkpostinstallcommands: ''
+        sdkpreinstallcommands: ''
+        targetcommands: ''
+        targetfiles: ''
+    debug:
+        arg: 'ARG SSHUSERNAME=#%application.username%#
+
+            '
+    release: {}
+publickey: ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQDN77vV6nT7U6Suwn7zJP8V9QUlh1cIpMa4/mizDmryK4DOa/TNGHirowGsOiJW35w06bxapk5vClo3Yv8weMfOdr1Gb3NlvHR+a+ZXldSyFnJknii8y9J9rlh8jUPClabEHY/xAgGyo1MChw1Asf3SrtXta0hHafMyMpwJxC+yx/JEJVJ7WclLxFfgP+3Wb5axALKuMFOCXlcmneFd4pev1jUw7h7i5jjfWbTKUqBnndD3aAVt7EFnamJj5KK4cl6TsqQ82/aIL1vy/YOWYE2jTQZQ6/ATVOhqSqvup2anjFy943FqnlK+LTckDdfSvnfxw3g8xmSFOL4MKDUgbxZ9
+sdkimages:
+    debug: ''
+    release: ''
+sdkimagetags:
+    debug: ''
+    release: ''
+sdksshaddress:
+    debug: null
+    release: null
+shutdownscript:
+    common: ''
+    debug: ''
+    release: ''
+startupscript:
+    common: ''
+    debug: ''
+    release: ''
+username: torizon
+volumes:
+    common:
+        /etc/os-release: /etc/os-release
+    debug:
+        /home/torizon/dotnet3ASPNETBlazor: /dotnet3ASPNETBlazor,rw
+    release: {}
