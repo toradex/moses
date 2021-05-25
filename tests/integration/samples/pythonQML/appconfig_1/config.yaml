@@ -1,0 +1,135 @@
+devices:
+    common:
+    - /dev/gpiochip1
+    debug: []
+    release: []
+dockercomposefile:
+    common: ''
+    debug: ''
+    release: ''
+extraparms:
+    common: {}
+    debug: {}
+    release: {}
+id: a34efdb7-6197-44ce-8108-b6173017306a
+images:
+    debug: sha256:3869fdb7fdebb0e909b675c601f3877062bc7037be9adc82a4e72c7eab770d74
+    release: sha256:1c9b57c0c2886fc9639a8461a5a830c9cadaec8a9ac5ef290ae8871a07a5346f
+imagetags:
+    debug: pythonqml_arm64v8-debian-python3-qt-vivante_bullseye_debug_a34efdb7-6197-44ce-8108-b6173017306a
+    release: pythonqml_arm64v8-debian-python3-qt-vivante_bullseye_release_a34efdb7-6197-44ce-8108-b6173017306a
+modificationdate: '2020-12-21T08:35:48.163364'
+networks:
+    common: []
+    debug: []
+    release: []
+platformid: arm64v8-debian-python3-qt-vivante_bullseye
+ports:
+    common: {}
+    debug: {}
+    release: {}
+privatekey: '-----BEGIN RSA PRIVATE KEY-----
+
+    MIIEowIBAAKCAQEAwV0H4+3uT3JiWUVbb2rnDkVCZcWpU4+WQfk1i5MtwCat6CdT
+
+    a7bEktM+fyGphHIJ172qEruu0of+jWujrO/Wlpn9KyCTWcY0eAtASM3kPZBwG/5G
+
+    9v9CUv5C7lHdJQQQsvWvVCHW36noqeBeXTtnVrKIHUcJ6g42RRWFz1hmCZp2Pc4F
+
+    VFag2/3oQpQ1gJ1zfILitlA5RNBPfe5IJKomElFBEVZWMbvsccT24z13MihgFhTV
+
+    fPJU1uZBiC99HvS3YlbpMCQM1GphIWeEG0/nOzX+3TAd/iW86EGf8qHbXkjA5bfn
+
+    ryOrpWTgLUVb1U5Q1fXwXA6CQ9ILJHpm40aQ7QIDAQABAoIBAQCrlU0KIjklQKAr
+
+    DVOs09UCoczgmHzADJtOIcE1AL5JU0lgx3zMCVv32gIMOCe/wp4fVktT4j2ozkrA
+
+    3XJZZF4sN6sjGP4IXMx0da9uq11MkB4biREZ3rrRAJUN+5DcZvYWh9M0Oe79fD1c
+
+    eR/jZXI2yaflKwOOMVxRA19A9fVdsKgww6BrikQhzPRSi+p4I+dsA4QBJwi/ycDf
+
+    pyHk9LPIHsDU5p8NM5BMgwqzRTyhrwSer7eqKyxHXBmMDjwa4dd6nEbYe6Eynn8M
+
+    Q7Iq1iEv+9sG5wtdCLkTUwddfFPUXBBD19vKOTaaOAgSObcE7swPuRIpMyv8h4+2
+
+    VmdthlwhAoGBAPvqB5JXwuIiftgqqDf7Bjok3dEaWyvDeoLTyNiYDMtyWUMSYVbs
+
+    MgFZP6YRR1rgqKHbTt/GsClGJ5IJculoKZtajkoMRHEe9jjgw+5+KYPsumFWDDgY
+
+    2kkNDoTOYUHk90fQZu5QoeCiC+fvDwTbAMJrg8tZ1zNLb+0R/H4dKre5AoGBAMR/
+
+    5KRRxn9ZKXXhHZMf4nTjk6d+z6zxbjyTXH5w4jdSRmNbyze7m3VOU0SiS+XVtOjS
+
+    DUsLuF35oD3TP2wWIf2h5Tg4xI8mEntpizVf1lG98ktDite76A8EzYEQXYYbObDC
+
+    ss+RMANMx4Z/c4bh1lhRJZbiMJg1R027wzYhi1TVAoGADxhD4eH+XHyCq0NLFyek
+
+    hOFmpTv2EJZDBgnYtBnQUnSEor88M/AtQuVtKe9JHknt8NzqSgBm1+JLRrXoO9Ix
+
+    BA0WD5vSkhCv4lKdivHmXPBXbrOwQcBDfDMbFpwjOcaVhqkXMdqFCKfNHNW3Sawx
+
+    zHSSziGRApLXnxX/0jK/N4kCgYAqcBynSGoAUvdbWBUVE0vLRuM6x25+wV23g3P0
+
+    ctjIbeJ5zvdiwAfhG9tr9UlDCBacOdFZJdzZnvH2qEsIQvdwWaixrcD10ZkoQjEo
+
+    g9w7pzRPAPVZhmGl7LmdaDVqozKgdEw9+/NMoyZsa9Y9iUTLqireHVe1Z7xQk36j
+
+    kDcRSQKBgC1H2AAOlVpz+oMHuwX22gy1wSTPXwBxlltzEp3gYfUnh5n7JVih+BX8
+
+    oM3zl7QobCfEF8NtgSvpYhHhbNI0b4bY4TCz0oHMAFmUoz8CINMYdQg8N78TFgHd
+
+    jO0tjw8awY1iFav+UI0FR2HJxa2ODSWj0zmxJ82M1MQT9Cqssy+j
+
+    -----END RSA PRIVATE KEY-----
+
+    '
+props:
+    common:
+        appargs: ''
+        appname: pythonQML
+        arg: ''
+        buildcommands: RUN usermod -a -G gpio torizon
+        buildfiles: ''
+        command: ''
+        devpackages: ''
+        env: ENV TORIZON=true
+        expose: ''
+        extrapackages: ''
+        language: python
+        main: main.py
+        preinstallcommands: ''
+        runtime: python3
+        sdkpostinstallcommands: ''
+        sdkpreinstallcommands: ''
+        targetcommands: ''
+        targetfiles: ''
+    debug:
+        arg: 'ARG SSHUSERNAME=#%application.username%#
+
+            '
+    release: {}
+publickey: ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQDBXQfj7e5PcmJZRVtvaucORUJlxalTj5ZB+TWLky3AJq3oJ1NrtsSS0z5/IamEcgnXvaoSu67Sh/6Na6Os79aWmf0rIJNZxjR4C0BIzeQ9kHAb/kb2/0JS/kLuUd0lBBCy9a9UIdbfqeip4F5dO2dWsogdRwnqDjZFFYXPWGYJmnY9zgVUVqDb/ehClDWAnXN8guK2UDlE0E997kgkqiYSUUERVlYxu+xxxPbjPXcyKGAWFNV88lTW5kGIL30e9LdiVukwJAzUamEhZ4QbT+c7Nf7dMB3+JbzoQZ/yodteSMDlt+evI6ulZOAtRVvVTlDV9fBcDoJD0gskembjRpDt
+sdkimages:
+    debug: ''
+    release: ''
+sdkimagetags:
+    debug: ''
+    release: ''
+sdksshaddress:
+    debug: null
+    release: null
+shutdownscript:
+    common: ''
+    debug: ''
+    release: ''
+startupscript:
+    common: ''
+    debug: ''
+    release: ''
+username: torizon
+volumes:
+    common:
+        /etc/os-release: /etc/os-release
+    debug:
+        /home/torizon/pythonQML: /pythonQML,rw
+    release: {}
