@@ -28,7 +28,7 @@ Method | HTTP request | Description
 
 
 # **application_build**
-> application_build(application_id, configuration, progress_id=progress_id)
+> application_build(application_id, configuration)
 
 Build container image
 
@@ -37,10 +37,10 @@ Build application release or debug container
 ### Example
 
 ```python
-from __future__ import print_function
 import time
 import moses_client
-from moses_client.rest import ApiException
+from moses_client.api import applications_api
+from moses_client.model.error_info import ErrorInfo
 from pprint import pprint
 # Defining the host is optional and defaults to http://localhost:5000/api
 # See configuration.py for a list of all supported configuration parameters.
@@ -52,25 +52,35 @@ configuration = moses_client.Configuration(
 # Enter a context with an instance of the API client
 with moses_client.ApiClient() as api_client:
     # Create an instance of the API class
-    api_instance = moses_client.ApplicationsApi(api_client)
-    application_id = 'application_id_example' # str | Id of an application (uuid)
-configuration = 'configuration_example' # str | 
-progress_id = 'progress_id_example' # str | Id of a progress cookie (uuid) (optional)
+    api_instance = applications_api.ApplicationsApi(api_client)
+    application_id = "555914d4-d6Ea-18e3-e53E-03fEE4Bc7d,," # str | Id of an application (uuid)
+    configuration = "release" # str | 
+    progress_id = "55914d4d-6Ea1-8e3e-53E0-3fEE4Bc7d,,c" # str | Id of a progress cookie (uuid) (optional)
 
+    # example passing only required values which don't have defaults set
+    try:
+        # Build container image
+        api_instance.application_build(application_id, configuration)
+    except moses_client.ApiException as e:
+        print("Exception when calling ApplicationsApi->application_build: %s\n" % e)
+
+    # example passing only required values which don't have defaults set
+    # and optional values
     try:
         # Build container image
         api_instance.application_build(application_id, configuration, progress_id=progress_id)
-    except ApiException as e:
+    except moses_client.ApiException as e:
         print("Exception when calling ApplicationsApi->application_build: %s\n" % e)
 ```
+
 
 ### Parameters
 
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
- **application_id** | **str**| Id of an application (uuid) | 
- **configuration** | **str**|  | 
- **progress_id** | **str**| Id of a progress cookie (uuid) | [optional] 
+ **application_id** | **str**| Id of an application (uuid) |
+ **configuration** | **str**|  |
+ **progress_id** | **str**| Id of a progress cookie (uuid) | [optional]
 
 ### Return type
 
@@ -84,6 +94,7 @@ No authorization required
 
  - **Content-Type**: Not defined
  - **Accept**: application/json
+
 
 ### HTTP response details
 | Status code | Description | Response headers |
@@ -106,10 +117,10 @@ Remove an application and all the associated data and containers
 ### Example
 
 ```python
-from __future__ import print_function
 import time
 import moses_client
-from moses_client.rest import ApiException
+from moses_client.api import applications_api
+from moses_client.model.error_info import ErrorInfo
 from pprint import pprint
 # Defining the host is optional and defaults to http://localhost:5000/api
 # See configuration.py for a list of all supported configuration parameters.
@@ -121,21 +132,23 @@ configuration = moses_client.Configuration(
 # Enter a context with an instance of the API client
 with moses_client.ApiClient() as api_client:
     # Create an instance of the API class
-    api_instance = moses_client.ApplicationsApi(api_client)
-    application_id = 'application_id_example' # str | Id of an application (uuid)
+    api_instance = applications_api.ApplicationsApi(api_client)
+    application_id = "555914d4-d6Ea-18e3-e53E-03fEE4Bc7d,," # str | Id of an application (uuid)
 
+    # example passing only required values which don't have defaults set
     try:
         # Remove an application
         api_instance.application_delete(application_id)
-    except ApiException as e:
+    except moses_client.ApiException as e:
         print("Exception when calling ApplicationsApi->application_delete: %s\n" % e)
 ```
+
 
 ### Parameters
 
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
- **application_id** | **str**| Id of an application (uuid) | 
+ **application_id** | **str**| Id of an application (uuid) |
 
 ### Return type
 
@@ -149,6 +162,7 @@ No authorization required
 
  - **Content-Type**: Not defined
  - **Accept**: application/json
+
 
 ### HTTP response details
 | Status code | Description | Response headers |
@@ -161,7 +175,7 @@ No authorization required
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
 
 # **application_deploy**
-> application_deploy(application_id, configuration, device_id, progress_id=progress_id)
+> application_deploy(application_id, configuration, device_id)
 
 Deploy container image
 
@@ -170,10 +184,10 @@ Deploy application container to target
 ### Example
 
 ```python
-from __future__ import print_function
 import time
 import moses_client
-from moses_client.rest import ApiException
+from moses_client.api import applications_api
+from moses_client.model.error_info import ErrorInfo
 from pprint import pprint
 # Defining the host is optional and defaults to http://localhost:5000/api
 # See configuration.py for a list of all supported configuration parameters.
@@ -185,27 +199,37 @@ configuration = moses_client.Configuration(
 # Enter a context with an instance of the API client
 with moses_client.ApiClient() as api_client:
     # Create an instance of the API class
-    api_instance = moses_client.ApplicationsApi(api_client)
-    application_id = 'application_id_example' # str | Id of an application (uuid)
-configuration = 'configuration_example' # str | 
-device_id = 'device_id_example' # str | Target device serial number
-progress_id = 'progress_id_example' # str | Id of a progress cookie (uuid) (optional)
+    api_instance = applications_api.ApplicationsApi(api_client)
+    application_id = "555914d4-d6Ea-18e3-e53E-03fEE4Bc7d,," # str | Id of an application (uuid)
+    configuration = "release" # str | 
+    device_id = "zA9LCSLv1C1ylmgd0.Y2TA" # str | Target device serial number
+    progress_id = "55914d4d-6Ea1-8e3e-53E0-3fEE4Bc7d,,c" # str | Id of a progress cookie (uuid) (optional)
 
+    # example passing only required values which don't have defaults set
+    try:
+        # Deploy container image
+        api_instance.application_deploy(application_id, configuration, device_id)
+    except moses_client.ApiException as e:
+        print("Exception when calling ApplicationsApi->application_deploy: %s\n" % e)
+
+    # example passing only required values which don't have defaults set
+    # and optional values
     try:
         # Deploy container image
         api_instance.application_deploy(application_id, configuration, device_id, progress_id=progress_id)
-    except ApiException as e:
+    except moses_client.ApiException as e:
         print("Exception when calling ApplicationsApi->application_deploy: %s\n" % e)
 ```
+
 
 ### Parameters
 
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
- **application_id** | **str**| Id of an application (uuid) | 
- **configuration** | **str**|  | 
- **device_id** | **str**| Target device serial number | 
- **progress_id** | **str**| Id of a progress cookie (uuid) | [optional] 
+ **application_id** | **str**| Id of an application (uuid) |
+ **configuration** | **str**|  |
+ **device_id** | **str**| Target device serial number |
+ **progress_id** | **str**| Id of a progress cookie (uuid) | [optional]
 
 ### Return type
 
@@ -219,6 +243,7 @@ No authorization required
 
  - **Content-Type**: Not defined
  - **Accept**: application/json
+
 
 ### HTTP response details
 | Status code | Description | Response headers |
@@ -245,10 +270,11 @@ Returns a specified application, knowing its id
 ### Example
 
 ```python
-from __future__ import print_function
 import time
 import moses_client
-from moses_client.rest import ApiException
+from moses_client.api import applications_api
+from moses_client.model.error_info import ErrorInfo
+from moses_client.model.application import Application
 from pprint import pprint
 # Defining the host is optional and defaults to http://localhost:5000/api
 # See configuration.py for a list of all supported configuration parameters.
@@ -260,22 +286,24 @@ configuration = moses_client.Configuration(
 # Enter a context with an instance of the API client
 with moses_client.ApiClient() as api_client:
     # Create an instance of the API class
-    api_instance = moses_client.ApplicationsApi(api_client)
-    application_id = 'application_id_example' # str | Id of an application (uuid)
+    api_instance = applications_api.ApplicationsApi(api_client)
+    application_id = "555914d4-d6Ea-18e3-e53E-03fEE4Bc7d,," # str | Id of an application (uuid)
 
+    # example passing only required values which don't have defaults set
     try:
         # Get application
         api_response = api_instance.application_get(application_id)
         pprint(api_response)
-    except ApiException as e:
+    except moses_client.ApiException as e:
         print("Exception when calling ApplicationsApi->application_get: %s\n" % e)
 ```
+
 
 ### Parameters
 
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
- **application_id** | **str**| Id of an application (uuid) | 
+ **application_id** | **str**| Id of an application (uuid) |
 
 ### Return type
 
@@ -289,6 +317,7 @@ No authorization required
 
  - **Content-Type**: Not defined
  - **Accept**: application/json
+
 
 ### HTTP response details
 | Status code | Description | Response headers |
@@ -309,10 +338,11 @@ Get detailed informations about container
 ### Example
 
 ```python
-from __future__ import print_function
 import time
 import moses_client
-from moses_client.rest import ApiException
+from moses_client.api import applications_api
+from moses_client.model.docker_container import DockerContainer
+from moses_client.model.error_info import ErrorInfo
 from pprint import pprint
 # Defining the host is optional and defaults to http://localhost:5000/api
 # See configuration.py for a list of all supported configuration parameters.
@@ -324,26 +354,28 @@ configuration = moses_client.Configuration(
 # Enter a context with an instance of the API client
 with moses_client.ApiClient() as api_client:
     # Create an instance of the API class
-    api_instance = moses_client.ApplicationsApi(api_client)
-    application_id = 'application_id_example' # str | Id of an application (uuid)
-configuration = 'configuration_example' # str | 
-device_id = 'device_id_example' # str | Target device serial number
+    api_instance = applications_api.ApplicationsApi(api_client)
+    application_id = "555914d4-d6Ea-18e3-e53E-03fEE4Bc7d,," # str | Id of an application (uuid)
+    configuration = "release" # str | 
+    device_id = "zA9LCSLv1C1ylmgd0.Y2TA" # str | Target device serial number
 
+    # example passing only required values which don't have defaults set
     try:
         # Get container information
         api_response = api_instance.application_getcontainer(application_id, configuration, device_id)
         pprint(api_response)
-    except ApiException as e:
+    except moses_client.ApiException as e:
         print("Exception when calling ApplicationsApi->application_getcontainer: %s\n" % e)
 ```
+
 
 ### Parameters
 
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
- **application_id** | **str**| Id of an application (uuid) | 
- **configuration** | **str**|  | 
- **device_id** | **str**| Target device serial number | 
+ **application_id** | **str**| Id of an application (uuid) |
+ **configuration** | **str**|  |
+ **device_id** | **str**| Target device serial number |
 
 ### Return type
 
@@ -357,6 +389,7 @@ No authorization required
 
  - **Content-Type**: Not defined
  - **Accept**: application/json
+
 
 ### HTTP response details
 | Status code | Description | Response headers |
@@ -373,7 +406,7 @@ No authorization required
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
 
 # **application_getcontainer_logs**
-> str application_getcontainer_logs(application_id, configuration, device_id, restart=restart)
+> str application_getcontainer_logs(application_id, configuration, device_id)
 
 Get one of more lines from container logs
 
@@ -382,10 +415,10 @@ Return one chunk of log (one or more lines), blocking if no data is available
 ### Example
 
 ```python
-from __future__ import print_function
 import time
 import moses_client
-from moses_client.rest import ApiException
+from moses_client.api import applications_api
+from moses_client.model.error_info import ErrorInfo
 from pprint import pprint
 # Defining the host is optional and defaults to http://localhost:5000/api
 # See configuration.py for a list of all supported configuration parameters.
@@ -397,28 +430,39 @@ configuration = moses_client.Configuration(
 # Enter a context with an instance of the API client
 with moses_client.ApiClient() as api_client:
     # Create an instance of the API class
-    api_instance = moses_client.ApplicationsApi(api_client)
-    application_id = 'application_id_example' # str | Id of an application (uuid)
-configuration = 'configuration_example' # str | 
-device_id = 'device_id_example' # str | Target device serial number
-restart = False # bool | when true reads the lock back from beginning (optional) (default to False)
+    api_instance = applications_api.ApplicationsApi(api_client)
+    application_id = "555914d4-d6Ea-18e3-e53E-03fEE4Bc7d,," # str | Id of an application (uuid)
+    configuration = "release" # str | 
+    device_id = "zA9LCSLv1C1ylmgd0.Y2TA" # str | Target device serial number
+    restart = False # bool | when true reads the lock back from beginning (optional) if omitted the server will use the default value of False
 
+    # example passing only required values which don't have defaults set
+    try:
+        # Get one of more lines from container logs
+        api_response = api_instance.application_getcontainer_logs(application_id, configuration, device_id)
+        pprint(api_response)
+    except moses_client.ApiException as e:
+        print("Exception when calling ApplicationsApi->application_getcontainer_logs: %s\n" % e)
+
+    # example passing only required values which don't have defaults set
+    # and optional values
     try:
         # Get one of more lines from container logs
         api_response = api_instance.application_getcontainer_logs(application_id, configuration, device_id, restart=restart)
         pprint(api_response)
-    except ApiException as e:
+    except moses_client.ApiException as e:
         print("Exception when calling ApplicationsApi->application_getcontainer_logs: %s\n" % e)
 ```
+
 
 ### Parameters
 
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
- **application_id** | **str**| Id of an application (uuid) | 
- **configuration** | **str**|  | 
- **device_id** | **str**| Target device serial number | 
- **restart** | **bool**| when true reads the lock back from beginning | [optional] [default to False]
+ **application_id** | **str**| Id of an application (uuid) |
+ **configuration** | **str**|  |
+ **device_id** | **str**| Target device serial number |
+ **restart** | **bool**| when true reads the lock back from beginning | [optional] if omitted the server will use the default value of False
 
 ### Return type
 
@@ -432,6 +476,7 @@ No authorization required
 
  - **Content-Type**: Not defined
  - **Accept**: application/json
+
 
 ### HTTP response details
 | Status code | Description | Response headers |
@@ -455,10 +500,10 @@ Return the full docker command line that can be used to run the application cont
 ### Example
 
 ```python
-from __future__ import print_function
 import time
 import moses_client
-from moses_client.rest import ApiException
+from moses_client.api import applications_api
+from moses_client.model.error_info import ErrorInfo
 from pprint import pprint
 # Defining the host is optional and defaults to http://localhost:5000/api
 # See configuration.py for a list of all supported configuration parameters.
@@ -470,24 +515,26 @@ configuration = moses_client.Configuration(
 # Enter a context with an instance of the API client
 with moses_client.ApiClient() as api_client:
     # Create an instance of the API class
-    api_instance = moses_client.ApplicationsApi(api_client)
-    application_id = 'application_id_example' # str | Id of an application (uuid)
-configuration = 'configuration_example' # str | 
+    api_instance = applications_api.ApplicationsApi(api_client)
+    application_id = "555914d4-d6Ea-18e3-e53E-03fEE4Bc7d,," # str | Id of an application (uuid)
+    configuration = "release" # str | 
 
+    # example passing only required values which don't have defaults set
     try:
         # Get docker command line to run the application/json
         api_response = api_instance.application_getdocker_commandline(application_id, configuration)
         pprint(api_response)
-    except ApiException as e:
+    except moses_client.ApiException as e:
         print("Exception when calling ApplicationsApi->application_getdocker_commandline: %s\n" % e)
 ```
+
 
 ### Parameters
 
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
- **application_id** | **str**| Id of an application (uuid) | 
- **configuration** | **str**|  | 
+ **application_id** | **str**| Id of an application (uuid) |
+ **configuration** | **str**|  |
 
 ### Return type
 
@@ -501,6 +548,7 @@ No authorization required
 
  - **Content-Type**: Not defined
  - **Accept**: application/json
+
 
 ### HTTP response details
 | Status code | Description | Response headers |
@@ -523,10 +571,10 @@ Return docker-compose file that can be used to run the application container and
 ### Example
 
 ```python
-from __future__ import print_function
 import time
 import moses_client
-from moses_client.rest import ApiException
+from moses_client.api import applications_api
+from moses_client.model.error_info import ErrorInfo
 from pprint import pprint
 # Defining the host is optional and defaults to http://localhost:5000/api
 # See configuration.py for a list of all supported configuration parameters.
@@ -538,24 +586,26 @@ configuration = moses_client.Configuration(
 # Enter a context with an instance of the API client
 with moses_client.ApiClient() as api_client:
     # Create an instance of the API class
-    api_instance = moses_client.ApplicationsApi(api_client)
-    application_id = 'application_id_example' # str | Id of an application (uuid)
-configuration = 'configuration_example' # str | 
+    api_instance = applications_api.ApplicationsApi(api_client)
+    application_id = "555914d4-d6Ea-18e3-e53E-03fEE4Bc7d,," # str | Id of an application (uuid)
+    configuration = "release" # str | 
 
+    # example passing only required values which don't have defaults set
     try:
         # Get docker compose file
         api_response = api_instance.application_getdocker_composefile(application_id, configuration)
         pprint(api_response)
-    except ApiException as e:
+    except moses_client.ApiException as e:
         print("Exception when calling ApplicationsApi->application_getdocker_composefile: %s\n" % e)
 ```
+
 
 ### Parameters
 
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
- **application_id** | **str**| Id of an application (uuid) | 
- **configuration** | **str**|  | 
+ **application_id** | **str**| Id of an application (uuid) |
+ **configuration** | **str**|  |
 
 ### Return type
 
@@ -569,6 +619,7 @@ No authorization required
 
  - **Content-Type**: Not defined
  - **Accept**: application/json
+
 
 ### HTTP response details
 | Status code | Description | Response headers |
@@ -591,10 +642,10 @@ Retrieve the path of the private key that allows passwordless connection to the 
 ### Example
 
 ```python
-from __future__ import print_function
 import time
 import moses_client
-from moses_client.rest import ApiException
+from moses_client.api import applications_api
+from moses_client.model.error_info import ErrorInfo
 from pprint import pprint
 # Defining the host is optional and defaults to http://localhost:5000/api
 # See configuration.py for a list of all supported configuration parameters.
@@ -606,22 +657,24 @@ configuration = moses_client.Configuration(
 # Enter a context with an instance of the API client
 with moses_client.ApiClient() as api_client:
     # Create an instance of the API class
-    api_instance = moses_client.ApplicationsApi(api_client)
-    application_id = 'application_id_example' # str | Id of an application (uuid)
+    api_instance = applications_api.ApplicationsApi(api_client)
+    application_id = "555914d4-d6Ea-18e3-e53E-03fEE4Bc7d,," # str | Id of an application (uuid)
 
+    # example passing only required values which don't have defaults set
     try:
         # Get the path of the RSA private key
         api_response = api_instance.application_getprivatekey(application_id)
         pprint(api_response)
-    except ApiException as e:
+    except moses_client.ApiException as e:
         print("Exception when calling ApplicationsApi->application_getprivatekey: %s\n" % e)
 ```
+
 
 ### Parameters
 
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
- **application_id** | **str**| Id of an application (uuid) | 
+ **application_id** | **str**| Id of an application (uuid) |
 
 ### Return type
 
@@ -636,6 +689,7 @@ No authorization required
  - **Content-Type**: Not defined
  - **Accept**: application/json
 
+
 ### HTTP response details
 | Status code | Description | Response headers |
 |-------------|-------------|------------------|
@@ -646,7 +700,7 @@ No authorization required
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
 
 # **application_modify**
-> Application application_modify(application_id, application=application)
+> Application application_modify(application_id)
 
 Change application properties
 
@@ -655,10 +709,11 @@ Changes specified properties on an application
 ### Example
 
 ```python
-from __future__ import print_function
 import time
 import moses_client
-from moses_client.rest import ApiException
+from moses_client.api import applications_api
+from moses_client.model.error_info import ErrorInfo
+from moses_client.model.application import Application
 from pprint import pprint
 # Defining the host is optional and defaults to http://localhost:5000/api
 # See configuration.py for a list of all supported configuration parameters.
@@ -670,24 +725,88 @@ configuration = moses_client.Configuration(
 # Enter a context with an instance of the API client
 with moses_client.ApiClient() as api_client:
     # Create an instance of the API class
-    api_instance = moses_client.ApplicationsApi(api_client)
-    application_id = 'application_id_example' # str | Id of an application (uuid)
-application = moses_client.Application() # Application |  (optional)
+    api_instance = applications_api.ApplicationsApi(api_client)
+    application_id = "555914d4-d6Ea-18e3-e53E-03fEE4Bc7d,," # str | Id of an application (uuid)
+    application = Application(
+        props={
+            "key": {
+                "key": "key_example",
+            },
+        },
+        dockercomposefile={
+            "key": "key_example",
+        },
+        startupscript={
+            "key": "key_example",
+        },
+        shutdownscript={
+            "key": "key_example",
+        },
+        ports={
+            "key": {
+                "key": "key_example",
+            },
+        },
+        volumes={
+            "key": {
+                "key": "key_example",
+            },
+        },
+        devices={
+            "key": [
+                "key_example",
+            ],
+        },
+        networks={
+            "key": [
+                "key_example",
+            ],
+        },
+        extraparms={
+            "key": {
+                "key": "key_example",
+            },
+        },
+        username="username_example",
+        images={
+            "key": "key_example",
+        },
+        sdkimages={
+            "key": "key_example",
+        },
+        imagetags={
+            "key": "key_example",
+        },
+        sdkimagetags={
+            "key": "key_example",
+        },
+    ) # Application |  (optional)
 
+    # example passing only required values which don't have defaults set
+    try:
+        # Change application properties
+        api_response = api_instance.application_modify(application_id)
+        pprint(api_response)
+    except moses_client.ApiException as e:
+        print("Exception when calling ApplicationsApi->application_modify: %s\n" % e)
+
+    # example passing only required values which don't have defaults set
+    # and optional values
     try:
         # Change application properties
         api_response = api_instance.application_modify(application_id, application=application)
         pprint(api_response)
-    except ApiException as e:
+    except moses_client.ApiException as e:
         print("Exception when calling ApplicationsApi->application_modify: %s\n" % e)
 ```
+
 
 ### Parameters
 
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
- **application_id** | **str**| Id of an application (uuid) | 
- **application** | [**Application**](Application.md)|  | [optional] 
+ **application_id** | **str**| Id of an application (uuid) |
+ **application** | [**Application**](Application.md)|  | [optional]
 
 ### Return type
 
@@ -702,6 +821,7 @@ No authorization required
  - **Content-Type**: application/json
  - **Accept**: application/json
 
+
 ### HTTP response details
 | Status code | Description | Response headers |
 |-------------|-------------|------------------|
@@ -714,7 +834,7 @@ No authorization required
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
 
 # **application_push_to_registry**
-> application_push_to_registry(application_id, configuration, username, password, progress_id=progress_id)
+> application_push_to_registry(application_id, configuration, username, password)
 
 Push application to docker registry
 
@@ -723,10 +843,10 @@ Push application's container to a docker registry, using authentication
 ### Example
 
 ```python
-from __future__ import print_function
 import time
 import moses_client
-from moses_client.rest import ApiException
+from moses_client.api import applications_api
+from moses_client.model.error_info import ErrorInfo
 from pprint import pprint
 # Defining the host is optional and defaults to http://localhost:5000/api
 # See configuration.py for a list of all supported configuration parameters.
@@ -738,29 +858,39 @@ configuration = moses_client.Configuration(
 # Enter a context with an instance of the API client
 with moses_client.ApiClient() as api_client:
     # Create an instance of the API class
-    api_instance = moses_client.ApplicationsApi(api_client)
-    application_id = 'application_id_example' # str | Id of an application (uuid)
-configuration = 'configuration_example' # str | 
-username = 'username_example' # str | 
-password = 'password_example' # str | 
-progress_id = 'progress_id_example' # str | Id of a progress cookie (uuid) (optional)
+    api_instance = applications_api.ApplicationsApi(api_client)
+    application_id = "555914d4-d6Ea-18e3-e53E-03fEE4Bc7d,," # str | Id of an application (uuid)
+    configuration = "release" # str | 
+    username = "username_example" # str | 
+    password = "password_example" # str | 
+    progress_id = "55914d4d-6Ea1-8e3e-53E0-3fEE4Bc7d,,c" # str | Id of a progress cookie (uuid) (optional)
 
+    # example passing only required values which don't have defaults set
+    try:
+        # Push application to docker registry
+        api_instance.application_push_to_registry(application_id, configuration, username, password)
+    except moses_client.ApiException as e:
+        print("Exception when calling ApplicationsApi->application_push_to_registry: %s\n" % e)
+
+    # example passing only required values which don't have defaults set
+    # and optional values
     try:
         # Push application to docker registry
         api_instance.application_push_to_registry(application_id, configuration, username, password, progress_id=progress_id)
-    except ApiException as e:
+    except moses_client.ApiException as e:
         print("Exception when calling ApplicationsApi->application_push_to_registry: %s\n" % e)
 ```
+
 
 ### Parameters
 
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
- **application_id** | **str**| Id of an application (uuid) | 
- **configuration** | **str**|  | 
- **username** | **str**|  | 
- **password** | **str**|  | 
- **progress_id** | **str**| Id of a progress cookie (uuid) | [optional] 
+ **application_id** | **str**| Id of an application (uuid) |
+ **configuration** | **str**|  |
+ **username** | **str**|  |
+ **password** | **str**|  |
+ **progress_id** | **str**| Id of a progress cookie (uuid) | [optional]
 
 ### Return type
 
@@ -774,6 +904,7 @@ No authorization required
 
  - **Content-Type**: Not defined
  - **Accept**: application/json
+
 
 ### HTTP response details
 | Status code | Description | Response headers |
@@ -798,10 +929,9 @@ This operation make the application no longer valid, but allow you to upload it 
 ### Example
 
 ```python
-from __future__ import print_function
 import time
 import moses_client
-from moses_client.rest import ApiException
+from moses_client.api import applications_api
 from pprint import pprint
 # Defining the host is optional and defaults to http://localhost:5000/api
 # See configuration.py for a list of all supported configuration parameters.
@@ -813,21 +943,23 @@ configuration = moses_client.Configuration(
 # Enter a context with an instance of the API client
 with moses_client.ApiClient() as api_client:
     # Create an instance of the API class
-    api_instance = moses_client.ApplicationsApi(api_client)
-    application_id = 'application_id_example' # str | Id of an application (uuid)
+    api_instance = applications_api.ApplicationsApi(api_client)
+    application_id = "555914d4-d6Ea-18e3-e53E-03fEE4Bc7d,," # str | Id of an application (uuid)
 
+    # example passing only required values which don't have defaults set
     try:
         # Clean id and keys from application configuration
         api_instance.application_reseal(application_id)
-    except ApiException as e:
+    except moses_client.ApiException as e:
         print("Exception when calling ApplicationsApi->application_reseal: %s\n" % e)
 ```
+
 
 ### Parameters
 
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
- **application_id** | **str**| Id of an application (uuid) | 
+ **application_id** | **str**| Id of an application (uuid) |
 
 ### Return type
 
@@ -842,6 +974,7 @@ No authorization required
  - **Content-Type**: Not defined
  - **Accept**: Not defined
 
+
 ### HTTP response details
 | Status code | Description | Response headers |
 |-------------|-------------|------------------|
@@ -851,7 +984,7 @@ No authorization required
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
 
 # **application_run**
-> DockerContainer application_run(application_id, configuration, device_id, progress_id=progress_id)
+> DockerContainer application_run(application_id, configuration, device_id)
 
 Run container image
 
@@ -860,10 +993,11 @@ Run the application release or debug container on target, if the application is 
 ### Example
 
 ```python
-from __future__ import print_function
 import time
 import moses_client
-from moses_client.rest import ApiException
+from moses_client.api import applications_api
+from moses_client.model.docker_container import DockerContainer
+from moses_client.model.error_info import ErrorInfo
 from pprint import pprint
 # Defining the host is optional and defaults to http://localhost:5000/api
 # See configuration.py for a list of all supported configuration parameters.
@@ -875,28 +1009,39 @@ configuration = moses_client.Configuration(
 # Enter a context with an instance of the API client
 with moses_client.ApiClient() as api_client:
     # Create an instance of the API class
-    api_instance = moses_client.ApplicationsApi(api_client)
-    application_id = 'application_id_example' # str | Id of an application (uuid)
-configuration = 'configuration_example' # str | 
-device_id = 'device_id_example' # str | Target device serial number
-progress_id = 'progress_id_example' # str | Id of a progress cookie (uuid) (optional)
+    api_instance = applications_api.ApplicationsApi(api_client)
+    application_id = "555914d4-d6Ea-18e3-e53E-03fEE4Bc7d,," # str | Id of an application (uuid)
+    configuration = "release" # str | 
+    device_id = "zA9LCSLv1C1ylmgd0.Y2TA" # str | Target device serial number
+    progress_id = "55914d4d-6Ea1-8e3e-53E0-3fEE4Bc7d,,c" # str | Id of a progress cookie (uuid) (optional)
 
+    # example passing only required values which don't have defaults set
+    try:
+        # Run container image
+        api_response = api_instance.application_run(application_id, configuration, device_id)
+        pprint(api_response)
+    except moses_client.ApiException as e:
+        print("Exception when calling ApplicationsApi->application_run: %s\n" % e)
+
+    # example passing only required values which don't have defaults set
+    # and optional values
     try:
         # Run container image
         api_response = api_instance.application_run(application_id, configuration, device_id, progress_id=progress_id)
         pprint(api_response)
-    except ApiException as e:
+    except moses_client.ApiException as e:
         print("Exception when calling ApplicationsApi->application_run: %s\n" % e)
 ```
+
 
 ### Parameters
 
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
- **application_id** | **str**| Id of an application (uuid) | 
- **configuration** | **str**|  | 
- **device_id** | **str**| Target device serial number | 
- **progress_id** | **str**| Id of a progress cookie (uuid) | [optional] 
+ **application_id** | **str**| Id of an application (uuid) |
+ **configuration** | **str**|  |
+ **device_id** | **str**| Target device serial number |
+ **progress_id** | **str**| Id of a progress cookie (uuid) | [optional]
 
 ### Return type
 
@@ -910,6 +1055,7 @@ No authorization required
 
  - **Content-Type**: Not defined
  - **Accept**: application/json
+
 
 ### HTTP response details
 | Status code | Description | Response headers |
@@ -927,7 +1073,7 @@ No authorization required
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
 
 # **application_runsdk**
-> InlineResponse200 application_runsdk(application_id, configuration, build=build, progress_id=progress_id)
+> InlineResponse200 application_runsdk(application_id, configuration)
 
 Run SDK containers
 
@@ -936,10 +1082,11 @@ Run SDK container and return its IP and SSH port
 ### Example
 
 ```python
-from __future__ import print_function
 import time
 import moses_client
-from moses_client.rest import ApiException
+from moses_client.api import applications_api
+from moses_client.model.inline_response200 import InlineResponse200
+from moses_client.model.error_info import ErrorInfo
 from pprint import pprint
 # Defining the host is optional and defaults to http://localhost:5000/api
 # See configuration.py for a list of all supported configuration parameters.
@@ -951,28 +1098,39 @@ configuration = moses_client.Configuration(
 # Enter a context with an instance of the API client
 with moses_client.ApiClient() as api_client:
     # Create an instance of the API class
-    api_instance = moses_client.ApplicationsApi(api_client)
-    application_id = 'application_id_example' # str | Id of an application (uuid)
-configuration = 'configuration_example' # str | 
-build = True # bool |  (optional) (default to True)
-progress_id = 'progress_id_example' # str | Id of a progress cookie (uuid) (optional)
+    api_instance = applications_api.ApplicationsApi(api_client)
+    application_id = "555914d4-d6Ea-18e3-e53E-03fEE4Bc7d,," # str | Id of an application (uuid)
+    configuration = "release" # str | 
+    build = True # bool |  (optional) if omitted the server will use the default value of True
+    progress_id = "55914d4d-6Ea1-8e3e-53E0-3fEE4Bc7d,,c" # str | Id of a progress cookie (uuid) (optional)
 
+    # example passing only required values which don't have defaults set
+    try:
+        # Run SDK containers
+        api_response = api_instance.application_runsdk(application_id, configuration)
+        pprint(api_response)
+    except moses_client.ApiException as e:
+        print("Exception when calling ApplicationsApi->application_runsdk: %s\n" % e)
+
+    # example passing only required values which don't have defaults set
+    # and optional values
     try:
         # Run SDK containers
         api_response = api_instance.application_runsdk(application_id, configuration, build=build, progress_id=progress_id)
         pprint(api_response)
-    except ApiException as e:
+    except moses_client.ApiException as e:
         print("Exception when calling ApplicationsApi->application_runsdk: %s\n" % e)
 ```
+
 
 ### Parameters
 
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
- **application_id** | **str**| Id of an application (uuid) | 
- **configuration** | **str**|  | 
- **build** | **bool**|  | [optional] [default to True]
- **progress_id** | **str**| Id of a progress cookie (uuid) | [optional] 
+ **application_id** | **str**| Id of an application (uuid) |
+ **configuration** | **str**|  |
+ **build** | **bool**|  | [optional] if omitted the server will use the default value of True
+ **progress_id** | **str**| Id of a progress cookie (uuid) | [optional]
 
 ### Return type
 
@@ -986,6 +1144,7 @@ No authorization required
 
  - **Content-Type**: Not defined
  - **Accept**: application/json
+
 
 ### HTTP response details
 | Status code | Description | Response headers |
@@ -1009,10 +1168,11 @@ Get SDK container information (can be used to check if it's running)
 ### Example
 
 ```python
-from __future__ import print_function
 import time
 import moses_client
-from moses_client.rest import ApiException
+from moses_client.api import applications_api
+from moses_client.model.docker_container import DockerContainer
+from moses_client.model.error_info import ErrorInfo
 from pprint import pprint
 # Defining the host is optional and defaults to http://localhost:5000/api
 # See configuration.py for a list of all supported configuration parameters.
@@ -1024,24 +1184,26 @@ configuration = moses_client.Configuration(
 # Enter a context with an instance of the API client
 with moses_client.ApiClient() as api_client:
     # Create an instance of the API class
-    api_instance = moses_client.ApplicationsApi(api_client)
-    application_id = 'application_id_example' # str | Id of an application (uuid)
-configuration = 'configuration_example' # str | 
+    api_instance = applications_api.ApplicationsApi(api_client)
+    application_id = "555914d4-d6Ea-18e3-e53E-03fEE4Bc7d,," # str | Id of an application (uuid)
+    configuration = "release" # str | 
 
+    # example passing only required values which don't have defaults set
     try:
         # Get SDK container
         api_response = api_instance.application_sdk_container(application_id, configuration)
         pprint(api_response)
-    except ApiException as e:
+    except moses_client.ApiException as e:
         print("Exception when calling ApplicationsApi->application_sdk_container: %s\n" % e)
 ```
+
 
 ### Parameters
 
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
- **application_id** | **str**| Id of an application (uuid) | 
- **configuration** | **str**|  | 
+ **application_id** | **str**| Id of an application (uuid) |
+ **configuration** | **str**|  |
 
 ### Return type
 
@@ -1055,6 +1217,7 @@ No authorization required
 
  - **Content-Type**: Not defined
  - **Accept**: application/json
+
 
 ### HTTP response details
 | Status code | Description | Response headers |
@@ -1079,10 +1242,10 @@ Stop application release or debug container currently running on target, operati
 ### Example
 
 ```python
-from __future__ import print_function
 import time
 import moses_client
-from moses_client.rest import ApiException
+from moses_client.api import applications_api
+from moses_client.model.error_info import ErrorInfo
 from pprint import pprint
 # Defining the host is optional and defaults to http://localhost:5000/api
 # See configuration.py for a list of all supported configuration parameters.
@@ -1094,25 +1257,27 @@ configuration = moses_client.Configuration(
 # Enter a context with an instance of the API client
 with moses_client.ApiClient() as api_client:
     # Create an instance of the API class
-    api_instance = moses_client.ApplicationsApi(api_client)
-    application_id = 'application_id_example' # str | Id of an application (uuid)
-configuration = 'configuration_example' # str | 
-device_id = 'device_id_example' # str | Target device serial number
+    api_instance = applications_api.ApplicationsApi(api_client)
+    application_id = "555914d4-d6Ea-18e3-e53E-03fEE4Bc7d,," # str | Id of an application (uuid)
+    configuration = "release" # str | 
+    device_id = "zA9LCSLv1C1ylmgd0.Y2TA" # str | Target device serial number
 
+    # example passing only required values which don't have defaults set
     try:
         # Stop running container image
         api_instance.application_stop(application_id, configuration, device_id)
-    except ApiException as e:
+    except moses_client.ApiException as e:
         print("Exception when calling ApplicationsApi->application_stop: %s\n" % e)
 ```
+
 
 ### Parameters
 
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
- **application_id** | **str**| Id of an application (uuid) | 
- **configuration** | **str**|  | 
- **device_id** | **str**| Target device serial number | 
+ **application_id** | **str**| Id of an application (uuid) |
+ **configuration** | **str**|  |
+ **device_id** | **str**| Target device serial number |
 
 ### Return type
 
@@ -1126,6 +1291,7 @@ No authorization required
 
  - **Content-Type**: Not defined
  - **Accept**: application/json
+
 
 ### HTTP response details
 | Status code | Description | Response headers |
@@ -1139,7 +1305,7 @@ No authorization required
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
 
 # **application_syncfolders**
-> application_syncfolders(application_id, sourcefolder, configuration, device_id, destfolder, source_is_sdk=source_is_sdk, progress_id=progress_id)
+> application_syncfolders(application_id, sourcefolder, configuration, device_id, destfolder)
 
 Synchronize folders
 
@@ -1148,10 +1314,10 @@ Synchronizes folders between host/SDK container and the application container
 ### Example
 
 ```python
-from __future__ import print_function
 import time
 import moses_client
-from moses_client.rest import ApiException
+from moses_client.api import applications_api
+from moses_client.model.error_info import ErrorInfo
 from pprint import pprint
 # Defining the host is optional and defaults to http://localhost:5000/api
 # See configuration.py for a list of all supported configuration parameters.
@@ -1163,33 +1329,43 @@ configuration = moses_client.Configuration(
 # Enter a context with an instance of the API client
 with moses_client.ApiClient() as api_client:
     # Create an instance of the API class
-    api_instance = moses_client.ApplicationsApi(api_client)
-    application_id = 'application_id_example' # str | Id of an application (uuid)
-sourcefolder = 'sourcefolder_example' # str | 
-configuration = 'configuration_example' # str | 
-device_id = 'device_id_example' # str | Target device serial number
-destfolder = 'destfolder_example' # str | 
-source_is_sdk = True # bool |  (optional)
-progress_id = 'progress_id_example' # str | Id of a progress cookie (uuid) (optional)
+    api_instance = applications_api.ApplicationsApi(api_client)
+    application_id = "555914d4-d6Ea-18e3-e53E-03fEE4Bc7d,," # str | Id of an application (uuid)
+    sourcefolder = "sourcefolder_example" # str | 
+    configuration = "release" # str | 
+    device_id = "zA9LCSLv1C1ylmgd0.Y2TA" # str | Target device serial number
+    destfolder = "destfolder_example" # str | 
+    source_is_sdk = True # bool |  (optional)
+    progress_id = "55914d4d-6Ea1-8e3e-53E0-3fEE4Bc7d,,c" # str | Id of a progress cookie (uuid) (optional)
 
+    # example passing only required values which don't have defaults set
+    try:
+        # Synchronize folders
+        api_instance.application_syncfolders(application_id, sourcefolder, configuration, device_id, destfolder)
+    except moses_client.ApiException as e:
+        print("Exception when calling ApplicationsApi->application_syncfolders: %s\n" % e)
+
+    # example passing only required values which don't have defaults set
+    # and optional values
     try:
         # Synchronize folders
         api_instance.application_syncfolders(application_id, sourcefolder, configuration, device_id, destfolder, source_is_sdk=source_is_sdk, progress_id=progress_id)
-    except ApiException as e:
+    except moses_client.ApiException as e:
         print("Exception when calling ApplicationsApi->application_syncfolders: %s\n" % e)
 ```
+
 
 ### Parameters
 
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
- **application_id** | **str**| Id of an application (uuid) | 
- **sourcefolder** | **str**|  | 
- **configuration** | **str**|  | 
- **device_id** | **str**| Target device serial number | 
- **destfolder** | **str**|  | 
- **source_is_sdk** | **bool**|  | [optional] 
- **progress_id** | **str**| Id of a progress cookie (uuid) | [optional] 
+ **application_id** | **str**| Id of an application (uuid) |
+ **sourcefolder** | **str**|  |
+ **configuration** | **str**|  |
+ **device_id** | **str**| Target device serial number |
+ **destfolder** | **str**|  |
+ **source_is_sdk** | **bool**|  | [optional]
+ **progress_id** | **str**| Id of a progress cookie (uuid) | [optional]
 
 ### Return type
 
@@ -1203,6 +1379,7 @@ No authorization required
 
  - **Content-Type**: Not defined
  - **Accept**: application/json
+
 
 ### HTTP response details
 | Status code | Description | Response headers |
@@ -1232,10 +1409,10 @@ Check if some properties have been changed after the last build of the configura
 ### Example
 
 ```python
-from __future__ import print_function
 import time
 import moses_client
-from moses_client.rest import ApiException
+from moses_client.api import applications_api
+from moses_client.model.error_info import ErrorInfo
 from pprint import pprint
 # Defining the host is optional and defaults to http://localhost:5000/api
 # See configuration.py for a list of all supported configuration parameters.
@@ -1247,24 +1424,26 @@ configuration = moses_client.Configuration(
 # Enter a context with an instance of the API client
 with moses_client.ApiClient() as api_client:
     # Create an instance of the API class
-    api_instance = moses_client.ApplicationsApi(api_client)
-    application_id = 'application_id_example' # str | Id of an application (uuid)
-configuration = 'configuration_example' # str | 
+    api_instance = applications_api.ApplicationsApi(api_client)
+    application_id = "555914d4-d6Ea-18e3-e53E-03fEE4Bc7d,," # str | Id of an application (uuid)
+    configuration = "release" # str | 
 
+    # example passing only required values which don't have defaults set
     try:
         # Check if container image is up to date
         api_response = api_instance.application_updated(application_id, configuration)
         pprint(api_response)
-    except ApiException as e:
+    except moses_client.ApiException as e:
         print("Exception when calling ApplicationsApi->application_updated: %s\n" % e)
 ```
+
 
 ### Parameters
 
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
- **application_id** | **str**| Id of an application (uuid) | 
- **configuration** | **str**|  | 
+ **application_id** | **str**| Id of an application (uuid) |
+ **configuration** | **str**|  |
 
 ### Return type
 
@@ -1279,6 +1458,7 @@ No authorization required
  - **Content-Type**: Not defined
  - **Accept**: application/json
 
+
 ### HTTP response details
 | Status code | Description | Response headers |
 |-------------|-------------|------------------|
@@ -1290,7 +1470,7 @@ No authorization required
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
 
 # **application_updatesdk**
-> application_updatesdk(application_id, configuration, progress_id=progress_id)
+> application_updatesdk(application_id, configuration)
 
 Update SDK container
 
@@ -1299,10 +1479,10 @@ Update the SDK container by adding new dev libraries or synchronizing sysroots
 ### Example
 
 ```python
-from __future__ import print_function
 import time
 import moses_client
-from moses_client.rest import ApiException
+from moses_client.api import applications_api
+from moses_client.model.error_info import ErrorInfo
 from pprint import pprint
 # Defining the host is optional and defaults to http://localhost:5000/api
 # See configuration.py for a list of all supported configuration parameters.
@@ -1314,25 +1494,35 @@ configuration = moses_client.Configuration(
 # Enter a context with an instance of the API client
 with moses_client.ApiClient() as api_client:
     # Create an instance of the API class
-    api_instance = moses_client.ApplicationsApi(api_client)
-    application_id = 'application_id_example' # str | Id of an application (uuid)
-configuration = 'configuration_example' # str | 
-progress_id = 'progress_id_example' # str | Id of a progress cookie (uuid) (optional)
+    api_instance = applications_api.ApplicationsApi(api_client)
+    application_id = "555914d4-d6Ea-18e3-e53E-03fEE4Bc7d,," # str | Id of an application (uuid)
+    configuration = "release" # str | 
+    progress_id = "55914d4d-6Ea1-8e3e-53E0-3fEE4Bc7d,,c" # str | Id of a progress cookie (uuid) (optional)
 
+    # example passing only required values which don't have defaults set
+    try:
+        # Update SDK container
+        api_instance.application_updatesdk(application_id, configuration)
+    except moses_client.ApiException as e:
+        print("Exception when calling ApplicationsApi->application_updatesdk: %s\n" % e)
+
+    # example passing only required values which don't have defaults set
+    # and optional values
     try:
         # Update SDK container
         api_instance.application_updatesdk(application_id, configuration, progress_id=progress_id)
-    except ApiException as e:
+    except moses_client.ApiException as e:
         print("Exception when calling ApplicationsApi->application_updatesdk: %s\n" % e)
 ```
+
 
 ### Parameters
 
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
- **application_id** | **str**| Id of an application (uuid) | 
- **configuration** | **str**|  | 
- **progress_id** | **str**| Id of a progress cookie (uuid) | [optional] 
+ **application_id** | **str**| Id of an application (uuid) |
+ **configuration** | **str**|  |
+ **progress_id** | **str**| Id of a progress cookie (uuid) | [optional]
 
 ### Return type
 
@@ -1346,6 +1536,7 @@ No authorization required
 
  - **Content-Type**: Not defined
  - **Accept**: application/json
+
 
 ### HTTP response details
 | Status code | Description | Response headers |
@@ -1361,7 +1552,7 @@ No authorization required
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
 
 # **applications_create**
-> Application applications_create(platform_id, path, username=username)
+> Application applications_create(platform_id, path)
 
 Create an application configuration
 
@@ -1370,10 +1561,11 @@ Create a new application configuration
 ### Example
 
 ```python
-from __future__ import print_function
 import time
 import moses_client
-from moses_client.rest import ApiException
+from moses_client.api import applications_api
+from moses_client.model.error_info import ErrorInfo
+from moses_client.model.application import Application
 from pprint import pprint
 # Defining the host is optional and defaults to http://localhost:5000/api
 # See configuration.py for a list of all supported configuration parameters.
@@ -1385,26 +1577,37 @@ configuration = moses_client.Configuration(
 # Enter a context with an instance of the API client
 with moses_client.ApiClient() as api_client:
     # Create an instance of the API class
-    api_instance = moses_client.ApplicationsApi(api_client)
-    platform_id = 'platform_id_example' # str | 
-path = 'path_example' # str | 
-username = 'username_example' # str |  (optional)
+    api_instance = applications_api.ApplicationsApi(api_client)
+    platform_id = "platform_id_example" # str | 
+    path = "path_example" # str | 
+    username = "username_example" # str |  (optional)
 
+    # example passing only required values which don't have defaults set
+    try:
+        # Create an application configuration
+        api_response = api_instance.applications_create(platform_id, path)
+        pprint(api_response)
+    except moses_client.ApiException as e:
+        print("Exception when calling ApplicationsApi->applications_create: %s\n" % e)
+
+    # example passing only required values which don't have defaults set
+    # and optional values
     try:
         # Create an application configuration
         api_response = api_instance.applications_create(platform_id, path, username=username)
         pprint(api_response)
-    except ApiException as e:
+    except moses_client.ApiException as e:
         print("Exception when calling ApplicationsApi->applications_create: %s\n" % e)
 ```
+
 
 ### Parameters
 
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
- **platform_id** | **str**|  | 
- **path** | **str**|  | 
- **username** | **str**|  | [optional] 
+ **platform_id** | **str**|  |
+ **path** | **str**|  |
+ **username** | **str**|  | [optional]
 
 ### Return type
 
@@ -1418,6 +1621,7 @@ No authorization required
 
  - **Content-Type**: Not defined
  - **Accept**: application/json
+
 
 ### HTTP response details
 | Status code | Description | Response headers |
@@ -1441,10 +1645,11 @@ Load an application configuration from the local filesystem
 ### Example
 
 ```python
-from __future__ import print_function
 import time
 import moses_client
-from moses_client.rest import ApiException
+from moses_client.api import applications_api
+from moses_client.model.error_info import ErrorInfo
+from moses_client.model.application import Application
 from pprint import pprint
 # Defining the host is optional and defaults to http://localhost:5000/api
 # See configuration.py for a list of all supported configuration parameters.
@@ -1456,22 +1661,24 @@ configuration = moses_client.Configuration(
 # Enter a context with an instance of the API client
 with moses_client.ApiClient() as api_client:
     # Create an instance of the API class
-    api_instance = moses_client.ApplicationsApi(api_client)
-    path = 'path_example' # str | 
+    api_instance = applications_api.ApplicationsApi(api_client)
+    path = "path_example" # str | 
 
+    # example passing only required values which don't have defaults set
     try:
         # Load an application configuration
         api_response = api_instance.applications_load(path)
         pprint(api_response)
-    except ApiException as e:
+    except moses_client.ApiException as e:
         print("Exception when calling ApplicationsApi->applications_load: %s\n" % e)
 ```
+
 
 ### Parameters
 
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
- **path** | **str**|  | 
+ **path** | **str**|  |
 
 ### Return type
 
@@ -1485,6 +1692,7 @@ No authorization required
 
  - **Content-Type**: Not defined
  - **Accept**: application/json
+
 
 ### HTTP response details
 | Status code | Description | Response headers |

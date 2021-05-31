@@ -38,7 +38,7 @@ Method | HTTP request | Description
 
 
 # **container_getlogs**
-> str container_getlogs(device_id, container_id, restart=restart)
+> str container_getlogs(device_id, container_id)
 
 Return text lines from the container logs
 
@@ -47,10 +47,10 @@ Return one or more lines from the log, waiting until it's available, this will a
 ### Example
 
 ```python
-from __future__ import print_function
 import time
 import moses_client
-from moses_client.rest import ApiException
+from moses_client.api import devices_api
+from moses_client.model.error_info import ErrorInfo
 from pprint import pprint
 # Defining the host is optional and defaults to http://localhost:5000/api
 # See configuration.py for a list of all supported configuration parameters.
@@ -62,26 +62,37 @@ configuration = moses_client.Configuration(
 # Enter a context with an instance of the API client
 with moses_client.ApiClient() as api_client:
     # Create an instance of the API class
-    api_instance = moses_client.DevicesApi(api_client)
-    device_id = 'device_id_example' # str | Target device serial number
-container_id = 'container_id_example' # str | Id of a container
-restart = False # bool | when true reads the lock back from beginning (optional) (default to False)
+    api_instance = devices_api.DevicesApi(api_client)
+    device_id = "zA9LCSLv1C1ylmgd0.Y2TA" # str | Target device serial number
+    container_id = "555914d4d6Ea18e3e53E03fEE4Bc7d,,c0d281Fb40cDe1Fd7eaf49b6d348c6Fc" # str | Id of a container
+    restart = False # bool | when true reads the lock back from beginning (optional) if omitted the server will use the default value of False
 
+    # example passing only required values which don't have defaults set
+    try:
+        # Return text lines from the container logs
+        api_response = api_instance.container_getlogs(device_id, container_id)
+        pprint(api_response)
+    except moses_client.ApiException as e:
+        print("Exception when calling DevicesApi->container_getlogs: %s\n" % e)
+
+    # example passing only required values which don't have defaults set
+    # and optional values
     try:
         # Return text lines from the container logs
         api_response = api_instance.container_getlogs(device_id, container_id, restart=restart)
         pprint(api_response)
-    except ApiException as e:
+    except moses_client.ApiException as e:
         print("Exception when calling DevicesApi->container_getlogs: %s\n" % e)
 ```
+
 
 ### Parameters
 
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
- **device_id** | **str**| Target device serial number | 
- **container_id** | **str**| Id of a container | 
- **restart** | **bool**| when true reads the lock back from beginning | [optional] [default to False]
+ **device_id** | **str**| Target device serial number |
+ **container_id** | **str**| Id of a container |
+ **restart** | **bool**| when true reads the lock back from beginning | [optional] if omitted the server will use the default value of False
 
 ### Return type
 
@@ -95,6 +106,7 @@ No authorization required
 
  - **Content-Type**: Not defined
  - **Accept**: application/json
+
 
 ### HTTP response details
 | Status code | Description | Response headers |
@@ -119,10 +131,11 @@ Return total/free/available memory on a specific container running on a device
 ### Example
 
 ```python
-from __future__ import print_function
 import time
 import moses_client
-from moses_client.rest import ApiException
+from moses_client.api import devices_api
+from moses_client.model.mem_info import MemInfo
+from moses_client.model.error_info import ErrorInfo
 from pprint import pprint
 # Defining the host is optional and defaults to http://localhost:5000/api
 # See configuration.py for a list of all supported configuration parameters.
@@ -134,24 +147,26 @@ configuration = moses_client.Configuration(
 # Enter a context with an instance of the API client
 with moses_client.ApiClient() as api_client:
     # Create an instance of the API class
-    api_instance = moses_client.DevicesApi(api_client)
-    device_id = 'device_id_example' # str | Target device serial number
-container_id = 'container_id_example' # str | Id of a container
+    api_instance = devices_api.DevicesApi(api_client)
+    device_id = "zA9LCSLv1C1ylmgd0.Y2TA" # str | Target device serial number
+    container_id = "555914d4d6Ea18e3e53E03fEE4Bc7d,,c0d281Fb40cDe1Fd7eaf49b6d348c6Fc" # str | Id of a container
 
+    # example passing only required values which don't have defaults set
     try:
         # Return container memory information
         api_response = api_instance.container_getmemory(device_id, container_id)
         pprint(api_response)
-    except ApiException as e:
+    except moses_client.ApiException as e:
         print("Exception when calling DevicesApi->container_getmemory: %s\n" % e)
 ```
+
 
 ### Parameters
 
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
- **device_id** | **str**| Target device serial number | 
- **container_id** | **str**| Id of a container | 
+ **device_id** | **str**| Target device serial number |
+ **container_id** | **str**| Id of a container |
 
 ### Return type
 
@@ -166,6 +181,7 @@ No authorization required
  - **Content-Type**: Not defined
  - **Accept**: application/json
 
+
 ### HTTP response details
 | Status code | Description | Response headers |
 |-------------|-------------|------------------|
@@ -178,7 +194,7 @@ No authorization required
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
 
 # **container_getmountpoints**
-> list[MountPoint] container_getmountpoints(device_id, container_id)
+> [MountPoint] container_getmountpoints(device_id, container_id)
 
 Return information about storage
 
@@ -187,10 +203,11 @@ Return a list of mount points available inside the container
 ### Example
 
 ```python
-from __future__ import print_function
 import time
 import moses_client
-from moses_client.rest import ApiException
+from moses_client.api import devices_api
+from moses_client.model.mount_point import MountPoint
+from moses_client.model.error_info import ErrorInfo
 from pprint import pprint
 # Defining the host is optional and defaults to http://localhost:5000/api
 # See configuration.py for a list of all supported configuration parameters.
@@ -202,28 +219,30 @@ configuration = moses_client.Configuration(
 # Enter a context with an instance of the API client
 with moses_client.ApiClient() as api_client:
     # Create an instance of the API class
-    api_instance = moses_client.DevicesApi(api_client)
-    device_id = 'device_id_example' # str | Target device serial number
-container_id = 'container_id_example' # str | Id of a container
+    api_instance = devices_api.DevicesApi(api_client)
+    device_id = "zA9LCSLv1C1ylmgd0.Y2TA" # str | Target device serial number
+    container_id = "555914d4d6Ea18e3e53E03fEE4Bc7d,,c0d281Fb40cDe1Fd7eaf49b6d348c6Fc" # str | Id of a container
 
+    # example passing only required values which don't have defaults set
     try:
         # Return information about storage
         api_response = api_instance.container_getmountpoints(device_id, container_id)
         pprint(api_response)
-    except ApiException as e:
+    except moses_client.ApiException as e:
         print("Exception when calling DevicesApi->container_getmountpoints: %s\n" % e)
 ```
+
 
 ### Parameters
 
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
- **device_id** | **str**| Target device serial number | 
- **container_id** | **str**| Id of a container | 
+ **device_id** | **str**| Target device serial number |
+ **container_id** | **str**| Id of a container |
 
 ### Return type
 
-[**list[MountPoint]**](MountPoint.md)
+[**[MountPoint]**](MountPoint.md)
 
 ### Authorization
 
@@ -233,6 +252,7 @@ No authorization required
 
  - **Content-Type**: Not defined
  - **Accept**: application/json
+
 
 ### HTTP response details
 | Status code | Description | Response headers |
@@ -247,7 +267,7 @@ No authorization required
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
 
 # **container_getprocesses**
-> list[Process] container_getprocesses(device_id, container_id)
+> [Process] container_getprocesses(device_id, container_id)
 
 Get processes running in container
 
@@ -256,10 +276,11 @@ Return a list of processes running in the specified container on a device
 ### Example
 
 ```python
-from __future__ import print_function
 import time
 import moses_client
-from moses_client.rest import ApiException
+from moses_client.api import devices_api
+from moses_client.model.error_info import ErrorInfo
+from moses_client.model.process import Process
 from pprint import pprint
 # Defining the host is optional and defaults to http://localhost:5000/api
 # See configuration.py for a list of all supported configuration parameters.
@@ -271,28 +292,30 @@ configuration = moses_client.Configuration(
 # Enter a context with an instance of the API client
 with moses_client.ApiClient() as api_client:
     # Create an instance of the API class
-    api_instance = moses_client.DevicesApi(api_client)
-    device_id = 'device_id_example' # str | Target device serial number
-container_id = 'container_id_example' # str | Id of a container
+    api_instance = devices_api.DevicesApi(api_client)
+    device_id = "zA9LCSLv1C1ylmgd0.Y2TA" # str | Target device serial number
+    container_id = "555914d4d6Ea18e3e53E03fEE4Bc7d,,c0d281Fb40cDe1Fd7eaf49b6d348c6Fc" # str | Id of a container
 
+    # example passing only required values which don't have defaults set
     try:
         # Get processes running in container
         api_response = api_instance.container_getprocesses(device_id, container_id)
         pprint(api_response)
-    except ApiException as e:
+    except moses_client.ApiException as e:
         print("Exception when calling DevicesApi->container_getprocesses: %s\n" % e)
 ```
+
 
 ### Parameters
 
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
- **device_id** | **str**| Target device serial number | 
- **container_id** | **str**| Id of a container | 
+ **device_id** | **str**| Target device serial number |
+ **container_id** | **str**| Id of a container |
 
 ### Return type
 
-[**list[Process]**](Process.md)
+[**[Process]**](Process.md)
 
 ### Authorization
 
@@ -302,6 +325,7 @@ No authorization required
 
  - **Content-Type**: Not defined
  - **Accept**: application/json
+
 
 ### HTTP response details
 | Status code | Description | Response headers |
@@ -325,10 +349,11 @@ Start a specified container on a device
 ### Example
 
 ```python
-from __future__ import print_function
 import time
 import moses_client
-from moses_client.rest import ApiException
+from moses_client.api import devices_api
+from moses_client.model.docker_container import DockerContainer
+from moses_client.model.error_info import ErrorInfo
 from pprint import pprint
 # Defining the host is optional and defaults to http://localhost:5000/api
 # See configuration.py for a list of all supported configuration parameters.
@@ -340,24 +365,26 @@ configuration = moses_client.Configuration(
 # Enter a context with an instance of the API client
 with moses_client.ApiClient() as api_client:
     # Create an instance of the API class
-    api_instance = moses_client.DevicesApi(api_client)
-    device_id = 'device_id_example' # str | Target device serial number
-container_id = 'container_id_example' # str | Id of a container
+    api_instance = devices_api.DevicesApi(api_client)
+    device_id = "zA9LCSLv1C1ylmgd0.Y2TA" # str | Target device serial number
+    container_id = "555914d4d6Ea18e3e53E03fEE4Bc7d,,c0d281Fb40cDe1Fd7eaf49b6d348c6Fc" # str | Id of a container
 
+    # example passing only required values which don't have defaults set
     try:
         # Starts container
         api_response = api_instance.container_start(device_id, container_id)
         pprint(api_response)
-    except ApiException as e:
+    except moses_client.ApiException as e:
         print("Exception when calling DevicesApi->container_start: %s\n" % e)
 ```
+
 
 ### Parameters
 
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
- **device_id** | **str**| Target device serial number | 
- **container_id** | **str**| Id of a container | 
+ **device_id** | **str**| Target device serial number |
+ **container_id** | **str**| Id of a container |
 
 ### Return type
 
@@ -371,6 +398,7 @@ No authorization required
 
  - **Content-Type**: Not defined
  - **Accept**: application/json
+
 
 ### HTTP response details
 | Status code | Description | Response headers |
@@ -394,10 +422,11 @@ Stop a specified container running on a device
 ### Example
 
 ```python
-from __future__ import print_function
 import time
 import moses_client
-from moses_client.rest import ApiException
+from moses_client.api import devices_api
+from moses_client.model.docker_container import DockerContainer
+from moses_client.model.error_info import ErrorInfo
 from pprint import pprint
 # Defining the host is optional and defaults to http://localhost:5000/api
 # See configuration.py for a list of all supported configuration parameters.
@@ -409,24 +438,26 @@ configuration = moses_client.Configuration(
 # Enter a context with an instance of the API client
 with moses_client.ApiClient() as api_client:
     # Create an instance of the API class
-    api_instance = moses_client.DevicesApi(api_client)
-    device_id = 'device_id_example' # str | Target device serial number
-container_id = 'container_id_example' # str | Id of a container
+    api_instance = devices_api.DevicesApi(api_client)
+    device_id = "zA9LCSLv1C1ylmgd0.Y2TA" # str | Target device serial number
+    container_id = "555914d4d6Ea18e3e53E03fEE4Bc7d,,c0d281Fb40cDe1Fd7eaf49b6d348c6Fc" # str | Id of a container
 
+    # example passing only required values which don't have defaults set
     try:
         # Stop container
         api_response = api_instance.container_stop(device_id, container_id)
         pprint(api_response)
-    except ApiException as e:
+    except moses_client.ApiException as e:
         print("Exception when calling DevicesApi->container_stop: %s\n" % e)
 ```
+
 
 ### Parameters
 
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
- **device_id** | **str**| Target device serial number | 
- **container_id** | **str**| Id of a container | 
+ **device_id** | **str**| Target device serial number |
+ **container_id** | **str**| Id of a container |
 
 ### Return type
 
@@ -440,6 +471,7 @@ No authorization required
 
  - **Content-Type**: Not defined
  - **Accept**: application/json
+
 
 ### HTTP response details
 | Status code | Description | Response headers |
@@ -463,10 +495,10 @@ Stops and removes a container running on a device
 ### Example
 
 ```python
-from __future__ import print_function
 import time
 import moses_client
-from moses_client.rest import ApiException
+from moses_client.api import devices_api
+from moses_client.model.error_info import ErrorInfo
 from pprint import pprint
 # Defining the host is optional and defaults to http://localhost:5000/api
 # See configuration.py for a list of all supported configuration parameters.
@@ -478,23 +510,25 @@ configuration = moses_client.Configuration(
 # Enter a context with an instance of the API client
 with moses_client.ApiClient() as api_client:
     # Create an instance of the API class
-    api_instance = moses_client.DevicesApi(api_client)
-    device_id = 'device_id_example' # str | Target device serial number
-container_id = 'container_id_example' # str | Id of a container
+    api_instance = devices_api.DevicesApi(api_client)
+    device_id = "zA9LCSLv1C1ylmgd0.Y2TA" # str | Target device serial number
+    container_id = "555914d4d6Ea18e3e53E03fEE4Bc7d,,c0d281Fb40cDe1Fd7eaf49b6d348c6Fc" # str | Id of a container
 
+    # example passing only required values which don't have defaults set
     try:
         # Delete a container
         api_instance.containers_deletecontainer(device_id, container_id)
-    except ApiException as e:
+    except moses_client.ApiException as e:
         print("Exception when calling DevicesApi->containers_deletecontainer: %s\n" % e)
 ```
+
 
 ### Parameters
 
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
- **device_id** | **str**| Target device serial number | 
- **container_id** | **str**| Id of a container | 
+ **device_id** | **str**| Target device serial number |
+ **container_id** | **str**| Id of a container |
 
 ### Return type
 
@@ -508,6 +542,7 @@ No authorization required
 
  - **Content-Type**: Not defined
  - **Accept**: application/json
+
 
 ### HTTP response details
 | Status code | Description | Response headers |
@@ -531,10 +566,11 @@ Get detailed information on a specific container running on a device
 ### Example
 
 ```python
-from __future__ import print_function
 import time
 import moses_client
-from moses_client.rest import ApiException
+from moses_client.api import devices_api
+from moses_client.model.docker_container import DockerContainer
+from moses_client.model.error_info import ErrorInfo
 from pprint import pprint
 # Defining the host is optional and defaults to http://localhost:5000/api
 # See configuration.py for a list of all supported configuration parameters.
@@ -546,24 +582,26 @@ configuration = moses_client.Configuration(
 # Enter a context with an instance of the API client
 with moses_client.ApiClient() as api_client:
     # Create an instance of the API class
-    api_instance = moses_client.DevicesApi(api_client)
-    device_id = 'device_id_example' # str | Target device serial number
-container_id = 'container_id_example' # str | Id of a container
+    api_instance = devices_api.DevicesApi(api_client)
+    device_id = "zA9LCSLv1C1ylmgd0.Y2TA" # str | Target device serial number
+    container_id = "555914d4d6Ea18e3e53E03fEE4Bc7d,,c0d281Fb40cDe1Fd7eaf49b6d348c6Fc" # str | Id of a container
 
+    # example passing only required values which don't have defaults set
     try:
         # Get information about a container
         api_response = api_instance.containers_getcontainer(device_id, container_id)
         pprint(api_response)
-    except ApiException as e:
+    except moses_client.ApiException as e:
         print("Exception when calling DevicesApi->containers_getcontainer: %s\n" % e)
 ```
+
 
 ### Parameters
 
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
- **device_id** | **str**| Target device serial number | 
- **container_id** | **str**| Id of a container | 
+ **device_id** | **str**| Target device serial number |
+ **container_id** | **str**| Id of a container |
 
 ### Return type
 
@@ -577,6 +615,7 @@ No authorization required
 
  - **Content-Type**: Not defined
  - **Accept**: application/json
+
 
 ### HTTP response details
 | Status code | Description | Response headers |
@@ -600,10 +639,10 @@ Stop exposing remote docker port on localhost
 ### Example
 
 ```python
-from __future__ import print_function
 import time
 import moses_client
-from moses_client.rest import ApiException
+from moses_client.api import devices_api
+from moses_client.model.error_info import ErrorInfo
 from pprint import pprint
 # Defining the host is optional and defaults to http://localhost:5000/api
 # See configuration.py for a list of all supported configuration parameters.
@@ -615,21 +654,23 @@ configuration = moses_client.Configuration(
 # Enter a context with an instance of the API client
 with moses_client.ApiClient() as api_client:
     # Create an instance of the API class
-    api_instance = moses_client.DevicesApi(api_client)
-    device_id = 'device_id_example' # str | Target device serial number
+    api_instance = devices_api.DevicesApi(api_client)
+    device_id = "zA9LCSLv1C1ylmgd0.Y2TA" # str | Target device serial number
 
+    # example passing only required values which don't have defaults set
     try:
         # Close SSH tunnel for docker API
         api_instance.device_closedocker(device_id)
-    except ApiException as e:
+    except moses_client.ApiException as e:
         print("Exception when calling DevicesApi->device_closedocker: %s\n" % e)
 ```
+
 
 ### Parameters
 
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
- **device_id** | **str**| Target device serial number | 
+ **device_id** | **str**| Target device serial number |
 
 ### Return type
 
@@ -643,6 +684,7 @@ No authorization required
 
  - **Content-Type**: Not defined
  - **Accept**: application/json
+
 
 ### HTTP response details
 | Status code | Description | Response headers |
@@ -663,10 +705,10 @@ Stop exposing remote shell port on localhost
 ### Example
 
 ```python
-from __future__ import print_function
 import time
 import moses_client
-from moses_client.rest import ApiException
+from moses_client.api import devices_api
+from moses_client.model.error_info import ErrorInfo
 from pprint import pprint
 # Defining the host is optional and defaults to http://localhost:5000/api
 # See configuration.py for a list of all supported configuration parameters.
@@ -678,21 +720,23 @@ configuration = moses_client.Configuration(
 # Enter a context with an instance of the API client
 with moses_client.ApiClient() as api_client:
     # Create an instance of the API class
-    api_instance = moses_client.DevicesApi(api_client)
-    device_id = 'device_id_example' # str | Target device serial number
+    api_instance = devices_api.DevicesApi(api_client)
+    device_id = "zA9LCSLv1C1ylmgd0.Y2TA" # str | Target device serial number
 
+    # example passing only required values which don't have defaults set
     try:
         # Close SSH tunnel for shell
         api_instance.device_closessh(device_id)
-    except ApiException as e:
+    except moses_client.ApiException as e:
         print("Exception when calling DevicesApi->device_closessh: %s\n" % e)
 ```
+
 
 ### Parameters
 
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
- **device_id** | **str**| Target device serial number | 
+ **device_id** | **str**| Target device serial number |
 
 ### Return type
 
@@ -706,6 +750,7 @@ No authorization required
 
  - **Content-Type**: Not defined
  - **Accept**: application/json
+
 
 ### HTTP response details
 | Status code | Description | Response headers |
@@ -726,10 +771,10 @@ Return current ip of the device using local DNS and mDNS
 ### Example
 
 ```python
-from __future__ import print_function
 import time
 import moses_client
-from moses_client.rest import ApiException
+from moses_client.api import devices_api
+from moses_client.model.error_info import ErrorInfo
 from pprint import pprint
 # Defining the host is optional and defaults to http://localhost:5000/api
 # See configuration.py for a list of all supported configuration parameters.
@@ -741,22 +786,24 @@ configuration = moses_client.Configuration(
 # Enter a context with an instance of the API client
 with moses_client.ApiClient() as api_client:
     # Create an instance of the API class
-    api_instance = moses_client.DevicesApi(api_client)
-    device_id = 'device_id_example' # str | Target device serial number
+    api_instance = devices_api.DevicesApi(api_client)
+    device_id = "zA9LCSLv1C1ylmgd0.Y2TA" # str | Target device serial number
 
+    # example passing only required values which don't have defaults set
     try:
         # Get current ip of the device
         api_response = api_instance.device_current_ip(device_id)
         pprint(api_response)
-    except ApiException as e:
+    except moses_client.ApiException as e:
         print("Exception when calling DevicesApi->device_current_ip: %s\n" % e)
 ```
+
 
 ### Parameters
 
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
- **device_id** | **str**| Target device serial number | 
+ **device_id** | **str**| Target device serial number |
 
 ### Return type
 
@@ -770,6 +817,7 @@ No authorization required
 
  - **Content-Type**: Not defined
  - **Accept**: application/json
+
 
 ### HTTP response details
 | Status code | Description | Response headers |
@@ -792,10 +840,10 @@ Permanently remove a device from the list of configured ones
 ### Example
 
 ```python
-from __future__ import print_function
 import time
 import moses_client
-from moses_client.rest import ApiException
+from moses_client.api import devices_api
+from moses_client.model.error_info import ErrorInfo
 from pprint import pprint
 # Defining the host is optional and defaults to http://localhost:5000/api
 # See configuration.py for a list of all supported configuration parameters.
@@ -807,21 +855,23 @@ configuration = moses_client.Configuration(
 # Enter a context with an instance of the API client
 with moses_client.ApiClient() as api_client:
     # Create an instance of the API class
-    api_instance = moses_client.DevicesApi(api_client)
-    device_id = 'device_id_example' # str | Target device serial number
+    api_instance = devices_api.DevicesApi(api_client)
+    device_id = "zA9LCSLv1C1ylmgd0.Y2TA" # str | Target device serial number
 
+    # example passing only required values which don't have defaults set
     try:
         # Remove a device
         api_instance.device_delete(device_id)
-    except ApiException as e:
+    except moses_client.ApiException as e:
         print("Exception when calling DevicesApi->device_delete: %s\n" % e)
 ```
+
 
 ### Parameters
 
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
- **device_id** | **str**| Target device serial number | 
+ **device_id** | **str**| Target device serial number |
 
 ### Return type
 
@@ -835,6 +885,7 @@ No authorization required
 
  - **Content-Type**: Not defined
  - **Accept**: application/json
+
 
 ### HTTP response details
 | Status code | Description | Response headers |
@@ -855,10 +906,11 @@ Return a specific configured device, knowing its id
 ### Example
 
 ```python
-from __future__ import print_function
 import time
 import moses_client
-from moses_client.rest import ApiException
+from moses_client.api import devices_api
+from moses_client.model.error_info import ErrorInfo
+from moses_client.model.target_device import TargetDevice
 from pprint import pprint
 # Defining the host is optional and defaults to http://localhost:5000/api
 # See configuration.py for a list of all supported configuration parameters.
@@ -870,22 +922,24 @@ configuration = moses_client.Configuration(
 # Enter a context with an instance of the API client
 with moses_client.ApiClient() as api_client:
     # Create an instance of the API class
-    api_instance = moses_client.DevicesApi(api_client)
-    device_id = 'device_id_example' # str | Target device serial number
+    api_instance = devices_api.DevicesApi(api_client)
+    device_id = "zA9LCSLv1C1ylmgd0.Y2TA" # str | Target device serial number
 
+    # example passing only required values which don't have defaults set
     try:
         # Get device
         api_response = api_instance.device_get(device_id)
         pprint(api_response)
-    except ApiException as e:
+    except moses_client.ApiException as e:
         print("Exception when calling DevicesApi->device_get: %s\n" % e)
 ```
+
 
 ### Parameters
 
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
- **device_id** | **str**| Target device serial number | 
+ **device_id** | **str**| Target device serial number |
 
 ### Return type
 
@@ -900,6 +954,7 @@ No authorization required
  - **Content-Type**: Not defined
  - **Accept**: application/json
 
+
 ### HTTP response details
 | Status code | Description | Response headers |
 |-------------|-------------|------------------|
@@ -910,7 +965,7 @@ No authorization required
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
 
 # **device_getcontainers**
-> list[DockerContainer] device_getcontainers(device_id)
+> [DockerContainer] device_getcontainers(device_id)
 
 List containers
 
@@ -919,10 +974,11 @@ Get a list of the containers on a specific device
 ### Example
 
 ```python
-from __future__ import print_function
 import time
 import moses_client
-from moses_client.rest import ApiException
+from moses_client.api import devices_api
+from moses_client.model.docker_container import DockerContainer
+from moses_client.model.error_info import ErrorInfo
 from pprint import pprint
 # Defining the host is optional and defaults to http://localhost:5000/api
 # See configuration.py for a list of all supported configuration parameters.
@@ -934,26 +990,28 @@ configuration = moses_client.Configuration(
 # Enter a context with an instance of the API client
 with moses_client.ApiClient() as api_client:
     # Create an instance of the API class
-    api_instance = moses_client.DevicesApi(api_client)
-    device_id = 'device_id_example' # str | Target device serial number
+    api_instance = devices_api.DevicesApi(api_client)
+    device_id = "zA9LCSLv1C1ylmgd0.Y2TA" # str | Target device serial number
 
+    # example passing only required values which don't have defaults set
     try:
         # List containers
         api_response = api_instance.device_getcontainers(device_id)
         pprint(api_response)
-    except ApiException as e:
+    except moses_client.ApiException as e:
         print("Exception when calling DevicesApi->device_getcontainers: %s\n" % e)
 ```
+
 
 ### Parameters
 
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
- **device_id** | **str**| Target device serial number | 
+ **device_id** | **str**| Target device serial number |
 
 ### Return type
 
-[**list[DockerContainer]**](DockerContainer.md)
+[**[DockerContainer]**](DockerContainer.md)
 
 ### Authorization
 
@@ -963,6 +1021,7 @@ No authorization required
 
  - **Content-Type**: Not defined
  - **Accept**: application/json
+
 
 ### HTTP response details
 | Status code | Description | Response headers |
@@ -986,10 +1045,10 @@ Get local port where docker is tunneled via SSH
 ### Example
 
 ```python
-from __future__ import print_function
 import time
 import moses_client
-from moses_client.rest import ApiException
+from moses_client.api import devices_api
+from moses_client.model.error_info import ErrorInfo
 from pprint import pprint
 # Defining the host is optional and defaults to http://localhost:5000/api
 # See configuration.py for a list of all supported configuration parameters.
@@ -1001,22 +1060,24 @@ configuration = moses_client.Configuration(
 # Enter a context with an instance of the API client
 with moses_client.ApiClient() as api_client:
     # Create an instance of the API class
-    api_instance = moses_client.DevicesApi(api_client)
-    device_id = 'device_id_example' # str | Target device serial number
+    api_instance = devices_api.DevicesApi(api_client)
+    device_id = "zA9LCSLv1C1ylmgd0.Y2TA" # str | Target device serial number
 
+    # example passing only required values which don't have defaults set
     try:
         # Get local port for remote docker tunnel
         api_response = api_instance.device_getdockerport(device_id)
         pprint(api_response)
-    except ApiException as e:
+    except moses_client.ApiException as e:
         print("Exception when calling DevicesApi->device_getdockerport: %s\n" % e)
 ```
+
 
 ### Parameters
 
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
- **device_id** | **str**| Target device serial number | 
+ **device_id** | **str**| Target device serial number |
 
 ### Return type
 
@@ -1031,6 +1092,7 @@ No authorization required
  - **Content-Type**: Not defined
  - **Accept**: application/json
 
+
 ### HTTP response details
 | Status code | Description | Response headers |
 |-------------|-------------|------------------|
@@ -1043,7 +1105,7 @@ No authorization required
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
 
 # **device_getimages**
-> list[DockerImage] device_getimages(device_id)
+> [DockerImage] device_getimages(device_id)
 
 List container images on the device
 
@@ -1052,10 +1114,11 @@ Get list of all container images available on a specified device
 ### Example
 
 ```python
-from __future__ import print_function
 import time
 import moses_client
-from moses_client.rest import ApiException
+from moses_client.api import devices_api
+from moses_client.model.error_info import ErrorInfo
+from moses_client.model.docker_image import DockerImage
 from pprint import pprint
 # Defining the host is optional and defaults to http://localhost:5000/api
 # See configuration.py for a list of all supported configuration parameters.
@@ -1067,26 +1130,28 @@ configuration = moses_client.Configuration(
 # Enter a context with an instance of the API client
 with moses_client.ApiClient() as api_client:
     # Create an instance of the API class
-    api_instance = moses_client.DevicesApi(api_client)
-    device_id = 'device_id_example' # str | Target device serial number
+    api_instance = devices_api.DevicesApi(api_client)
+    device_id = "zA9LCSLv1C1ylmgd0.Y2TA" # str | Target device serial number
 
+    # example passing only required values which don't have defaults set
     try:
         # List container images on the device
         api_response = api_instance.device_getimages(device_id)
         pprint(api_response)
-    except ApiException as e:
+    except moses_client.ApiException as e:
         print("Exception when calling DevicesApi->device_getimages: %s\n" % e)
 ```
+
 
 ### Parameters
 
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
- **device_id** | **str**| Target device serial number | 
+ **device_id** | **str**| Target device serial number |
 
 ### Return type
 
-[**list[DockerImage]**](DockerImage.md)
+[**[DockerImage]**](DockerImage.md)
 
 ### Authorization
 
@@ -1096,6 +1161,7 @@ No authorization required
 
  - **Content-Type**: Not defined
  - **Accept**: application/json
+
 
 ### HTTP response details
 | Status code | Description | Response headers |
@@ -1119,10 +1185,11 @@ Return total/free/available memory on the device
 ### Example
 
 ```python
-from __future__ import print_function
 import time
 import moses_client
-from moses_client.rest import ApiException
+from moses_client.api import devices_api
+from moses_client.model.mem_info import MemInfo
+from moses_client.model.error_info import ErrorInfo
 from pprint import pprint
 # Defining the host is optional and defaults to http://localhost:5000/api
 # See configuration.py for a list of all supported configuration parameters.
@@ -1134,22 +1201,24 @@ configuration = moses_client.Configuration(
 # Enter a context with an instance of the API client
 with moses_client.ApiClient() as api_client:
     # Create an instance of the API class
-    api_instance = moses_client.DevicesApi(api_client)
-    device_id = 'device_id_example' # str | Target device serial number
+    api_instance = devices_api.DevicesApi(api_client)
+    device_id = "zA9LCSLv1C1ylmgd0.Y2TA" # str | Target device serial number
 
+    # example passing only required values which don't have defaults set
     try:
         # Get device memory information
         api_response = api_instance.device_getmemory(device_id)
         pprint(api_response)
-    except ApiException as e:
+    except moses_client.ApiException as e:
         print("Exception when calling DevicesApi->device_getmemory: %s\n" % e)
 ```
+
 
 ### Parameters
 
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
- **device_id** | **str**| Target device serial number | 
+ **device_id** | **str**| Target device serial number |
 
 ### Return type
 
@@ -1164,6 +1233,7 @@ No authorization required
  - **Content-Type**: Not defined
  - **Accept**: application/json
 
+
 ### HTTP response details
 | Status code | Description | Response headers |
 |-------------|-------------|------------------|
@@ -1176,7 +1246,7 @@ No authorization required
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
 
 # **device_getmountpoints**
-> list[MountPoint] device_getmountpoints(device_id)
+> [MountPoint] device_getmountpoints(device_id)
 
 Get storage information for a device
 
@@ -1185,10 +1255,11 @@ Return a list with information about every mountpoint
 ### Example
 
 ```python
-from __future__ import print_function
 import time
 import moses_client
-from moses_client.rest import ApiException
+from moses_client.api import devices_api
+from moses_client.model.mount_point import MountPoint
+from moses_client.model.error_info import ErrorInfo
 from pprint import pprint
 # Defining the host is optional and defaults to http://localhost:5000/api
 # See configuration.py for a list of all supported configuration parameters.
@@ -1200,26 +1271,28 @@ configuration = moses_client.Configuration(
 # Enter a context with an instance of the API client
 with moses_client.ApiClient() as api_client:
     # Create an instance of the API class
-    api_instance = moses_client.DevicesApi(api_client)
-    device_id = 'device_id_example' # str | Target device serial number
+    api_instance = devices_api.DevicesApi(api_client)
+    device_id = "zA9LCSLv1C1ylmgd0.Y2TA" # str | Target device serial number
 
+    # example passing only required values which don't have defaults set
     try:
         # Get storage information for a device
         api_response = api_instance.device_getmountpoints(device_id)
         pprint(api_response)
-    except ApiException as e:
+    except moses_client.ApiException as e:
         print("Exception when calling DevicesApi->device_getmountpoints: %s\n" % e)
 ```
+
 
 ### Parameters
 
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
- **device_id** | **str**| Target device serial number | 
+ **device_id** | **str**| Target device serial number |
 
 ### Return type
 
-[**list[MountPoint]**](MountPoint.md)
+[**[MountPoint]**](MountPoint.md)
 
 ### Authorization
 
@@ -1229,6 +1302,7 @@ No authorization required
 
  - **Content-Type**: Not defined
  - **Accept**: application/json
+
 
 ### HTTP response details
 | Status code | Description | Response headers |
@@ -1251,10 +1325,10 @@ Returns the file containing the key that can be used to activate passowordless c
 ### Example
 
 ```python
-from __future__ import print_function
 import time
 import moses_client
-from moses_client.rest import ApiException
+from moses_client.api import devices_api
+from moses_client.model.error_info import ErrorInfo
 from pprint import pprint
 # Defining the host is optional and defaults to http://localhost:5000/api
 # See configuration.py for a list of all supported configuration parameters.
@@ -1266,22 +1340,24 @@ configuration = moses_client.Configuration(
 # Enter a context with an instance of the API client
 with moses_client.ApiClient() as api_client:
     # Create an instance of the API class
-    api_instance = moses_client.DevicesApi(api_client)
-    device_id = 'device_id_example' # str | Target device serial number
+    api_instance = devices_api.DevicesApi(api_client)
+    device_id = "zA9LCSLv1C1ylmgd0.Y2TA" # str | Target device serial number
 
+    # example passing only required values which don't have defaults set
     try:
         # Return the path of the device private key
         api_response = api_instance.device_getprivatekey(device_id)
         pprint(api_response)
-    except ApiException as e:
+    except moses_client.ApiException as e:
         print("Exception when calling DevicesApi->device_getprivatekey: %s\n" % e)
 ```
+
 
 ### Parameters
 
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
- **device_id** | **str**| Target device serial number | 
+ **device_id** | **str**| Target device serial number |
 
 ### Return type
 
@@ -1296,6 +1372,7 @@ No authorization required
  - **Content-Type**: Not defined
  - **Accept**: application/json
 
+
 ### HTTP response details
 | Status code | Description | Response headers |
 |-------------|-------------|------------------|
@@ -1306,7 +1383,7 @@ No authorization required
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
 
 # **device_getprocesses**
-> list[Process] device_getprocesses(device_id)
+> [Process] device_getprocesses(device_id)
 
 Get list of processes
 
@@ -1315,10 +1392,11 @@ Get list of processes running on a specified device
 ### Example
 
 ```python
-from __future__ import print_function
 import time
 import moses_client
-from moses_client.rest import ApiException
+from moses_client.api import devices_api
+from moses_client.model.error_info import ErrorInfo
+from moses_client.model.process import Process
 from pprint import pprint
 # Defining the host is optional and defaults to http://localhost:5000/api
 # See configuration.py for a list of all supported configuration parameters.
@@ -1330,26 +1408,28 @@ configuration = moses_client.Configuration(
 # Enter a context with an instance of the API client
 with moses_client.ApiClient() as api_client:
     # Create an instance of the API class
-    api_instance = moses_client.DevicesApi(api_client)
-    device_id = 'device_id_example' # str | Target device serial number
+    api_instance = devices_api.DevicesApi(api_client)
+    device_id = "zA9LCSLv1C1ylmgd0.Y2TA" # str | Target device serial number
 
+    # example passing only required values which don't have defaults set
     try:
         # Get list of processes
         api_response = api_instance.device_getprocesses(device_id)
         pprint(api_response)
-    except ApiException as e:
+    except moses_client.ApiException as e:
         print("Exception when calling DevicesApi->device_getprocesses: %s\n" % e)
 ```
+
 
 ### Parameters
 
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
- **device_id** | **str**| Target device serial number | 
+ **device_id** | **str**| Target device serial number |
 
 ### Return type
 
-[**list[Process]**](Process.md)
+[**[Process]**](Process.md)
 
 ### Authorization
 
@@ -1359,6 +1439,7 @@ No authorization required
 
  - **Content-Type**: Not defined
  - **Accept**: application/json
+
 
 ### HTTP response details
 | Status code | Description | Response headers |
@@ -1381,10 +1462,10 @@ Get local port where remote shell is tunneled via SSH
 ### Example
 
 ```python
-from __future__ import print_function
 import time
 import moses_client
-from moses_client.rest import ApiException
+from moses_client.api import devices_api
+from moses_client.model.error_info import ErrorInfo
 from pprint import pprint
 # Defining the host is optional and defaults to http://localhost:5000/api
 # See configuration.py for a list of all supported configuration parameters.
@@ -1396,22 +1477,24 @@ configuration = moses_client.Configuration(
 # Enter a context with an instance of the API client
 with moses_client.ApiClient() as api_client:
     # Create an instance of the API class
-    api_instance = moses_client.DevicesApi(api_client)
-    device_id = 'device_id_example' # str | Target device serial number
+    api_instance = devices_api.DevicesApi(api_client)
+    device_id = "zA9LCSLv1C1ylmgd0.Y2TA" # str | Target device serial number
 
+    # example passing only required values which don't have defaults set
     try:
         # Get local port for shell
         api_response = api_instance.device_getsshport(device_id)
         pprint(api_response)
-    except ApiException as e:
+    except moses_client.ApiException as e:
         print("Exception when calling DevicesApi->device_getsshport: %s\n" % e)
 ```
+
 
 ### Parameters
 
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
- **device_id** | **str**| Target device serial number | 
+ **device_id** | **str**| Target device serial number |
 
 ### Return type
 
@@ -1426,6 +1509,7 @@ No authorization required
  - **Content-Type**: Not defined
  - **Accept**: application/json
 
+
 ### HTTP response details
 | Status code | Description | Response headers |
 |-------------|-------------|------------------|
@@ -1438,7 +1522,7 @@ No authorization required
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
 
 # **device_modify**
-> TargetDevice device_modify(device_id, device=device)
+> TargetDevice device_modify(device_id)
 
 Change device properties
 
@@ -1447,10 +1531,11 @@ Changes specified properties on a configured device
 ### Example
 
 ```python
-from __future__ import print_function
 import time
 import moses_client
-from moses_client.rest import ApiException
+from moses_client.api import devices_api
+from moses_client.model.error_info import ErrorInfo
+from moses_client.model.target_device import TargetDevice
 from pprint import pprint
 # Defining the host is optional and defaults to http://localhost:5000/api
 # See configuration.py for a list of all supported configuration parameters.
@@ -1462,24 +1547,41 @@ configuration = moses_client.Configuration(
 # Enter a context with an instance of the API client
 with moses_client.ApiClient() as api_client:
     # Create an instance of the API class
-    api_instance = moses_client.DevicesApi(api_client)
-    device_id = 'device_id_example' # str | Target device serial number
-device = moses_client.TargetDevice() # TargetDevice |  (optional)
+    api_instance = devices_api.DevicesApi(api_client)
+    device_id = "zA9LCSLv1C1ylmgd0.Y2TA" # str | Target device serial number
+    device = TargetDevice(
+        name="Colibri imx7 EVB",
+        hostname="verdin-imx8mm-06632494",
+        username="torizon",
+        homefolder="/home/torizon",
+        runningtorizon=False,
+    ) # TargetDevice |  (optional)
 
+    # example passing only required values which don't have defaults set
+    try:
+        # Change device properties
+        api_response = api_instance.device_modify(device_id)
+        pprint(api_response)
+    except moses_client.ApiException as e:
+        print("Exception when calling DevicesApi->device_modify: %s\n" % e)
+
+    # example passing only required values which don't have defaults set
+    # and optional values
     try:
         # Change device properties
         api_response = api_instance.device_modify(device_id, device=device)
         pprint(api_response)
-    except ApiException as e:
+    except moses_client.ApiException as e:
         print("Exception when calling DevicesApi->device_modify: %s\n" % e)
 ```
+
 
 ### Parameters
 
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
- **device_id** | **str**| Target device serial number | 
- **device** | [**TargetDevice**](TargetDevice.md)|  | [optional] 
+ **device_id** | **str**| Target device serial number |
+ **device** | [**TargetDevice**](TargetDevice.md)|  | [optional]
 
 ### Return type
 
@@ -1494,6 +1596,7 @@ No authorization required
  - **Content-Type**: application/json
  - **Accept**: application/json
 
+
 ### HTTP response details
 | Status code | Description | Response headers |
 |-------------|-------------|------------------|
@@ -1506,7 +1609,7 @@ No authorization required
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
 
 # **device_opendocker**
-> int device_opendocker(device_id, port=port)
+> int device_opendocker(device_id)
 
 Expose remote docker
 
@@ -1515,10 +1618,10 @@ Expose remote docker port on localhost via SSH tunnel
 ### Example
 
 ```python
-from __future__ import print_function
 import time
 import moses_client
-from moses_client.rest import ApiException
+from moses_client.api import devices_api
+from moses_client.model.error_info import ErrorInfo
 from pprint import pprint
 # Defining the host is optional and defaults to http://localhost:5000/api
 # See configuration.py for a list of all supported configuration parameters.
@@ -1530,24 +1633,35 @@ configuration = moses_client.Configuration(
 # Enter a context with an instance of the API client
 with moses_client.ApiClient() as api_client:
     # Create an instance of the API class
-    api_instance = moses_client.DevicesApi(api_client)
-    device_id = 'device_id_example' # str | Target device serial number
-port = 56 # int |  (optional)
+    api_instance = devices_api.DevicesApi(api_client)
+    device_id = "zA9LCSLv1C1ylmgd0.Y2TA" # str | Target device serial number
+    port = 1 # int |  (optional)
 
+    # example passing only required values which don't have defaults set
+    try:
+        # Expose remote docker
+        api_response = api_instance.device_opendocker(device_id)
+        pprint(api_response)
+    except moses_client.ApiException as e:
+        print("Exception when calling DevicesApi->device_opendocker: %s\n" % e)
+
+    # example passing only required values which don't have defaults set
+    # and optional values
     try:
         # Expose remote docker
         api_response = api_instance.device_opendocker(device_id, port=port)
         pprint(api_response)
-    except ApiException as e:
+    except moses_client.ApiException as e:
         print("Exception when calling DevicesApi->device_opendocker: %s\n" % e)
 ```
+
 
 ### Parameters
 
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
- **device_id** | **str**| Target device serial number | 
- **port** | **int**|  | [optional] 
+ **device_id** | **str**| Target device serial number |
+ **port** | **int**|  | [optional]
 
 ### Return type
 
@@ -1561,6 +1675,7 @@ No authorization required
 
  - **Content-Type**: Not defined
  - **Accept**: application/json
+
 
 ### HTTP response details
 | Status code | Description | Response headers |
@@ -1574,7 +1689,7 @@ No authorization required
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
 
 # **device_openssh**
-> int device_openssh(device_id, port=port)
+> int device_openssh(device_id)
 
 Expose shell via SSH
 
@@ -1583,10 +1698,10 @@ Expose remote shell on local port via SSH
 ### Example
 
 ```python
-from __future__ import print_function
 import time
 import moses_client
-from moses_client.rest import ApiException
+from moses_client.api import devices_api
+from moses_client.model.error_info import ErrorInfo
 from pprint import pprint
 # Defining the host is optional and defaults to http://localhost:5000/api
 # See configuration.py for a list of all supported configuration parameters.
@@ -1598,24 +1713,35 @@ configuration = moses_client.Configuration(
 # Enter a context with an instance of the API client
 with moses_client.ApiClient() as api_client:
     # Create an instance of the API class
-    api_instance = moses_client.DevicesApi(api_client)
-    device_id = 'device_id_example' # str | Target device serial number
-port = 56 # int |  (optional)
+    api_instance = devices_api.DevicesApi(api_client)
+    device_id = "zA9LCSLv1C1ylmgd0.Y2TA" # str | Target device serial number
+    port = 1 # int |  (optional)
 
+    # example passing only required values which don't have defaults set
+    try:
+        # Expose shell via SSH
+        api_response = api_instance.device_openssh(device_id)
+        pprint(api_response)
+    except moses_client.ApiException as e:
+        print("Exception when calling DevicesApi->device_openssh: %s\n" % e)
+
+    # example passing only required values which don't have defaults set
+    # and optional values
     try:
         # Expose shell via SSH
         api_response = api_instance.device_openssh(device_id, port=port)
         pprint(api_response)
-    except ApiException as e:
+    except moses_client.ApiException as e:
         print("Exception when calling DevicesApi->device_openssh: %s\n" % e)
 ```
+
 
 ### Parameters
 
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
- **device_id** | **str**| Target device serial number | 
- **port** | **int**|  | [optional] 
+ **device_id** | **str**| Target device serial number |
+ **port** | **int**|  | [optional]
 
 ### Return type
 
@@ -1630,6 +1756,7 @@ No authorization required
  - **Content-Type**: Not defined
  - **Accept**: application/json
 
+
 ### HTTP response details
 | Status code | Description | Response headers |
 |-------------|-------------|------------------|
@@ -1642,7 +1769,7 @@ No authorization required
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
 
 # **device_syncfolders**
-> device_syncfolders(device_id, sourcefolder, destfolder, progress_id=progress_id)
+> device_syncfolders(device_id, sourcefolder, destfolder)
 
 Synchronize folders
 
@@ -1651,10 +1778,10 @@ Synchronize folders between host and target
 ### Example
 
 ```python
-from __future__ import print_function
 import time
 import moses_client
-from moses_client.rest import ApiException
+from moses_client.api import devices_api
+from moses_client.model.error_info import ErrorInfo
 from pprint import pprint
 # Defining the host is optional and defaults to http://localhost:5000/api
 # See configuration.py for a list of all supported configuration parameters.
@@ -1666,27 +1793,37 @@ configuration = moses_client.Configuration(
 # Enter a context with an instance of the API client
 with moses_client.ApiClient() as api_client:
     # Create an instance of the API class
-    api_instance = moses_client.DevicesApi(api_client)
-    device_id = 'device_id_example' # str | Target device serial number
-sourcefolder = 'sourcefolder_example' # str | 
-destfolder = 'destfolder_example' # str | 
-progress_id = 'progress_id_example' # str | Id of a progress cookie (uuid) (optional)
+    api_instance = devices_api.DevicesApi(api_client)
+    device_id = "zA9LCSLv1C1ylmgd0.Y2TA" # str | Target device serial number
+    sourcefolder = "sourcefolder_example" # str | 
+    destfolder = "destfolder_example" # str | 
+    progress_id = "55914d4d-6Ea1-8e3e-53E0-3fEE4Bc7d,,c" # str | Id of a progress cookie (uuid) (optional)
 
+    # example passing only required values which don't have defaults set
+    try:
+        # Synchronize folders
+        api_instance.device_syncfolders(device_id, sourcefolder, destfolder)
+    except moses_client.ApiException as e:
+        print("Exception when calling DevicesApi->device_syncfolders: %s\n" % e)
+
+    # example passing only required values which don't have defaults set
+    # and optional values
     try:
         # Synchronize folders
         api_instance.device_syncfolders(device_id, sourcefolder, destfolder, progress_id=progress_id)
-    except ApiException as e:
+    except moses_client.ApiException as e:
         print("Exception when calling DevicesApi->device_syncfolders: %s\n" % e)
 ```
+
 
 ### Parameters
 
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
- **device_id** | **str**| Target device serial number | 
- **sourcefolder** | **str**|  | 
- **destfolder** | **str**|  | 
- **progress_id** | **str**| Id of a progress cookie (uuid) | [optional] 
+ **device_id** | **str**| Target device serial number |
+ **sourcefolder** | **str**|  |
+ **destfolder** | **str**|  |
+ **progress_id** | **str**| Id of a progress cookie (uuid) | [optional]
 
 ### Return type
 
@@ -1700,6 +1837,7 @@ No authorization required
 
  - **Content-Type**: Not defined
  - **Accept**: application/json
+
 
 ### HTTP response details
 | Status code | Description | Response headers |
@@ -1725,10 +1863,11 @@ Checks for updates on the remote device and return up-to-date information
 ### Example
 
 ```python
-from __future__ import print_function
 import time
 import moses_client
-from moses_client.rest import ApiException
+from moses_client.api import devices_api
+from moses_client.model.error_info import ErrorInfo
+from moses_client.model.target_device import TargetDevice
 from pprint import pprint
 # Defining the host is optional and defaults to http://localhost:5000/api
 # See configuration.py for a list of all supported configuration parameters.
@@ -1740,22 +1879,24 @@ configuration = moses_client.Configuration(
 # Enter a context with an instance of the API client
 with moses_client.ApiClient() as api_client:
     # Create an instance of the API class
-    api_instance = moses_client.DevicesApi(api_client)
-    device_id = 'device_id_example' # str | Target device serial number
+    api_instance = devices_api.DevicesApi(api_client)
+    device_id = "zA9LCSLv1C1ylmgd0.Y2TA" # str | Target device serial number
 
+    # example passing only required values which don't have defaults set
     try:
         # Update device information
         api_response = api_instance.device_update(device_id)
         pprint(api_response)
-    except ApiException as e:
+    except moses_client.ApiException as e:
         print("Exception when calling DevicesApi->device_update: %s\n" % e)
 ```
+
 
 ### Parameters
 
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
- **device_id** | **str**| Target device serial number | 
+ **device_id** | **str**| Target device serial number |
 
 ### Return type
 
@@ -1769,6 +1910,7 @@ No authorization required
 
  - **Content-Type**: Not defined
  - **Accept**: application/json
+
 
 ### HTTP response details
 | Status code | Description | Response headers |
@@ -1784,7 +1926,7 @@ No authorization required
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
 
 # **devices_get**
-> list[TargetDevice] devices_get()
+> [TargetDevice] devices_get()
 
 Get all devices
 
@@ -1793,10 +1935,11 @@ Returns all configured devices
 ### Example
 
 ```python
-from __future__ import print_function
 import time
 import moses_client
-from moses_client.rest import ApiException
+from moses_client.api import devices_api
+from moses_client.model.error_info import ErrorInfo
+from moses_client.model.target_device import TargetDevice
 from pprint import pprint
 # Defining the host is optional and defaults to http://localhost:5000/api
 # See configuration.py for a list of all supported configuration parameters.
@@ -1808,22 +1951,24 @@ configuration = moses_client.Configuration(
 # Enter a context with an instance of the API client
 with moses_client.ApiClient() as api_client:
     # Create an instance of the API class
-    api_instance = moses_client.DevicesApi(api_client)
-    
+    api_instance = devices_api.DevicesApi(api_client)
+
+    # example, this endpoint has no required or optional parameters
     try:
         # Get all devices
         api_response = api_instance.devices_get()
         pprint(api_response)
-    except ApiException as e:
+    except moses_client.ApiException as e:
         print("Exception when calling DevicesApi->devices_get: %s\n" % e)
 ```
+
 
 ### Parameters
 This endpoint does not need any parameter.
 
 ### Return type
 
-[**list[TargetDevice]**](TargetDevice.md)
+[**[TargetDevice]**](TargetDevice.md)
 
 ### Authorization
 
@@ -1833,6 +1978,7 @@ No authorization required
 
  - **Content-Type**: Not defined
  - **Accept**: application/json
+
 
 ### HTTP response details
 | Status code | Description | Response headers |
@@ -1852,10 +1998,11 @@ Detect a device using its ip or hostname
 ### Example
 
 ```python
-from __future__ import print_function
 import time
 import moses_client
-from moses_client.rest import ApiException
+from moses_client.api import devices_api
+from moses_client.model.error_info import ErrorInfo
+from moses_client.model.target_device import TargetDevice
 from pprint import pprint
 # Defining the host is optional and defaults to http://localhost:5000/api
 # See configuration.py for a list of all supported configuration parameters.
@@ -1867,26 +2014,28 @@ configuration = moses_client.Configuration(
 # Enter a context with an instance of the API client
 with moses_client.ApiClient() as api_client:
     # Create an instance of the API class
-    api_instance = moses_client.DevicesApi(api_client)
-    hostname = 'hostname_example' # str | 
-username = 'username_example' # str | 
-password = 'password_example' # str | 
+    api_instance = devices_api.DevicesApi(api_client)
+    hostname = "hostname_example" # str | 
+    username = "username_example" # str | 
+    password = "password_example" # str | 
 
+    # example passing only required values which don't have defaults set
     try:
         # Detect a network device
         api_response = api_instance.devices_networkdetect(hostname, username, password)
         pprint(api_response)
-    except ApiException as e:
+    except moses_client.ApiException as e:
         print("Exception when calling DevicesApi->devices_networkdetect: %s\n" % e)
 ```
+
 
 ### Parameters
 
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
- **hostname** | **str**|  | 
- **username** | **str**|  | 
- **password** | **str**|  | 
+ **hostname** | **str**|  |
+ **username** | **str**|  |
+ **password** | **str**|  |
 
 ### Return type
 
@@ -1900,6 +2049,7 @@ No authorization required
 
  - **Content-Type**: Not defined
  - **Accept**: application/json
+
 
 ### HTTP response details
 | Status code | Description | Response headers |
@@ -1927,10 +2077,11 @@ Detect a device connected to a local serial port
 ### Example
 
 ```python
-from __future__ import print_function
 import time
 import moses_client
-from moses_client.rest import ApiException
+from moses_client.api import devices_api
+from moses_client.model.error_info import ErrorInfo
+from moses_client.model.target_device import TargetDevice
 from pprint import pprint
 # Defining the host is optional and defaults to http://localhost:5000/api
 # See configuration.py for a list of all supported configuration parameters.
@@ -1942,26 +2093,28 @@ configuration = moses_client.Configuration(
 # Enter a context with an instance of the API client
 with moses_client.ApiClient() as api_client:
     # Create an instance of the API class
-    api_instance = moses_client.DevicesApi(api_client)
-    port = 'port_example' # str | 
-username = 'username_example' # str | 
-password = 'password_example' # str | 
+    api_instance = devices_api.DevicesApi(api_client)
+    port = "port_example" # str | 
+    username = "username_example" # str | 
+    password = "password_example" # str | 
 
+    # example passing only required values which don't have defaults set
     try:
         # Detect a serial device
         api_response = api_instance.devices_serialdetect(port, username, password)
         pprint(api_response)
-    except ApiException as e:
+    except moses_client.ApiException as e:
         print("Exception when calling DevicesApi->devices_serialdetect: %s\n" % e)
 ```
+
 
 ### Parameters
 
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
- **port** | **str**|  | 
- **username** | **str**|  | 
- **password** | **str**|  | 
+ **port** | **str**|  |
+ **username** | **str**|  |
+ **password** | **str**|  |
 
 ### Return type
 
@@ -1975,6 +2128,7 @@ No authorization required
 
  - **Content-Type**: Not defined
  - **Accept**: application/json
+
 
 ### HTTP response details
 | Status code | Description | Response headers |
@@ -2004,10 +2158,10 @@ Delete a specific container image from the device
 ### Example
 
 ```python
-from __future__ import print_function
 import time
 import moses_client
-from moses_client.rest import ApiException
+from moses_client.api import devices_api
+from moses_client.model.error_info import ErrorInfo
 from pprint import pprint
 # Defining the host is optional and defaults to http://localhost:5000/api
 # See configuration.py for a list of all supported configuration parameters.
@@ -2019,23 +2173,25 @@ configuration = moses_client.Configuration(
 # Enter a context with an instance of the API client
 with moses_client.ApiClient() as api_client:
     # Create an instance of the API class
-    api_instance = moses_client.DevicesApi(api_client)
-    device_id = 'device_id_example' # str | Target device serial number
-image_id = 'image_id_example' # str | Id of an image
+    api_instance = devices_api.DevicesApi(api_client)
+    device_id = "zA9LCSLv1C1ylmgd0.Y2TA" # str | Target device serial number
+    image_id = "sha256:555914d4d6Ea18e3e53E03fEE4Bc7d,,c0d281Fb40cDe1Fd7eaf49b6d348c6Fc" # str | Id of an image
 
+    # example passing only required values which don't have defaults set
     try:
         # Delete a container image
         api_instance.images_deleteimage(device_id, image_id)
-    except ApiException as e:
+    except moses_client.ApiException as e:
         print("Exception when calling DevicesApi->images_deleteimage: %s\n" % e)
 ```
+
 
 ### Parameters
 
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
- **device_id** | **str**| Target device serial number | 
- **image_id** | **str**| Id of an image | 
+ **device_id** | **str**| Target device serial number |
+ **image_id** | **str**| Id of an image |
 
 ### Return type
 
@@ -2049,6 +2205,7 @@ No authorization required
 
  - **Content-Type**: Not defined
  - **Accept**: application/json
+
 
 ### HTTP response details
 | Status code | Description | Response headers |
@@ -2072,10 +2229,11 @@ Get detailed information on a specific container image stored on a device
 ### Example
 
 ```python
-from __future__ import print_function
 import time
 import moses_client
-from moses_client.rest import ApiException
+from moses_client.api import devices_api
+from moses_client.model.error_info import ErrorInfo
+from moses_client.model.docker_image import DockerImage
 from pprint import pprint
 # Defining the host is optional and defaults to http://localhost:5000/api
 # See configuration.py for a list of all supported configuration parameters.
@@ -2087,24 +2245,26 @@ configuration = moses_client.Configuration(
 # Enter a context with an instance of the API client
 with moses_client.ApiClient() as api_client:
     # Create an instance of the API class
-    api_instance = moses_client.DevicesApi(api_client)
-    device_id = 'device_id_example' # str | Target device serial number
-image_id = 'image_id_example' # str | Id of an image
+    api_instance = devices_api.DevicesApi(api_client)
+    device_id = "zA9LCSLv1C1ylmgd0.Y2TA" # str | Target device serial number
+    image_id = "sha256:555914d4d6Ea18e3e53E03fEE4Bc7d,,c0d281Fb40cDe1Fd7eaf49b6d348c6Fc" # str | Id of an image
 
+    # example passing only required values which don't have defaults set
     try:
         # Get information about an image
         api_response = api_instance.images_getimage(device_id, image_id)
         pprint(api_response)
-    except ApiException as e:
+    except moses_client.ApiException as e:
         print("Exception when calling DevicesApi->images_getimage: %s\n" % e)
 ```
+
 
 ### Parameters
 
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
- **device_id** | **str**| Target device serial number | 
- **image_id** | **str**| Id of an image | 
+ **device_id** | **str**| Target device serial number |
+ **image_id** | **str**| Id of an image |
 
 ### Return type
 
@@ -2118,6 +2278,7 @@ No authorization required
 
  - **Content-Type**: Not defined
  - **Accept**: application/json
+
 
 ### HTTP response details
 | Status code | Description | Response headers |

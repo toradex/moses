@@ -9,7 +9,7 @@ Method | HTTP request | Description
 
 
 # **setup_enableemulation**
-> setup_enableemulation(progress_id=progress_id)
+> setup_enableemulation()
 
 Enable ARM emulation using binfmt/qemu
 
@@ -18,10 +18,10 @@ Uses an externa container that leverages binfmt and qemu to enable ARM32 and ARM
 ### Example
 
 ```python
-from __future__ import print_function
 import time
 import moses_client
-from moses_client.rest import ApiException
+from moses_client.api import setup_api
+from moses_client.model.error_info import ErrorInfo
 from pprint import pprint
 # Defining the host is optional and defaults to http://localhost:5000/api
 # See configuration.py for a list of all supported configuration parameters.
@@ -33,21 +33,24 @@ configuration = moses_client.Configuration(
 # Enter a context with an instance of the API client
 with moses_client.ApiClient() as api_client:
     # Create an instance of the API class
-    api_instance = moses_client.SetupApi(api_client)
-    progress_id = 'progress_id_example' # str | Id of a progress cookie (uuid) (optional)
+    api_instance = setup_api.SetupApi(api_client)
+    progress_id = "55914d4d-6Ea1-8e3e-53E0-3fEE4Bc7d,,c" # str | Id of a progress cookie (uuid) (optional)
 
+    # example passing only required values which don't have defaults set
+    # and optional values
     try:
         # Enable ARM emulation using binfmt/qemu
         api_instance.setup_enableemulation(progress_id=progress_id)
-    except ApiException as e:
+    except moses_client.ApiException as e:
         print("Exception when calling SetupApi->setup_enableemulation: %s\n" % e)
 ```
+
 
 ### Parameters
 
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
- **progress_id** | **str**| Id of a progress cookie (uuid) | [optional] 
+ **progress_id** | **str**| Id of a progress cookie (uuid) | [optional]
 
 ### Return type
 
@@ -61,6 +64,7 @@ No authorization required
 
  - **Content-Type**: Not defined
  - **Accept**: application/json
+
 
 ### HTTP response details
 | Status code | Description | Response headers |
@@ -73,7 +77,7 @@ No authorization required
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
 
 # **setup_pullcontainers**
-> setup_pullcontainers(progress_id=progress_id)
+> setup_pullcontainers()
 
 Pulls container from docker repo
 
@@ -82,10 +86,10 @@ Pulls all base and SDK base container for the configured platforms. This can als
 ### Example
 
 ```python
-from __future__ import print_function
 import time
 import moses_client
-from moses_client.rest import ApiException
+from moses_client.api import setup_api
+from moses_client.model.error_info import ErrorInfo
 from pprint import pprint
 # Defining the host is optional and defaults to http://localhost:5000/api
 # See configuration.py for a list of all supported configuration parameters.
@@ -97,21 +101,24 @@ configuration = moses_client.Configuration(
 # Enter a context with an instance of the API client
 with moses_client.ApiClient() as api_client:
     # Create an instance of the API class
-    api_instance = moses_client.SetupApi(api_client)
-    progress_id = 'progress_id_example' # str | Id of a progress cookie (uuid) (optional)
+    api_instance = setup_api.SetupApi(api_client)
+    progress_id = "55914d4d-6Ea1-8e3e-53E0-3fEE4Bc7d,,c" # str | Id of a progress cookie (uuid) (optional)
 
+    # example passing only required values which don't have defaults set
+    # and optional values
     try:
         # Pulls container from docker repo
         api_instance.setup_pullcontainers(progress_id=progress_id)
-    except ApiException as e:
+    except moses_client.ApiException as e:
         print("Exception when calling SetupApi->setup_pullcontainers: %s\n" % e)
 ```
+
 
 ### Parameters
 
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
- **progress_id** | **str**| Id of a progress cookie (uuid) | [optional] 
+ **progress_id** | **str**| Id of a progress cookie (uuid) | [optional]
 
 ### Return type
 
@@ -125,6 +132,7 @@ No authorization required
 
  - **Content-Type**: Not defined
  - **Accept**: application/json
+
 
 ### HTTP response details
 | Status code | Description | Response headers |

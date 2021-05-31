@@ -1,5 +1,6 @@
 # TargetDevice
 
+
 ## Properties
 Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------

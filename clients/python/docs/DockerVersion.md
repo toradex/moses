@@ -1,11 +1,12 @@
 # DockerVersion
 
 Information about docker version
+
 ## Properties
 Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
 **platform** | [**DockerVersionPlatform**](DockerVersionPlatform.md) |  | [optional] 
-**components** | [**list[DockerVersionComponents]**](DockerVersionComponents.md) |  | [optional] 
+**components** | [**[DockerVersionComponents]**](DockerVersionComponents.md) |  | [optional] 
 **version** | **str** |  | [optional] 
 **api_version** | **str** |  | [optional] 
 **min_api_version** | **str** |  | [optional] 

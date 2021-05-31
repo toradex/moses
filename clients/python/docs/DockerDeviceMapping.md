@@ -1,6 +1,7 @@
 # DockerDeviceMapping
 
 A device mapping between the host and container
+
 ## Properties
 Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------

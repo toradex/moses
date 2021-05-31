@@ -19,7 +19,7 @@ Name | Type | Description | Notes
 **Volumes** | **Dictionary&lt;string, Dictionary&lt;string, string&gt;&gt;** | Local folders to be mounted as mount points inside a container | [optional] 
 **Devices** | **Dictionary&lt;string, List&lt;string&gt;&gt;** | Additional devices to be shared inside container | [optional] 
 **Networks** | **Dictionary&lt;string, List&lt;string&gt;&gt;** | Networks used by container (in debug it will always be also on bridge) | [optional] 
-**Extraparms** | **Dictionary&lt;string, Dictionary&lt;string, Object&gt;&gt;** | Additional parameter passed to the run call (check docker SDK for python for reference, value is YAML) | [optional] 
+**Extraparms** | **Dictionary&lt;string, Dictionary&lt;string, string&gt;&gt;** | Additional parameter passed to the run call (check docker SDK for python for reference, value is YAML) | [optional] 
 **Props** | **Dictionary&lt;string, Dictionary&lt;string, string&gt;&gt;** | Custom properties (may be used in dockerfile or by extensions) | [optional] 
 **Description** | **string** | Platform human-readable description | [optional] [readonly] 
 **Tags** | **List&lt;string&gt;** | strings used to identify specific properties of the platform | [optional] [readonly] 
