@@ -15,6 +15,8 @@ class EULA(config.ConfigurableObject):
         {"title", "question", "filepath"}
     )
 
+    publicfields: set = set()
+
     def __init__(self, folder: Path, standard: bool):
         """Load eula information from folder.
 
@@ -48,17 +50,6 @@ class EULA(config.ConfigurableObject):
 
         """
         return True
-
-    def to_json(self) -> Dict[str, Any]:
-        """Convert object to an array of json-compatible key-value pairs.
-
-        :return: properties as a dictionary
-        :rtype: Dict[str, Any]
-
-        """
-        fields = super().to_json()
-        del fields["standard"]
-        return fields
 
     def _build_folder_path(self) -> Path:
         """Create full folder path from id and other info.

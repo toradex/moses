@@ -50,6 +50,7 @@ class TargetDevice(config.ConfigurableKeysObject):
     """
 
     readonlyfields = config.ConfigurableKeysObject.readonlyfields.copy()
+    publicfields: set = set()
 
     def __init__(self, folder: Optional[Path] = None):
         """Load data from a configuration file.
