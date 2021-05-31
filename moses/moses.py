@@ -121,7 +121,7 @@ if __name__ == "__main__":
     platformconfig.PlatformConfig.parse_schema(schema["definitions"]["Platform"])
 
     app.app.json_encoder = api.CustomJSONEncoder
-    api.init_api()
+    api.init_api(schema)
 
     with open("swagger.yaml") as swagger_file:
         swagger_yaml = yaml.load(swagger_file, Loader=yaml.FullLoader)

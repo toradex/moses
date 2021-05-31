@@ -12,6 +12,9 @@ import platformconfig
 import config
 import moses_exceptions
 import progresscookie
+from moses_exceptions import LocalDockerError
+import openapienforce
+
 
 # This module has many lines, but mostly wrappers between API calls
 # and the internal object, so it makes sense to keep those together
@@ -25,8 +28,6 @@ API_VERSION = "1.0"
 EMULATION_IMAGE_NAME = "torizon/binfmt"
 
 # validation of readonly fields is done internally
-
-
 # pylint: disable=unused-argument
 def remove_readonly(validator: Any, readonly: Any, instance: Any,
                     schema: Any) -> None:
@@ -66,7 +67,7 @@ class CustomJSONEncoder(connexion.apps.flask_app.FlaskJSONEncoder):
         """
         to_json = getattr(obj, "to_json", None)
         if callable(to_json):
-            return obj.to_json()
+            return openapienforce.denullify(obj.to_json())
         return connexion.apps.flask_app.FlaskJSONEncoder.default(self, obj)
 
 
@@ -129,11 +130,11 @@ def version_docker_get() -> Any:
     try:
         client = docker.from_env()
 
-        return (client.version(), 200)
+        return (openapienforce.normalize_object_from_type(client.version(),"Docker_Version"), 200)
     # pylint: disable=broad-except
-    except Exception:
-        return ("Docker not responding", 500)
-
+    except Exception as exception:
+        logging.exception("docker version")
+        raise LocalDockerError(exception) from exception
 
 def devices_get() -> Any:
     """Return the list of devices.
@@ -400,7 +401,7 @@ def devices_device_processes_get(device_id: str) -> Any:
 
     processes = devices[device_id].get_process_list()
     processes.sort(key=lambda x: x["pid"])
-    return (processes, 200)
+    return (openapienforce.normalize_array_from_type(processes,"Process"), 200)
 
 
 def devices_device_memory_get(device_id: str) -> Any:
@@ -417,7 +418,9 @@ def devices_device_memory_get(device_id: str) -> Any:
     if device_id not in devices:
         return ("Device not found", 404)
 
-    return (devices[device_id].get_memoryinfo(), 200)
+    return (openapienforce.normalize_object_from_type(
+        devices[device_id].get_memoryinfo(),
+        "MemInfo"), 200)
 
 
 def devices_device_storage_get(device_id: str) -> Any:
@@ -436,7 +439,7 @@ def devices_device_storage_get(device_id: str) -> Any:
 
     mountpoints = devices[device_id].get_storageinfo()
     mountpoints.sort(key=lambda x: x["mountpoint"])
-    return (mountpoints, 200)
+    return (openapienforce.normalize_array_from_type(mountpoints,"MountPoint"), 200)
 
 
 def devices_device_images_get(device_id: str) -> Any:
@@ -459,7 +462,7 @@ def devices_device_images_get(device_id: str) -> Any:
         if ("RepoTags" in x.keys() and len(x["RepoTags"]) > 0)
         else "~" + x["Id"]
     )
-    return (images, 200)
+    return (openapienforce.normalize_array_from_type(images,"Docker_Image"), 200)
 
 
 def devices_device_images_image_get(device_id: str, image_id: str) -> Any:
@@ -482,7 +485,7 @@ def devices_device_images_image_get(device_id: str, image_id: str) -> Any:
 
     if image is None:
         return ("Image not found", 404)
-    return (image.attrs, 200)
+    return (openapienforce.normalize_object_from_type(image.attrs,"Docker_Image"), 200)
 
 
 def devices_device_images_image_delete(device_id: str, image_id: str) -> Any:
@@ -526,7 +529,7 @@ def devices_device_containers_get(device_id: str) -> Any:
         if ("Name" in x.keys() and x["Name"] is not None)
         else "~" + x["Id"]
     )
-    return (containers, 200)
+    return (openapienforce.normalize_array_from_type(containers,"Docker_Container"), 200)
 
 
 def devices_device_containers_container_get(
@@ -550,7 +553,7 @@ def devices_device_containers_container_get(
 
     if container is None:
         return ("Container not found", 404)
-    return (container.attrs, 200)
+    return (openapienforce.normalize_object_from_type(container.attrs,"Docker_Container"), 200)
 
 
 def devices_device_containers_container_delete(
@@ -594,7 +597,7 @@ def devices_device_containers_container_start_get(
 
     device = devices[device_id]
     container = device.start_container(container_id)
-    return (container.attrs, 200)
+    return (openapienforce.normalize_object_from_type(container.attrs,"Docker_Container"), 200)
 
 
 def devices_device_containers_container_stop_get(
@@ -616,7 +619,7 @@ def devices_device_containers_container_stop_get(
 
     device = devices[device_id]
     container = device.stop_container(container_id)
-    return (container.attrs, 200)
+    return (openapienforce.normalize_object_from_type(container.attrs,"Docker_Container"), 200)
 
 
 def devices_device_containers_container_processes_get(
@@ -638,7 +641,7 @@ def devices_device_containers_container_processes_get(
 
     processes = devices[device_id].get_container_process_list(container_id)
     processes.sort(key=lambda x: x["pid"])
-    return (processes, 200)
+    return (openapienforce.normalize_array_from_type(processes,"Process"), 200)
 
 
 def devices_device_containers_container_memory_get(
@@ -658,7 +661,9 @@ def devices_device_containers_container_memory_get(
     if device_id not in devices:
         return ("Device not found", 404)
 
-    return (devices[device_id].get_container_memoryinfo(container_id), 200)
+    return (openapienforce.normalize_object_from_type(
+                devices[device_id].get_container_memoryinfo(container_id),
+                "MemInfo"), 200)
 
 
 def devices_device_containers_container_storage_get(
@@ -680,7 +685,7 @@ def devices_device_containers_container_storage_get(
 
     mountpoints = devices[device_id].get_container_storageinfo(container_id)
     mountpoints.sort(key=lambda x: x["mountpoint"])
-    return (mountpoints, 200)
+    return (openapienforce.normalize_array_from_type(mountpoints,"MountPoint"), 200)
 
 
 def devices_device_containers_container_logs_get(
@@ -1141,7 +1146,7 @@ def applications_application_run_get(
 
         progresscookie.progress_completed(progress)
 
-        return (container, 200)
+        return (openapienforce.normalize_object_from_type(container,"Docker_Container"), 200)
     except Exception as exception:
         progresscookie.progress_report_error(progress, exception)
         raise
@@ -1203,12 +1208,12 @@ def applications_application_container_get(
     if device_id not in devices:
         return ("Device not found", 404)
 
-    cfg = app.get_container(configuration, devices[device_id])
+    container = app.get_container(configuration, devices[device_id])
 
-    if cfg is None:
+    if container is None:
         return ("Container not found", 404)
 
-    return (cfg.attrs, 200)
+    return (openapienforce.normalize_object_from_type(container.attrs,"Docker_Container"), 200)
 
 
 def applications_application_sdk_container_get(
@@ -1229,12 +1234,12 @@ def applications_application_sdk_container_get(
         return ("Application not found", 404)
 
     app = applications[application_id]
-    cfg = app.get_sdk_container(configuration)
+    container = app.get_sdk_container(configuration)
 
-    if cfg is None:
+    if container is None:
         return (connexion.NoContent, 204)
 
-    return (cfg.attrs, 200)
+    return (openapienforce.normalize_object_from_type(container.attrs,"Docker_Container"), 200)
 
 
 def applications_application_container_logs_get(
@@ -1407,7 +1412,9 @@ def applications_application_sdk_run_get(
 
         progresscookie.progress_completed(progress)
 
-        return (app.sdksshaddress, 200)
+        if app.sdksshaddress[configuration] is None:
+            return ({"HostIp":"", "HostPort": ""}, 200)
+        return (app.sdksshaddress[configuration], 200)
     except Exception as exception:
         progresscookie.progress_report_error(progress, exception)
         raise
@@ -1715,7 +1722,7 @@ def progress_create_get() -> Any:
 
     progress_data = cookies.get_update(cookie.id, False)
 
-    return (progress_data, 200)
+    return (openapienforce.normalize_object_from_type(progress_data,"Progress"), 200)
 
 
 def progress_delete_get(progress_id: str = "") -> Any:
@@ -1749,9 +1756,14 @@ def progress_status_get(progress_id: str = "") -> Any:
     if progress_data is None:
         return (connexion.NoContent, 404)
 
-    return (progress_data, 200)
+    return (openapienforce.normalize_object_from_type(progress_data,"Progress"), 200)
 
 
-def init_api() -> None:
-    """Initialize the api and allocates all required objects."""
+def init_api(schema: Dict[str,Any]) -> None:
+    """Initialize the api and allocates all required objects.
+
+    :param schema: contents of swagger.YAML
+    :type schema: Any
+    """
     config.ServerConfig()
+    openapienforce.init_openapi_enforce(schema)

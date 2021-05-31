@@ -24,6 +24,7 @@ class ConfigurableObject:
 
     readonlyfields: set = {"folder"}
     generatedfields: Mapping[str,Callable[[Any],Dict[str,Any]]] = {}
+    publicfields: set = set()
 
     @classmethod
     def parse_schema(cls, schema: dict) -> None:
@@ -37,6 +38,7 @@ class ConfigurableObject:
 
         """
         for key, prop in schema["properties"].items():
+            cls.publicfields.add(key)
             if "readOnly" in prop:
                 if prop["readOnly"]:
                     cls.readonlyfields.add(key)
@@ -201,8 +203,15 @@ class ConfigurableObject:
 
         """
         fields = self.__getstate__()
-        # we keep id in the info we return via REST
         fields["id"] = self.id
+        to_be_removed = []
+        for key in fields.keys():
+            if not key in self.publicfields:
+                to_be_removed.append(key)
+
+        for key in to_be_removed:
+            del fields[key]
+
         return fields
 
 
@@ -297,20 +306,6 @@ class ConfigurableKeysObject(ConfigurableObject):
             )
         else:
             os.chmod(keypath, 0o600)
-
-    def to_json(self) -> Dict[str, Any]:
-        """Convert object to an array of json-compatible key-value pairs.
-
-        Remove keys from json serialization
-
-        :return: properties as a dictionary
-        :rtype: Dict[str, Any]
-
-        """
-        fields = super().to_json()
-        del fields["privatekey"]
-        del fields["publickey"]
-        return fields
 
     def get_privatekeypath(self) -> Optional[str]:
         """Return path for the private key file.

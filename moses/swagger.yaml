@@ -1,7 +1,7 @@
 swagger: "2.0"
 info:
   description: Toradex API to build and deploy applications running as containers on Torizon
-  version: 1.1.1
+  version: 1.1.2
   title: Torizon IDE-backend API
 consumes:
   - application/json
@@ -107,7 +107,7 @@ paths:
         546:
           $ref: "#/responses/InvalidDeviceError_546"
         547:
-          $ref: "#/responses/InvalidModelError_547"          
+          $ref: "#/responses/InvalidModelError_547"
 
   /devices/serial_detect:
     get:
@@ -1002,7 +1002,7 @@ paths:
       tags:
         - Applications
       summary: Create an application configuration
-      description: Create a new application configuration 
+      description: Create a new application configuration
       parameters:
         - name: platform_id
           in: query
@@ -1170,7 +1170,7 @@ paths:
           $ref: "#/responses/LocalDockerError_530"
         551:
           $ref: "#/responses/AbortError_551"
-       
+
 
   /applications/{application_id}/deploy:
 
@@ -1363,7 +1363,7 @@ paths:
       operationId: application_getdocker_composefile
       tags:
         - Applications
-      summary: Get docker compose file 
+      summary: Get docker compose file
       description: Return docker-compose file that can be used to run the application container and its dependencies
       parameters:
         - $ref: "#/parameters/application_id"
@@ -1487,7 +1487,7 @@ paths:
           $ref: "#/responses/SSHError_533"
         551:
           $ref: "#/responses/AbortError_551"
-  
+
   /applications/{application_id}/sdk/container:
 
     get:
@@ -1575,7 +1575,7 @@ paths:
       tags:
         - Applications
       summary: Get the path of the RSA private key
-      description: Retrieve the path of the private key that allows passwordless connection to the container. 
+      description: Retrieve the path of the private key that allows passwordless connection to the container.
                    The application stores the public key inside the container if ssh is enabled (usually for debug builds only)
       parameters:
         - $ref: "#/parameters/application_id"
@@ -1596,7 +1596,7 @@ paths:
       tags:
         - Applications
       summary: Clean id and keys from application configuration
-      description: This operation make the application no longer valid, but allow you to upload it to a git repo from where it can be cloned/forked. 
+      description: This operation make the application no longer valid, but allow you to upload it to a git repo from where it can be cloned/forked.
                    Id and keys will be re-generated on next re-opening of the application, leading to different names for the images etc.
       parameters:
         - $ref: "#/parameters/application_id"
@@ -1659,7 +1659,7 @@ paths:
         200:
           description: Progress Cookie Information
           schema:
-            $ref: "#definitions/Progress"
+            $ref: "#/definitions/Progress"
         500:
           $ref: "#/responses/InternalServerError_500"
 
@@ -1678,7 +1678,7 @@ paths:
         200:
           description: Progress Cookie Information
           schema:
-            $ref: "#definitions/Progress"
+            $ref: "#/definitions/Progress"
         404:
           description: Object not found
         500:
@@ -1690,7 +1690,7 @@ paths:
       operationId: progress_delete
       summary: Releases a progress cookie
       description: Delete the cookie. If the operation is pending this will cause an abort. Abort may not be immediate.
-                   After the delete operation is called the progress cookie id is no longer valid and further calls to 
+                   After the delete operation is called the progress cookie id is no longer valid and further calls to
                    progress_status will fail.
       tags:
         - Progress
@@ -1833,13 +1833,13 @@ definitions:
 
   Eula:
     type: object
-    properties: 
+    properties:
       id:
         type: string
         description: Unique name (should be filesystem-compatible)
         example: nxp
         readOnly: true
-      title: 
+      title:
         type: string
         description: eula title
         readOnly: true
@@ -1945,12 +1945,7 @@ definitions:
         additionalProperties:
           type: object
           additionalProperties:
-            type: object
-            properties:
-              name:
-                type: string
-              value:
-                type: string
+            type: string
         description: Additional parameter passed to the run call (check docker SDK for python for reference, value is YAML)
         example: { network_mode: host }
       props:
@@ -2055,7 +2050,7 @@ definitions:
         additionalProperties:
           type: object
           additionalProperties:
-                type: string
+            type: string
         description: Additional parameter passed to the run call (check docker SDK for python for reference, value is YAML)
         example: { network_mode: host }
       username:
@@ -2065,7 +2060,7 @@ definitions:
         type: object
         additionalProperties:
           type: string
-        description: SHA-ids of the debug and release images        
+        description: SHA-ids of the debug and release images
       sdkimages:
         type: object
         additionalProperties:
@@ -2083,6 +2078,7 @@ definitions:
         description: unique tag used for the SDK images (if application uses an SDK)
 
   ErrorInfo:
+    type: object
     properties:
       code:
         type: integer
@@ -3382,7 +3378,7 @@ definitions:
 
   Progress:
     type: object
-    properties: 
+    properties:
       id:
         type: string
         description: "cookie"
@@ -3393,7 +3389,7 @@ definitions:
         readOnly: true
       messages:
         type: array
-        items: 
+        items:
           type: string
           description: output message
         readOnly: true

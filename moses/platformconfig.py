@@ -17,6 +17,8 @@ from moses_exceptions import PlatformDoesNotExistError
 class PlatformConfig(config.ConfigurableObject, properties.PropertiesObject):
     """Class used to manage a platform."""
 
+    publicfields: set = set()
+
     def __init__(self, folder: Path = None, standard: bool = False) -> None:
         """Load data from a configuration folder.
 

@@ -27,6 +27,8 @@ class ApplicationConfigBase(
         {"images", "sdkimages"}
     )
 
+    publicfields: set = set()
+
     non_nullable_properties = [
         "dockercomposefile",
         "startupscript",
@@ -118,6 +120,7 @@ class ApplicationConfigBase(
                 try:
                     _ = localdocker.images.get(imgid)
                 except docker.errors.ImageNotFound:
+                    logging.error(f"Image {imgid} not found")
                     self.__dict__[field][configuration] = ""
 
     def _generate_keys(self) -> None:
