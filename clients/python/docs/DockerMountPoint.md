@@ -1,6 +1,7 @@
 # DockerMountPoint
 
 A mount point inside a container
+
 ## Properties
 Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------

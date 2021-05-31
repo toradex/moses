@@ -1,6 +1,7 @@
 # DockerMountBindOptions
 
 Optional configuration for the `bind` type.
+
 ## Properties
 Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------

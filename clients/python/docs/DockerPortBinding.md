@@ -1,6 +1,7 @@
 # DockerPortBinding
 
 PortBinding represents a binding between a host IP address and a host port. 
+
 ## Properties
 Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------

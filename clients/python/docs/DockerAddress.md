@@ -1,6 +1,7 @@
 # DockerAddress
 
 Address represents an IPv4 or IPv6 IP address.
+
 ## Properties
 Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
