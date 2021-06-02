@@ -163,6 +163,7 @@ def run_rsync(
             "-o",
             "-t",
             "-q" if progress is None else "-v",
+            "--delete",
             "-e",
             "ssh -p "
             + str(port)
