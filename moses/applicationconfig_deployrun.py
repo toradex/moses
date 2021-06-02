@@ -758,7 +758,7 @@ def _run_rsync_from_sdk(self: ApplicationConfigBase,
         sftp.chmod(".ssh/id_rsa", 0o600)
         sftp.close()
 
-        rsynccommand = "rsync -rzv "
+        rsynccommand = "rsync -rzv --delete "
         rsynccommand += (
             '-e "ssh -p ' + port + ' -o \\"StrictHostKeyChecking no\\"" '
         )
