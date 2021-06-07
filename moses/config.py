@@ -316,7 +316,13 @@ class ConfigurableKeysObject(ConfigurableObject):
         if self.folder is None:
             return None
 
-        self._set_key_permissions()
+        try:
+            self._set_key_permissions()
+        # permission changes may not work when running as a container
+        # under windows, but this does not prevent ssh from working
+        # pylint: disable = broad-except
+        except Exception:
+            pass
         return os.path.join(self.folder, "id_rsa")
 
 
