@@ -436,7 +436,7 @@ class ApplicationConfigBase(
         sdkimage_tags["release"]=self.get_sdk_image_name("release")
         return sdkimage_tags
 
-    generatedfields : Mapping[str,Callable[[Any],Dict[str,Any]]] = dict(
+    generatedfields : Mapping[str,Callable[[Any],Any]] = dict(
         imagetags=_get_image_tags,
         sdkimagetags=_get_sdkimage_tags,
         **config.ConfigurableKeysObject.generatedfields)

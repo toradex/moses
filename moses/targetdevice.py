@@ -3,7 +3,7 @@ import io
 import logging
 import os
 import re
-from typing import Optional, List, Dict, Any
+from typing import Optional, List, Dict, Any, Mapping, Callable
 from pathlib import Path
 import docker
 import paramiko
@@ -71,6 +71,7 @@ class TargetDevice(config.ConfigurableKeysObject):
         self.sshforwarder: Optional[sharedssh.SSHListenThread] = None
         self.homefolder = ""
         self.runningtorizon = True
+        self.cpu_architecture = ""
 
         if self.folder is not None:
             self.load()
@@ -570,6 +571,32 @@ class TargetDevice(config.ConfigurableKeysObject):
         del fields["logs"]
         return fields
 
+    def __setstate__(self, fields: Dict[str, Any]) -> None:
+        """Fill cpu_architecture member if not specified.
+
+        :param fields: fields loaded from file
+        :type fields: Dict[str, Any]
+        """
+        super().__setstate__(fields)
+
+        if self.cpu_architecture == "" and self.model != "":
+            self.cpu_architecture = self._get_architecture_from_model()
+
+    def _get_architecture_from_model(self) -> str:
+        if self.model in targetdevice_setup.MODELS:
+            return targetdevice_setup.MODELS[self.model][2]
+        return ""
+
+    def _get_model_description(self:Any) -> str:
+        if self.model is None:
+            return "Community device"
+        if self.model in targetdevice_setup.MODELS:
+            return targetdevice_setup.MODELS[self.model][1]
+        return "Unknown Toradex device"
+
+    generatedfields : Mapping[str,Callable[[Any],Any]] = dict(
+        model_description=_get_model_description,
+        **config.ConfigurableKeysObject.generatedfields)
 
 class TargetDevices(Dict[str, TargetDevice], metaclass=singleton.Singleton):
     """Class that manages the list of devices.

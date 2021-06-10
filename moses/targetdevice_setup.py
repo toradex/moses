@@ -1,12 +1,11 @@
 """Module defining functions used during target device detection."""
 import logging
-from typing import TYPE_CHECKING
+from typing import TYPE_CHECKING, Dict, List
 import console
 from moses_exceptions import (
     SudoError,
     InvalidDeviceError,
-    InvalidDeviceIdError,
-    InvalidModelError)
+    InvalidDeviceIdError)
 
 # used to allow mypy to check types declared in a module
 # that can't be imported directly to avoid cyclic import
@@ -185,32 +184,47 @@ def get_version_info_from_console(
     dev.distroversion = dev.distroversion.lstrip("PRETTY_NAME=")
     dev.distroversion = dev.distroversion.strip('"')
 
-
 # dictionary with supported modules
-MODELS = dict.fromkeys(
-    ["0014", "0015", "0016", "0017"], "colibri-imx6")
-MODELS.update(dict.fromkeys(
-    ["0032", "0033", "0039"], "colibri-imx7"))
-MODELS.update(
-    dict.fromkeys(["0027", "0028", "0029", "0035"], "apalis-imx6")
-)
-MODELS.update(
-    dict.fromkeys(["0036", "0040", "0044", "0045"], "colibri-imx6ull")
-)
-MODELS.update(
-    dict.fromkeys(
-        ["0037", "0047", "0048", "0049", "0046", "0053", "0054", "0038"],
-        "apalis-imx8",
-    )
-)
-MODELS.update(
-    dict.fromkeys(["0038", "0050", "0051", "0052"], "colibri-imx8")
-)
-MODELS.update(
-    dict.fromkeys(
-        ["0055", "0056", "0057", "0059", "0060"], "verdin-imx8")
-)
-
+MODELS : Dict[str,List[str]] =  {
+"0014": ["colibri-imx6","Colibri iMX6S 256MB","arm7vl"],
+"0015": ["colibri-imx6","Colibri iMX6DL 512MB","arm7vl"],
+"0016": ["colibri-imx6","Colibri iMX6S 256MB IT","arm7vl"],
+"0017": ["colibri-imx6","Colibri iMX6DL 512MB IT","arm7vl"],
+"0027": ["apalis-imx6","Apalis iMX6Q 1GB","arm7vl"],
+"0028": ["apalis-imx6","Apalis iMX6Q 2GB IT","arm7vl"],
+"0029": ["apalis-imx6","Apalis iMX6D 512MB","arm7vl"],
+"0032": ["colibri-imx7","Colibri iMX7S 256MB","arm7vl"],
+"0033": ["colibri-imx7","Colibri iMX7D 512MB","arm7vl"],
+"0035": ["apalis-imx7","Apalis iMX6D 1GB IT","arm7vl"],
+"0036": ["colibri-imx6ull","Colibri iMX6ULL 256MB","arm7vl"],
+"0037": ["apalis-imx8","Apalis iMX8QM 4GB WB IT","aarch64"],
+"0038": ["colibri-imx8","Colibri iMX8QXP 2GB WB IT","aarch64"],
+"0039": ["colibri-imx7","Colibri iMX7D 1GB","arm7vl"],
+"0040": ["colibri-imx6ull","Colibri iMX6ULL 512MB WB IT","arm7vl"],
+"0044": ["colibri-imx6ull","Colibri iMX6ULL 512MB IT","arm7vl"],
+"0045": ["colibri-imx6ull","Colibri iMX6ULL 512MB WB","arm7vl"],
+"0046": ["apalis-imx8x","Apalis iMX8QXP 2GB WB IT","aarch64"],
+"0047": ["apalis-imx8","Apalis iMX8QM 4GB IT","aarch64"],
+"0048": ["apalis-imx8","Apalis iMX8QP 2GB WB","aarch64"],
+"0049": ["apalis-imx8","Apalis iMX8QP 2GB","aarch64"],
+"0050": ["colibri-imx8","Colibri iMX8QXP 2GB IT","aarch64"],
+"0051": ["colibri-imx8","Colibri iMX8DX 1GB WB","aarch64"],
+"0052": ["colibri-imx8","Colibri iMX8DX 1GB","aarch64"],
+"0053": ["apalis-imx8x","Apalis iMX8QXP 2GB ECC IT","aarch64"],
+"0054": ["apalis-imx8x","Apalis iMX8DXP 1GB","aarch64"],
+"0055": ["verdin-imx8","Verdin iMX8M Mini Quad 2GB WB IT","aarch64"],
+"0056": ["verdin-imx8","Verdin iMX8M Nano Quad 1GB WB","aarch64"],
+"0057": ["verdin-imx8","Verdin iMX8M Mini DualLite 1GB","aarch64"],
+"0058": ["verdin-imx8","Verdin iMX8M Plus Quad 4GB WB IT","aarch64"],
+"0059": ["verdin-imx8","Verdin iMX8M Mini Quad 2GB IT","aarch64"],
+"0060": ["verdin-imx8","Verdin iMX8M Mini DualLite 1GB WB IT","aarch64"],
+"0061": ["verdin-imx8","Verdin iMX8M Plus Quad 2GB","aarch64"],
+"0062": ["colibri-imx6ull","Colibri iMX6ULL 1GB IT","arm7vl"],
+"0063": ["verdin-imx8","Verdin iMX8M Plus Quad 4GB IT","aarch64"],
+"0064": ["verdin-imx8","Verdin iMX8M Plus Quad 2GB WB IT","aarch64"],
+"0065": ["verdin-imx8","Verdin iMX8M Plus QuadLite 1GB IT","aarch64"],
+"0066": ["verdin-imx8","Verdin iMX8M Plus Quad 8GB WB","aarch64"]
+}
 
 def _get_hostname_from_model(model: str) -> str:
     """Return default hostname for specific model.
@@ -223,8 +237,8 @@ def _get_hostname_from_model(model: str) -> str:
 
     """
     if model in MODELS:
-        return MODELS[model]
-    raise InvalidModelError(model)
+        return MODELS[model][0]
+    return "toradex-"+model
 
 
 def setup_device_from_console(dev: "targetdevice.TargetDevice",
@@ -243,6 +257,10 @@ def setup_device_from_console(dev: "targetdevice.TargetDevice",
     dev.id = console_.send_cmd(
         "cat /proc/device-tree/serial-number", timeout
     ).rstrip("\x00")
+
+    dev.cpu_architecture = console_.send_cmd(
+        "arch"
+    ).strip()
 
     # Toradex Devices has product Id
     productid = console_.send_cmd(
