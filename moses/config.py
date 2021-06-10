@@ -23,7 +23,7 @@ class ConfigurableObject:
     """
 
     readonlyfields: set = {"folder"}
-    generatedfields: Mapping[str,Callable[[Any],Dict[str,Any]]] = {}
+    generatedfields: Mapping[str,Callable[[Any],Any]] = {}
     publicfields: set = set()
 
     @classmethod

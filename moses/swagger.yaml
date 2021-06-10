@@ -1830,6 +1830,15 @@ definitions:
         type: boolean
         description: True for a target device that is a community device, false for default Toradex devices
         example: false
+      cpu_architecture:
+        type: string
+        description: CPU architecture
+        example: aarch64, armv7l
+      model_description:
+        type: string
+        description: detailed model description
+        example: Colibri imx6DL 512MB IT
+
 
   Eula:
     type: object

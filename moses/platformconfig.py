@@ -41,6 +41,7 @@ class PlatformConfig(config.ConfigurableObject, properties.PropertiesObject):
         self.usessh = False
         self.supportedmodels = ["*"]
         self.unsupportedmodels: List[str] = []
+        self.supportedarchitectures : List[str] = []
         self.container = {"common": None, "debug": None, "release": None}
 
         self.baseimage = {"common": None, "debug": None, "release": None}
@@ -167,23 +168,6 @@ class PlatformConfig(config.ConfigurableObject, properties.PropertiesObject):
 
         return True
 
-    def supports_model(self, model: str) -> bool:
-        """Check if this platform support a specific HW model.
-
-        :param model: Toradex model code
-        :type model: str
-        :returns: true if model is supported
-        :rtype: bool
-
-        """
-        if model in self.unsupportedmodels:
-            return False
-
-        if "*" in self.supportedmodels:
-            return True
-
-        return model in self.supportedmodels
-
     def get_prop(self, configuration: str, prop: str) -> Optional[str]:
         """Return value for a base property.
 
@@ -265,6 +249,12 @@ class PlatformConfig(config.ConfigurableObject, properties.PropertiesObject):
             return True
 
         if device.model in self.unsupportedmodels:
+            return False
+
+        if len(self.supportedarchitectures)>0:
+            if device.cpu_architecture is not None \
+                and device.cpu_architecture in self.supportedarchitectures:
+                return True
             return False
 
         if "*" in self.supportedmodels:
