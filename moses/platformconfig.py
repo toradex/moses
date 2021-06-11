@@ -204,13 +204,15 @@ class PlatformConfig(config.ConfigurableObject, properties.PropertiesObject):
 
         # those properties are used to generate a tag
         if prop in ("baseimage", "sdkbaseimage"):
-            if self.__dict__[prop][configuration] is not None:
+            if self.__dict__[prop][configuration] is not None \
+                and len (self.__dict__[prop][configuration]) > 0:
                 return ":".join(self.__dict__[prop][configuration])
             if self.__dict__[prop]["common"] is not None:
                 return ":".join(self.__dict__[prop]["common"])
 
         if isinstance(self.__dict__[prop], dict):
-            if self.__dict__[prop][configuration] is not None:
+            if self.__dict__[prop][configuration] is not None \
+                and len (self.__dict__[prop][configuration]) > 0:
                 return str(self.__dict__[prop][configuration])
             if self.__dict__[prop]["common"] is not None:
                 return str(self.__dict__[prop]["common"])
