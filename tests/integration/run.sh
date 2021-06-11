@@ -25,6 +25,14 @@ BATS_ERRORS_COUNT=0
 
 set -o pipefail
 
+print_message() {
+    if [ "$TIE_REPORT" = "1" ]; then
+        echo $1 >> $REPORT_FILE
+    fi
+    echo $1
+}
+
+
 run_tests() {
     if [ "$TIE_REPORT" = "1" ]; then
         $BATS_BIN --timing $@ 2>&1 | tee -a $REPORT_FILE
@@ -48,7 +56,7 @@ fi
 
 # check if setup.sh was sourced.
 if [ -z "$TIE_SETUP_LAUNCHED" ]; then
-    echo "Error: setup.sh was not sourced. Please execute 'source setup.sh' before running the test cases."
+    print_message "Error: setup.sh was not sourced. Please execute 'source setup.sh' before running the test cases."
     exit 1
 fi
 
@@ -67,20 +75,20 @@ if [ -z "$TIE_DEBUG_BACKEND" ]; then
     start_moses
 
     if ! check_moses; then
-        echo "Error starting ide-backend."
+        print_message "Error starting ide-backend."
         cat $MOSES_LOG_FILE
         exit -1
     fi
 
     MOSES_TIMEOUT=10
 
-    echo "Backend started with PID $MOSES_PID, waiting $MOSES_TIMEOUT'' for initialization."
+    print_message "Backend started with PID $MOSES_PID, waiting $MOSES_TIMEOUT'' for initialization."
 
     # delay to allow backend to process requests in further steps
     sleep $MOSES_TIMEOUT
 
     if ! check_moses; then
-        echo "Error during ide-backend initialization."
+        print_message "Error during ide-backend initialization."
         cat $MOSES_LOG_FILE
         exit -1
     fi
@@ -97,8 +105,7 @@ mkdir -p $TIE_EULASPATH
 run_tests $TESTCASES
 
 if [ ! -z "$TIE_PLATFORM" ]; then
-    declare -a MOSES_PLATFORMS_LIST
-    MOSES_PLATFORMS_LIST[0]="$TIE_PLATFORM"
+    read -a MOSES_PLATFORMS_LIST <<< $TIE_PLATFORM
 else
     readarray -t MOSES_PLATFORMS_LIST < <($TDSKT platforms | tail -n +2 | awk '{ print $1 }')
 fi
@@ -107,8 +114,7 @@ if [ ! -z "$TIE_DEVICE" ]; then
     if [ "$TIE_DEVICE" == "*" ]; then
         readarray -t MOSES_DEVICES_LIST < <($TDSKT devices | tail -n +2 | awk '{ print $1 }')
     else
-        declare -a MOSES_DEVICES_LIST
-        MOSES_DEVICES_LIST[0]="$TIE_DEVICE"
+        read -a MOSES_DEVICES_LIST <<< $TIE_DEVICE
     fi
 else
     declare -a MOSES_DEVICES_LIST
@@ -127,7 +133,7 @@ do
         multipath="$dir/${filename%.*}_multi_platform.bats"
 
         if [ -f "$multipath" ]; then
-            echo "# Testing $filename on $MOSES_CURRENT_PLATFORM"
+            print_message "# Testing $filename on $MOSES_CURRENT_PLATFORM"
             run_tests $multipath
         fi
 
@@ -136,7 +142,7 @@ do
         if [ -f "$multipath" ]; then
             for MOSES_CURRENT_DEVICE in "${MOSES_DEVICES_LIST[@]}"
             do
-                echo "# Testing $filename on $MOSES_CURRENT_PLATFORM / $MOSES_CURRENT_DEVICE"
+                print_message "# Testing $filename on $MOSES_CURRENT_PLATFORM / $MOSES_CURRENT_DEVICE"
                 run_tests $multipath
             done
         fi
@@ -159,7 +165,7 @@ do
         multipath="$dir/${filename%.*}_multi_device.bats"
 
         if [ -f "$multipath" ]; then
-            echo "# Testing $filename on $MOSES_CURRENT_DEVICE"
+            print_message "# Testing $filename on $MOSES_CURRENT_DEVICE"
             run_tests $multipath
         fi
     done
@@ -188,7 +194,7 @@ do
                 multipath="$dir/${filename%.*}_multi_sample.bats"
 
                 if [ -f "$multipath" ]; then
-                    echo "# Testing $filename on $appconfig"
+                    print_message "# Testing $filename on $appconfig"
                     run_tests $multipath
                 fi
 
@@ -197,7 +203,7 @@ do
                 if [ -f "$multipath" ]; then
                     for MOSES_CURRENT_DEVICE in "${MOSES_DEVICES_LIST[@]}"
                     do
-                        echo "# Testing $filename on $appconfig and $MOSES_CURRENT_DEVICE"
+                        print_message "# Testing $filename on $appconfig and $MOSES_CURRENT_DEVICE"
                         run_tests $multipath
                     done
                 fi
@@ -223,9 +229,9 @@ fi
 RETCODE=0
 
 if [ "$BATS_ERRORS_COUNT" -eq "0" ]; then
-    echo "Integration test completed successfully"
+    print_message "Integration test completed successfully"
 else
-    echo "$BATS_ERRORS_COUNT test(s) failed."
+    print_message "$BATS_ERRORS_COUNT test(s) failed."
     RETCODE=$BATS_ERRORS_COUNT
 fi
 
