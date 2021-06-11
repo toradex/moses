@@ -1555,6 +1555,8 @@ with moses_client.ApiClient() as api_client:
         username="torizon",
         homefolder="/home/torizon",
         runningtorizon=False,
+        cpu_architecture="aarch64, armv7l",
+        model_description="Colibri imx6DL 512MB IT",
     ) # TargetDevice |  (optional)
 
     # example passing only required values which don't have defaults set

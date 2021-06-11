@@ -178,7 +178,7 @@ class VersionApi(object):
                 async_req (bool): execute request asynchronously
 
             Returns:
-                {str: (bool, date, datetime, dict, float, int, list, str, none_type)}
+                bool, date, datetime, dict, float, int, list, str, none_type
                     If the method is called asynchronously, returns the request
                     thread.
             """
@@ -205,7 +205,7 @@ class VersionApi(object):
 
         self.version_get = _Endpoint(
             settings={
-                'response_type': ({str: (bool, date, datetime, dict, float, int, list, str, none_type)},),
+                'response_type': (bool, date, datetime, dict, float, int, list, str, none_type,),
                 'auth': [],
                 'endpoint_path': '/version',
                 'operation_id': 'version_get',

@@ -57,6 +57,14 @@ export class TargetDevice {
     * True for a target device that is a community device, false for default Toradex devices
     */
     'runningtorizon'?: boolean;
+    /**
+    * CPU architecture
+    */
+    'cpuArchitecture'?: string;
+    /**
+    * detailed model description
+    */
+    'modelDescription'?: string;
 
     static discriminator: string | undefined = undefined;
 
@@ -115,6 +123,16 @@ export class TargetDevice {
             "name": "runningtorizon",
             "baseName": "runningtorizon",
             "type": "boolean"
+        },
+        {
+            "name": "cpuArchitecture",
+            "baseName": "cpu_architecture",
+            "type": "string"
+        },
+        {
+            "name": "modelDescription",
+            "baseName": "model_description",
+            "type": "string"
         }    ];
 
     static getAttributeTypeMap() {

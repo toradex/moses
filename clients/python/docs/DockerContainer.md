@@ -14,7 +14,7 @@ Name | Type | Description | Notes
 **hostname_path** | **str** |  | [optional] 
 **hosts_path** | **str** |  | [optional] 
 **log_path** | **str** |  | [optional] 
-**node** | **{str: (bool, date, datetime, dict, float, int, list, str, none_type)}** | TODO | [optional] 
+**node** | **bool, date, datetime, dict, float, int, list, str, none_type** | TODO | [optional] 
 **name** | **str** |  | [optional] 
 **restart_count** | **int** |  | [optional] 
 **driver** | **str** |  | [optional] 
@@ -29,6 +29,7 @@ Name | Type | Description | Notes
 **mounts** | [**[DockerMountPoint]**](DockerMountPoint.md) |  | [optional] 
 **config** | [**DockerContainerConfig**](DockerContainerConfig.md) |  | [optional] 
 **network_settings** | [**DockerNetworkSettings**](DockerNetworkSettings.md) |  | [optional] 
+**any string name** | **bool, date, datetime, dict, float, int, list, str, none_type** | any string name can be used but the value must be the correct type | [optional]
 
 [[Back to Model list]](../README.md#documentation-for-models) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to README]](../README.md)
 

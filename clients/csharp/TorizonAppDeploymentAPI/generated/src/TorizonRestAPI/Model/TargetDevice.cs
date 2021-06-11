@@ -38,13 +38,17 @@ namespace TorizonRestAPI.Model
         /// <param name="username">User account used to connect to device via ssh.</param>
         /// <param name="homefolder">Home folder of ssh user (used to deploy files and apps, can be different from actual home).</param>
         /// <param name="runningtorizon">True for a target device that is a community device, false for default Toradex devices.</param>
-        public TargetDevice(string name = default(string), string hostname = default(string), string username = default(string), string homefolder = default(string), bool runningtorizon = default(bool))
+        /// <param name="cpuArchitecture">CPU architecture.</param>
+        /// <param name="modelDescription">detailed model description.</param>
+        public TargetDevice(string name = default(string), string hostname = default(string), string username = default(string), string homefolder = default(string), bool runningtorizon = default(bool), string cpuArchitecture = default(string), string modelDescription = default(string))
         {
             this.Name = name;
             this.Hostname = hostname;
             this.Username = username;
             this.Homefolder = homefolder;
             this.Runningtorizon = runningtorizon;
+            this.CpuArchitecture = cpuArchitecture;
+            this.ModelDescription = modelDescription;
         }
 
         /// <summary>
@@ -125,6 +129,20 @@ namespace TorizonRestAPI.Model
         public bool Runningtorizon { get; set; }
 
         /// <summary>
+        /// CPU architecture
+        /// </summary>
+        /// <value>CPU architecture</value>
+        [DataMember(Name="cpu_architecture", EmitDefaultValue=false)]
+        public string CpuArchitecture { get; set; }
+
+        /// <summary>
+        /// detailed model description
+        /// </summary>
+        /// <value>detailed model description</value>
+        [DataMember(Name="model_description", EmitDefaultValue=false)]
+        public string ModelDescription { get; set; }
+
+        /// <summary>
         /// Returns the string presentation of the object
         /// </summary>
         /// <returns>String presentation of the object</returns>
@@ -143,6 +161,8 @@ namespace TorizonRestAPI.Model
             sb.Append("  Username: ").Append(Username).Append("\n");
             sb.Append("  Homefolder: ").Append(Homefolder).Append("\n");
             sb.Append("  Runningtorizon: ").Append(Runningtorizon).Append("\n");
+            sb.Append("  CpuArchitecture: ").Append(CpuArchitecture).Append("\n");
+            sb.Append("  ModelDescription: ").Append(ModelDescription).Append("\n");
             sb.Append("}\n");
             return sb.ToString();
         }
@@ -231,6 +251,16 @@ namespace TorizonRestAPI.Model
                     this.Runningtorizon == input.Runningtorizon ||
                     (this.Runningtorizon != null &&
                     this.Runningtorizon.Equals(input.Runningtorizon))
+                ) && 
+                (
+                    this.CpuArchitecture == input.CpuArchitecture ||
+                    (this.CpuArchitecture != null &&
+                    this.CpuArchitecture.Equals(input.CpuArchitecture))
+                ) && 
+                (
+                    this.ModelDescription == input.ModelDescription ||
+                    (this.ModelDescription != null &&
+                    this.ModelDescription.Equals(input.ModelDescription))
                 );
         }
 
@@ -265,6 +295,10 @@ namespace TorizonRestAPI.Model
                     hashCode = hashCode * 59 + this.Homefolder.GetHashCode();
                 if (this.Runningtorizon != null)
                     hashCode = hashCode * 59 + this.Runningtorizon.GetHashCode();
+                if (this.CpuArchitecture != null)
+                    hashCode = hashCode * 59 + this.CpuArchitecture.GetHashCode();
+                if (this.ModelDescription != null)
+                    hashCode = hashCode * 59 + this.ModelDescription.GetHashCode();
                 return hashCode;
             }
         }

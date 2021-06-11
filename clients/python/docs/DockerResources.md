@@ -36,6 +36,7 @@ Name | Type | Description | Notes
 **cpu_percent** | **int** | The usable percentage of the available CPUs (Windows only).  On Windows Server containers, the processor resource controls are mutually exclusive. The order of precedence is &#x60;CPUCount&#x60; first, then &#x60;CPUShares&#x60;, and &#x60;CPUPercent&#x60; last.  | [optional] 
 **io_maximum_i_ops** | **int** | Maximum IOps for the container system drive (Windows only) | [optional] 
 **io_maximum_bandwidth** | **int** | Maximum IO in bytes per second for the container system drive (Windows only) | [optional] 
+**any string name** | **bool, date, datetime, dict, float, int, list, str, none_type** | any string name can be used but the value must be the correct type | [optional]
 
 [[Back to Model list]](../README.md#documentation-for-models) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to README]](../README.md)
 

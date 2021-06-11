@@ -25,6 +25,9 @@ from moses_client.model_utils import (  # noqa: F401
     none_type,
     validate_get_composed_info,
 )
+from ..model_utils import OpenApiModel
+from moses_client.exceptions import ApiAttributeError
+
 
 def lazy_import():
     from moses_client.model.docker_device_mapping import DockerDeviceMapping
@@ -75,7 +78,14 @@ class DockerResources(ModelNormal):
         },
     }
 
-    additional_properties_type = None
+    @cached_property
+    def additional_properties_type():
+        """
+        This must be a method because a model may have properties that are
+        of type self, this must run after the class is loaded
+        """
+        lazy_import()
+        return (bool, date, datetime, dict, float, int, list, str, none_type,)  # noqa: E501
 
     _nullable = False
 
@@ -163,7 +173,114 @@ class DockerResources(ModelNormal):
         'io_maximum_bandwidth': 'IOMaximumBandwidth',  # noqa: E501
     }
 
+    read_only_vars = {
+    }
+
     _composed_schemas = {}
+
+    @classmethod
+    @convert_js_args_to_python_args
+    def _from_openapi_data(cls, *args, **kwargs):  # noqa: E501
+        """DockerResources - a model defined in OpenAPI
+
+        Keyword Args:
+            _check_type (bool): if True, values for parameters in openapi_types
+                                will be type checked and a TypeError will be
+                                raised if the wrong type is input.
+                                Defaults to True
+            _path_to_item (tuple/list): This is a list of keys or values to
+                                drill down to the model in received_data
+                                when deserializing a response
+            _spec_property_naming (bool): True if the variable names in the input data
+                                are serialized names, as specified in the OpenAPI document.
+                                False if the variable names in the input data
+                                are pythonic names, e.g. snake case (default)
+            _configuration (Configuration): the instance to use when
+                                deserializing a file_type parameter.
+                                If passed, type conversion is attempted
+                                If omitted no type conversion is done.
+            _visited_composed_classes (tuple): This stores a tuple of
+                                classes that we have traveled through so that
+                                if we see that class again we will not use its
+                                discriminator again.
+                                When traveling through a discriminator, the
+                                composed schema that is
+                                is traveled through is added to this set.
+                                For example if Animal has a discriminator
+                                petType and we pass in "Dog", and the class Dog
+                                allOf includes Animal, we move through Animal
+                                once using the discriminator, and pick Dog.
+                                Then in Dog, we will make an instance of the
+                                Animal class but this time we won't travel
+                                through its discriminator because we passed in
+                                _visited_composed_classes = (Animal,)
+            cpu_shares (int): An integer value representing this container's relative CPU weight versus other containers.. [optional]  # noqa: E501
+            memory (int): Memory limit in bytes.. [optional] if omitted the server will use the default value of 0  # noqa: E501
+            cgroup_parent (str): Path to `cgroups` under which the container's `cgroup` is created. If the path is not absolute, the path is considered to be relative to the `cgroups` path of the init process. Cgroups are created if they do not already exist.. [optional]  # noqa: E501
+            blkio_weight (int): Block IO weight (relative weight).. [optional]  # noqa: E501
+            blkio_weight_device ([DockerResourcesBlkioWeightDevice]): Block IO weight (relative device weight) in the form `[{\"Path\": \"device_path\", \"Weight\": weight}]`. . [optional]  # noqa: E501
+            blkio_device_read_bps ([DockerThrottleDevice]): Limit read rate (bytes per second) from a device, in the form `[{\"Path\": \"device_path\", \"Rate\": rate}]`. . [optional]  # noqa: E501
+            blkio_device_write_bps ([DockerThrottleDevice]): Limit write rate (bytes per second) to a device, in the form `[{\"Path\": \"device_path\", \"Rate\": rate}]`. . [optional]  # noqa: E501
+            blkio_device_read_i_ops ([DockerThrottleDevice]): Limit read rate (IO per second) from a device, in the form `[{\"Path\": \"device_path\", \"Rate\": rate}]`. . [optional]  # noqa: E501
+            blkio_device_write_i_ops ([DockerThrottleDevice]): Limit write rate (IO per second) to a device, in the form `[{\"Path\": \"device_path\", \"Rate\": rate}]`. . [optional]  # noqa: E501
+            cpu_period (int): The length of a CPU period in microseconds.. [optional]  # noqa: E501
+            cpu_quota (int): Microseconds of CPU time that the container can get in a CPU period.. [optional]  # noqa: E501
+            cpu_realtime_period (int): The length of a CPU real-time period in microseconds. Set to 0 to allocate no time allocated to real-time tasks.. [optional]  # noqa: E501
+            cpu_realtime_runtime (int): The length of a CPU real-time runtime in microseconds. Set to 0 to allocate no time allocated to real-time tasks.. [optional]  # noqa: E501
+            cpuset_cpus (str): CPUs in which to allow execution (e.g., `0-3`, `0,1`). [optional]  # noqa: E501
+            cpuset_mems (str): Memory nodes (MEMs) in which to allow execution (0-3, 0,1). Only effective on NUMA systems.. [optional]  # noqa: E501
+            devices ([DockerDeviceMapping]): A list of devices to add to the container.. [optional]  # noqa: E501
+            device_cgroup_rules ([str]): a list of cgroup rules to apply to the container. [optional]  # noqa: E501
+            disk_quota (int): Disk limit (in bytes).. [optional]  # noqa: E501
+            kernel_memory (int): Kernel memory limit in bytes.. [optional]  # noqa: E501
+            memory_reservation (int): Memory soft limit in bytes.. [optional]  # noqa: E501
+            memory_swap (int): Total memory limit (memory + swap). Set as `-1` to enable unlimited swap.. [optional]  # noqa: E501
+            memory_swappiness (int, none_type): Tune a container's memory swappiness behavior. Accepts an integer between 0 and 100.. [optional]  # noqa: E501
+            nano_cpus (int): CPU quota in units of 10<sup>-9</sup> CPUs.. [optional]  # noqa: E501
+            oom_kill_disable (bool): Disable OOM Killer for the container.. [optional]  # noqa: E501
+            init (bool, none_type): Run an init inside the container that forwards signals and reaps processes. This field is omitted if empty, and the default (as configured on the daemon) is used.. [optional]  # noqa: E501
+            pids_limit (int, none_type): Tune a container's pids limit. Set -1 for unlimited.. [optional]  # noqa: E501
+            ulimits ([DockerResourcesUlimits]): A list of resource limits to set in the container. For example: `{\"Name\": \"nofile\", \"Soft\": 1024, \"Hard\": 2048}`\" . [optional]  # noqa: E501
+            cpu_count (int): The number of usable CPUs (Windows only).  On Windows Server containers, the processor resource controls are mutually exclusive. The order of precedence is `CPUCount` first, then `CPUShares`, and `CPUPercent` last. . [optional]  # noqa: E501
+            cpu_percent (int): The usable percentage of the available CPUs (Windows only).  On Windows Server containers, the processor resource controls are mutually exclusive. The order of precedence is `CPUCount` first, then `CPUShares`, and `CPUPercent` last. . [optional]  # noqa: E501
+            io_maximum_i_ops (int): Maximum IOps for the container system drive (Windows only). [optional]  # noqa: E501
+            io_maximum_bandwidth (int): Maximum IO in bytes per second for the container system drive (Windows only). [optional]  # noqa: E501
+        """
+
+        _check_type = kwargs.pop('_check_type', True)
+        _spec_property_naming = kwargs.pop('_spec_property_naming', False)
+        _path_to_item = kwargs.pop('_path_to_item', ())
+        _configuration = kwargs.pop('_configuration', None)
+        _visited_composed_classes = kwargs.pop('_visited_composed_classes', ())
+
+        self = super(OpenApiModel, cls).__new__(cls)
+
+        if args:
+            raise ApiTypeError(
+                "Invalid positional arguments=%s passed to %s. Remove those invalid positional arguments." % (
+                    args,
+                    self.__class__.__name__,
+                ),
+                path_to_item=_path_to_item,
+                valid_classes=(self.__class__,),
+            )
+
+        self._data_store = {}
+        self._check_type = _check_type
+        self._spec_property_naming = _spec_property_naming
+        self._path_to_item = _path_to_item
+        self._configuration = _configuration
+        self._visited_composed_classes = _visited_composed_classes + (self.__class__,)
+
+        for var_name, var_value in kwargs.items():
+            if var_name not in self.attribute_map and \
+                        self._configuration is not None and \
+                        self._configuration.discard_unknown_keys and \
+                        self.additional_properties_type is None:
+                # discard variable.
+                continue
+            setattr(self, var_name, var_value)
+        return self
 
     required_properties = set([
         '_data_store',
@@ -273,3 +390,6 @@ class DockerResources(ModelNormal):
                 # discard variable.
                 continue
             setattr(self, var_name, var_value)
+            if var_name in self.read_only_vars:
+                raise ApiAttributeError(f"`{var_name}` is a read-only attribute. Use `from_openapi_data` to instantiate "
+                                     f"class with read only attributes.")
