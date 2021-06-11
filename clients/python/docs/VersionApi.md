@@ -72,7 +72,7 @@ No authorization required
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
 
 # **version_get**
-> {str: (bool, date, datetime, dict, float, int, list, str, none_type)} version_get()
+> bool, date, datetime, dict, float, int, list, str, none_type version_get()
 
 APP/API version
 
@@ -112,7 +112,7 @@ This endpoint does not need any parameter.
 
 ### Return type
 
-**{str: (bool, date, datetime, dict, float, int, list, str, none_type)}**
+**bool, date, datetime, dict, float, int, list, str, none_type**
 
 ### Authorization
 

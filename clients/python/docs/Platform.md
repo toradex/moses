@@ -24,6 +24,7 @@ Name | Type | Description | Notes
 **tags** | **[str]** | strings used to identify specific properties of the platform | [optional] [readonly] 
 **architecture** | **str** | architecture as defined by docker | [optional] [readonly] 
 **deprecated** | **bool** | true for platforms that are no longer supported | [optional] [readonly] 
+**any string name** | **bool, date, datetime, dict, float, int, list, str, none_type** | any string name can be used but the value must be the correct type | [optional]
 
 [[Back to Model list]](../README.md#documentation-for-models) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to README]](../README.md)
 
