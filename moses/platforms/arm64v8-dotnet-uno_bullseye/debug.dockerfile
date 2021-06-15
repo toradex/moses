@@ -25,14 +25,7 @@ RUN apt-get -q -y update \
     openssl \
     openssh-server \
     rsync \
-    && apt-get clean && apt-get autoremove \
-    && rm -rf /var/lib/apt/lists/*
-
-# One layer only for extrapackages (this will speed up the docker build)
-RUN apt-get -q -y update \
-    && apt-get -q -y install \
     file \
-    #%application.extrapackages%#\
     && apt-get clean && apt-get autoremove \
     && rm -rf /var/lib/apt/lists/*
 
@@ -51,6 +44,12 @@ RUN mkdir /var/run/sshd \
 
 RUN rm -r /etc/ssh/ssh*key \
     && dpkg-reconfigure openssh-server
+
+RUN if [ ! -z "#%application.extrapackages%#" ]; then \
+    apt-get -q -y update \
+    && apt-get -q -y install #%application.extrapackages%# \
+    && rm -rf /var/lib/apt/lists/* ; \
+    fi
 
 #%application.buildfiles%#
 #%application.buildcommands%#

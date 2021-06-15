@@ -14,11 +14,17 @@ ENV DEBIAN_FRONTEND="noninteractive"
 # your regular RUN statements here
 # Install required packages
 RUN apt-get -q -y update \
-    && apt-get -q -y install #%application.extrapackages%# \
+    && apt-get -q -y install \
     libxdamage1 \
     libxfixes3 \
     libxext6 \
     && rm -rf /var/lib/apt/lists/*
+
+RUN if [ ! -z "#%application.extrapackages%#" ]; then \
+    apt-get -q -y update \
+    && apt-get -q -y install #%application.extrapackages%# \
+    && rm -rf /var/lib/apt/lists/* ; \
+    fi
 
 # commands that should be run after all packages have been installed (RUN/COPY/ADD)
 #%application.buildfiles%#

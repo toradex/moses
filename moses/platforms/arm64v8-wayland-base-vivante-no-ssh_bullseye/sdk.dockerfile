@@ -21,4 +21,16 @@ RUN apt-get -q -y update \
     #%application.sdkpackages%#\
     && rm -rf /var/lib/apt/lists/*
 
+RUN if [ ! -z "#%application.devpackages%#" ]; then \
+    apt-get -q -y update \
+    && apt-get -q -y install #%application.devpackages%# \
+    && rm -rf /var/lib/apt/lists/* ; \
+    fi
+
+RUN if [ ! -z "#%application.sdkpackages%#" ]; then \
+    apt-get -q -y update \
+    && apt-get -q -y install #%application.sdkpackages%# \
+    && rm -rf /var/lib/apt/lists/* ; \
+    fi
+
 #%application.sdkpostinstallcommands%#
