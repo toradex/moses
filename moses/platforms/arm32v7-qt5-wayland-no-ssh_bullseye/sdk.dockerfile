@@ -18,8 +18,18 @@ RUN apt-get -q -y update \
     && apt-get -q -y install gdb-multiarch procps rsync openssh-client\
     qt5-qmake:armhf \
     qtbase5-dev:armhf \
-    #%application.devpackages%#\
-    #%application.sdkpackages%#\
     && rm -rf /var/lib/apt/lists/*
+
+RUN if [ ! -z "#%application.devpackages%#" ]; then \
+    apt-get -q -y update \
+    && apt-get -q -y install #%application.devpackages%# \
+    && rm -rf /var/lib/apt/lists/* ; \
+    fi
+
+RUN if [ ! -z "#%application.sdkpackages%#" ]; then \
+    apt-get -q -y update \
+    && apt-get -q -y install #%application.sdkpackages%# \
+    && rm -rf /var/lib/apt/lists/* ; \
+    fi
 
 #%application.sdkpostinstallcommands%#

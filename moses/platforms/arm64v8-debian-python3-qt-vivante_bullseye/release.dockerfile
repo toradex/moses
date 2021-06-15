@@ -29,10 +29,15 @@ RUN apt-get update \
     python3-pyside2.qtquick \
     python3-pyside2.qtnetwork \
     qml-module-qtquick-dialogs \
-    #%application.extrapackages%#\
     && rm -rf /var/lib/apt/lists/*
 
 RUN pip3 install --upgrade pip
+
+RUN if [ ! -z "#%application.extrapackages%#" ]; then \
+    apt-get -q -y update \
+    && apt-get -q -y install #%application.extrapackages%# \
+    && rm -rf /var/lib/apt/lists/* ; \
+    fi
 
 COPY work/setup.sh /setup.sh
 COPY work/cleanup.sh /cleanup.sh

@@ -23,8 +23,13 @@ RUN apt-get -q -y update \
     procps \
     libxdamage1 \
     libxfixes3 \
-    #%application.extrapackages%#\
     && rm -rf /var/lib/apt/lists/*
+
+RUN if [ ! -z "#%application.extrapackages%#" ]; then \
+    apt-get -q -y update \
+    && apt-get -q -y install #%application.extrapackages%# \
+    && rm -rf /var/lib/apt/lists/* ; \
+    fi
 
 #%application.buildfiles%#
 #%application.buildcommands%#
