@@ -158,7 +158,7 @@ class SerialConsole(console.GenericConsole):
                 try:
                     # <ENTER>
                     self.ser.write("\n".encode("utf-8"))
-                    self.wait_for_prompt("login")
+                    self.wait_for_prompt("login: ")
 
                     # input username
                     self.ser.write(username.encode("utf-8"))
