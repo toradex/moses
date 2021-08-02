@@ -300,6 +300,8 @@ def setup_device_from_console(dev: "targetdevice.TargetDevice",
 
         dev.hostname = console_.send_cmd(
             "cat /etc/hostname", timeout).rstrip("\x00")
+        # make sure to resolve it with .local
+        dev.hostname += ".local"
     else:
         raise InvalidDeviceIdError()
 
@@ -319,6 +321,8 @@ def setup_device_from_console(dev: "targetdevice.TargetDevice",
 
     dev.hostname = console_.send_cmd(
         "hostname", timeout).rstrip("\x00").strip()
+    # make sure to resolve it with .local
+    dev.hostname += ".local"
 
     dev.homefolder = console_.send_cmd(
         "echo $HOME", timeout).rstrip("\x00").strip()
