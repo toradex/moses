@@ -6,8 +6,9 @@ mDNS provides a good solution for small LANs and does not require
 a server or router configuration.
 
 """
-import socket
+
 from typing import Tuple
+import socket
 import dns.resolver
 
 resolver = dns.resolver.Resolver()
@@ -37,7 +38,15 @@ def resolve_hostname(hostname: str) -> Tuple[str, bool]:
 
     # pylint: disable = broad-except
     try:
-        ipaddress = socket.gethostbyname(hostname)
+        info = socket.getaddrinfo(hostname, 0, 0, 0, 0)
+
+        for addrinfo in info:
+            if addrinfo[0] == socket.AF_INET:
+                # if not empty we got our address
+                if addrinfo[4][0]:
+                    ipaddress = addrinfo[4][0]
+                    break
+
     except socket.gaierror:
         if not hostname.endswith(".local"):
             hostname += ".local"
@@ -52,4 +61,5 @@ def resolve_hostname(hostname: str) -> Tuple[str, bool]:
             pass
     except Exception:
         pass
+
     return ipaddress, mdns
