@@ -31,7 +31,7 @@ USER #%application.username%#
 
 WORKDIR /#%application.appname%#
 
-CMD /dotnet/dotnet #%application.appname%#.dll #%application.appargs%#
+CMD /dotnet/dotnet #%application.appname%#.Skia.Gtk.dll #%application.appargs%#
 
 # commands that will run on the target (ENTRYPOINT or CMD)
 #%application.targetcommands%#
