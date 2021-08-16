@@ -19,6 +19,47 @@ setup_file() {
     fi
 }
 
+is_container_running() {
+    sleep 30
+
+    state="created"
+    while [ "$state" == "created" ]
+    do
+        state=$($TDSKT -p application $1 container $2 $MOSES_CURRENT_DEVICE | grep state | grep status | awk '{ print $3 }')
+    done
+
+    case  $state in
+        running)
+            return 0
+            ;;
+        paused)
+            echo "container paused."
+            return 1
+            ;;
+        restarting)
+            echo "container restarting."
+            return 2
+            ;;
+        removing)
+            echo "container removing."
+            return 3
+            ;;
+        exited)
+            echo "container exited."
+            echo $($TDSKT -p application $1 logs $2 $MOSES_CURRENT_DEVICE)
+            return 4
+            ;;
+        dead)
+            echo "container dead."
+            return 5
+            ;;
+        *)
+            echo "container state: $state"
+            return 6
+            ;;
+    esac
+}
+
 @test "ide-backend: deploy debug application" {
 
     if [ "$MOSES_DEV_COMPATIBLE" -eq "0" ]; then
@@ -52,15 +93,20 @@ setup_file() {
     assert_success
 }
 
-@test "ide-backend: get debug container" {
+@test "ide-backend: check that debug container is running" {
 
     if [ "$MOSES_DEV_COMPATIBLE" -eq "0" ]; then
         skip "device is not compatible with current platform"
     fi
 
+    # first check is used to verify that container exist, following one to verify that
+    # it's in running state
     application=$($TDSKT load $MOSES_CURRENT_APPLICATION_FOLDER | tr -d '\r')
     run $TDSKT -p application $application container debug $MOSES_CURRENT_DEVICE
     assert_success
+    if ! is_container_running $application debug; then
+        fail "container is not running."
+    fi
 }
 
 @test "ide-backend: run debug application" {
@@ -72,6 +118,20 @@ setup_file() {
     application=$($TDSKT load $MOSES_CURRENT_APPLICATION_FOLDER | tr -d '\r')
     run $TDSKT application $application run debug $MOSES_CURRENT_DEVICE
     assert_success
+}
+
+@test "ide-backend: check that debug container is running after restart" {
+
+    if [ "$MOSES_DEV_COMPATIBLE" -eq "0" ]; then
+        skip "device is not compatible with current platform"
+    fi
+
+    application=$($TDSKT load $MOSES_CURRENT_APPLICATION_FOLDER | tr -d '\r')
+    run $TDSKT -p application $application container debug $MOSES_CURRENT_DEVICE
+    assert_success
+    if ! is_container_running $application debug; then
+        fail "container is not running."
+    fi
 }
 
 @test "ide-backend: stop debug application" {
@@ -94,6 +154,16 @@ setup_file() {
     application=$($TDSKT load $MOSES_CURRENT_APPLICATION_FOLDER | tr -d '\r')
     run $TDSKT -p application $application logs debug $MOSES_CURRENT_DEVICE
     assert_success
+}
+
+@test "ide-backend: check that debug container has been removed" {
+
+    if [ "$MOSES_DEV_COMPATIBLE" -eq "0" ]; then
+        skip "device is not compatible with current platform"
+    fi
+
+    run $TDSKT -p application $application container debug $MOSES_CURRENT_DEVICE
+    assert_failure 2
 }
 
 @test "ide-backend: deploy release application" {
@@ -129,7 +199,7 @@ setup_file() {
     assert_success
 }
 
-@test "ide-backend: get release container" {
+@test "ide-backend: check that release container is running" {
 
     if [ "$MOSES_DEV_COMPATIBLE" -eq "0" ]; then
         skip "device is not compatible with current platform"
@@ -138,6 +208,9 @@ setup_file() {
     application=$($TDSKT load $MOSES_CURRENT_APPLICATION_FOLDER | tr -d '\r')
     run $TDSKT -p application $application container release $MOSES_CURRENT_DEVICE
     assert_success
+    if ! is_container_running $application release; then
+        fail "container is not running."
+    fi
 }
 
 @test "ide-backend: run release application" {
@@ -149,6 +222,20 @@ setup_file() {
     application=$($TDSKT load $MOSES_CURRENT_APPLICATION_FOLDER | tr -d '\r')
     run $TDSKT application $application run release $MOSES_CURRENT_DEVICE
     assert_success
+}
+
+@test "ide-backend: check that release container is running after restart" {
+
+    if [ "$MOSES_DEV_COMPATIBLE" -eq "0" ]; then
+        skip "device is not compatible with current platform"
+    fi
+
+    application=$($TDSKT load $MOSES_CURRENT_APPLICATION_FOLDER | tr -d '\r')
+    run $TDSKT -p application $application container release $MOSES_CURRENT_DEVICE
+    assert_success
+    if ! is_container_running $application release; then
+        fail "container is not running."
+    fi
 }
 
 @test "ide-backend: stop release application" {
@@ -171,6 +258,17 @@ setup_file() {
     application=$($TDSKT load $MOSES_CURRENT_APPLICATION_FOLDER | tr -d '\r')
     run $TDSKT -p application $application logs release $MOSES_CURRENT_DEVICE
     assert_success
+}
+
+@test "ide-backend: check that release container has been removed" {
+
+    if [ "$MOSES_DEV_COMPATIBLE" -eq "0" ]; then
+        skip "device is not compatible with current platform"
+    fi
+
+    application=$($TDSKT load $MOSES_CURRENT_APPLICATION_FOLDER | tr -d '\r')
+    run $TDSKT -p application $application container release $MOSES_CURRENT_DEVICE
+    assert_failure 2
 }
 
 teardown_file() {
