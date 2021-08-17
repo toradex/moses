@@ -8,6 +8,7 @@ rsync provided by WSL.
 import platform
 import subprocess
 import socket
+import os
 from typing import Optional, List
 import targetdevice
 import nameresolution
@@ -169,10 +170,22 @@ def run_rsync(
             + str(port)
             + " -q -i '"
             + keypath
-            + "' -o 'StrictHostKeyChecking no' -o 'UserKnownHostsFile /dev/null'",
+            + "' -o 'StrictHostKeyChecking no' -o 'UserKnownHostsFile /dev/null'"]
+
+        rsync_exclude_path = os.path.join(sourcefolder,".rsync-exclude-list")
+
+        if os.path.exists(rsync_exclude_path):
+            if SHOULD_TRANSLATE_PATH:
+                rsync_exclude_path = translate_path(rsync_exclude_path)
+
+            rsync_args.append(
+                "--exclude-from="+rsync_exclude_path
+            )
+
+        rsync_args.extend([
             sourcefolder,
             device.username + "@" + ipaddress + ":" + targetfolder,
-        ]
+        ])
 
         process = subprocess.Popen(
             rsync_args, stdout=subprocess.PIPE, stderr=subprocess.STDOUT
