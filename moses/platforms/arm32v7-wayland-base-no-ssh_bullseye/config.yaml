@@ -54,7 +54,7 @@ usessh: false
 sdkbaseimage:
   common:
     - "torizon/debian-cross-toolchain-armhf"
-    - "2"
+    - "2-bullseye"
   debug:
   release:
 # template file for SDK container build
