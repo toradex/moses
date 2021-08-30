@@ -22,7 +22,11 @@ class LocalRegistry(metaclass=singleton.Singleton):
         self._containername = socket.gethostname()+"_TIE_docker_registry"
         self._keypath=config.ServerConfig().certspath / (self._hostname+".key")
         self._certpath=config.ServerConfig().certspath / (self._hostname+".cert")
+        self._port = ""
+        self.localurl = ""
 
+
+    def _start_local_registry(self) -> None:
         # check if container is already running
         docker_client = docker.from_env()
 
@@ -93,6 +97,8 @@ class LocalRegistry(metaclass=singleton.Singleton):
         :param device: device
         :type device: targetdevice.TargetDevice
         """
+        self._start_local_registry()
+
         with remotedocker.RemoteDocker(device) as remote_docker:
 
             container = remote_docker.get_container(self._containername)
