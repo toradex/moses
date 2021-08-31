@@ -1068,6 +1068,26 @@ def cmd_handler_application_setprop(args) -> int:
     api.application_modify(args.application_id,application=application)
     return 0
 
+
+def cmd_handler_application_publish(args) -> int:
+    """Build the container for a specific configuration of the app
+
+    Arguments:
+        args {[type]} -- command line arguments
+
+    Returns:
+        int -- 0 for success
+    """
+    api = moses_client.api.applications_api.ApplicationsApi()
+
+    progress_id = handle_progress(args)
+
+    logging.info("Publishing application to Torizon OTA...")
+    api.application_publish(
+        args.application_id, args.credentials, args.username, args.password, progress_id=progress_id
+    )
+    return 0
+
 def cmd_handler_detect(args) -> int:
     """Detects a new serial or network device
 
@@ -1417,6 +1437,7 @@ def create_parser() -> argparse.ArgumentParser:
     application_push_parser = application_subparsers.add_parser("push")
     application_setprop_parser = application_subparsers.add_parser("setprop")
     application_logs_parser = application_subparsers.add_parser("logs")
+    application_publish_parser = application_subparsers.add_parser("publish")
 
     application_build_parser.add_argument(
         "configuration", help="debug/release or other app-specific configuration"
@@ -1509,7 +1530,8 @@ def create_parser() -> argparse.ArgumentParser:
     )
 
     application_setprop_parser.add_argument(
-        "configuration", help="debug/release/common or other app-specific configuration", default=None
+        "configuration", help="debug/release/common or other app-specific configuration",
+        nargs='?', default=None
     )
 
     application_logs_parser.add_argument(
@@ -1517,6 +1539,17 @@ def create_parser() -> argparse.ArgumentParser:
     )
     application_logs_parser.add_argument(
         "device_id", help="Device serial number", metavar="device-id"
+    )
+
+    application_publish_parser
+    application_publish_parser.add_argument(
+        "credentials", help="path to credentials.zip file"
+    )
+    application_publish_parser.add_argument(
+        "username", help="Username for docker registry login"
+    )
+    application_publish_parser.add_argument(
+        "password", help="password/token used for authentication"
     )
 
     eula_parser.add_argument(
