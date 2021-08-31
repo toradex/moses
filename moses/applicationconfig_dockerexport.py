@@ -497,6 +497,7 @@ _compose_parms: Dict[str, Optional[Callable]] = {
 
 # pylint: disable = too-many-locals
 # pylint: disable = too-many-branches
+# pylint: disable = too-many-statements
 def get_docker_composefile(self: ApplicationConfigBase,
                            configuration: str) -> Optional[str]:
     """Return a docker-compose file that can be used to run the application's container.
@@ -546,6 +547,33 @@ def get_docker_composefile(self: ApplicationConfigBase,
 
     # merge volumes, devices, ports into extraparms
     # (we can't have multiple instances of the same parameter)
+    _setup_extraparams(extraparms, ports, volumes, devices, service)
+
+    tag = self.get_custom_prop(configuration, "tag")
+
+    if not tag:
+        tag = self._get_image_name(configuration)
+
+    service["image"] = tag
+
+    if self._get_prop(configuration, "depends_on") is not None:
+        service["depends_on"] = self._get_prop(configuration, "depends_on")
+    else:
+        service["depends_on"] = list(composeyaml["services"].keys())
+
+    composeyaml["services"][self._get_image_name(configuration)] = service
+
+    for network in networks:
+        composeyaml["networks"][network] = {}
+
+    return yaml.dump(composeyaml)
+
+def _setup_extraparams(
+    extraparms: Dict[str,Any],
+    ports: Dict[str,str],
+    volumes: Dict[str,Any],
+    devices: List[str],
+    service: Dict[str,Any]) -> None:
     if not "ports" in extraparms:
         extraparms["ports"] = dict()
 
@@ -583,20 +611,6 @@ def get_docker_composefile(self: ApplicationConfigBase,
                 service[parm].extend(value)
             else:
                 service[parm] = value
-
-    service["image"] = self._get_image_name(configuration)
-
-    if self._get_prop(configuration, "depends_on") is not None:
-        service["depends_on"] = self._get_prop(configuration, "depends_on")
-    else:
-        service["depends_on"] = list(composeyaml["services"].keys())
-
-    composeyaml["services"][self._get_image_name(configuration)] = service
-
-    for network in networks:
-        composeyaml["networks"][network] = {}
-
-    return yaml.dump(composeyaml)
 
 
 def push_to_registry(self: ApplicationConfigBase, configuration: str, username: str,
