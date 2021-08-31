@@ -17,6 +17,7 @@ Return docker version information
 
 ### Example
 
+
 ```python
 import time
 import moses_client
@@ -64,6 +65,7 @@ No authorization required
 
 
 ### HTTP response details
+
 | Status code | Description | Response headers |
 |-------------|-------------|------------------|
 **200** | Successful |  -  |
@@ -79,6 +81,7 @@ APP/API version
 Return app and API version
 
 ### Example
+
 
 ```python
 import time
@@ -125,6 +128,7 @@ No authorization required
 
 
 ### HTTP response details
+
 | Status code | Description | Response headers |
 |-------------|-------------|------------------|
 **200** | Successful |  -  |

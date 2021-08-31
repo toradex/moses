@@ -18,6 +18,7 @@ Return a list of devices that are compatible with the platform
 
 ### Example
 
+
 ```python
 import time
 import moses_client
@@ -69,6 +70,7 @@ No authorization required
 
 
 ### HTTP response details
+
 | Status code | Description | Response headers |
 |-------------|-------------|------------------|
 **200** | List of devices |  -  |
@@ -85,6 +87,7 @@ Get detailed information about a platform
 Return data about a specific platform
 
 ### Example
+
 
 ```python
 import time
@@ -137,6 +140,7 @@ No authorization required
 
 
 ### HTTP response details
+
 | Status code | Description | Response headers |
 |-------------|-------------|------------------|
 **200** | Platform information |  -  |
@@ -153,6 +157,7 @@ Get all platforms
 Return all configured platforms
 
 ### Example
+
 
 ```python
 import time
@@ -206,6 +211,7 @@ No authorization required
 
 
 ### HTTP response details
+
 | Status code | Description | Response headers |
 |-------------|-------------|------------------|
 **200** | List of Platforms |  -  |

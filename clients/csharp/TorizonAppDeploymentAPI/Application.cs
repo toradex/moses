@@ -225,5 +225,15 @@ namespace TorizonAppDeploymentAPI
             await Task.Run(taskBuild);
             await task; // in this way exceptions will be generated
         }
+
+        public async Task PublishAsync(string username, string password, string credentials, Action<string,int> PublishCompleted)
+        {
+            Progress progress = null;
+            var taskBuild = CreateProgressTask(ref progress, PublishCompleted);
+
+            var task = api.ApplicationPublishAsync(this.Id, credentials, username, password, progress.Id);
+            await Task.Run(taskBuild);
+            await task; // in this way exceptions will be generated
+        }
     }
 }

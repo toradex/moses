@@ -14,6 +14,7 @@ Method | HTTP request | Description
 [**application_getdocker_composefile**](ApplicationsApi.md#application_getdocker_composefile) | **GET** /applications/{application_id}/docker_composefile | Get docker compose file
 [**application_getprivatekey**](ApplicationsApi.md#application_getprivatekey) | **GET** /applications/{application_id}/privatekey | Get the path of the RSA private key
 [**application_modify**](ApplicationsApi.md#application_modify) | **PUT** /applications/{application_id} | Change application properties
+[**application_publish**](ApplicationsApi.md#application_publish) | **GET** /applications/{application_id}/publish | Publish a new version of the application on Torizon OTA
 [**application_push_to_registry**](ApplicationsApi.md#application_push_to_registry) | **GET** /applications/{application_id}/push_to_registry | Push application to docker registry
 [**application_reseal**](ApplicationsApi.md#application_reseal) | **GET** /applications/{application_id}/reseal | Clean id and keys from application configuration
 [**application_run**](ApplicationsApi.md#application_run) | **GET** /applications/{application_id}/run | Run container image
@@ -35,6 +36,7 @@ Build container image
 Build application release or debug container
 
 ### Example
+
 
 ```python
 import time
@@ -97,6 +99,7 @@ No authorization required
 
 
 ### HTTP response details
+
 | Status code | Description | Response headers |
 |-------------|-------------|------------------|
 **200** | OK |  -  |
@@ -115,6 +118,7 @@ Remove an application
 Remove an application and all the associated data and containers
 
 ### Example
+
 
 ```python
 import time
@@ -165,6 +169,7 @@ No authorization required
 
 
 ### HTTP response details
+
 | Status code | Description | Response headers |
 |-------------|-------------|------------------|
 **204** | OK |  -  |
@@ -182,6 +187,7 @@ Deploy container image
 Deploy application container to target
 
 ### Example
+
 
 ```python
 import time
@@ -246,6 +252,7 @@ No authorization required
 
 
 ### HTTP response details
+
 | Status code | Description | Response headers |
 |-------------|-------------|------------------|
 **200** | OK |  -  |
@@ -268,6 +275,7 @@ Get application
 Returns a specified application, knowing its id
 
 ### Example
+
 
 ```python
 import time
@@ -320,6 +328,7 @@ No authorization required
 
 
 ### HTTP response details
+
 | Status code | Description | Response headers |
 |-------------|-------------|------------------|
 **200** | Returns application |  -  |
@@ -336,6 +345,7 @@ Get container information
 Get detailed informations about container
 
 ### Example
+
 
 ```python
 import time
@@ -392,6 +402,7 @@ No authorization required
 
 
 ### HTTP response details
+
 | Status code | Description | Response headers |
 |-------------|-------------|------------------|
 **200** | Container information |  -  |
@@ -413,6 +424,7 @@ Get one of more lines from container logs
 Return one chunk of log (one or more lines), blocking if no data is available
 
 ### Example
+
 
 ```python
 import time
@@ -479,6 +491,7 @@ No authorization required
 
 
 ### HTTP response details
+
 | Status code | Description | Response headers |
 |-------------|-------------|------------------|
 **200** | Log entries as text |  -  |
@@ -498,6 +511,7 @@ Get docker command line to run the application/json
 Return the full docker command line that can be used to run the application container
 
 ### Example
+
 
 ```python
 import time
@@ -551,6 +565,7 @@ No authorization required
 
 
 ### HTTP response details
+
 | Status code | Description | Response headers |
 |-------------|-------------|------------------|
 **200** | Command line |  -  |
@@ -569,6 +584,7 @@ Get docker compose file
 Return docker-compose file that can be used to run the application container and its dependencies
 
 ### Example
+
 
 ```python
 import time
@@ -622,6 +638,7 @@ No authorization required
 
 
 ### HTTP response details
+
 | Status code | Description | Response headers |
 |-------------|-------------|------------------|
 **200** | Docker-compose file (string with *nix line endings) |  -  |
@@ -640,6 +657,7 @@ Get the path of the RSA private key
 Retrieve the path of the private key that allows passwordless connection to the container. The application stores the public key inside the container if ssh is enabled (usually for debug builds only)
 
 ### Example
+
 
 ```python
 import time
@@ -691,6 +709,7 @@ No authorization required
 
 
 ### HTTP response details
+
 | Status code | Description | Response headers |
 |-------------|-------------|------------------|
 **200** | Key path |  -  |
@@ -707,6 +726,7 @@ Change application properties
 Changes specified properties on an application
 
 ### Example
+
 
 ```python
 import time
@@ -780,6 +800,8 @@ with moses_client.ApiClient() as api_client:
         sdkimagetags={
             "key": "key_example",
         },
+        otapackagename="otapackagename_example",
+        otapackageversion="otapackageversion_example",
     ) # Application |  (optional)
 
     # example passing only required values which don't have defaults set
@@ -823,6 +845,7 @@ No authorization required
 
 
 ### HTTP response details
+
 | Status code | Description | Response headers |
 |-------------|-------------|------------------|
 **200** | Application information |  -  |
@@ -830,6 +853,95 @@ No authorization required
 **500** | Unexpected exception. |  -  |
 **531** | Object Does not have a valid id. |  -  |
 **532** | Object cannot be saved because it&#39;s in an invalid state. |  -  |
+
+[[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
+
+# **application_publish**
+> application_publish(application_id, credentials, dockeruser, dockerpass)
+
+Publish a new version of the application on Torizon OTA
+
+Publishes a new package version for the application, if no credentials are provided, then only docker-compose file is generated.
+
+### Example
+
+
+```python
+import time
+import moses_client
+from moses_client.api import applications_api
+from moses_client.model.error_info import ErrorInfo
+from pprint import pprint
+# Defining the host is optional and defaults to http://localhost:5000/api
+# See configuration.py for a list of all supported configuration parameters.
+configuration = moses_client.Configuration(
+    host = "http://localhost:5000/api"
+)
+
+
+# Enter a context with an instance of the API client
+with moses_client.ApiClient() as api_client:
+    # Create an instance of the API class
+    api_instance = applications_api.ApplicationsApi(api_client)
+    application_id = "555914d4-d6Ea-18e3-e53E-03fEE4Bc7d,," # str | Id of an application (uuid)
+    credentials = "credentials_example" # str | credentials file
+    dockeruser = "dockeruser_example" # str | user for docker registry login
+    dockerpass = "dockerpass_example" # str | password for docker registry login
+    progress_id = "55914d4d-6Ea1-8e3e-53E0-3fEE4Bc7d,,c" # str | Id of a progress cookie (uuid) (optional)
+
+    # example passing only required values which don't have defaults set
+    try:
+        # Publish a new version of the application on Torizon OTA
+        api_instance.application_publish(application_id, credentials, dockeruser, dockerpass)
+    except moses_client.ApiException as e:
+        print("Exception when calling ApplicationsApi->application_publish: %s\n" % e)
+
+    # example passing only required values which don't have defaults set
+    # and optional values
+    try:
+        # Publish a new version of the application on Torizon OTA
+        api_instance.application_publish(application_id, credentials, dockeruser, dockerpass, progress_id=progress_id)
+    except moses_client.ApiException as e:
+        print("Exception when calling ApplicationsApi->application_publish: %s\n" % e)
+```
+
+
+### Parameters
+
+Name | Type | Description  | Notes
+------------- | ------------- | ------------- | -------------
+ **application_id** | **str**| Id of an application (uuid) |
+ **credentials** | **str**| credentials file |
+ **dockeruser** | **str**| user for docker registry login |
+ **dockerpass** | **str**| password for docker registry login |
+ **progress_id** | **str**| Id of a progress cookie (uuid) | [optional]
+
+### Return type
+
+void (empty response body)
+
+### Authorization
+
+No authorization required
+
+### HTTP request headers
+
+ - **Content-Type**: Not defined
+ - **Accept**: application/json
+
+
+### HTTP response details
+
+| Status code | Description | Response headers |
+|-------------|-------------|------------------|
+**200** | OK |  -  |
+**404** | Application not found |  -  |
+**500** | Unexpected exception. |  -  |
+**520** | Container image not found on local host. |  -  |
+**530** | Local docker exception. |  -  |
+**550** | No tag has been set for the image |  -  |
+**551** | Operation has been aborted |  -  |
+**552** | Invalid or missing parameter |  -  |
 
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
 
@@ -841,6 +953,7 @@ Push application to docker registry
 Push application's container to a docker registry, using authentication
 
 ### Example
+
 
 ```python
 import time
@@ -907,6 +1020,7 @@ No authorization required
 
 
 ### HTTP response details
+
 | Status code | Description | Response headers |
 |-------------|-------------|------------------|
 **200** | OK |  -  |
@@ -927,6 +1041,7 @@ Clean id and keys from application configuration
 This operation make the application no longer valid, but allow you to upload it to a git repo from where it can be cloned/forked. Id and keys will be re-generated on next re-opening of the application, leading to different names for the images etc.
 
 ### Example
+
 
 ```python
 import time
@@ -976,6 +1091,7 @@ No authorization required
 
 
 ### HTTP response details
+
 | Status code | Description | Response headers |
 |-------------|-------------|------------------|
 **200** | OK |  -  |
@@ -991,6 +1107,7 @@ Run container image
 Run the application release or debug container on target, if the application is already running, restarts it
 
 ### Example
+
 
 ```python
 import time
@@ -1058,6 +1175,7 @@ No authorization required
 
 
 ### HTTP response details
+
 | Status code | Description | Response headers |
 |-------------|-------------|------------------|
 **200** | Container information |  -  |
@@ -1080,6 +1198,7 @@ Run SDK containers
 Run SDK container and return its IP and SSH port
 
 ### Example
+
 
 ```python
 import time
@@ -1147,6 +1266,7 @@ No authorization required
 
 
 ### HTTP response details
+
 | Status code | Description | Response headers |
 |-------------|-------------|------------------|
 **200** | IP and port of the SSH port exposed by container (if any) |  -  |
@@ -1166,6 +1286,7 @@ Get SDK container
 Get SDK container information (can be used to check if it's running)
 
 ### Example
+
 
 ```python
 import time
@@ -1220,6 +1341,7 @@ No authorization required
 
 
 ### HTTP response details
+
 | Status code | Description | Response headers |
 |-------------|-------------|------------------|
 **200** | Container information |  -  |
@@ -1240,6 +1362,7 @@ Stop running container image
 Stop application release or debug container currently running on target, operation succeeds even if the container is not running
 
 ### Example
+
 
 ```python
 import time
@@ -1294,6 +1417,7 @@ No authorization required
 
 
 ### HTTP response details
+
 | Status code | Description | Response headers |
 |-------------|-------------|------------------|
 **200** | OK |  -  |
@@ -1312,6 +1436,7 @@ Synchronize folders
 Synchronizes folders between host/SDK container and the application container
 
 ### Example
+
 
 ```python
 import time
@@ -1382,6 +1507,7 @@ No authorization required
 
 
 ### HTTP response details
+
 | Status code | Description | Response headers |
 |-------------|-------------|------------------|
 **200** | OK |  -  |
@@ -1407,6 +1533,7 @@ Check if container image is up to date
 Check if some properties have been changed after the last build of the configuration-specific container image
 
 ### Example
+
 
 ```python
 import time
@@ -1460,6 +1587,7 @@ No authorization required
 
 
 ### HTTP response details
+
 | Status code | Description | Response headers |
 |-------------|-------------|------------------|
 **200** | true if container image is up to date |  -  |
@@ -1477,6 +1605,7 @@ Update SDK container
 Update the SDK container by adding new dev libraries or synchronizing sysroots
 
 ### Example
+
 
 ```python
 import time
@@ -1539,6 +1668,7 @@ No authorization required
 
 
 ### HTTP response details
+
 | Status code | Description | Response headers |
 |-------------|-------------|------------------|
 **200** | OK |  -  |
@@ -1559,6 +1689,7 @@ Create an application configuration
 Create a new application configuration
 
 ### Example
+
 
 ```python
 import time
@@ -1624,6 +1755,7 @@ No authorization required
 
 
 ### HTTP response details
+
 | Status code | Description | Response headers |
 |-------------|-------------|------------------|
 **200** | Application information |  -  |
@@ -1643,6 +1775,7 @@ Load an application configuration
 Load an application configuration from the local filesystem
 
 ### Example
+
 
 ```python
 import time
@@ -1695,6 +1828,7 @@ No authorization required
 
 
 ### HTTP response details
+
 | Status code | Description | Response headers |
 |-------------|-------------|------------------|
 **200** | Returns an application |  -  |

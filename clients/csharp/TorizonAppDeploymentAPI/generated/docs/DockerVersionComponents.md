@@ -6,7 +6,7 @@
 Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
 **Name** | **string** |  | 
-**Version** | **string** |  | 
+**_Version** | **string** |  | 
 **Details** | **Object** |  | [optional] 
 
 [[Back to Model list]](../README.md#documentation-for-models)

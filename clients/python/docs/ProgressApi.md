@@ -18,6 +18,7 @@ Creates a progress object that could be used to monitor and abort operations. A 
 
 ### Example
 
+
 ```python
 import time
 import moses_client
@@ -65,6 +66,7 @@ No authorization required
 
 
 ### HTTP response details
+
 | Status code | Description | Response headers |
 |-------------|-------------|------------------|
 **200** | Progress Cookie Information |  -  |
@@ -80,6 +82,7 @@ Releases a progress cookie
 Delete the cookie. If the operation is pending this will cause an abort. Abort may not be immediate. After the delete operation is called the progress cookie id is no longer valid and further calls to progress_status will fail.
 
 ### Example
+
 
 ```python
 import time
@@ -131,6 +134,7 @@ No authorization required
 
 
 ### HTTP response details
+
 | Status code | Description | Response headers |
 |-------------|-------------|------------------|
 **200** | OK |  -  |
@@ -146,6 +150,7 @@ Retrieves progress status of an operation
 Return the operation status, progress and messages, it's blocking until status changes or the operation is completed/terminated. Not all operations can return detailed progress information (it may not be possible to estimate it before starting the actual operation), it's anyway granted that an operation will report its completition/failure.
 
 ### Example
+
 
 ```python
 import time
@@ -199,6 +204,7 @@ No authorization required
 
 
 ### HTTP response details
+
 | Status code | Description | Response headers |
 |-------------|-------------|------------------|
 **200** | Progress Cookie Information |  -  |

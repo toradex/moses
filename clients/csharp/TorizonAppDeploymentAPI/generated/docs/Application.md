@@ -22,6 +22,8 @@ Name | Type | Description | Notes
 **Sdkimages** | **Dictionary&lt;string, string&gt;** | SHA-ids of the debug and release SDK images | [optional] 
 **Imagetags** | **Dictionary&lt;string, string&gt;** | unique tag used for the images | [optional] 
 **Sdkimagetags** | **Dictionary&lt;string, string&gt;** | unique tag used for the SDK images (if application uses an SDK) | [optional] 
+**Otapackagename** | **string** | name of the OTA package | [optional] 
+**Otapackageversion** | **string** | version of the OTA package | [optional] 
 
 [[Back to Model list]](../README.md#documentation-for-models)
 [[Back to API list]](../README.md#documentation-for-api-endpoints)
