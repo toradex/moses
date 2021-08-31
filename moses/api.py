@@ -1555,6 +1555,50 @@ def applications_application_reseal_get(application_id: str) -> Any:
     app.reseal()
     return (connexion.NoContent, 200)
 
+def applications_application_publish_get(
+        application_id: str, credentials: str,
+        dockeruser: str, dockerpass: str, progress_id: str = None) -> Any:
+    """Push application's container to docker registry.
+
+    :param application_id: application id
+    :type application_id: str
+    :param credentials: path of the credential.zip file used to sign the update
+    :type credentials: str
+    :param dockeruser: username for docker login
+    :type dockeruser: str
+    :param dockerpass: password for docker login
+    :type dockerpass: str
+    :param progress_id: progress object id  (Default value = None)
+    :type progress_id: str
+
+    :returns: API tuple with object and return code
+
+    """
+    cookies = progresscookie.ProgressCookies()
+    progress = None
+
+    if progress_id is not None and progress_id in cookies:
+        progress = cookies[progress_id]
+
+    try:
+        applications = applicationconfig.ApplicationConfigs()
+
+        if application_id not in applications:
+            raise moses_exceptions.ObjectNotFound(
+                "Application", application_id)
+
+        app = applications[application_id]
+
+        app.publish(credentials, dockeruser, dockerpass, progress)
+
+        progresscookie.progress_completed(progress)
+
+        return (connexion.NoContent, 200)
+    except Exception as exception:
+        progresscookie.progress_report_error(progress, exception)
+        raise
+
+
 
 # pylint: disable=too-many-nested-blocks
 # pylint: disable=too-many-branches

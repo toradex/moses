@@ -284,7 +284,8 @@ def push_image(client: DockerClient,
 def pull_image( client: DockerClient,
                 repository: str,
                 tag: Optional[str],
-                progress: Optional[progresscookie.ProgressCookie]
+                progress: Optional[progresscookie.ProgressCookie],
+                platform: Optional[str] = None
                 ) -> None:
     """Pull an image from registry providing progress information.
 
@@ -299,6 +300,7 @@ def pull_image( client: DockerClient,
     """
     apiclient = client.api
 
-    stream = apiclient.pull(repository, tag = tag, stream = True, decode = True)
+    stream = apiclient.pull(
+        repository, tag = tag, stream = True, decode = True, platform = platform)
 
     _process_pushpull_stream(stream, progress)

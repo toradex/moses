@@ -18,6 +18,7 @@ import applicationconfig_build
 import applicationconfig_deployrun
 import applicationconfig_sdk
 import applicationconfig_dockerexport
+import applicationconfig_publish
 
 
 class ApplicationConfig(ApplicationConfigBase):
@@ -39,6 +40,8 @@ class ApplicationConfig(ApplicationConfigBase):
     get_docker_commandline = applicationconfig_dockerexport.get_docker_commandline
     get_docker_composefile = applicationconfig_dockerexport.get_docker_composefile
     push_to_registry = applicationconfig_dockerexport.push_to_registry
+
+    publish = applicationconfig_publish.publish
 
     def touch(self) -> None:
         """Set modification date to current time."""

@@ -59,7 +59,7 @@ class InternalServerError(MosesError):
     code = 500
     description = "Unexpected exception."
 
-    def __init__(self, e: Optional[Exception]):
+    def __init__(self, e: Optional[Any]):
         """Encapsulate the original exception.
 
         :param e: Original exception
@@ -629,6 +629,17 @@ class AbortError(MosesError):
     def __init__(self) -> None:
         """Generate error string."""
         super().__init__("Operation has been aborted.")
+
+
+class InvalidOrMissingParameterError(MosesError):
+    """User aborted the operation."""
+
+    code = 552
+    description = "Invalid or missing parameter."
+
+    def __init__(self,parameter:str) -> None:
+        """Generate error string."""
+        super().__init__(f"Parameter {parameter} is missing or invalid.")
 
 
 def encode_error(exception: MosesError) -> flask.Response:
