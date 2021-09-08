@@ -46,6 +46,7 @@ Return one or more lines from the log, waiting until it's available, this will a
 
 ### Example
 
+
 ```python
 import time
 import moses_client
@@ -109,6 +110,7 @@ No authorization required
 
 
 ### HTTP response details
+
 | Status code | Description | Response headers |
 |-------------|-------------|------------------|
 **200** | Text from the logs |  -  |
@@ -129,6 +131,7 @@ Return container memory information
 Return total/free/available memory on a specific container running on a device
 
 ### Example
+
 
 ```python
 import time
@@ -183,6 +186,7 @@ No authorization required
 
 
 ### HTTP response details
+
 | Status code | Description | Response headers |
 |-------------|-------------|------------------|
 **200** | Memory information |  -  |
@@ -201,6 +205,7 @@ Return information about storage
 Return a list of mount points available inside the container
 
 ### Example
+
 
 ```python
 import time
@@ -255,6 +260,7 @@ No authorization required
 
 
 ### HTTP response details
+
 | Status code | Description | Response headers |
 |-------------|-------------|------------------|
 **200** | List of mount point information |  -  |
@@ -274,6 +280,7 @@ Get processes running in container
 Return a list of processes running in the specified container on a device
 
 ### Example
+
 
 ```python
 import time
@@ -328,6 +335,7 @@ No authorization required
 
 
 ### HTTP response details
+
 | Status code | Description | Response headers |
 |-------------|-------------|------------------|
 **200** | List of processes |  -  |
@@ -347,6 +355,7 @@ Starts container
 Start a specified container on a device
 
 ### Example
+
 
 ```python
 import time
@@ -401,6 +410,7 @@ No authorization required
 
 
 ### HTTP response details
+
 | Status code | Description | Response headers |
 |-------------|-------------|------------------|
 **200** | Container information |  -  |
@@ -420,6 +430,7 @@ Stop container
 Stop a specified container running on a device
 
 ### Example
+
 
 ```python
 import time
@@ -474,6 +485,7 @@ No authorization required
 
 
 ### HTTP response details
+
 | Status code | Description | Response headers |
 |-------------|-------------|------------------|
 **200** | Returns container |  -  |
@@ -493,6 +505,7 @@ Delete a container
 Stops and removes a container running on a device
 
 ### Example
+
 
 ```python
 import time
@@ -545,6 +558,7 @@ No authorization required
 
 
 ### HTTP response details
+
 | Status code | Description | Response headers |
 |-------------|-------------|------------------|
 **204** | OK |  -  |
@@ -564,6 +578,7 @@ Get information about a container
 Get detailed information on a specific container running on a device
 
 ### Example
+
 
 ```python
 import time
@@ -618,6 +633,7 @@ No authorization required
 
 
 ### HTTP response details
+
 | Status code | Description | Response headers |
 |-------------|-------------|------------------|
 **200** | Container information |  -  |
@@ -637,6 +653,7 @@ Close SSH tunnel for docker API
 Stop exposing remote docker port on localhost
 
 ### Example
+
 
 ```python
 import time
@@ -687,6 +704,7 @@ No authorization required
 
 
 ### HTTP response details
+
 | Status code | Description | Response headers |
 |-------------|-------------|------------------|
 **200** | OK |  -  |
@@ -703,6 +721,7 @@ Close SSH tunnel for shell
 Stop exposing remote shell port on localhost
 
 ### Example
+
 
 ```python
 import time
@@ -753,6 +772,7 @@ No authorization required
 
 
 ### HTTP response details
+
 | Status code | Description | Response headers |
 |-------------|-------------|------------------|
 **200** | OK |  -  |
@@ -769,6 +789,7 @@ Get current ip of the device
 Return current ip of the device using local DNS and mDNS
 
 ### Example
+
 
 ```python
 import time
@@ -820,6 +841,7 @@ No authorization required
 
 
 ### HTTP response details
+
 | Status code | Description | Response headers |
 |-------------|-------------|------------------|
 **200** | ip |  -  |
@@ -838,6 +860,7 @@ Remove a device
 Permanently remove a device from the list of configured ones
 
 ### Example
+
 
 ```python
 import time
@@ -888,6 +911,7 @@ No authorization required
 
 
 ### HTTP response details
+
 | Status code | Description | Response headers |
 |-------------|-------------|------------------|
 **204** | Device was correctly removed |  -  |
@@ -904,6 +928,7 @@ Get device
 Return a specific configured device, knowing its id
 
 ### Example
+
 
 ```python
 import time
@@ -956,6 +981,7 @@ No authorization required
 
 
 ### HTTP response details
+
 | Status code | Description | Response headers |
 |-------------|-------------|------------------|
 **200** | Device Information |  -  |
@@ -972,6 +998,7 @@ List containers
 Get a list of the containers on a specific device
 
 ### Example
+
 
 ```python
 import time
@@ -1024,6 +1051,7 @@ No authorization required
 
 
 ### HTTP response details
+
 | Status code | Description | Response headers |
 |-------------|-------------|------------------|
 **200** | List of containers |  -  |
@@ -1043,6 +1071,7 @@ Get local port for remote docker tunnel
 Get local port where docker is tunneled via SSH
 
 ### Example
+
 
 ```python
 import time
@@ -1094,6 +1123,7 @@ No authorization required
 
 
 ### HTTP response details
+
 | Status code | Description | Response headers |
 |-------------|-------------|------------------|
 **200** | Local port for docker interface |  -  |
@@ -1112,6 +1142,7 @@ List container images on the device
 Get list of all container images available on a specified device
 
 ### Example
+
 
 ```python
 import time
@@ -1164,6 +1195,7 @@ No authorization required
 
 
 ### HTTP response details
+
 | Status code | Description | Response headers |
 |-------------|-------------|------------------|
 **200** | List of container images |  -  |
@@ -1183,6 +1215,7 @@ Get device memory information
 Return total/free/available memory on the device
 
 ### Example
+
 
 ```python
 import time
@@ -1235,6 +1268,7 @@ No authorization required
 
 
 ### HTTP response details
+
 | Status code | Description | Response headers |
 |-------------|-------------|------------------|
 **200** | Memory information |  -  |
@@ -1253,6 +1287,7 @@ Get storage information for a device
 Return a list with information about every mountpoint
 
 ### Example
+
 
 ```python
 import time
@@ -1305,6 +1340,7 @@ No authorization required
 
 
 ### HTTP response details
+
 | Status code | Description | Response headers |
 |-------------|-------------|------------------|
 **200** | List of mount point information |  -  |
@@ -1323,6 +1359,7 @@ Return the path of the device private key
 Returns the file containing the key that can be used to activate passowordless connections to the device
 
 ### Example
+
 
 ```python
 import time
@@ -1374,6 +1411,7 @@ No authorization required
 
 
 ### HTTP response details
+
 | Status code | Description | Response headers |
 |-------------|-------------|------------------|
 **200** | Path of the key file |  -  |
@@ -1390,6 +1428,7 @@ Get list of processes
 Get list of processes running on a specified device
 
 ### Example
+
 
 ```python
 import time
@@ -1442,6 +1481,7 @@ No authorization required
 
 
 ### HTTP response details
+
 | Status code | Description | Response headers |
 |-------------|-------------|------------------|
 **200** | List of processes |  -  |
@@ -1460,6 +1500,7 @@ Get local port for shell
 Get local port where remote shell is tunneled via SSH
 
 ### Example
+
 
 ```python
 import time
@@ -1511,6 +1552,7 @@ No authorization required
 
 
 ### HTTP response details
+
 | Status code | Description | Response headers |
 |-------------|-------------|------------------|
 **200** | Local port for SSH shell |  -  |
@@ -1529,6 +1571,7 @@ Change device properties
 Changes specified properties on a configured device
 
 ### Example
+
 
 ```python
 import time
@@ -1600,6 +1643,7 @@ No authorization required
 
 
 ### HTTP response details
+
 | Status code | Description | Response headers |
 |-------------|-------------|------------------|
 **200** | Device information |  -  |
@@ -1618,6 +1662,7 @@ Expose remote docker
 Expose remote docker port on localhost via SSH tunnel
 
 ### Example
+
 
 ```python
 import time
@@ -1680,6 +1725,7 @@ No authorization required
 
 
 ### HTTP response details
+
 | Status code | Description | Response headers |
 |-------------|-------------|------------------|
 **200** | Local port for docker interface |  -  |
@@ -1698,6 +1744,7 @@ Expose shell via SSH
 Expose remote shell on local port via SSH
 
 ### Example
+
 
 ```python
 import time
@@ -1760,6 +1807,7 @@ No authorization required
 
 
 ### HTTP response details
+
 | Status code | Description | Response headers |
 |-------------|-------------|------------------|
 **200** | Local port for SSH shell |  -  |
@@ -1778,6 +1826,7 @@ Synchronize folders
 Synchronize folders between host and target
 
 ### Example
+
 
 ```python
 import time
@@ -1842,6 +1891,7 @@ No authorization required
 
 
 ### HTTP response details
+
 | Status code | Description | Response headers |
 |-------------|-------------|------------------|
 **200** | OK |  -  |
@@ -1863,6 +1913,7 @@ Update device information
 Checks for updates on the remote device and return up-to-date information
 
 ### Example
+
 
 ```python
 import time
@@ -1915,6 +1966,7 @@ No authorization required
 
 
 ### HTTP response details
+
 | Status code | Description | Response headers |
 |-------------|-------------|------------------|
 **200** | Device information |  -  |
@@ -1935,6 +1987,7 @@ Get all devices
 Returns all configured devices
 
 ### Example
+
 
 ```python
 import time
@@ -1983,6 +2036,7 @@ No authorization required
 
 
 ### HTTP response details
+
 | Status code | Description | Response headers |
 |-------------|-------------|------------------|
 **200** | Devices list |  -  |
@@ -1998,6 +2052,7 @@ Detect a network device
 Detect a device using its ip or hostname
 
 ### Example
+
 
 ```python
 import time
@@ -2054,6 +2109,7 @@ No authorization required
 
 
 ### HTTP response details
+
 | Status code | Description | Response headers |
 |-------------|-------------|------------------|
 **200** | Device information |  -  |
@@ -2077,6 +2133,7 @@ Detect a serial device
 Detect a device connected to a local serial port
 
 ### Example
+
 
 ```python
 import time
@@ -2133,6 +2190,7 @@ No authorization required
 
 
 ### HTTP response details
+
 | Status code | Description | Response headers |
 |-------------|-------------|------------------|
 **200** | Device information |  -  |
@@ -2158,6 +2216,7 @@ Delete a container image
 Delete a specific container image from the device
 
 ### Example
+
 
 ```python
 import time
@@ -2210,6 +2269,7 @@ No authorization required
 
 
 ### HTTP response details
+
 | Status code | Description | Response headers |
 |-------------|-------------|------------------|
 **204** | OK |  -  |
@@ -2229,6 +2289,7 @@ Get information about an image
 Get detailed information on a specific container image stored on a device
 
 ### Example
+
 
 ```python
 import time
@@ -2283,6 +2344,7 @@ No authorization required
 
 
 ### HTTP response details
+
 | Status code | Description | Response headers |
 |-------------|-------------|------------------|
 **200** | Container image information |  -  |

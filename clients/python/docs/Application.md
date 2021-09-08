@@ -21,6 +21,8 @@ Name | Type | Description | Notes
 **sdkimages** | **{str: (str,)}** | SHA-ids of the debug and release SDK images | [optional] 
 **imagetags** | **{str: (str,)}** | unique tag used for the images | [optional] 
 **sdkimagetags** | **{str: (str,)}** | unique tag used for the SDK images (if application uses an SDK) | [optional] 
+**otapackagename** | **str** | name of the OTA package | [optional] 
+**otapackageversion** | **str** | version of the OTA package | [optional] 
 **any string name** | **bool, date, datetime, dict, float, int, list, str, none_type** | any string name can be used but the value must be the correct type | [optional]
 
 [[Back to Model list]](../README.md#documentation-for-models) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to README]](../README.md)

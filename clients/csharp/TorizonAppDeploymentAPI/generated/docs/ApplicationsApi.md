@@ -14,6 +14,7 @@ Method | HTTP request | Description
 [**ApplicationGetdockerComposefile**](ApplicationsApi.md#applicationgetdockercomposefile) | **GET** /applications/{application_id}/docker_composefile | Get docker compose file
 [**ApplicationGetprivatekey**](ApplicationsApi.md#applicationgetprivatekey) | **GET** /applications/{application_id}/privatekey | Get the path of the RSA private key
 [**ApplicationModify**](ApplicationsApi.md#applicationmodify) | **PUT** /applications/{application_id} | Change application properties
+[**ApplicationPublish**](ApplicationsApi.md#applicationpublish) | **GET** /applications/{application_id}/publish | Publish a new version of the application on Torizon OTA
 [**ApplicationPushToRegistry**](ApplicationsApi.md#applicationpushtoregistry) | **GET** /applications/{application_id}/push_to_registry | Push application to docker registry
 [**ApplicationReseal**](ApplicationsApi.md#applicationreseal) | **GET** /applications/{application_id}/reseal | Clean id and keys from application configuration
 [**ApplicationRun**](ApplicationsApi.md#applicationrun) | **GET** /applications/{application_id}/run | Run container image
@@ -847,6 +848,96 @@ No authorization required
 | **500** | Unexpected exception. |  -  |
 | **531** | Object Does not have a valid id. |  -  |
 | **532** | Object cannot be saved because it&#39;s in an invalid state. |  -  |
+
+[[Back to top]](#)
+[[Back to API list]](../README.md#documentation-for-api-endpoints)
+[[Back to Model list]](../README.md#documentation-for-models)
+[[Back to README]](../README.md)
+
+
+## ApplicationPublish
+
+> void ApplicationPublish (string applicationId, string credentials, string dockeruser, string dockerpass, string progressId = null)
+
+Publish a new version of the application on Torizon OTA
+
+Publishes a new package version for the application, if no credentials are provided, then only docker-compose file is generated.
+
+### Example
+
+```csharp
+using System.Collections.Generic;
+using System.Diagnostics;
+using TorizonRestAPI.Api;
+using TorizonRestAPI.Client;
+using TorizonRestAPI.Model;
+
+namespace Example
+{
+    public class ApplicationPublishExample
+    {
+        public static void Main()
+        {
+            Configuration.Default.BasePath = "http://localhost:5000/api";
+            var apiInstance = new ApplicationsApi(Configuration.Default);
+            var applicationId = applicationId_example;  // string | Id of an application (uuid)
+            var credentials = credentials_example;  // string | credentials file
+            var dockeruser = dockeruser_example;  // string | user for docker registry login
+            var dockerpass = dockerpass_example;  // string | password for docker registry login
+            var progressId = progressId_example;  // string | Id of a progress cookie (uuid) (optional) 
+
+            try
+            {
+                // Publish a new version of the application on Torizon OTA
+                apiInstance.ApplicationPublish(applicationId, credentials, dockeruser, dockerpass, progressId);
+            }
+            catch (ApiException e)
+            {
+                Debug.Print("Exception when calling ApplicationsApi.ApplicationPublish: " + e.Message );
+                Debug.Print("Status Code: "+ e.ErrorCode);
+                Debug.Print(e.StackTrace);
+            }
+        }
+    }
+}
+```
+
+### Parameters
+
+
+Name | Type | Description  | Notes
+------------- | ------------- | ------------- | -------------
+ **applicationId** | **string**| Id of an application (uuid) | 
+ **credentials** | **string**| credentials file | 
+ **dockeruser** | **string**| user for docker registry login | 
+ **dockerpass** | **string**| password for docker registry login | 
+ **progressId** | **string**| Id of a progress cookie (uuid) | [optional] 
+
+### Return type
+
+void (empty response body)
+
+### Authorization
+
+No authorization required
+
+### HTTP request headers
+
+- **Content-Type**: Not defined
+- **Accept**: application/json
+
+
+### HTTP response details
+| Status code | Description | Response headers |
+|-------------|-------------|------------------|
+| **200** | OK |  -  |
+| **404** | Application not found |  -  |
+| **500** | Unexpected exception. |  -  |
+| **520** | Container image not found on local host. |  -  |
+| **530** | Local docker exception. |  -  |
+| **550** | No tag has been set for the image |  -  |
+| **551** | Operation has been aborted |  -  |
+| **552** | Invalid or missing parameter |  -  |
 
 [[Back to top]](#)
 [[Back to API list]](../README.md#documentation-for-api-endpoints)

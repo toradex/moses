@@ -79,6 +79,9 @@ class ApplicationConfigBase(
             "release": None,
         }
 
+        self.otapackagename = ""
+        self.otapackageversion = "1.0.0"
+
         if self.folder is not None and self.folder.exists():
             self.load()
         else:
