@@ -160,7 +160,8 @@ class ConfigurableObject:
                 readonlyitems.append(key)
 
         for key in readonlyitems:
-            fields.pop(key)
+            if key in fields:
+                fields.pop(key)
 
         return fields
 
