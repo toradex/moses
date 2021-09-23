@@ -1,8 +1,6 @@
 """Implementation of OTA-related features."""
 import os
-import tempfile
-from types import SimpleNamespace
-from typing import Optional, Any, List, Tuple, Dict
+from typing import Optional, Any, List
 import yaml
 import docker
 import dockerapi
@@ -11,9 +9,10 @@ import applicationconfig_dockerexport
 from moses_exceptions import InternalServerError, \
     InvalidOrMissingParameterError, \
     InvalidPathError, \
-    ImageNotFoundError, LocalCommandError
+    ImageNotFoundError
 import platformconfig
 import progresscookie
+from torizoncorebuilderutils import TorizonCoreBuilderUtils
 
 TCBUILDER_REPO = "torizon/torizoncore-builder"
 TCBUILDER_TAG = "3.1"
@@ -87,52 +86,15 @@ def publish(
 
     progresscookie.progress_message(progress,"Pushing new package to OTA server...")
 
-    _run_tcbuilder(self, dockerclient, credentials, composepath, progress)
+    TorizonCoreBuilderUtils.publish(
+        credentials,
+        composepath,
+        self.otapackagename,
+        self.otapackageversion,
+        progress
+    )
 
     return True
-
-def _run_tcbuilder(
-    self: ApplicationConfigBase,
-    dockerclient: docker.DockerClient,
-    credentials: str,
-    composepath: str,
-    progress: Optional[progresscookie.ProgressCookie]) -> None:
-    dockerapi.pull_image(dockerclient,TCBUILDER_REPO,TCBUILDER_TAG,progress)
-
-    cmdline,volumes = _get_tcbuilder_args(
-        credentials, composepath, self.otapackagename, self.otapackageversion)
-
-    container = dockerclient.containers.run(
-        ":".join([TCBUILDER_REPO,TCBUILDER_TAG]),
-        command=cmdline,volumes=volumes,remove=True, detach=True)
-
-    retcode = container.wait()
-
-    if retcode["StatusCode"] != 0:
-        raise LocalCommandError(
-            SimpleNamespace(args=cmdline,returncode=retcode["StatusCode"],stderr=container.logs()))
-
-def _get_tcbuilder_args(
-    credentials: str,
-    composefile: str,
-    packagename: str,
-    packageversion: str) -> Tuple[str, Dict[str,Dict[str,str]]]:
-    credentialspath=os.path.dirname(credentials)
-    credentialsfile=os.path.basename(credentials)
-    composepath=os.path.dirname(composefile)
-    composefile=os.path.basename(composefile)
-    cmdline=f"push --credentials /credentials/{credentialsfile}\
-        --package-name {packagename} \
-        --package-version {packageversion} \
-        /compose/{composefile}"
-
-    volumes = {
-        credentialspath: { "bind":"/credentials", "mode":"ro" },
-        composepath: { "bind":"/compose", "mode": "ro" },
-        tempfile.gettempdir() : { "bind":"/storage", "mode": "rw"}
-    }
-    return cmdline,volumes
-
 
 def _check_images_on_registry(
     images: List,
