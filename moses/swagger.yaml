@@ -3742,4 +3742,7 @@ responses:
     description: Invalid or missing parameter
     schema:
       $ref: "#/definitions/ErrorInfo"
-
+  TorizonCoreBuilderError_553:
+    description: TorizonCore Builder error
+    schema:
+      $ref: "#/definitions/ErrorInfo"

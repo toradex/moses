@@ -641,6 +641,15 @@ class InvalidOrMissingParameterError(MosesError):
         """Generate error string."""
         super().__init__(f"Parameter {parameter} is missing or invalid.")
 
+class TorizonCoreBuilderError(MosesError):
+    """TorizonCore Builder returned an error."""
+
+    code = 553
+    description = "TorizonCore Builder error, check logs."
+
+    def __init__(self,parameter:str) -> None:
+        """Generate error string."""
+        super().__init__(f"TorizonCore Builder returned exit code {parameter}")
 
 def encode_error(exception: MosesError) -> flask.Response:
     """Encode an error into a Flaskk response object.
