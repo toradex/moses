@@ -1,10 +1,12 @@
 """Utils for use Torizon Core Builder."""
-from typing import Container, Dict, Optional, Tuple, Union
+from typing import Dict, Optional, Tuple, Union
 import os
 import tempfile
 import logging
 import docker
-from docker.errors import APIError
+# type ignore is needed because docker lib has no stubs for typing
+from docker.errors import APIError # type: ignore
+from docker.models.containers import Container
 import dockerapi
 import progresscookie
 from moses_exceptions import TorizonCoreBuilderError
@@ -136,5 +138,4 @@ class TorizonCoreBuilderUtils:
 
         # throw exception
         if exit_code["StatusCode"] != 0:
-            print("Error")
             raise TorizonCoreBuilderError(exit_code["StatusCode"])

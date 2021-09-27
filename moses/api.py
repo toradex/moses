@@ -1772,8 +1772,15 @@ def applications_application_tcb_build_yaml_get(
 
         app = applications[application_id]
 
+        # app.folder can be Path | None
+        # so, to pass to mypy check we need to make sure to use joinpath
+        # only if app.folder is not None
+        workdir = app.folder
+        if workdir is not None:
+            workdir = workdir.joinpath("..")
+
         TorizonCoreBuilderUtils.yaml_build(
-            app.folder.joinpath(".."),
+            str(workdir),
             yamlfilepath,
             progress
         )
