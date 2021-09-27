@@ -14,6 +14,7 @@ import moses_exceptions
 import progresscookie
 from moses_exceptions import LocalDockerError
 import openapienforce
+from torizoncorebuilderutils import TorizonCoreBuilderUtils
 
 
 # This module has many lines, but mostly wrappers between API calls
@@ -1737,11 +1738,56 @@ def applications_application_validate_dictionary_entry_get(
         configuration, parameter, key, value, newitem)
     return (result, 200)
 
+
+def applications_application_tcb_build_yaml_get(
+        application_id: str,
+        yamlfilepath: str,
+        progress_id: str = None) -> Any:
+    """Build tcbuil.yaml file using TorizonCore Builder Docker image.
+    
+    :param application_id: application id
+    :type application_id: str
+    :param workspacepath: application workspace path
+    :type worspacepath: str
+    :param yamlfilepath: tcbuild.yaml file from workspace path
+    :type yamlfilepath: str
+    :param progress_id: progress object id  (Default value = None)
+    :type progress_id: str
+
+    :returns: API tuple with object and return code
+
+    """
+    cookies = progresscookie.ProgressCookies()
+    progress = None
+
+    if progress_id is not None and progress_id in cookies:
+        progress = cookies[progress_id]
+
+    try:
+        applications = applicationconfig.ApplicationConfigs()
+
+        if application_id not in applications:
+            raise moses_exceptions.ObjectNotFound(
+                "Application", application_id)
+
+        app = applications[application_id]
+
+        TorizonCoreBuilderUtils.yaml_build(
+            app.folder.joinpath(".."),
+            yamlfilepath,
+            progress
+        )
+
+        progresscookie.progress_completed(progress)
+
+        return (connexion.NoContent, 200)
+    except Exception as exception:
+        progresscookie.progress_report_error(progress, exception)
+        raise
+
 # pylint: disable=too-many-nested-blocks
 # pylint: disable=too-many-branches
 # pylint: disable=too-many-statements
-
-
 def setup_pullcontainers_get(progress_id: str = None) -> Any:
     """Pull all base containers needed for the different applications.
 

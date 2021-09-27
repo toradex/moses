@@ -1676,6 +1676,40 @@ paths:
           $ref: "#/responses/AbortError_551"
         552:
           $ref: "#/responses/InvalidOrMissingParameterError_552"
+  
+  /applications/{application_id}/tcb_build_yaml:
+
+    get:
+      operationId: application_tcb_build_yaml
+      tags:
+        - Applications
+      summary: Build the TorizonCore tcbuild.yaml
+      description: Build the TorizonCore tcbuild.yaml using TorizonCore Builder Docker image.
+      parameters:
+        - $ref: "#/parameters/application_id"
+        - name: yamlfilepath
+          description: the yaml file name from workspace path
+          in: query
+          type: string
+          required: true
+        - $ref: "#/parameters/progress_id"
+      responses:
+        200:
+          description: OK
+        404:
+          description: Application not found
+        500:
+          $ref: "#/responses/InternalServerError_500"
+        520:
+          $ref: "#/responses/ImageNotFoundError_520"
+        530:
+          $ref: "#/responses/LocalDockerError_530"
+        550:
+          $ref: "#/responses/NoTagError_550"
+        551:
+          $ref: "#/responses/AbortError_551"
+        553:
+          $ref: "#/responses/TorizonCoreBuilderError_553"
 
   /applications/{application_id}/validate_parameter:
     get:
