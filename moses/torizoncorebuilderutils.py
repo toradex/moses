@@ -1,12 +1,13 @@
 """Utils for use Torizon Core Builder."""
-from typing import Dict, Optional, Tuple
-from types import SimpleNamespace
+from typing import Container, Dict, Optional, Tuple, Union
 import os
 import tempfile
+import logging
 import docker
+from docker.errors import APIError
 import dockerapi
 import progresscookie
-from moses_exceptions import LocalCommandError
+from moses_exceptions import TorizonCoreBuilderError
 
 # pylint: disable=too-few-public-methods
 class TorizonCoreBuilderUtils:
@@ -14,6 +15,38 @@ class TorizonCoreBuilderUtils:
 
     TCBUILDER_REPO = "torizon/torizoncore-builder"
     TCBUILDER_TAG = "3.1"
+
+    @staticmethod
+    def pull_docker_image(
+        progress: Optional[progresscookie.ProgressCookie]) -> None:
+        """."""
+        dockerclient = docker.client.from_env()
+        dockerapi.pull_image(
+            dockerclient,
+            TorizonCoreBuilderUtils.TCBUILDER_REPO,
+            TorizonCoreBuilderUtils.TCBUILDER_TAG,
+            progress
+        )
+
+    @staticmethod
+    def yaml_build (
+        workspacepath: str,
+        yamlfilepath: str,
+        progress: Optional[progresscookie.ProgressCookie]) -> None:
+        """Run Torizon Core Builder Build."""
+        volumes = [
+            "deploy:/deploy",
+            f"{workspacepath}:/workdir",
+            "storage:/storage"
+        ]
+
+        TorizonCoreBuilderUtils.__run_tcbuilder(
+            f"build \
+                --file {yamlfilepath} \
+                --force",
+            volumes,
+            progress
+        )
 
     @staticmethod
     def publish (credentials: str,
@@ -38,16 +71,16 @@ class TorizonCoreBuilderUtils:
     @staticmethod
     def __run_tcbuilder(
         cmdline: str,
-        volumes: Dict[str,Dict[str,str]],
+        volumes: Union[Dict[str,Dict[str,str]], list],
         progress: Optional[progresscookie.ProgressCookie]) -> None:
 
         dockerclient = docker.client.from_env()
-        dockerapi.pull_image(
-            dockerclient,
-            TorizonCoreBuilderUtils.TCBUILDER_REPO,
-            TorizonCoreBuilderUtils.TCBUILDER_TAG,
-            progress
-        )
+        # make shure to remove deploy
+        try:
+            dockerclient.api.remove_volume("deploy", force=True)
+        except APIError:
+            # if that doesn't exist nobody care
+            pass
 
         container = dockerclient.containers.run(
             ":".join([
@@ -60,16 +93,11 @@ class TorizonCoreBuilderUtils:
             detach=True
         )
 
-        retcode = container.wait()
-
-        if retcode["StatusCode"] != 0:
-            raise LocalCommandError(
-                SimpleNamespace(
-                    args=cmdline,
-                    returncode=retcode["StatusCode"],
-                    stderr=container.logs()
-                )
-            )
+        # new way
+        TorizonCoreBuilderUtils.__process_run_stream(
+            container,
+            progress
+        )
 
     @staticmethod
     def __get_publish_args(
@@ -93,3 +121,20 @@ class TorizonCoreBuilderUtils:
             tempfile.gettempdir() : { "bind":"/storage", "mode": "rw"}
         }
         return cmdline,volumes
+
+    @staticmethod
+    def __process_run_stream(
+        container: Container,
+        progress: Optional[progresscookie.ProgressCookie]) -> None:
+        stream = container.logs(stream=True)
+
+        for line in stream:
+            progresscookie.progress_message(progress, line.decode())
+
+        exit_code = container.wait()
+        logging.info(f"TCB ExitCode {exit_code}")
+
+        # throw exception
+        if exit_code["StatusCode"] != 0:
+            print("Error")
+            raise TorizonCoreBuilderError(exit_code["StatusCode"])

@@ -86,6 +86,7 @@ def publish(
 
     progresscookie.progress_message(progress,"Pushing new package to OTA server...")
 
+    TorizonCoreBuilderUtils.pull_docker_image(progress)
     TorizonCoreBuilderUtils.publish(
         credentials,
         composepath,
