@@ -41,6 +41,7 @@ export * from './platform';
 export * from './process';
 export * from './progress';
 export * from './targetDevice';
+export * from './validationResult';
 
 import * as fs from 'fs';
 
@@ -96,6 +97,7 @@ import { Platform } from './platform';
 import { Process } from './process';
 import { Progress } from './progress';
 import { TargetDevice } from './targetDevice';
+import { ValidationResult } from './validationResult';
 
 /* tslint:disable:no-unused-variable */
 let primitives = [
@@ -159,6 +161,7 @@ let typeMap: {[index: string]: any} = {
     "Process": Process,
     "Progress": Progress,
     "TargetDevice": TargetDevice,
+    "ValidationResult": ValidationResult,
 }
 
 export class ObjectSerializer {

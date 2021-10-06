@@ -24,6 +24,9 @@ Method | HTTP request | Description
 [**ApplicationSyncfolders**](ApplicationsApi.md#applicationsyncfolders) | **GET** /applications/{application_id}/syncfolders | Synchronize folders
 [**ApplicationUpdated**](ApplicationsApi.md#applicationupdated) | **GET** /applications/{application_id}/updated | Check if container image is up to date
 [**ApplicationUpdatesdk**](ApplicationsApi.md#applicationupdatesdk) | **GET** /applications/{application_id}/sdk/update | Update SDK container
+[**ApplicationValidateArrayItem**](ApplicationsApi.md#applicationvalidatearrayitem) | **GET** /applications/{application_id}/validate_array_item | Validates a value for a parameter
+[**ApplicationValidateDictionaryEntry**](ApplicationsApi.md#applicationvalidatedictionaryentry) | **GET** /applications/{application_id}/validate_dictionary_entry | Validates a value for a parameter
+[**ApplicationValidateParameter**](ApplicationsApi.md#applicationvalidateparameter) | **GET** /applications/{application_id}/validate_parameter | Validates a value for a parameter
 [**ApplicationsCreate**](ApplicationsApi.md#applicationscreate) | **GET** /applications/create | Create an application configuration
 [**ApplicationsLoad**](ApplicationsApi.md#applicationsload) | **GET** /applications/load | Load an application configuration
 
@@ -1711,6 +1714,264 @@ No authorization required
 | **530** | Local docker exception. |  -  |
 | **533** | SSH error. |  -  |
 | **551** | Operation has been aborted |  -  |
+
+[[Back to top]](#)
+[[Back to API list]](../README.md#documentation-for-api-endpoints)
+[[Back to Model list]](../README.md#documentation-for-models)
+[[Back to README]](../README.md)
+
+
+## ApplicationValidateArrayItem
+
+> ValidationResult ApplicationValidateArrayItem (string applicationId, string configuration, string _parameter, string value, int index)
+
+Validates a value for a parameter
+
+Validates a parameter, allowing UI to report problems before applying it.
+
+### Example
+
+```csharp
+using System.Collections.Generic;
+using System.Diagnostics;
+using TorizonRestAPI.Api;
+using TorizonRestAPI.Client;
+using TorizonRestAPI.Model;
+
+namespace Example
+{
+    public class ApplicationValidateArrayItemExample
+    {
+        public static void Main()
+        {
+            Configuration.Default.BasePath = "http://localhost:5000/api";
+            var apiInstance = new ApplicationsApi(Configuration.Default);
+            var applicationId = applicationId_example;  // string | Id of an application (uuid)
+            var configuration = configuration_example;  // string | 
+            var _parameter = _parameter_example;  // string | 
+            var value = value_example;  // string | 
+            var index = 56;  // int | 
+
+            try
+            {
+                // Validates a value for a parameter
+                ValidationResult result = apiInstance.ApplicationValidateArrayItem(applicationId, configuration, _parameter, value, index);
+                Debug.WriteLine(result);
+            }
+            catch (ApiException e)
+            {
+                Debug.Print("Exception when calling ApplicationsApi.ApplicationValidateArrayItem: " + e.Message );
+                Debug.Print("Status Code: "+ e.ErrorCode);
+                Debug.Print(e.StackTrace);
+            }
+        }
+    }
+}
+```
+
+### Parameters
+
+
+Name | Type | Description  | Notes
+------------- | ------------- | ------------- | -------------
+ **applicationId** | **string**| Id of an application (uuid) | 
+ **configuration** | **string**|  | 
+ **_parameter** | **string**|  | 
+ **value** | **string**|  | 
+ **index** | **int**|  | 
+
+### Return type
+
+[**ValidationResult**](ValidationResult.md)
+
+### Authorization
+
+No authorization required
+
+### HTTP request headers
+
+- **Content-Type**: Not defined
+- **Accept**: application/json
+
+
+### HTTP response details
+| Status code | Description | Response headers |
+|-------------|-------------|------------------|
+| **200** | Validation results |  -  |
+| **404** | Application not found |  -  |
+| **500** | Unexpected exception. |  -  |
+
+[[Back to top]](#)
+[[Back to API list]](../README.md#documentation-for-api-endpoints)
+[[Back to Model list]](../README.md#documentation-for-models)
+[[Back to README]](../README.md)
+
+
+## ApplicationValidateDictionaryEntry
+
+> ValidationResult ApplicationValidateDictionaryEntry (string applicationId, string configuration, string _parameter, string key, string value, bool newitem)
+
+Validates a value for a parameter
+
+Validates a parameter, allowing UI to report problems before applying it.
+
+### Example
+
+```csharp
+using System.Collections.Generic;
+using System.Diagnostics;
+using TorizonRestAPI.Api;
+using TorizonRestAPI.Client;
+using TorizonRestAPI.Model;
+
+namespace Example
+{
+    public class ApplicationValidateDictionaryEntryExample
+    {
+        public static void Main()
+        {
+            Configuration.Default.BasePath = "http://localhost:5000/api";
+            var apiInstance = new ApplicationsApi(Configuration.Default);
+            var applicationId = applicationId_example;  // string | Id of an application (uuid)
+            var configuration = configuration_example;  // string | 
+            var _parameter = _parameter_example;  // string | 
+            var key = key_example;  // string | 
+            var value = value_example;  // string | 
+            var newitem = true;  // bool | 
+
+            try
+            {
+                // Validates a value for a parameter
+                ValidationResult result = apiInstance.ApplicationValidateDictionaryEntry(applicationId, configuration, _parameter, key, value, newitem);
+                Debug.WriteLine(result);
+            }
+            catch (ApiException e)
+            {
+                Debug.Print("Exception when calling ApplicationsApi.ApplicationValidateDictionaryEntry: " + e.Message );
+                Debug.Print("Status Code: "+ e.ErrorCode);
+                Debug.Print(e.StackTrace);
+            }
+        }
+    }
+}
+```
+
+### Parameters
+
+
+Name | Type | Description  | Notes
+------------- | ------------- | ------------- | -------------
+ **applicationId** | **string**| Id of an application (uuid) | 
+ **configuration** | **string**|  | 
+ **_parameter** | **string**|  | 
+ **key** | **string**|  | 
+ **value** | **string**|  | 
+ **newitem** | **bool**|  | 
+
+### Return type
+
+[**ValidationResult**](ValidationResult.md)
+
+### Authorization
+
+No authorization required
+
+### HTTP request headers
+
+- **Content-Type**: Not defined
+- **Accept**: application/json
+
+
+### HTTP response details
+| Status code | Description | Response headers |
+|-------------|-------------|------------------|
+| **200** | Validation results |  -  |
+| **404** | Application not found |  -  |
+| **500** | Unexpected exception. |  -  |
+
+[[Back to top]](#)
+[[Back to API list]](../README.md#documentation-for-api-endpoints)
+[[Back to Model list]](../README.md#documentation-for-models)
+[[Back to README]](../README.md)
+
+
+## ApplicationValidateParameter
+
+> ValidationResult ApplicationValidateParameter (string applicationId, string configuration, string _parameter, string value)
+
+Validates a value for a parameter
+
+Validates a parameter, allowing UI to report problems before applying it.
+
+### Example
+
+```csharp
+using System.Collections.Generic;
+using System.Diagnostics;
+using TorizonRestAPI.Api;
+using TorizonRestAPI.Client;
+using TorizonRestAPI.Model;
+
+namespace Example
+{
+    public class ApplicationValidateParameterExample
+    {
+        public static void Main()
+        {
+            Configuration.Default.BasePath = "http://localhost:5000/api";
+            var apiInstance = new ApplicationsApi(Configuration.Default);
+            var applicationId = applicationId_example;  // string | Id of an application (uuid)
+            var configuration = configuration_example;  // string | 
+            var _parameter = _parameter_example;  // string | 
+            var value = value_example;  // string | 
+
+            try
+            {
+                // Validates a value for a parameter
+                ValidationResult result = apiInstance.ApplicationValidateParameter(applicationId, configuration, _parameter, value);
+                Debug.WriteLine(result);
+            }
+            catch (ApiException e)
+            {
+                Debug.Print("Exception when calling ApplicationsApi.ApplicationValidateParameter: " + e.Message );
+                Debug.Print("Status Code: "+ e.ErrorCode);
+                Debug.Print(e.StackTrace);
+            }
+        }
+    }
+}
+```
+
+### Parameters
+
+
+Name | Type | Description  | Notes
+------------- | ------------- | ------------- | -------------
+ **applicationId** | **string**| Id of an application (uuid) | 
+ **configuration** | **string**|  | 
+ **_parameter** | **string**|  | 
+ **value** | **string**|  | 
+
+### Return type
+
+[**ValidationResult**](ValidationResult.md)
+
+### Authorization
+
+No authorization required
+
+### HTTP request headers
+
+- **Content-Type**: Not defined
+- **Accept**: application/json
+
+
+### HTTP response details
+| Status code | Description | Response headers |
+|-------------|-------------|------------------|
+| **200** | Validation results |  -  |
+| **404** | Application not found |  -  |
+| **500** | Unexpected exception. |  -  |
 
 [[Back to top]](#)
 [[Back to API list]](../README.md#documentation-for-api-endpoints)

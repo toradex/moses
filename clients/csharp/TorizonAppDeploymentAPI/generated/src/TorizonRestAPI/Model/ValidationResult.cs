@@ -25,35 +25,33 @@ using OpenAPIDateConverter = TorizonRestAPI.Client.OpenAPIDateConverter;
 namespace TorizonRestAPI.Model
 {
     /// <summary>
-    /// Address represents an IPv4 or IPv6 IP address.
+    /// ValidationResult
     /// </summary>
     [DataContract]
-    public partial class DockerAddress :  IEquatable<DockerAddress>, IValidatableObject
+    public partial class ValidationResult :  IEquatable<ValidationResult>, IValidatableObject
     {
         /// <summary>
-        /// Initializes a new instance of the <see cref="DockerAddress" /> class.
+        /// Initializes a new instance of the <see cref="ValidationResult" /> class.
         /// </summary>
-        /// <param name="addr">IP address..</param>
-        /// <param name="prefixLen">Mask length of the IP address..</param>
-        public DockerAddress(string addr = default(string), int prefixLen = default(int))
+        /// <param name="errors">errors.</param>
+        /// <param name="warnings">warnings.</param>
+        public ValidationResult(List<string> errors = default(List<string>), List<string> warnings = default(List<string>))
         {
-            this.Addr = addr;
-            this.PrefixLen = prefixLen;
+            this.Errors = errors;
+            this.Warnings = warnings;
         }
 
         /// <summary>
-        /// IP address.
+        /// Gets or Sets Errors
         /// </summary>
-        /// <value>IP address.</value>
-        [DataMember(Name="Addr", EmitDefaultValue=false)]
-        public string Addr { get; set; }
+        [DataMember(Name="errors", EmitDefaultValue=false)]
+        public List<string> Errors { get; set; }
 
         /// <summary>
-        /// Mask length of the IP address.
+        /// Gets or Sets Warnings
         /// </summary>
-        /// <value>Mask length of the IP address.</value>
-        [DataMember(Name="PrefixLen", EmitDefaultValue=false)]
-        public int PrefixLen { get; set; }
+        [DataMember(Name="warnings", EmitDefaultValue=false)]
+        public List<string> Warnings { get; set; }
 
         /// <summary>
         /// Returns the string presentation of the object
@@ -62,9 +60,9 @@ namespace TorizonRestAPI.Model
         public override string ToString()
         {
             var sb = new StringBuilder();
-            sb.Append("class DockerAddress {\n");
-            sb.Append("  Addr: ").Append(Addr).Append("\n");
-            sb.Append("  PrefixLen: ").Append(PrefixLen).Append("\n");
+            sb.Append("class ValidationResult {\n");
+            sb.Append("  Errors: ").Append(Errors).Append("\n");
+            sb.Append("  Warnings: ").Append(Warnings).Append("\n");
             sb.Append("}\n");
             return sb.ToString();
         }
@@ -85,29 +83,31 @@ namespace TorizonRestAPI.Model
         /// <returns>Boolean</returns>
         public override bool Equals(object input)
         {
-            return this.Equals(input as DockerAddress);
+            return this.Equals(input as ValidationResult);
         }
 
         /// <summary>
-        /// Returns true if DockerAddress instances are equal
+        /// Returns true if ValidationResult instances are equal
         /// </summary>
-        /// <param name="input">Instance of DockerAddress to be compared</param>
+        /// <param name="input">Instance of ValidationResult to be compared</param>
         /// <returns>Boolean</returns>
-        public bool Equals(DockerAddress input)
+        public bool Equals(ValidationResult input)
         {
             if (input == null)
                 return false;
 
             return 
                 (
-                    this.Addr == input.Addr ||
-                    (this.Addr != null &&
-                    this.Addr.Equals(input.Addr))
+                    this.Errors == input.Errors ||
+                    this.Errors != null &&
+                    input.Errors != null &&
+                    this.Errors.SequenceEqual(input.Errors)
                 ) && 
                 (
-                    this.PrefixLen == input.PrefixLen ||
-                    (this.PrefixLen != null &&
-                    this.PrefixLen.Equals(input.PrefixLen))
+                    this.Warnings == input.Warnings ||
+                    this.Warnings != null &&
+                    input.Warnings != null &&
+                    this.Warnings.SequenceEqual(input.Warnings)
                 );
         }
 
@@ -120,10 +120,10 @@ namespace TorizonRestAPI.Model
             unchecked // Overflow is fine, just wrap
             {
                 int hashCode = 41;
-                if (this.Addr != null)
-                    hashCode = hashCode * 59 + this.Addr.GetHashCode();
-                if (this.PrefixLen != null)
-                    hashCode = hashCode * 59 + this.PrefixLen.GetHashCode();
+                if (this.Errors != null)
+                    hashCode = hashCode * 59 + this.Errors.GetHashCode();
+                if (this.Warnings != null)
+                    hashCode = hashCode * 59 + this.Warnings.GetHashCode();
                 return hashCode;
             }
         }

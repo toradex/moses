@@ -12,35 +12,26 @@
 
 import { RequestFile } from './models';
 
-/**
-* EndpointIPAMConfig represents an endpoint\'s IPAM configuration. 
-*/
-export class DockerEndpointIPAMConfig {
-    'iPv4Address'?: string;
-    'iPv6Address'?: string;
-    'linkLocalIPs'?: Array<string>;
+export class ValidationResult {
+    'errors'?: Array<string>;
+    'warnings'?: Array<string>;
 
     static discriminator: string | undefined = undefined;
 
     static attributeTypeMap: Array<{name: string, baseName: string, type: string}> = [
         {
-            "name": "iPv4Address",
-            "baseName": "IPv4Address",
-            "type": "string"
+            "name": "errors",
+            "baseName": "errors",
+            "type": "Array<string>"
         },
         {
-            "name": "iPv6Address",
-            "baseName": "IPv6Address",
-            "type": "string"
-        },
-        {
-            "name": "linkLocalIPs",
-            "baseName": "LinkLocalIPs",
+            "name": "warnings",
+            "baseName": "warnings",
             "type": "Array<string>"
         }    ];
 
     static getAttributeTypeMap() {
-        return DockerEndpointIPAMConfig.attributeTypeMap;
+        return ValidationResult.attributeTypeMap;
     }
 }
 

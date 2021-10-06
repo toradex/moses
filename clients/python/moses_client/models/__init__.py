@@ -51,3 +51,4 @@ from moses_client.model.platform import Platform
 from moses_client.model.process import Process
 from moses_client.model.progress import Progress
 from moses_client.model.target_device import TargetDevice
+from moses_client.model.validation_result import ValidationResult

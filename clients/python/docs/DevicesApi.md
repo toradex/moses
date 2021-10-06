@@ -30,6 +30,7 @@ Method | HTTP request | Description
 [**device_openssh**](DevicesApi.md#device_openssh) | **GET** /devices/{device_id}/ssh/open | Expose shell via SSH
 [**device_syncfolders**](DevicesApi.md#device_syncfolders) | **GET** /devices/{device_id}/syncfolders | Synchronize folders
 [**device_update**](DevicesApi.md#device_update) | **GET** /devices/{device_id}/update | Update device information
+[**device_validate_parameter**](DevicesApi.md#device_validate_parameter) | **GET** /devices/{device_id}/validate_parameter | Validates a value for a parameter
 [**devices_get**](DevicesApi.md#devices_get) | **GET** /devices | Get all devices
 [**devices_networkdetect**](DevicesApi.md#devices_networkdetect) | **GET** /devices/network_detect | Detect a network device
 [**devices_serialdetect**](DevicesApi.md#devices_serialdetect) | **GET** /devices/serial_detect | Detect a serial device
@@ -1597,9 +1598,6 @@ with moses_client.ApiClient() as api_client:
         hostname="verdin-imx8mm-06632494",
         username="torizon",
         homefolder="/home/torizon",
-        runningtorizon=False,
-        cpu_architecture="aarch64, armv7l",
-        model_description="Colibri imx6DL 512MB IT",
     ) # TargetDevice |  (optional)
 
     # example passing only required values which don't have defaults set
@@ -1975,6 +1973,80 @@ No authorization required
 **532** | Object cannot be saved because it&#39;s in an invalid state. |  -  |
 **533** | SSH error. |  -  |
 **534** | OS error. |  -  |
+**535** | Invalid device id. |  -  |
+
+[[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
+
+# **device_validate_parameter**
+> ValidationResult device_validate_parameter(device_id, parameter, value)
+
+Validates a value for a parameter
+
+Validates a parameter, allowing UI to report problems before applying it.
+
+### Example
+
+
+```python
+import time
+import moses_client
+from moses_client.api import devices_api
+from moses_client.model.validation_result import ValidationResult
+from moses_client.model.error_info import ErrorInfo
+from pprint import pprint
+# Defining the host is optional and defaults to http://localhost:5000/api
+# See configuration.py for a list of all supported configuration parameters.
+configuration = moses_client.Configuration(
+    host = "http://localhost:5000/api"
+)
+
+
+# Enter a context with an instance of the API client
+with moses_client.ApiClient() as api_client:
+    # Create an instance of the API class
+    api_instance = devices_api.DevicesApi(api_client)
+    device_id = "zA9LCSLv1C1ylmgd0.Y2TA" # str | Target device serial number
+    parameter = "parameter_example" # str | 
+    value = "value_example" # str | 
+
+    # example passing only required values which don't have defaults set
+    try:
+        # Validates a value for a parameter
+        api_response = api_instance.device_validate_parameter(device_id, parameter, value)
+        pprint(api_response)
+    except moses_client.ApiException as e:
+        print("Exception when calling DevicesApi->device_validate_parameter: %s\n" % e)
+```
+
+
+### Parameters
+
+Name | Type | Description  | Notes
+------------- | ------------- | ------------- | -------------
+ **device_id** | **str**| Target device serial number |
+ **parameter** | **str**|  |
+ **value** | **str**|  |
+
+### Return type
+
+[**ValidationResult**](ValidationResult.md)
+
+### Authorization
+
+No authorization required
+
+### HTTP request headers
+
+ - **Content-Type**: Not defined
+ - **Accept**: application/json
+
+
+### HTTP response details
+
+| Status code | Description | Response headers |
+|-------------|-------------|------------------|
+**200** | Validation results |  -  |
+**500** | Unexpected exception. |  -  |
 **535** | Invalid device id. |  -  |
 
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)

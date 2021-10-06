@@ -24,6 +24,9 @@ Method | HTTP request | Description
 [**application_syncfolders**](ApplicationsApi.md#application_syncfolders) | **GET** /applications/{application_id}/syncfolders | Synchronize folders
 [**application_updated**](ApplicationsApi.md#application_updated) | **GET** /applications/{application_id}/updated | Check if container image is up to date
 [**application_updatesdk**](ApplicationsApi.md#application_updatesdk) | **GET** /applications/{application_id}/sdk/update | Update SDK container
+[**application_validate_array_item**](ApplicationsApi.md#application_validate_array_item) | **GET** /applications/{application_id}/validate_array_item | Validates a value for a parameter
+[**application_validate_dictionary_entry**](ApplicationsApi.md#application_validate_dictionary_entry) | **GET** /applications/{application_id}/validate_dictionary_entry | Validates a value for a parameter
+[**application_validate_parameter**](ApplicationsApi.md#application_validate_parameter) | **GET** /applications/{application_id}/validate_parameter | Validates a value for a parameter
 [**applications_create**](ApplicationsApi.md#applications_create) | **GET** /applications/create | Create an application configuration
 [**applications_load**](ApplicationsApi.md#applications_load) | **GET** /applications/load | Load an application configuration
 
@@ -1678,6 +1681,240 @@ No authorization required
 **530** | Local docker exception. |  -  |
 **533** | SSH error. |  -  |
 **551** | Operation has been aborted |  -  |
+
+[[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
+
+# **application_validate_array_item**
+> ValidationResult application_validate_array_item(application_id, configuration, parameter, value, index)
+
+Validates a value for a parameter
+
+Validates a parameter, allowing UI to report problems before applying it.
+
+### Example
+
+
+```python
+import time
+import moses_client
+from moses_client.api import applications_api
+from moses_client.model.validation_result import ValidationResult
+from moses_client.model.error_info import ErrorInfo
+from pprint import pprint
+# Defining the host is optional and defaults to http://localhost:5000/api
+# See configuration.py for a list of all supported configuration parameters.
+configuration = moses_client.Configuration(
+    host = "http://localhost:5000/api"
+)
+
+
+# Enter a context with an instance of the API client
+with moses_client.ApiClient() as api_client:
+    # Create an instance of the API class
+    api_instance = applications_api.ApplicationsApi(api_client)
+    application_id = "555914d4-d6Ea-18e3-e53E-03fEE4Bc7d,," # str | Id of an application (uuid)
+    configuration = "common" # str | 
+    parameter = "parameter_example" # str | 
+    value = "value_example" # str | 
+    index = 1 # int | 
+
+    # example passing only required values which don't have defaults set
+    try:
+        # Validates a value for a parameter
+        api_response = api_instance.application_validate_array_item(application_id, configuration, parameter, value, index)
+        pprint(api_response)
+    except moses_client.ApiException as e:
+        print("Exception when calling ApplicationsApi->application_validate_array_item: %s\n" % e)
+```
+
+
+### Parameters
+
+Name | Type | Description  | Notes
+------------- | ------------- | ------------- | -------------
+ **application_id** | **str**| Id of an application (uuid) |
+ **configuration** | **str**|  |
+ **parameter** | **str**|  |
+ **value** | **str**|  |
+ **index** | **int**|  |
+
+### Return type
+
+[**ValidationResult**](ValidationResult.md)
+
+### Authorization
+
+No authorization required
+
+### HTTP request headers
+
+ - **Content-Type**: Not defined
+ - **Accept**: application/json
+
+
+### HTTP response details
+
+| Status code | Description | Response headers |
+|-------------|-------------|------------------|
+**200** | Validation results |  -  |
+**404** | Application not found |  -  |
+**500** | Unexpected exception. |  -  |
+
+[[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
+
+# **application_validate_dictionary_entry**
+> ValidationResult application_validate_dictionary_entry(application_id, configuration, parameter, key, value, newitem)
+
+Validates a value for a parameter
+
+Validates a parameter, allowing UI to report problems before applying it.
+
+### Example
+
+
+```python
+import time
+import moses_client
+from moses_client.api import applications_api
+from moses_client.model.validation_result import ValidationResult
+from moses_client.model.error_info import ErrorInfo
+from pprint import pprint
+# Defining the host is optional and defaults to http://localhost:5000/api
+# See configuration.py for a list of all supported configuration parameters.
+configuration = moses_client.Configuration(
+    host = "http://localhost:5000/api"
+)
+
+
+# Enter a context with an instance of the API client
+with moses_client.ApiClient() as api_client:
+    # Create an instance of the API class
+    api_instance = applications_api.ApplicationsApi(api_client)
+    application_id = "555914d4-d6Ea-18e3-e53E-03fEE4Bc7d,," # str | Id of an application (uuid)
+    configuration = "common" # str | 
+    parameter = "parameter_example" # str | 
+    key = "key_example" # str | 
+    value = "value_example" # str | 
+    newitem = True # bool | 
+
+    # example passing only required values which don't have defaults set
+    try:
+        # Validates a value for a parameter
+        api_response = api_instance.application_validate_dictionary_entry(application_id, configuration, parameter, key, value, newitem)
+        pprint(api_response)
+    except moses_client.ApiException as e:
+        print("Exception when calling ApplicationsApi->application_validate_dictionary_entry: %s\n" % e)
+```
+
+
+### Parameters
+
+Name | Type | Description  | Notes
+------------- | ------------- | ------------- | -------------
+ **application_id** | **str**| Id of an application (uuid) |
+ **configuration** | **str**|  |
+ **parameter** | **str**|  |
+ **key** | **str**|  |
+ **value** | **str**|  |
+ **newitem** | **bool**|  |
+
+### Return type
+
+[**ValidationResult**](ValidationResult.md)
+
+### Authorization
+
+No authorization required
+
+### HTTP request headers
+
+ - **Content-Type**: Not defined
+ - **Accept**: application/json
+
+
+### HTTP response details
+
+| Status code | Description | Response headers |
+|-------------|-------------|------------------|
+**200** | Validation results |  -  |
+**404** | Application not found |  -  |
+**500** | Unexpected exception. |  -  |
+
+[[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
+
+# **application_validate_parameter**
+> ValidationResult application_validate_parameter(application_id, configuration, parameter, value)
+
+Validates a value for a parameter
+
+Validates a parameter, allowing UI to report problems before applying it.
+
+### Example
+
+
+```python
+import time
+import moses_client
+from moses_client.api import applications_api
+from moses_client.model.validation_result import ValidationResult
+from moses_client.model.error_info import ErrorInfo
+from pprint import pprint
+# Defining the host is optional and defaults to http://localhost:5000/api
+# See configuration.py for a list of all supported configuration parameters.
+configuration = moses_client.Configuration(
+    host = "http://localhost:5000/api"
+)
+
+
+# Enter a context with an instance of the API client
+with moses_client.ApiClient() as api_client:
+    # Create an instance of the API class
+    api_instance = applications_api.ApplicationsApi(api_client)
+    application_id = "555914d4-d6Ea-18e3-e53E-03fEE4Bc7d,," # str | Id of an application (uuid)
+    configuration = "common" # str | 
+    parameter = "parameter_example" # str | 
+    value = "value_example" # str | 
+
+    # example passing only required values which don't have defaults set
+    try:
+        # Validates a value for a parameter
+        api_response = api_instance.application_validate_parameter(application_id, configuration, parameter, value)
+        pprint(api_response)
+    except moses_client.ApiException as e:
+        print("Exception when calling ApplicationsApi->application_validate_parameter: %s\n" % e)
+```
+
+
+### Parameters
+
+Name | Type | Description  | Notes
+------------- | ------------- | ------------- | -------------
+ **application_id** | **str**| Id of an application (uuid) |
+ **configuration** | **str**|  |
+ **parameter** | **str**|  |
+ **value** | **str**|  |
+
+### Return type
+
+[**ValidationResult**](ValidationResult.md)
+
+### Authorization
+
+No authorization required
+
+### HTTP request headers
+
+ - **Content-Type**: Not defined
+ - **Accept**: application/json
+
+
+### HTTP response details
+
+| Status code | Description | Response headers |
+|-------------|-------------|------------------|
+**200** | Validation results |  -  |
+**404** | Application not found |  -  |
+**500** | Unexpected exception. |  -  |
 
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
 

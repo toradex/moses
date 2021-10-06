@@ -12,7 +12,7 @@ Name | Type | Description | Notes
 **OOMKilled** | **bool** | Whether this container has been killed because it ran out of memory. | [optional] 
 **Dead** | **bool** |  | [optional] 
 **Pid** | **int** | The process ID of this container | [optional] 
-**ExitCode** | **int** | The last exit code of this container | [optional] 
+**ExitCode** | **int** | The last e code of this container | [optional] 
 **Error** | **string** |  | [optional] 
 **StartedAt** | **string** | The time when this container was last started. | [optional] 
 **FinishedAt** | **string** | The time when this container last exited. | [optional] 

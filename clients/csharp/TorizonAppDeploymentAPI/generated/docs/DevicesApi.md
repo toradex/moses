@@ -30,6 +30,7 @@ Method | HTTP request | Description
 [**DeviceOpenssh**](DevicesApi.md#deviceopenssh) | **GET** /devices/{device_id}/ssh/open | Expose shell via SSH
 [**DeviceSyncfolders**](DevicesApi.md#devicesyncfolders) | **GET** /devices/{device_id}/syncfolders | Synchronize folders
 [**DeviceUpdate**](DevicesApi.md#deviceupdate) | **GET** /devices/{device_id}/update | Update device information
+[**DeviceValidateParameter**](DevicesApi.md#devicevalidateparameter) | **GET** /devices/{device_id}/validate_parameter | Validates a value for a parameter
 [**DevicesGet**](DevicesApi.md#devicesget) | **GET** /devices | Get all devices
 [**DevicesNetworkdetect**](DevicesApi.md#devicesnetworkdetect) | **GET** /devices/network_detect | Detect a network device
 [**DevicesSerialdetect**](DevicesApi.md#devicesserialdetect) | **GET** /devices/serial_detect | Detect a serial device
@@ -2140,6 +2141,88 @@ No authorization required
 | **532** | Object cannot be saved because it&#39;s in an invalid state. |  -  |
 | **533** | SSH error. |  -  |
 | **534** | OS error. |  -  |
+| **535** | Invalid device id. |  -  |
+
+[[Back to top]](#)
+[[Back to API list]](../README.md#documentation-for-api-endpoints)
+[[Back to Model list]](../README.md#documentation-for-models)
+[[Back to README]](../README.md)
+
+
+## DeviceValidateParameter
+
+> ValidationResult DeviceValidateParameter (string deviceId, string _parameter, string value)
+
+Validates a value for a parameter
+
+Validates a parameter, allowing UI to report problems before applying it.
+
+### Example
+
+```csharp
+using System.Collections.Generic;
+using System.Diagnostics;
+using TorizonRestAPI.Api;
+using TorizonRestAPI.Client;
+using TorizonRestAPI.Model;
+
+namespace Example
+{
+    public class DeviceValidateParameterExample
+    {
+        public static void Main()
+        {
+            Configuration.Default.BasePath = "http://localhost:5000/api";
+            var apiInstance = new DevicesApi(Configuration.Default);
+            var deviceId = deviceId_example;  // string | Target device serial number
+            var _parameter = _parameter_example;  // string | 
+            var value = value_example;  // string | 
+
+            try
+            {
+                // Validates a value for a parameter
+                ValidationResult result = apiInstance.DeviceValidateParameter(deviceId, _parameter, value);
+                Debug.WriteLine(result);
+            }
+            catch (ApiException e)
+            {
+                Debug.Print("Exception when calling DevicesApi.DeviceValidateParameter: " + e.Message );
+                Debug.Print("Status Code: "+ e.ErrorCode);
+                Debug.Print(e.StackTrace);
+            }
+        }
+    }
+}
+```
+
+### Parameters
+
+
+Name | Type | Description  | Notes
+------------- | ------------- | ------------- | -------------
+ **deviceId** | **string**| Target device serial number | 
+ **_parameter** | **string**|  | 
+ **value** | **string**|  | 
+
+### Return type
+
+[**ValidationResult**](ValidationResult.md)
+
+### Authorization
+
+No authorization required
+
+### HTTP request headers
+
+- **Content-Type**: Not defined
+- **Accept**: application/json
+
+
+### HTTP response details
+| Status code | Description | Response headers |
+|-------------|-------------|------------------|
+| **200** | Validation results |  -  |
+| **500** | Unexpected exception. |  -  |
 | **535** | Invalid device id. |  -  |
 
 [[Back to top]](#)
