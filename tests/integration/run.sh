@@ -2,7 +2,7 @@
 
 BASE_DIR=$PWD
 WORK_DIR=$PWD/workdir
-TESTCASES_DIR=$BASE_DIR/testcases
+export TESTCASES_DIR=$BASE_DIR/testcases
 
 REPORT_DIR=$WORK_DIR/reports
 REPORT_FILE=$REPORT_DIR/$(date +"%Y%02m%02d%H%M%S").log
@@ -17,11 +17,8 @@ $TESTCASES_DIR/platforms.bats \
 $TESTCASES_DIR/devices.bats \
 $TESTCASES_DIR/applications.bats \
 $TESTCASES_DIR/samples.bats \
+$TESTCASES_DIR/validations.bats \
 "
-
-# BATS command
-BATS_BIN="./bats/bats-core/bin/bats"
-BATS_ERRORS_COUNT=0
 
 set -o pipefail
 
@@ -32,17 +29,10 @@ print_message() {
     echo $1
 }
 
+export BATS_BIN="./bats/bats-core/bin/bats"
+export BATS_ERRORS_COUNT=0
 
-run_tests() {
-    if [ "$TIE_REPORT" = "1" ]; then
-        $BATS_BIN --timing $@ 2>&1 | tee -a $REPORT_FILE
-    else
-        $BATS_BIN --timing $@
-    fi
-    if [ ! "$?" -eq "0" ]; then
-        BATS_ERRORS_COUNT=$(expr $BATS_ERRORS_COUNT + 1)
-    fi
-}
+source run_tests.bash
 
 # test case to run
 if [ ! -z "$TIE_TESTCASE" ]; then
@@ -66,6 +56,7 @@ fi
 # we need this folder to store moses logs
 mkdir -p $REPORT_DIR
 
+export TIE_TESTCASES_DIR=$TESTCASES_DIR
 export TIE_TEMP_DIR=$WORK_DIR/temp
 export TIE_EULASPATH=$TIE_TEMP_DIR/eulas
 export TIE_SAMPLES_DIR=$BASE_DIR/samples
@@ -133,8 +124,18 @@ do
         multipath="$dir/${filename%.*}_multi_platform.bats"
 
         if [ -f "$multipath" ]; then
+
+            if [ -f "$TIE_TEMP_DIR/extra.bats" ]; then
+                rm $TIE_TEMP_DIR/extra.bats
+            fi
+
             print_message "# Testing $filename on $MOSES_CURRENT_PLATFORM"
             run_tests $multipath
+
+            if [ -f "$TIE_TEMP_DIR/extra.bats" ]; then
+                print_message "# Running platform specific tests for $MOSES_CURRENT_PLATFORM"
+                run_tests $TIE_TEMP_DIR/extra.bats
+            fi
         fi
 
         multipath="$dir/${filename%.*}_multi_platform_device.bats"
