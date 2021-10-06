@@ -761,6 +761,27 @@ def cmd_handler_device_ip(args) -> int:
     logging.info(ip)
     return 0
 
+def cmd_handler_device_validate(args) -> int:
+    """Sync a local folder with a folder on the device
+
+    Arguments:
+        args -- parsed command line arguments
+
+    Returns:
+        int -- 0 for success
+    """
+    api = moses_client.api.devices_api.DevicesApi()
+    result = api.device_validate_parameter(args.device_id,args.parameter,args.value)
+    retcode = 0
+
+    for warning in result.warnings:
+        logging.warning(warning)
+        retcode = 2
+    for error in result.errors:
+        logging.error(error)
+        retcode = 1
+    return retcode
+
 
 def cmd_handler_application_info(args) -> int:
     """dumps application info
@@ -1060,7 +1081,7 @@ def cmd_handler_application_setprop(args) -> int:
         application.props[args.configuration][propertyname]="" if value is None else value
     else:
         if args.configuration is None:
-            setattr(application,args.property,value)
+            setattr(application,args.property,str(value))
         else:
             dictionary=getattr(application,args.property)
             dictionary[args.configuration]=value
@@ -1087,6 +1108,51 @@ def cmd_handler_application_publish(args) -> int:
         args.application_id, args.credentials, args.username, args.password, progress_id=progress_id
     )
     return 0
+
+def cmd_handler_application_validate_parameter(args) -> int:
+    """Validate a simple parameter"""
+    api = moses_client.api.applications_api.ApplicationsApi()
+
+    result = api.application_validate_parameter(args.application_id, args.configuration, args.parameter, args.value)
+    retcode = 0
+
+    for warning in result.warnings:
+        logging.warning(warning)
+        retcode = 2
+    for error in result.errors:
+        logging.error(error)
+        retcode = 1
+    return retcode
+
+def cmd_handler_application_validate_item(args) -> int:
+    """Validate an array item"""
+    api = moses_client.api.applications_api.ApplicationsApi()
+
+    result = api.application_validate_array_item(args.application_id, args.configuration, args.array, args.value, args.index)
+    retcode = 0
+
+    for warning in result.warnings:
+        logging.warning(warning)
+        retcode = 2
+    for error in result.errors:
+        logging.error(error)
+        retcode = 1
+    return retcode
+
+def cmd_handler_application_validate_entry(args) -> int:
+    """Validate an array item"""
+    api = moses_client.api.applications_api.ApplicationsApi()
+
+    result = api.application_validate_dictionary_entry(args.application_id, args.configuration, args.dictionary, args.key, args.value, args.newitem)
+    retcode = 0
+
+    for warning in result.warnings:
+        logging.warning(warning)
+        retcode = 2
+    for error in result.errors:
+        logging.error(error)
+        retcode = 1
+    return retcode
 
 def cmd_handler_detect(args) -> int:
     """Detects a new serial or network device
@@ -1352,6 +1418,7 @@ def create_parser() -> argparse.ArgumentParser:
     device_subparsers.add_parser("key")
     device_sync_parser = device_subparsers.add_parser("sync")
     device_subparsers.add_parser("ip")
+    device_validate_parser = device_subparsers.add_parser("validate")
 
     # add sub-commands for device image
     device_image_parser.add_argument(
@@ -1387,6 +1454,14 @@ def create_parser() -> argparse.ArgumentParser:
         help="Destination folder (target device)",
         metavar="destination-folder",
     )
+
+    device_validate_parser.add_argument(
+        "parameter",
+        help="Parameter being validated")
+
+    device_validate_parser.add_argument(
+        "value",
+        help="Value for the parameter being validated")
 
     detect_parser.add_argument(
         "target", type=str, help="serial port or ip address/hostname"
@@ -1438,6 +1513,7 @@ def create_parser() -> argparse.ArgumentParser:
     application_setprop_parser = application_subparsers.add_parser("setprop")
     application_logs_parser = application_subparsers.add_parser("logs")
     application_publish_parser = application_subparsers.add_parser("publish")
+    application_validate_parser = application_subparsers.add_parser("validate")
 
     application_build_parser.add_argument(
         "configuration", help="debug/release or other app-specific configuration"
@@ -1537,6 +1613,7 @@ def create_parser() -> argparse.ArgumentParser:
     application_logs_parser.add_argument(
         "configuration", help="debug/release or other app-specific configuration"
     )
+
     application_logs_parser.add_argument(
         "device_id", help="Device serial number", metavar="device-id"
     )
@@ -1550,6 +1627,53 @@ def create_parser() -> argparse.ArgumentParser:
     )
     application_publish_parser.add_argument(
         "password", help="password/token used for authentication"
+    )
+
+    application_validate_subparsers = application_validate_parser.add_subparsers(dest="subsubcommand")
+
+    application_validate_parameter_parser = application_validate_subparsers.add_parser("parameter")
+    application_validate_item_parser = application_validate_subparsers.add_parser("item")
+    application_validate_entry_parser = application_validate_subparsers.add_parser("entry")
+
+    application_validate_parameter_parser.add_argument(
+        "configuration", help="debug/release/common"
+    )
+    application_validate_parameter_parser.add_argument(
+        "parameter", help="parameter name"
+    )
+    application_validate_parameter_parser.add_argument(
+        "value", help="parameter value"
+    )
+
+    application_validate_item_parser.add_argument(
+        "configuration", help="debug/release/common"
+    )
+    application_validate_item_parser.add_argument(
+        "array", help="array name"
+    )
+    application_validate_item_parser.add_argument(
+        "value", help="item value"
+    )
+
+    application_validate_item_parser.add_argument(
+        "index", help="item index (-1 for new item)",
+        type=int, nargs="?", default=-1
+    )
+    application_validate_entry_parser.add_argument(
+        "configuration", help="debug/release/common"
+    )
+    application_validate_entry_parser.add_argument(
+        "dictionary", help="dictionary name"
+    )
+    application_validate_entry_parser.add_argument(
+        "key", help="key value"
+    )
+    application_validate_entry_parser.add_argument(
+        "value", help="entry value"
+    )
+    application_validate_entry_parser.add_argument(
+        "--newitem", help="set if item is going to be added to dict",
+        action="store_true", default=False
     )
 
     eula_parser.add_argument(

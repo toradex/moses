@@ -19,6 +19,7 @@ import applicationconfig_deployrun
 import applicationconfig_sdk
 import applicationconfig_dockerexport
 import applicationconfig_publish
+import applicationconfig_validation
 
 
 class ApplicationConfig(ApplicationConfigBase):
@@ -42,6 +43,22 @@ class ApplicationConfig(ApplicationConfigBase):
     push_to_registry = applicationconfig_dockerexport.push_to_registry
 
     publish = applicationconfig_publish.publish
+
+    get_array = applicationconfig_validation.get_array
+    get_dictionary = applicationconfig_validation.get_dictionary
+
+    validate_configuration_parameter = applicationconfig_validation.validate_parameter
+    validate_configuration_array_item = applicationconfig_validation.validate_array_item
+    validate_configuration_dictionary_entry = applicationconfig_validation.validate_dictionary_entry
+
+    def __init__(self,folder: Optional[Path] = None, platformid: str = ""):
+        """Initialize the object and its base classes.
+
+        :param folder: folder
+        :type folder: Optional[Path], optional
+        """
+        ApplicationConfigBase.__init__(self, folder, platformid)
+        applicationconfig_validation.init(self)
 
     def touch(self) -> None:
         """Set modification date to current time."""
@@ -196,6 +213,8 @@ class ApplicationConfigs(Dict[str, ApplicationConfig],
         :rtype: ApplicationConfig
 
         """
+        assert platform.id is not None
+
         # finds a new folder for the app config
         counter = 0
 
@@ -205,11 +224,8 @@ class ApplicationConfigs(Dict[str, ApplicationConfig],
         while (rootfolder / ("appconfig_" + str(counter))).exists():
             counter += 1
 
-        app = ApplicationConfig(rootfolder / ("appconfig_" + str(counter)))
+        app = ApplicationConfig(rootfolder / ("appconfig_" + str(counter)), platform.id)
 
-        assert platform.id is not None
-
-        app.platformid = platform.id
         app.username = username
         app.save()
 

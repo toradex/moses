@@ -3,7 +3,7 @@ import io
 import logging
 import os
 import re
-from typing import Optional, List, Dict, Any, Mapping, Callable
+from typing import Optional, List, Dict, Any, Mapping, Callable, Tuple
 from pathlib import Path
 import docker
 import paramiko
@@ -20,6 +20,7 @@ import rsync
 import logs
 import progresscookie
 import processoutput
+import validation
 import targetdevice_setup
 from moses_exceptions import (
     SSHError,
@@ -41,7 +42,7 @@ FREE_CMD_LINE = "free -k"
 
 # pylint: disable = too-many-instance-attributes
 # pylint: disable = too-many-public-methods
-class TargetDevice(config.ConfigurableKeysObject):
+class TargetDevice(config.ConfigurableKeysObject, validation.BasicValidation):
     """Class used to store information about a specific device.
 
     Property changes will be saved permanently.
@@ -52,13 +53,33 @@ class TargetDevice(config.ConfigurableKeysObject):
     readonlyfields = config.ConfigurableKeysObject.readonlyfields.copy()
     publicfields: set = set()
 
+    validation_base_table :  Dict[str,
+                                  List[
+                                  Tuple[
+                                          bool,
+                                          Callable[...,Optional[str]],
+                                          Any]]] = {
+        "name": [
+            (True,validation.validate_non_empty_string, None)],
+        "hostname": [
+            (True,validation.validate_non_empty_string, None),
+            (True, validation.validate_hostname, None)],
+        "username": [
+            (True,validation.validate_non_empty_string, None),
+            (True, validation.validate_username, None)],
+        "homefolder": [
+            (True,validation.validate_non_empty_string, None),
+            (True,validation.validate_remote_path, None)]
+    }
+
     def __init__(self, folder: Optional[Path] = None):
         """Load data from a configuration file.
 
         :param folder: path to the folder used to store configuration data
         :type folder: Path
         """
-        super().__init__(folder)
+        config.ConfigurableKeysObject.__init__(self,folder)
+        validation.BasicValidation.__init__(self,self.validation_base_table, None)
 
         self.name = ""
         self.model = ""
@@ -569,6 +590,7 @@ class TargetDevice(config.ConfigurableKeysObject):
         del fields["dockertunnel"]
         del fields["sshforwarder"]
         del fields["logs"]
+        del fields["validation_table"]
         return fields
 
     def __setstate__(self, fields: Dict[str, Any]) -> None:

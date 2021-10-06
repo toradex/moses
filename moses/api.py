@@ -29,6 +29,8 @@ EMULATION_IMAGE_NAME = "torizon/binfmt"
 
 # validation of readonly fields is done internally
 # pylint: disable=unused-argument
+
+
 def remove_readonly(validator: Any, readonly: Any, instance: Any,
                     schema: Any) -> None:
     """Skip validation of readonly fields.
@@ -130,11 +132,13 @@ def version_docker_get() -> Any:
     try:
         client = docker.from_env()
 
-        return (openapienforce.normalize_object_from_type(client.version(),"Docker_Version"), 200)
+        return (openapienforce.normalize_object_from_type(
+            client.version(), "Docker_Version"), 200)
     # pylint: disable=broad-except
     except Exception as exception:
         logging.exception("docker version")
         raise LocalDockerError(exception) from exception
+
 
 def devices_get() -> Any:
     """Return the list of devices.
@@ -401,7 +405,7 @@ def devices_device_processes_get(device_id: str) -> Any:
 
     processes = devices[device_id].get_process_list()
     processes.sort(key=lambda x: x["pid"])
-    return (openapienforce.normalize_array_from_type(processes,"Process"), 200)
+    return (openapienforce.normalize_array_from_type(processes, "Process"), 200)
 
 
 def devices_device_memory_get(device_id: str) -> Any:
@@ -439,7 +443,8 @@ def devices_device_storage_get(device_id: str) -> Any:
 
     mountpoints = devices[device_id].get_storageinfo()
     mountpoints.sort(key=lambda x: x["mountpoint"])
-    return (openapienforce.normalize_array_from_type(mountpoints,"MountPoint"), 200)
+    return (openapienforce.normalize_array_from_type(
+        mountpoints, "MountPoint"), 200)
 
 
 def devices_device_images_get(device_id: str) -> Any:
@@ -462,7 +467,8 @@ def devices_device_images_get(device_id: str) -> Any:
         if ("RepoTags" in x.keys() and len(x["RepoTags"]) > 0)
         else "~" + x["Id"]
     )
-    return (openapienforce.normalize_array_from_type(images,"Docker_Image"), 200)
+    return (openapienforce.normalize_array_from_type(
+        images, "Docker_Image"), 200)
 
 
 def devices_device_images_image_get(device_id: str, image_id: str) -> Any:
@@ -485,7 +491,8 @@ def devices_device_images_image_get(device_id: str, image_id: str) -> Any:
 
     if image is None:
         return ("Image not found", 404)
-    return (openapienforce.normalize_object_from_type(image.attrs,"Docker_Image"), 200)
+    return (openapienforce.normalize_object_from_type(
+        image.attrs, "Docker_Image"), 200)
 
 
 def devices_device_images_image_delete(device_id: str, image_id: str) -> Any:
@@ -529,7 +536,8 @@ def devices_device_containers_get(device_id: str) -> Any:
         if ("Name" in x.keys() and x["Name"] is not None)
         else "~" + x["Id"]
     )
-    return (openapienforce.normalize_array_from_type(containers,"Docker_Container"), 200)
+    return (openapienforce.normalize_array_from_type(
+        containers, "Docker_Container"), 200)
 
 
 def devices_device_containers_container_get(
@@ -553,7 +561,8 @@ def devices_device_containers_container_get(
 
     if container is None:
         return ("Container not found", 404)
-    return (openapienforce.normalize_object_from_type(container.attrs,"Docker_Container"), 200)
+    return (openapienforce.normalize_object_from_type(
+        container.attrs, "Docker_Container"), 200)
 
 
 def devices_device_containers_container_delete(
@@ -597,7 +606,8 @@ def devices_device_containers_container_start_get(
 
     device = devices[device_id]
     container = device.start_container(container_id)
-    return (openapienforce.normalize_object_from_type(container.attrs,"Docker_Container"), 200)
+    return (openapienforce.normalize_object_from_type(
+        container.attrs, "Docker_Container"), 200)
 
 
 def devices_device_containers_container_stop_get(
@@ -619,7 +629,8 @@ def devices_device_containers_container_stop_get(
 
     device = devices[device_id]
     container = device.stop_container(container_id)
-    return (openapienforce.normalize_object_from_type(container.attrs,"Docker_Container"), 200)
+    return (openapienforce.normalize_object_from_type(
+        container.attrs, "Docker_Container"), 200)
 
 
 def devices_device_containers_container_processes_get(
@@ -641,7 +652,7 @@ def devices_device_containers_container_processes_get(
 
     processes = devices[device_id].get_container_process_list(container_id)
     processes.sort(key=lambda x: x["pid"])
-    return (openapienforce.normalize_array_from_type(processes,"Process"), 200)
+    return (openapienforce.normalize_array_from_type(processes, "Process"), 200)
 
 
 def devices_device_containers_container_memory_get(
@@ -662,8 +673,8 @@ def devices_device_containers_container_memory_get(
         return ("Device not found", 404)
 
     return (openapienforce.normalize_object_from_type(
-                devices[device_id].get_container_memoryinfo(container_id),
-                "MemInfo"), 200)
+        devices[device_id].get_container_memoryinfo(container_id),
+        "MemInfo"), 200)
 
 
 def devices_device_containers_container_storage_get(
@@ -685,7 +696,8 @@ def devices_device_containers_container_storage_get(
 
     mountpoints = devices[device_id].get_container_storageinfo(container_id)
     mountpoints.sort(key=lambda x: x["mountpoint"])
-    return (openapienforce.normalize_array_from_type(mountpoints,"MountPoint"), 200)
+    return (openapienforce.normalize_array_from_type(
+        mountpoints, "MountPoint"), 200)
 
 
 def devices_device_containers_container_logs_get(
@@ -784,6 +796,28 @@ def devices_device_current_ip_get(device_id: str) -> Any:
         return ("Device not found", 404)
 
     return (devices[device_id].get_current_ip(), 200)
+
+
+def devices_device_validate_parameter_get(
+        device_id: str, parameter: str, value: str) -> Any:
+    """Validate a parameter for a device.
+
+    :param device_id: device id
+    :type device_id: str
+    :param parameter: parameter to validate
+    :type parameter: str
+    :param value: parameter value
+    :type value: str
+
+    :returns: API tuple with object and return code
+
+    """
+    devices = targetdevice.TargetDevices()
+
+    if device_id not in devices:
+        return ("Device not found", 404)
+
+    return (devices[device_id].validate(parameter, value), 200)
 
 
 def eulas_get() -> Any:
@@ -1146,7 +1180,8 @@ def applications_application_run_get(
 
         progresscookie.progress_completed(progress)
 
-        return (openapienforce.normalize_object_from_type(container,"Docker_Container"), 200)
+        return (openapienforce.normalize_object_from_type(
+            container, "Docker_Container"), 200)
     except Exception as exception:
         progresscookie.progress_report_error(progress, exception)
         raise
@@ -1213,7 +1248,8 @@ def applications_application_container_get(
     if container is None:
         return ("Container not found", 404)
 
-    return (openapienforce.normalize_object_from_type(container.attrs,"Docker_Container"), 200)
+    return (openapienforce.normalize_object_from_type(
+        container.attrs, "Docker_Container"), 200)
 
 
 def applications_application_sdk_container_get(
@@ -1239,7 +1275,8 @@ def applications_application_sdk_container_get(
     if container is None:
         return (connexion.NoContent, 204)
 
-    return (openapienforce.normalize_object_from_type(container.attrs,"Docker_Container"), 200)
+    return (openapienforce.normalize_object_from_type(
+        container.attrs, "Docker_Container"), 200)
 
 
 def applications_application_container_logs_get(
@@ -1413,7 +1450,7 @@ def applications_application_sdk_run_get(
         progresscookie.progress_completed(progress)
 
         if app.sdksshaddress[configuration] is None:
-            return ({"HostIp":"", "HostPort": ""}, 200)
+            return ({"HostIp": "", "HostPort": ""}, 200)
         return (app.sdksshaddress[configuration], 200)
     except Exception as exception:
         progresscookie.progress_report_error(progress, exception)
@@ -1555,6 +1592,7 @@ def applications_application_reseal_get(application_id: str) -> Any:
     app.reseal()
     return (connexion.NoContent, 200)
 
+
 def applications_application_publish_get(
         application_id: str, credentials: str,
         dockeruser: str, dockerpass: str, progress_id: str = None) -> Any:
@@ -1599,10 +1637,111 @@ def applications_application_publish_get(
         raise
 
 
+def applications_application_validate_parameter_get(
+        application_id: str,
+        configuration: str,
+        parameter: str,
+        value: str) -> Any:
+    """Validate a parameter for a device.
+
+    :param application_id: application id
+    :type application_id: str
+    :param configuration: debug/release
+    :type configuration: str
+    :param parameter: parameter to validate
+    :type parameter: str
+    :param value: parameter value
+    :type value: str
+
+    :returns: API tuple with object and return code
+
+    """
+    applications = applicationconfig.ApplicationConfigs()
+
+    if application_id not in applications:
+        raise moses_exceptions.ObjectNotFound(
+            "Application", application_id)
+
+    app = applications[application_id]
+
+    result = app.validate_configuration_parameter(
+        configuration, parameter, value)
+    return (result, 200)
+
+
+def applications_application_validate_array_item_get(
+        application_id: str,
+        configuration: str,
+        parameter: str,
+        value: str,
+        index: int) -> Any:
+    """Validate an array parameter for an application.
+
+    :param application_id: application id
+    :type application_id: str
+    :param configuration: debug/release
+    :type configuration: str
+    :param parameter: parameter to validate
+    :type parameter: str
+    :param value: item value
+    :type value: str
+
+    :returns: API tuple with object and return code
+
+    """
+    applications = applicationconfig.ApplicationConfigs()
+
+    if application_id not in applications:
+        raise moses_exceptions.ObjectNotFound(
+            "Application", application_id)
+
+    app = applications[application_id]
+
+    result = app.validate_configuration_array_item(
+        configuration, parameter, value, index)
+    return (result, 200)
+
+
+def applications_application_validate_dictionary_entry_get(
+        application_id: str,
+        configuration: str,
+        parameter: str,
+        key: str,
+        value: str,
+        newitem: bool) -> Any:
+    """Validate an array parameter for an application.
+
+    :param application_id: application id
+    :type application_id: str
+    :param configuration: debug/release
+    :type configuration: str
+    :param parameter: parameter to validate
+    :type parameter: str
+    :param key: entry key
+    :type key: str
+    :param value: entry value
+    :type value: str
+
+    :returns: API tuple with object and return code
+
+    """
+    applications = applicationconfig.ApplicationConfigs()
+
+    if application_id not in applications:
+        raise moses_exceptions.ObjectNotFound(
+            "Application", application_id)
+
+    app = applications[application_id]
+
+    result = app.validate_configuration_dictionary_entry(
+        configuration, parameter, key, value, newitem)
+    return (result, 200)
 
 # pylint: disable=too-many-nested-blocks
 # pylint: disable=too-many-branches
 # pylint: disable=too-many-statements
+
+
 def setup_pullcontainers_get(progress_id: str = None) -> Any:
     """Pull all base containers needed for the different applications.
 
@@ -1758,7 +1897,8 @@ def progress_create_get() -> Any:
 
     progress_data = cookies.get_update(cookie.id, False)
 
-    return (openapienforce.normalize_object_from_type(progress_data,"Progress"), 200)
+    return (openapienforce.normalize_object_from_type(
+        progress_data, "Progress"), 200)
 
 
 def progress_delete_get(progress_id: str = "") -> Any:
@@ -1792,10 +1932,11 @@ def progress_status_get(progress_id: str = "") -> Any:
     if progress_data is None:
         return (connexion.NoContent, 404)
 
-    return (openapienforce.normalize_object_from_type(progress_data,"Progress"), 200)
+    return (openapienforce.normalize_object_from_type(
+        progress_data, "Progress"), 200)
 
 
-def init_api(schema: Dict[str,Any]) -> None:
+def init_api(schema: Dict[str, Any]) -> None:
     """Initialize the api and allocates all required objects.
 
     :param schema: contents of swagger.YAML

@@ -16,11 +16,12 @@ import config
 import properties
 import platformconfig
 import tags
-
+import validation
 
 # pylint: disable=too-many-instance-attributes
+# pylint: disable=abstract-method
 class ApplicationConfigBase(
-        config.ConfigurableKeysObject, properties.PropertiesObject):
+        config.ConfigurableKeysObject, properties.PropertiesObject, validation.ExtendedValidation):
     """Class used to manage an application."""
 
     readonlyfields = config.ConfigurableKeysObject.readonlyfields.union(
@@ -35,7 +36,8 @@ class ApplicationConfigBase(
         "shutdownscript"]
     configurations = ["common", "debug", "release"]
 
-    def __init__(self, folder: Optional[Path] = None):
+    # pylint: disable = super-init-not-called
+    def __init__(self, folder: Optional[Path] = None, platformid: str = ""):
         """Load data from the configuration folder.
 
         :param folder: path of the folder used to store application configuration
@@ -69,7 +71,7 @@ class ApplicationConfigBase(
 
         self.sdkimages: Dict[str, str] = {"debug": "", "release": ""}
 
-        self.platformid = ""
+        self.platformid = platformid
         self.publickey: Optional[str] = None
         self.privatekey: Optional[str] = None
         self.modificationdate = datetime.datetime.utcnow().isoformat()
@@ -197,6 +199,10 @@ class ApplicationConfigBase(
         fields["sdksshaddress"] = self.sdksshaddress
         if "logs" in fields:
             del fields["logs"]
+        del fields["dictionary_validation_table"]
+        del fields["array_validation_table"]
+        del fields["skip_table"]
+        del fields["validation_table"]
         return fields
 
     def to_json(self) -> Dict[str, Any]:

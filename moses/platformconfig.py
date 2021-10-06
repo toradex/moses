@@ -3,6 +3,8 @@
 Platforms define containers that will run on a device.
 """
 import logging
+import os
+import types
 from pathlib import Path
 from typing import Optional, List, Dict
 import config
@@ -67,6 +69,26 @@ class PlatformConfig(config.ConfigurableObject, properties.PropertiesObject):
 
         if self.folder is not None:
             self.load()
+            validation_file = os.path.join(self.folder, "validate.py")
+
+            if not os.path.isfile(validation_file):
+                return
+
+            assert self.id is not None
+
+            modulename = "validate_" + self.id.replace("-","_")
+
+            moduletype = types.ModuleType(modulename)
+            modulecode = compile(open(validation_file).read(),modulename, "exec")
+            #pylint: disable=exec-used
+            exec(modulecode,moduletype.__dict__,moduletype.__dict__)
+
+            if "init_app_tables" not in moduletype.__dict__:
+                return
+
+            self.init_validation_tables=moduletype.__dict__["init_app_tables"]
+        else:
+            self.init_validation_tables=None
 
     def _build_folder_path(self) -> Path:
         """Create a folder path concatenating base folder and the platform id."""
@@ -274,7 +296,6 @@ class PlatformConfig(config.ConfigurableObject, properties.PropertiesObject):
             for d in targetdevice.TargetDevices().values()
             if self.check_device_compatibility(d)
         ]
-
 
 class PlatformConfigs(Dict[str, PlatformConfig],
                       metaclass=singleton.Singleton):
