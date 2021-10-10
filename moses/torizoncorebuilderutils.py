@@ -51,6 +51,49 @@ class TorizonCoreBuilderUtils:
         )
 
     @staticmethod
+    def unpack (workspacepath: str,
+        outputpath: str,
+        progress: Optional[progresscookie.ProgressCookie]) -> None:
+        """Run Torizon Core unpack command."""
+        volumes = [
+            "deploy:/deploy",
+            f"{workspacepath}:/workdir",
+            "storage:/storage"
+        ]
+
+        TorizonCoreBuilderUtils.__run_tcbuilder(
+            f"images \
+                --remove-storage \
+                unpack \
+                {outputpath}",
+            volumes,
+            progress
+        )
+
+    @staticmethod
+    def deploy (workspacepath: str,
+        host: str,
+        username: str,
+        password: str,
+        progress: Optional[progresscookie.ProgressCookie]) -> None:
+        """Run Torizon Core Builder Deploy."""
+        volumes = [
+            "deploy:/deploy",
+            f"{workspacepath}:/workdir",
+            "storage:/storage"
+        ]
+
+        TorizonCoreBuilderUtils.__run_tcbuilder(
+            f"deploy \
+                --remote-host {host} \
+                --remote-username {username} \
+                --remote-password {password} \
+                --reboot",
+            volumes,
+            progress
+        )
+
+    @staticmethod
     def publish (credentials: str,
         composefile: str,
         packagename: str,

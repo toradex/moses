@@ -1807,6 +1807,75 @@ paths:
         500:
           $ref: "#/responses/InternalServerError_500"
 
+  /applications/{application_id}/tcb_unpack:
+
+    get:
+      operationId: application_tcb_unpack
+      tags:
+        - Applications
+      summary: TorizonCore unpack command
+      description: Unpack the output using TorizonCore Builder Docker image.
+      parameters:
+        - $ref: "#/parameters/application_id"
+        - name: outputpath
+          description: the output directory created by TorizonCore builder from workspace path
+          in: query
+          type: string
+          required: true
+        - $ref: "#/parameters/progress_id"
+      responses:
+        200:
+          description: OK
+        520:
+          $ref: "#/responses/ImageNotFoundError_520"
+        530:
+          $ref: "#/responses/LocalDockerError_530"
+        550:
+          $ref: "#/responses/NoTagError_550"
+        551:
+          $ref: "#/responses/AbortError_551"
+        553:
+          $ref: "#/responses/TorizonCoreBuilderError_553"
+
+  /applications/{application_id}/tcb_deploy:
+
+    get:
+      operationId: application_tcb_deploy
+      tags:
+        - Applications
+      summary: TorizonCore unpack command
+      description: Unpack the output using TorizonCore Builder Docker image.
+      parameters:
+        - $ref: "#/parameters/application_id"
+        - name: host
+          description: the hostname or ip address of the device to be deployed
+          in: query
+          type: string
+          required: true
+        - name: username
+          description: the Torizon username of the device to be deployed
+          in: query
+          type: string
+          required: true
+        - name: password
+          description: the Torizon password of the device to be deployed
+          in: query
+          type: string
+          required: true
+        - $ref: "#/parameters/progress_id"
+      responses:
+        200:
+          description: OK
+        520:
+          $ref: "#/responses/ImageNotFoundError_520"
+        530:
+          $ref: "#/responses/LocalDockerError_530"
+        550:
+          $ref: "#/responses/NoTagError_550"
+        551:
+          $ref: "#/responses/AbortError_551"
+        553:
+          $ref: "#/responses/TorizonCoreBuilderError_553"
 
   /setup/pullcontainers:
     get:
