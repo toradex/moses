@@ -1297,7 +1297,7 @@ def create_parser() -> argparse.ArgumentParser:
         "-p", "--progress", action="store_true", dest="progress", default=False
     )
 
-    subparsers = parser.add_subparsers(dest="command")
+    subparsers = parser.add_subparsers(dest="command", required=True)
 
     # add first level commands
     device_parser = subparsers.add_parser("devices")
@@ -1319,7 +1319,7 @@ def create_parser() -> argparse.ArgumentParser:
     )
 
     # add sub-commands for device
-    device_subparsers = device_parser.add_subparsers(dest="subcommand")
+    device_subparsers = device_parser.add_subparsers(dest="subcommand", required=True)
 
     device_subparsers.add_parser("images")
     device_subparsers.add_parser("containers")
@@ -1338,7 +1338,7 @@ def create_parser() -> argparse.ArgumentParser:
         "image_id", help="Image SHA-id", metavar="image-id"
     )
     device_image_subparsers = device_image_parser.add_subparsers(
-        dest="subsubcommand")
+        dest="subsubcommand", required=True)
 
     device_image_subparsers.add_parser("info")
     device_image_subparsers.add_parser("delete")
@@ -1348,7 +1348,7 @@ def create_parser() -> argparse.ArgumentParser:
         "container_id", help="Container SHA-id", metavar="container-id"
     )
     device_container_subparsers = device_container_parser.add_subparsers(
-        dest="subsubcommand"
+        dest="subsubcommand", required=True
     )
 
     device_container_subparsers.add_parser("info")
@@ -1387,7 +1387,7 @@ def create_parser() -> argparse.ArgumentParser:
     platform_parser.add_argument(
         "platform_id", help="Platform unique identifier", metavar="platform-id"
     )
-    platform_subparsers = platform_parser.add_subparsers(dest="subcommand")
+    platform_subparsers = platform_parser.add_subparsers(dest="subcommand", required=True)
 
     platform_subparsers.add_parser("info")
     platform_subparsers.add_parser("compatible")
@@ -1396,7 +1396,7 @@ def create_parser() -> argparse.ArgumentParser:
         "application_id", help="Application unique identifier", metavar="application-id"
     )
     application_subparsers = application_parser.add_subparsers(
-        dest="subcommand")
+        dest="subcommand", required=True)
 
     application_subparsers.add_parser("info")
     application_build_parser = application_subparsers.add_parser("build")
@@ -1524,7 +1524,7 @@ def create_parser() -> argparse.ArgumentParser:
     )
 
     eula_subparsers = eula_parser.add_subparsers(
-        dest="subcommand")
+        dest="subcommand", required=True)
     eula_subparsers.add_parser("info")
     eula_setprop_parser=eula_subparsers.add_parser("setprop")
 
@@ -1608,10 +1608,10 @@ if __name__ == "__main__":
     else:
         function_name += args.command
 
-    if "subcommand" in args:
+    if "subcommand" in args and args.subcommand is not None:
         function_name += "_" + args.subcommand
 
-    if "subsubcommand" in args:
+    if "subsubcommand" in args and args.subsubcommand is not None:
         function_name += "_" + args.subsubcommand
 
     try:
