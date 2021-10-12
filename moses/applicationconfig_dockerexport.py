@@ -563,8 +563,10 @@ def get_docker_composefile(self: ApplicationConfigBase,
 
     composeyaml["services"][self._get_image_name(configuration)] = service
 
-    for network in networks:
-        composeyaml["networks"][network] = {}
+    if len(networks)>0:
+        composeyaml["networks"]={}
+        for network in networks:
+            composeyaml["networks"][network] = {}
 
     return yaml.dump(composeyaml)
 
