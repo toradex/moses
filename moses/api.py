@@ -22,8 +22,8 @@ import openapienforce
 
 # pylint: disable=too-many-lines
 
-APP_VERSION = "1.0"
-API_VERSION = "1.0"
+APP_VERSION = "1.0.0"
+API_VERSION = "1.0.0"
 
 EMULATION_IMAGE_NAME = "torizon/binfmt"
 
@@ -1751,11 +1751,15 @@ def progress_status_get(progress_id: str = "") -> Any:
     return (openapienforce.normalize_object_from_type(progress_data,"Progress"), 200)
 
 
-def init_api(schema: Dict[str,Any]) -> None:
+#pylint: disable=global-statement
+def init_api(schema: Dict[str, Any]) -> None:
     """Initialize the api and allocates all required objects.
 
     :param schema: contents of swagger.YAML
     :type schema: Any
     """
+    global API_VERSION
+
     config.ServerConfig()
     openapienforce.init_openapi_enforce(schema)
+    API_VERSION=schema["info"]["version"]
