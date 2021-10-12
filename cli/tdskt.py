@@ -1072,15 +1072,24 @@ def cmd_handler_application_setprop(args) -> int:
     api = moses_client.api.applications_api.ApplicationsApi(api_client)
     application = api.application_get(args.application_id)
 
-    value=yaml.full_load(args.value)
+    property=args.property
+    key=None
 
-    if args.property.startswith("props."):
+    if "." in property:
+        property,key = property.split(".")[0:2]
+
+    if getattr(application,property) is None:
+        raise argparse.ArgumentError(None, "Invalid property name.")
+
+    if key is not None:
         if args.configuration is None:
-            raise argparse.ArgumentError(None,"Custom properties require configuration parameter.")
+            raise argparse.ArgumentError(None,"This property requires configuration parameter.")
 
-        propertyname=args.property[len("props."):]
-        application.props[args.configuration][propertyname]="" if value is None else value
+        dictionary=getattr(application,property)
+        dictionary[args.configuration][key]="" if args.value is None else str(args.value)
     else:
+        value=yaml.full_load(args.value)
+
         if args.configuration is None:
             setattr(application,args.property,str(value))
         else:
