@@ -20,6 +20,7 @@ import moses_client.models
 
 from typing import Optional
 
+api_client = moses_client.ApiClient()
 
 def progress_function(api, progress_id):
 
@@ -57,7 +58,7 @@ def handle_progress(args) -> Optional[str]:
     if not args.progress:
         return ""
 
-    api = moses_client.api.progress_api.ProgressApi()
+    api = moses_client.api.progress_api.ProgressApi(api_client)
     progress = api.progress_create()
 
     thread = threading.Thread(
@@ -160,7 +161,7 @@ def cmd_handler_eulas(args) -> int:
     Returns:
         int -- 0 for success
     """
-    api = moses_client.api.eulas_api.EulasApi()
+    api = moses_client.api.eulas_api.EulasApi(api_client)
     eulas = api.eulas_get()
     eulalist = map(generate_eula_list_item, eulas)
     logging.info(tabulate.tabulate(eulalist, headers="keys", tablefmt="plain"))
@@ -175,7 +176,7 @@ def cmd_handler_eula_info(args) -> int:
     Returns:
         int -- 0 for success
     """
-    api = moses_client.api.eulas_api.EulasApi()
+    api = moses_client.api.eulas_api.EulasApi(api_client)
     eula = api.eula_get(args.eula_id)
     logging.info(
         tabulate.tabulate(
@@ -187,7 +188,7 @@ def cmd_handler_eula_info(args) -> int:
     return 0
 
 def cmd_handler_eula_setprop(args) -> int:
-    """Return backend and docker information
+    """Change Eula's property
 
     Arguments:
         args {[type]} -- command line arguments
@@ -195,7 +196,7 @@ def cmd_handler_eula_setprop(args) -> int:
     Returns:
         int -- 0 for success
     """
-    api = moses_client.api.eulas_api.EulasApi()
+    api = moses_client.api.eulas_api.EulasApi(api_client)
     eula = api.eula_get(args.eula_id)
 
     setattr(eula,args.property,yaml.full_load(args.value))
@@ -230,7 +231,7 @@ def cmd_handler_platforms(args) -> int:
     Returns:
         int -- 0 for success
     """
-    api = moses_client.api.platforms_api.PlatformsApi()
+    api = moses_client.api.platforms_api.PlatformsApi(api_client)
     platforms = api.platforms_get()
     platlist = map(generate_platform_list_item, platforms)
     logging.info(tabulate.tabulate(platlist, headers="keys", tablefmt="plain"))
@@ -246,7 +247,7 @@ def cmd_handler_platform_info(args) -> int:
     Returns:
         int -- 0 for success
     """
-    api = moses_client.api.platforms_api.PlatformsApi()
+    api = moses_client.api.platforms_api.PlatformsApi(api_client)
     platform = api.platform_get(args.platform_id)
     logging.info(
         tabulate.tabulate(
@@ -267,7 +268,7 @@ def cmd_handler_platform_compatible(args) -> int:
     Returns:
         int -- 0 for success
     """
-    api = moses_client.api.platforms_api.PlatformsApi()
+    api = moses_client.api.platforms_api.PlatformsApi(api_client)
     devices = api.platform_compatibledevices_get(args.platform_id)
     deviceslist = map(generate_device_list_item, devices)
     logging.info(
@@ -305,7 +306,7 @@ def cmd_handler_devices(args) -> int:
     Returns:
         int -- 0 for success
     """
-    api = moses_client.api.devices_api.DevicesApi()
+    api = moses_client.api.devices_api.DevicesApi(api_client)
     devices = api.devices_get()
     deviceslist = map(generate_device_list_item, devices)
     logging.info(
@@ -325,7 +326,7 @@ def cmd_handler_device_info(args) -> int:
     Returns:
         int -- 0 for success
     """
-    api = moses_client.api.devices_api.DevicesApi()
+    api = moses_client.api.devices_api.DevicesApi(api_client)
     device = api.device_get(args.device_id)
     logging.info(
         tabulate.tabulate(
@@ -344,7 +345,7 @@ def cmd_handler_device_delete(args) -> int:
     Returns:
         int -- 0 for success
     """
-    api = moses_client.api.devices_api.DevicesApi()
+    api = moses_client.api.devices_api.DevicesApi(api_client)
     device = api.device_delete(args.device_id)
     logging.info("Device %s has been successfully deleted.", args.device_id)
     return 0
@@ -359,7 +360,7 @@ def cmd_handler_device_mem(args) -> int:
     Returns:
         int -- 0 for success
     """
-    api = moses_client.api.devices_api.DevicesApi()
+    api = moses_client.api.devices_api.DevicesApi(api_client)
     meminfo = api.device_getmemory(args.device_id)
     logging.info(
         tabulate.tabulate(
@@ -396,7 +397,7 @@ def cmd_handler_device_storage(args) -> int:
     Returns:
         int -- 0 for success
     """
-    api = moses_client.api.devices_api.DevicesApi()
+    api = moses_client.api.devices_api.DevicesApi(api_client)
     mountpoints = api.device_getmountpoints(args.device_id)
     mountpointslist = map(generate_mountpoint_list_item, mountpoints)
     logging.info(
@@ -437,7 +438,7 @@ def cmd_handler_device_ps(args) -> int:
     Returns:
         int -- 0 for success
     """
-    api = moses_client.api.devices_api.DevicesApi()
+    api = moses_client.api.devices_api.DevicesApi(api_client)
     processes = api.device_getprocesses(args.device_id)
     processeslist = map(generate_process_list_item, processes)
     logging.info(
@@ -474,7 +475,7 @@ def cmd_handler_device_images(args) -> int:
     Returns:
         int -- 0 for success
     """
-    api = moses_client.api.devices_api.DevicesApi()
+    api = moses_client.api.devices_api.DevicesApi(api_client)
     images = api.device_getimages(args.device_id)
     imageslist = map(generate_image_list_item, images)
     logging.info(
@@ -494,7 +495,7 @@ def cmd_handler_device_image_info(args) -> int:
     Returns:
         int -- 0 for success
     """
-    api = moses_client.api.devices_api.DevicesApi()
+    api = moses_client.api.devices_api.DevicesApi(api_client)
     image = api.images_getimage(args.device_id, args.image_id)
     logging.info(
         tabulate.tabulate(
@@ -513,7 +514,7 @@ def cmd_handler_device_image_delete(args) -> int:
     Returns:
         int -- 0 for success
     """
-    api = moses_client.api.devices_api.DevicesApi()
+    api = moses_client.api.devices_api.DevicesApi(api_client)
     api.images_deleteimage(args.device_id, args.image_id)
     logging.info("Image %s has been successfully deleted.", args.image_id)
     return 0
@@ -540,7 +541,7 @@ def cmd_handler_device_containers(args) -> int:
     Returns:
         int -- 0 for success
     """
-    api = moses_client.api.devices_api.DevicesApi()
+    api = moses_client.api.devices_api.DevicesApi(api_client)
     containers = api.device_getcontainers(args.device_id)
     containerslist = map(generate_container_list_item, containers)
     logging.info(
@@ -560,7 +561,7 @@ def cmd_handler_device_container_info(args) -> int:
     Returns:
         int -- 0 for success
     """
-    api = moses_client.api.devices_api.DevicesApi()
+    api = moses_client.api.devices_api.DevicesApi(api_client)
     container = api.containers_getcontainer(args.device_id, args.container_id)
     logging.info(
         tabulate.tabulate(
@@ -581,7 +582,7 @@ def cmd_handler_device_container_delete(args) -> int:
     Returns:
         int -- 0 for success
     """
-    api = moses_client.api.devices_api.DevicesApi()
+    api = moses_client.api.devices_api.DevicesApi(api_client)
     api.containers_deletecontainer(args.device_id, args.container_id)
     logging.info(
         "Container %s has been successfully deleted.",
@@ -598,7 +599,7 @@ def cmd_handler_device_container_start(args) -> int:
     Returns:
         int -- 0 for success
     """
-    api = moses_client.api.devices_api.DevicesApi()
+    api = moses_client.api.devices_api.DevicesApi(api_client)
     api.container_start(args.device_id, args.container_id)
     logging.info(
         "Container %s has been successfully started.",
@@ -615,7 +616,7 @@ def cmd_handler_device_container_stop(args) -> int:
     Returns:
         int -- 0 for success
     """
-    api = moses_client.api.devices_api.DevicesApi()
+    api = moses_client.api.devices_api.DevicesApi(api_client)
     api.container_stop(args.device_id, args.container_id)
     logging.info(
         "Container %s has been successfully stopped.",
@@ -632,7 +633,7 @@ def cmd_handler_device_container_mem(args) -> int:
     Returns:
         int -- 0 for success
     """
-    api = moses_client.api.devices_api.DevicesApi()
+    api = moses_client.api.devices_api.DevicesApi(api_client)
     meminfo = api.container_getmemory(args.device_id, args.container_id)
     logging.info(
         tabulate.tabulate(
@@ -651,7 +652,7 @@ def cmd_handler_device_container_storage(args) -> int:
     Returns:
         int -- 0 for success
     """
-    api = moses_client.api.devices_api.DevicesApi()
+    api = moses_client.api.devices_api.DevicesApi(api_client)
     mountpoints = api.container_getmountpoints(
         args.device_id, args.container_id)
     mountpointslist = map(generate_mountpoint_list_item, mountpoints)
@@ -672,7 +673,7 @@ def cmd_handler_device_container_ps(args) -> int:
     Returns:
         int -- 0 for success
     """
-    api = moses_client.api.devices_api.DevicesApi()
+    api = moses_client.api.devices_api.DevicesApi(api_client)
     processes = api.container_getprocesses(args.device_id, args.container_id)
     processeslist = map(generate_process_list_item, processes)
     logging.info(
@@ -692,7 +693,7 @@ def cmd_handler_device_container_logs(args) -> int:
     Returns:
         int -- 0 for success
     """
-    api = moses_client.api.devices_api.DevicesApi()
+    api = moses_client.api.devices_api.DevicesApi(api_client)
 
     restart = True
 
@@ -719,7 +720,7 @@ def cmd_handler_device_key(args) -> int:
     Returns:
         int -- 0 for success
     """
-    api = moses_client.api.devices_api.DevicesApi()
+    api = moses_client.api.devices_api.DevicesApi(api_client)
     keypath = api.device_getprivatekey(args.device_id)
     logging.info(keypath)
     return 0
@@ -734,7 +735,7 @@ def cmd_handler_device_sync(args) -> int:
     Returns:
         int -- 0 for success
     """
-    api = moses_client.api.devices_api.DevicesApi()
+    api = moses_client.api.devices_api.DevicesApi(api_client)
 
     progress_id = handle_progress(args)
 
@@ -756,7 +757,7 @@ def cmd_handler_device_ip(args) -> int:
     Returns:
         int -- 0 for success
     """
-    api = moses_client.api.devices_api.DevicesApi()
+    api = moses_client.api.devices_api.DevicesApi(api_client)
     ip = api.device_current_ip(args.device_id)
     logging.info(ip)
     return 0
@@ -770,7 +771,7 @@ def cmd_handler_device_validate(args) -> int:
     Returns:
         int -- 0 for success
     """
-    api = moses_client.api.devices_api.DevicesApi()
+    api = moses_client.api.devices_api.DevicesApi(api_client)
     result = api.device_validate_parameter(args.device_id,args.parameter,args.value)
     retcode = 0
 
@@ -792,7 +793,7 @@ def cmd_handler_application_info(args) -> int:
     Returns:
         int -- 0 for success
     """
-    api = moses_client.api.applications_api.ApplicationsApi()
+    api = moses_client.api.applications_api.ApplicationsApi(api_client)
 
     application = api.application_get(args.application_id)
     logging.info(
@@ -814,7 +815,7 @@ def cmd_handler_application_build(args) -> int:
     Returns:
         int -- 0 for success
     """
-    api = moses_client.api.applications_api.ApplicationsApi()
+    api = moses_client.api.applications_api.ApplicationsApi(api_client)
 
     progress_id = handle_progress(args)
 
@@ -836,7 +837,7 @@ def cmd_handler_application_deploy(args) -> int:
     Returns:
         int -- 0 for success
     """
-    api = moses_client.api.applications_api.ApplicationsApi()
+    api = moses_client.api.applications_api.ApplicationsApi(api_client)
     progress_id = handle_progress(args)
 
     logging.info("Deploying application, this may take a few minutes...")
@@ -857,7 +858,7 @@ def cmd_handler_application_run(args) -> int:
     Returns:
         int -- 0 for success
     """
-    api = moses_client.api.applications_api.ApplicationsApi()
+    api = moses_client.api.applications_api.ApplicationsApi(api_client)
     progress_id = handle_progress(args)
 
     logging.info("Starting application...")
@@ -878,7 +879,7 @@ def cmd_handler_application_stop(args) -> int:
     Returns:
         int -- 0 for success
     """
-    api = moses_client.api.applications_api.ApplicationsApi()
+    api = moses_client.api.applications_api.ApplicationsApi(api_client)
 
     container = api.application_stop(
         args.application_id, args.configuration, args.device_id
@@ -896,7 +897,7 @@ def cmd_handler_application_container(args) -> int:
     Returns:
         int -- 0 for success
     """
-    api = moses_client.api.applications_api.ApplicationsApi()
+    api = moses_client.api.applications_api.ApplicationsApi(api_client)
 
     container = api.application_getcontainer(
         args.application_id, args.configuration, args.device_id
@@ -922,7 +923,7 @@ def cmd_handler_application_logs(args) -> int:
     Returns:
         int -- 0 for success
     """
-    api = moses_client.api.applications_api.ApplicationsApi()
+    api = moses_client.api.applications_api.ApplicationsApi(api_client)
 
     restart = True
 
@@ -950,7 +951,7 @@ def cmd_handler_application_key(args) -> int:
     Returns:
         int -- 0 for success
     """
-    api = moses_client.api.applications_api.ApplicationsApi()
+    api = moses_client.api.applications_api.ApplicationsApi(api_client)
 
     keypath = api.application_getprivatekey(args.application_id)
     logging.info(keypath)
@@ -966,7 +967,7 @@ def cmd_handler_application_reseal(args) -> int:
     Returns:
         int -- 0 for success
     """
-    api = moses_client.api.applications_api.ApplicationsApi()
+    api = moses_client.api.applications_api.ApplicationsApi(api_client)
 
     api.application_reseal(args.application_id)
     logging.warning(
@@ -984,7 +985,7 @@ def cmd_handler_application_sync(args) -> int:
     Returns:
         int -- 0 for success
     """
-    api = moses_client.api.applications_api.ApplicationsApi()
+    api = moses_client.api.applications_api.ApplicationsApi(api_client)
 
     progress_id = handle_progress(args)
 
@@ -1009,7 +1010,7 @@ def cmd_handler_application_cmdline(args) -> int:
     Returns:
         int -- 0 for success
     """
-    api = moses_client.api.applications_api.ApplicationsApi()
+    api = moses_client.api.applications_api.ApplicationsApi(api_client)
 
     cmdline = api.application_getdocker_commandline(
         args.application_id, args.configuration
@@ -1027,7 +1028,7 @@ def cmd_handler_application_composefile(args) -> int:
     Returns:
         int -- 0 for success
     """
-    api = moses_client.api.applications_api.ApplicationsApi()
+    api = moses_client.api.applications_api.ApplicationsApi(api_client)
 
     composefile = api.application_getdocker_composefile(
         args.application_id, args.configuration
@@ -1045,7 +1046,7 @@ def cmd_handler_application_push(args) -> int:
     Returns:
         int -- 0 for success
     """
-    api = moses_client.api.applications_api.ApplicationsApi()
+    api = moses_client.api.applications_api.ApplicationsApi(api_client)
 
     progress_id = handle_progress(args)
 
@@ -1060,7 +1061,7 @@ def cmd_handler_application_push(args) -> int:
     return 0
 
 def cmd_handler_application_setprop(args) -> int:
-    """Return backend and docker information
+    """Set an application's property
 
     Arguments:
         args {[type]} -- command line arguments
@@ -1068,7 +1069,7 @@ def cmd_handler_application_setprop(args) -> int:
     Returns:
         int -- 0 for success
     """
-    api = moses_client.api.applications_api.ApplicationsApi()
+    api = moses_client.api.applications_api.ApplicationsApi(api_client)
     application = api.application_get(args.application_id)
 
     value=yaml.full_load(args.value)
@@ -1099,7 +1100,7 @@ def cmd_handler_application_publish(args) -> int:
     Returns:
         int -- 0 for success
     """
-    api = moses_client.api.applications_api.ApplicationsApi()
+    api = moses_client.api.applications_api.ApplicationsApi(api_client)
 
     progress_id = handle_progress(args)
 
@@ -1111,7 +1112,7 @@ def cmd_handler_application_publish(args) -> int:
 
 def cmd_handler_application_validate_parameter(args) -> int:
     """Validate a simple parameter"""
-    api = moses_client.api.applications_api.ApplicationsApi()
+    api = moses_client.api.applications_api.ApplicationsApi(api_client)
 
     result = api.application_validate_parameter(args.application_id, args.configuration, args.parameter, args.value)
     retcode = 0
@@ -1126,7 +1127,7 @@ def cmd_handler_application_validate_parameter(args) -> int:
 
 def cmd_handler_application_validate_item(args) -> int:
     """Validate an array item"""
-    api = moses_client.api.applications_api.ApplicationsApi()
+    api = moses_client.api.applications_api.ApplicationsApi(api_client)
 
     result = api.application_validate_array_item(args.application_id, args.configuration, args.array, args.value, args.index)
     retcode = 0
@@ -1141,7 +1142,7 @@ def cmd_handler_application_validate_item(args) -> int:
 
 def cmd_handler_application_validate_entry(args) -> int:
     """Validate an array item"""
-    api = moses_client.api.applications_api.ApplicationsApi()
+    api = moses_client.api.applications_api.ApplicationsApi(api_client)
 
     result = api.application_validate_dictionary_entry(args.application_id, args.configuration, args.dictionary, args.key, args.value, args.newitem)
     retcode = 0
@@ -1163,7 +1164,7 @@ def cmd_handler_detect(args) -> int:
     Returns:
         int -- 0 for success
     """
-    api = moses_client.api.devices_api.DevicesApi()
+    api = moses_client.api.devices_api.DevicesApi(api_client)
 
     device = None
 
@@ -1207,7 +1208,7 @@ def cmd_handler_create(args) -> int:
     Returns:
         int -- 0 for success
     """
-    api = moses_client.api.applications_api.ApplicationsApi()
+    api = moses_client.api.applications_api.ApplicationsApi(api_client)
 
     # the api requires absolute paths
     path = os.path.abspath(args.path)
@@ -1229,7 +1230,7 @@ def cmd_handler_load(args) -> int:
     Returns:
         int -- 0 for success
     """
-    api = moses_client.api.applications_api.ApplicationsApi()
+    api = moses_client.api.applications_api.ApplicationsApi(api_client)
 
     # the api requires absolute paths
     path = os.path.abspath(args.path)
@@ -1248,7 +1249,7 @@ def cmd_handler_application_updatesdk(args) -> int:
     Returns:
         int -- 0 for success
     """
-    api = moses_client.api.applications_api.ApplicationsApi()
+    api = moses_client.api.applications_api.ApplicationsApi(api_client)
 
     progress_id = handle_progress(args)
 
@@ -1271,7 +1272,7 @@ def cmd_handler_application_runsdk(args) -> int:
     Returns:
         int -- 0 for success
     """
-    api = moses_client.api.applications_api.ApplicationsApi()
+    api = moses_client.api.applications_api.ApplicationsApi(api_client)
 
     progress_id = handle_progress(args)
 
@@ -1298,7 +1299,7 @@ def cmd_handler_pull(args) -> int:
     Returns:
         int -- 0 for success
     """
-    api = moses_client.api.setup_api.SetupApi()
+    api = moses_client.api.setup_api.SetupApi(api_client)
 
     progress_id = handle_progress(args)
     api.setup_pullcontainers(progress_id=progress_id)
@@ -1314,14 +1315,14 @@ def cmd_handler_enableemulation(args) -> int:
     Returns:
         int -- 0 for success
     """
-    api = moses_client.api.setup_api.SetupApi()
+    api = moses_client.api.setup_api.SetupApi(api_client)
 
     progress_id = handle_progress(args)
     api.setup_enableemulation(progress_id=progress_id)
     return 0
 
 def cmd_handler_version(args) -> int:
-    """Return backend and docker information
+    """Return backend version
 
     Arguments:
         args {[type]} -- command line arguments
@@ -1329,7 +1330,7 @@ def cmd_handler_version(args) -> int:
     Returns:
         int -- 0 for success
     """
-    api = moses_client.api.version_api.VersionApi()
+    api = moses_client.api.version_api.VersionApi(api_client)
     backend_version = api.version_get()
 
     logging.info(
@@ -1340,7 +1341,7 @@ def cmd_handler_version(args) -> int:
     return 0
 
 def cmd_handler_dockerversion(args) -> int:
-    """Return backend and docker information
+    """Return docker version
 
     Arguments:
         args {[type]} -- command line arguments
@@ -1348,7 +1349,7 @@ def cmd_handler_dockerversion(args) -> int:
     Returns:
         int -- 0 for success
     """
-    api = moses_client.api.version_api.VersionApi()
+    api = moses_client.api.version_api.VersionApi(api_client)
     docker_version = api.version_docker()
 
     logging.info(
@@ -1380,7 +1381,11 @@ def create_parser() -> argparse.ArgumentParser:
     )
 
     parser.add_argument(
-        "-p", "--progress", action="store_true", dest="progress", default=False
+        "-p", "--progress", action="store_true", dest="progress", default=False, help="provide progress information during the operation"
+    )
+
+    parser.add_argument(
+        "-b", "----backend", dest="backend", default=None, help="<address>:<port> used to call backend REST api."
     )
 
     subparsers = parser.add_subparsers(dest="command", required=True)
@@ -1722,7 +1727,7 @@ def abort_handler(sig, frame):
     global progress
 
     if progress is not None:
-        api = moses_client.api.progress_api.ProgressApi()
+        api = moses_client.api.progress_api.ProgressApi(api_client)
 
         api.progress_delete(progress_id=progress.id)
 
@@ -1756,6 +1761,9 @@ if __name__ == "__main__":
     parser = create_parser()
 
     args = parser.parse_args()
+
+    if args.backend is not None:
+        api_client=moses_client.ApiClient(moses_client.Configuration(host="http://"+args.backend+"/api"))
 
     function_name = "cmd_handler_"
 
