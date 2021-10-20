@@ -1877,6 +1877,35 @@ paths:
         553:
           $ref: "#/responses/TorizonCoreBuilderError_553"
 
+  /applications/{application_id}/tcb_dt_checkout:
+
+    get:
+      operationId: application_tcb_dt_checkout
+      tags:
+        - Applications
+      summary: TorizonCore Device Tree repo checkout
+      description: Checkout the device tree and overlays repository at https://github.com/toradex/device-trees
+      parameters:
+        - $ref: "#/parameters/application_id"
+        - $ref: "#/parameters/progress_id"
+      responses:
+        200:
+          description: OK
+        404:
+          description: Application not found
+        500:
+          $ref: "#/responses/InternalServerError_500"
+        520:
+          $ref: "#/responses/ImageNotFoundError_520"
+        530:
+          $ref: "#/responses/LocalDockerError_530"
+        550:
+          $ref: "#/responses/NoTagError_550"
+        551:
+          $ref: "#/responses/AbortError_551"
+        553:
+          $ref: "#/responses/TorizonCoreBuilderError_553"
+
   /setup/pullcontainers:
     get:
       operationId: setup_pullcontainers

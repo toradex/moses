@@ -114,6 +114,22 @@ class TorizonCoreBuilderUtils:
         )
 
     @staticmethod
+    def dt_checkout (workspacepath:str,
+        progress: Optional[progresscookie.ProgressCookie]) -> None:
+        """Run Torizon Core Builder dt checkout."""
+        volumes = [
+            "deploy:/deploy",
+            f"{workspacepath}:/workdir",
+            "storage:/storage"
+        ]
+
+        TorizonCoreBuilderUtils.__run_tcbuilder(
+            "dt checkout",
+            volumes,
+            progress
+        )
+
+    @staticmethod
     def __run_tcbuilder(
         cmdline: str,
         volumes: Union[Dict[str,Dict[str,str]], list],
