@@ -150,13 +150,13 @@ class ConfigurableObject:
         readonlyitems = []
 
         for key, value in fields.items():
+            if key in self.generatedfields:
+                readonlyitems.append(key)
             if key in self.readonlyfields:
                 if value != str(self.__dict__[key]):
                     logging.warning(
                         "REST - Attempt to change value of property %s", key
                     )
-                readonlyitems.append(key)
-            if key in self.generatedfields:
                 readonlyitems.append(key)
 
         for key in readonlyitems:
