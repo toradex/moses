@@ -591,6 +591,7 @@ class TargetDevice(config.ConfigurableKeysObject, validation.BasicValidation):
         del fields["sshforwarder"]
         del fields["logs"]
         del fields["validation_table"]
+        del fields["skip_table"]
         return fields
 
     def __setstate__(self, fields: Dict[str, Any]) -> None:
