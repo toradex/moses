@@ -628,7 +628,7 @@ def run(self: ApplicationConfigBase,
         ports = self._merge_props(plat, configuration, "ports")
         volumes = self._merge_props(plat, configuration, "volumes")
         devices = list(
-            dict.fromkeys(self._append_props(plat, configuration, "networks"))
+            dict.fromkeys(self._append_props(plat, configuration, "devices"))
         )
         extraparms = self._merge_props(plat, configuration, "extraparms")
         networks = list(
