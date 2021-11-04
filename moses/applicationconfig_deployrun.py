@@ -648,6 +648,17 @@ def run(self: ApplicationConfigBase,
             networks,
         ).attrs
 
+def _network_safe_disconnect (network, container) -> None: # type: ignore
+    try:
+        network.disconnect(container, force=True)
+    except docker.errors.APIError as exception:
+        if exception.status_code == 500 \
+            and "is not connected to network" in exception.explanation:
+            logging.warning(
+                "Network %s is not connected, ignoring it ...", network.name)
+        else:
+            raise exception
+
 # pylint: disable=too-many-branches
 
 
@@ -695,7 +706,7 @@ def stop(self: ApplicationConfigBase,
 
                     for network in nets:
                         if network is not None:
-                            network.disconnect(container, force=True)
+                            _network_safe_disconnect(network, container)
 
             container.stop()
 
