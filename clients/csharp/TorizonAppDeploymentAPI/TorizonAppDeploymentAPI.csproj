@@ -111,6 +111,7 @@
     <Compile Include="generated\src\TorizonRestAPI\Model\Process.cs" />
     <Compile Include="generated\src\TorizonRestAPI\Model\Progress.cs" />
     <Compile Include="generated\src\TorizonRestAPI\Model\TargetDevice.cs" />
+    <Compile Include="generated\src\TorizonRestAPI\Model\ValidationResult.cs" />
     <Compile Include="TorizonAPIException.cs" />
     <Compile Include="Application.cs" />
     <Compile Include="DockerContainer.cs" />
