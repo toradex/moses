@@ -1877,6 +1877,51 @@ paths:
         553:
           $ref: "#/responses/TorizonCoreBuilderError_553"
 
+  /applications/{application_id}/tcb_isolate:
+
+    get:
+      operationId: application_tcb_isolate
+      tags:
+        - Applications
+      summary: TorizonCore isolate command
+      description: Get configuration changes from the target board.
+      parameters:
+        - $ref: "#/parameters/application_id"
+        - name: host
+          description: the hostname or ip address of the device to be deployed
+          in: query
+          type: string
+          required: true
+        - name: username
+          description: the Torizon username of the device to be deployed
+          in: query
+          type: string
+          required: true
+        - name: password
+          description: the Torizon password of the device to be deployed
+          in: query
+          type: string
+          required: true
+        - name: output_dir
+          description: the direcotry path that the changes will be save
+          in: query
+          type: string
+          required: true
+        - $ref: "#/parameters/progress_id"
+      responses:
+        200:
+          description: OK
+        520:
+          $ref: "#/responses/ImageNotFoundError_520"
+        530:
+          $ref: "#/responses/LocalDockerError_530"
+        550:
+          $ref: "#/responses/NoTagError_550"
+        551:
+          $ref: "#/responses/AbortError_551"
+        553:
+          $ref: "#/responses/TorizonCoreBuilderError_553"
+
   /applications/{application_id}/tcb_dt_checkout:
 
     get:

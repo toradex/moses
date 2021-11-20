@@ -50,6 +50,31 @@ class TorizonCoreBuilderUtils:
             progress
         )
 
+    # pylint: disable=too-many-arguments
+    @staticmethod
+    def isolate (workspacepath: str,
+        host: str,
+        username: str,
+        password: str,
+        output_dir: str,
+        progress: Optional[progresscookie.ProgressCookie]) -> None:
+        """Run Torizon Core Builder Deploy."""
+        volumes = [
+            "deploy:/deploy",
+            f"{workspacepath}:/workdir",
+            "storage:/storage"
+        ]
+
+        TorizonCoreBuilderUtils.__run_tcbuilder(
+            f"isolate \
+                --remote-host {host} \
+                --remote-username {username} \
+                --remote-password {password} \
+                --changes-directory {output_dir}",
+            volumes,
+            progress
+        )
+
     @staticmethod
     def unpack (workspacepath: str,
         outputpath: str,

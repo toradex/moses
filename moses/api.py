@@ -1782,6 +1782,52 @@ def applications_application_tcb_deploy_get(
         progresscookie.progress_report_error(progress, exception)
         raise
 
+def applications_application_tcb_isolate_get(
+        application_id: str,
+        host: str,
+        username: str,
+        password: str,
+        output_dir: str,
+        progress_id: str = None) -> Any:
+    """Torizoncore Builder isolate command."""
+    cookies = progresscookie.ProgressCookies()
+    progress = None
+
+    if progress_id is not None and progress_id in cookies:
+        progress = cookies[progress_id]
+
+    try:
+        applications = applicationconfig.ApplicationConfigs()
+
+        if application_id not in applications:
+            raise moses_exceptions.ObjectNotFound(
+                "Application", application_id)
+
+        app = applications[application_id]
+
+        # app.folder can be Path | None
+        # so, to pass to mypy check we need to make sure to use joinpath
+        # only if app.folder is not None
+        workdir = app.folder
+        if workdir is not None:
+            workdir = workdir.joinpath("..")
+
+        TorizonCoreBuilderUtils.isolate(
+            str(workdir),
+            host,
+            username,
+            password,
+            output_dir,
+            progress
+        )
+
+        progresscookie.progress_completed(progress)
+
+        return (connexion.NoContent, 200)
+    except Exception as exception:
+        progresscookie.progress_report_error(progress, exception)
+        raise
+
 def applications_application_tcb_unpack_get(
         application_id: str,
         outputpath: str,
