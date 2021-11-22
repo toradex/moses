@@ -22,6 +22,11 @@ Method | HTTP request | Description
 [**ApplicationSdkContainer**](ApplicationsApi.md#applicationsdkcontainer) | **GET** /applications/{application_id}/sdk/container | Get SDK container
 [**ApplicationStop**](ApplicationsApi.md#applicationstop) | **GET** /applications/{application_id}/stop | Stop running container image
 [**ApplicationSyncfolders**](ApplicationsApi.md#applicationsyncfolders) | **GET** /applications/{application_id}/syncfolders | Synchronize folders
+[**ApplicationTcbBuildYaml**](ApplicationsApi.md#applicationtcbbuildyaml) | **GET** /applications/{application_id}/tcb_build_yaml | Build the TorizonCore tcbuild.yaml
+[**ApplicationTcbDeploy**](ApplicationsApi.md#applicationtcbdeploy) | **GET** /applications/{application_id}/tcb_deploy | TorizonCore unpack command
+[**ApplicationTcbDtCheckout**](ApplicationsApi.md#applicationtcbdtcheckout) | **GET** /applications/{application_id}/tcb_dt_checkout | TorizonCore Device Tree repo checkout
+[**ApplicationTcbIsolate**](ApplicationsApi.md#applicationtcbisolate) | **GET** /applications/{application_id}/tcb_isolate | TorizonCore isolate command
+[**ApplicationTcbUnpack**](ApplicationsApi.md#applicationtcbunpack) | **GET** /applications/{application_id}/tcb_unpack | TorizonCore unpack command
 [**ApplicationUpdated**](ApplicationsApi.md#applicationupdated) | **GET** /applications/{application_id}/updated | Check if container image is up to date
 [**ApplicationUpdatesdk**](ApplicationsApi.md#applicationupdatesdk) | **GET** /applications/{application_id}/sdk/update | Update SDK container
 [**ApplicationValidateArrayItem**](ApplicationsApi.md#applicationvalidatearrayitem) | **GET** /applications/{application_id}/validate_array_item | Validates a value for a parameter
@@ -1548,6 +1553,438 @@ No authorization required
 | **541** | SDK container is not running. |  -  |
 | **549** | Container does not support SSH |  -  |
 | **551** | Operation has been aborted |  -  |
+
+[[Back to top]](#)
+[[Back to API list]](../README.md#documentation-for-api-endpoints)
+[[Back to Model list]](../README.md#documentation-for-models)
+[[Back to README]](../README.md)
+
+
+## ApplicationTcbBuildYaml
+
+> void ApplicationTcbBuildYaml (string applicationId, string yamlfilepath, string progressId = null)
+
+Build the TorizonCore tcbuild.yaml
+
+Build the TorizonCore tcbuild.yaml using TorizonCore Builder Docker image.
+
+### Example
+
+```csharp
+using System.Collections.Generic;
+using System.Diagnostics;
+using TorizonRestAPI.Api;
+using TorizonRestAPI.Client;
+using TorizonRestAPI.Model;
+
+namespace Example
+{
+    public class ApplicationTcbBuildYamlExample
+    {
+        public static void Main()
+        {
+            Configuration.Default.BasePath = "http://localhost:5000/api";
+            var apiInstance = new ApplicationsApi(Configuration.Default);
+            var applicationId = applicationId_example;  // string | Id of an application (uuid)
+            var yamlfilepath = yamlfilepath_example;  // string | the yaml file name from workspace path
+            var progressId = progressId_example;  // string | Id of a progress cookie (uuid) (optional) 
+
+            try
+            {
+                // Build the TorizonCore tcbuild.yaml
+                apiInstance.ApplicationTcbBuildYaml(applicationId, yamlfilepath, progressId);
+            }
+            catch (ApiException e)
+            {
+                Debug.Print("Exception when calling ApplicationsApi.ApplicationTcbBuildYaml: " + e.Message );
+                Debug.Print("Status Code: "+ e.ErrorCode);
+                Debug.Print(e.StackTrace);
+            }
+        }
+    }
+}
+```
+
+### Parameters
+
+
+Name | Type | Description  | Notes
+------------- | ------------- | ------------- | -------------
+ **applicationId** | **string**| Id of an application (uuid) | 
+ **yamlfilepath** | **string**| the yaml file name from workspace path | 
+ **progressId** | **string**| Id of a progress cookie (uuid) | [optional] 
+
+### Return type
+
+void (empty response body)
+
+### Authorization
+
+No authorization required
+
+### HTTP request headers
+
+- **Content-Type**: Not defined
+- **Accept**: application/json
+
+
+### HTTP response details
+| Status code | Description | Response headers |
+|-------------|-------------|------------------|
+| **200** | OK |  -  |
+| **404** | Application not found |  -  |
+| **500** | Unexpected exception. |  -  |
+| **520** | Container image not found on local host. |  -  |
+| **530** | Local docker exception. |  -  |
+| **550** | No tag has been set for the image |  -  |
+| **551** | Operation has been aborted |  -  |
+| **553** | TorizonCore Builder error |  -  |
+
+[[Back to top]](#)
+[[Back to API list]](../README.md#documentation-for-api-endpoints)
+[[Back to Model list]](../README.md#documentation-for-models)
+[[Back to README]](../README.md)
+
+
+## ApplicationTcbDeploy
+
+> void ApplicationTcbDeploy (string applicationId, string host, string username, string password, string progressId = null)
+
+TorizonCore unpack command
+
+Unpack the output using TorizonCore Builder Docker image.
+
+### Example
+
+```csharp
+using System.Collections.Generic;
+using System.Diagnostics;
+using TorizonRestAPI.Api;
+using TorizonRestAPI.Client;
+using TorizonRestAPI.Model;
+
+namespace Example
+{
+    public class ApplicationTcbDeployExample
+    {
+        public static void Main()
+        {
+            Configuration.Default.BasePath = "http://localhost:5000/api";
+            var apiInstance = new ApplicationsApi(Configuration.Default);
+            var applicationId = applicationId_example;  // string | Id of an application (uuid)
+            var host = host_example;  // string | the hostname or ip address of the device to be deployed
+            var username = username_example;  // string | the Torizon username of the device to be deployed
+            var password = password_example;  // string | the Torizon password of the device to be deployed
+            var progressId = progressId_example;  // string | Id of a progress cookie (uuid) (optional) 
+
+            try
+            {
+                // TorizonCore unpack command
+                apiInstance.ApplicationTcbDeploy(applicationId, host, username, password, progressId);
+            }
+            catch (ApiException e)
+            {
+                Debug.Print("Exception when calling ApplicationsApi.ApplicationTcbDeploy: " + e.Message );
+                Debug.Print("Status Code: "+ e.ErrorCode);
+                Debug.Print(e.StackTrace);
+            }
+        }
+    }
+}
+```
+
+### Parameters
+
+
+Name | Type | Description  | Notes
+------------- | ------------- | ------------- | -------------
+ **applicationId** | **string**| Id of an application (uuid) | 
+ **host** | **string**| the hostname or ip address of the device to be deployed | 
+ **username** | **string**| the Torizon username of the device to be deployed | 
+ **password** | **string**| the Torizon password of the device to be deployed | 
+ **progressId** | **string**| Id of a progress cookie (uuid) | [optional] 
+
+### Return type
+
+void (empty response body)
+
+### Authorization
+
+No authorization required
+
+### HTTP request headers
+
+- **Content-Type**: Not defined
+- **Accept**: application/json
+
+
+### HTTP response details
+| Status code | Description | Response headers |
+|-------------|-------------|------------------|
+| **200** | OK |  -  |
+| **520** | Container image not found on local host. |  -  |
+| **530** | Local docker exception. |  -  |
+| **550** | No tag has been set for the image |  -  |
+| **551** | Operation has been aborted |  -  |
+| **553** | TorizonCore Builder error |  -  |
+
+[[Back to top]](#)
+[[Back to API list]](../README.md#documentation-for-api-endpoints)
+[[Back to Model list]](../README.md#documentation-for-models)
+[[Back to README]](../README.md)
+
+
+## ApplicationTcbDtCheckout
+
+> void ApplicationTcbDtCheckout (string applicationId, string progressId = null)
+
+TorizonCore Device Tree repo checkout
+
+Checkout the device tree and overlays repository at https://github.com/toradex/device-trees
+
+### Example
+
+```csharp
+using System.Collections.Generic;
+using System.Diagnostics;
+using TorizonRestAPI.Api;
+using TorizonRestAPI.Client;
+using TorizonRestAPI.Model;
+
+namespace Example
+{
+    public class ApplicationTcbDtCheckoutExample
+    {
+        public static void Main()
+        {
+            Configuration.Default.BasePath = "http://localhost:5000/api";
+            var apiInstance = new ApplicationsApi(Configuration.Default);
+            var applicationId = applicationId_example;  // string | Id of an application (uuid)
+            var progressId = progressId_example;  // string | Id of a progress cookie (uuid) (optional) 
+
+            try
+            {
+                // TorizonCore Device Tree repo checkout
+                apiInstance.ApplicationTcbDtCheckout(applicationId, progressId);
+            }
+            catch (ApiException e)
+            {
+                Debug.Print("Exception when calling ApplicationsApi.ApplicationTcbDtCheckout: " + e.Message );
+                Debug.Print("Status Code: "+ e.ErrorCode);
+                Debug.Print(e.StackTrace);
+            }
+        }
+    }
+}
+```
+
+### Parameters
+
+
+Name | Type | Description  | Notes
+------------- | ------------- | ------------- | -------------
+ **applicationId** | **string**| Id of an application (uuid) | 
+ **progressId** | **string**| Id of a progress cookie (uuid) | [optional] 
+
+### Return type
+
+void (empty response body)
+
+### Authorization
+
+No authorization required
+
+### HTTP request headers
+
+- **Content-Type**: Not defined
+- **Accept**: application/json
+
+
+### HTTP response details
+| Status code | Description | Response headers |
+|-------------|-------------|------------------|
+| **200** | OK |  -  |
+| **404** | Application not found |  -  |
+| **500** | Unexpected exception. |  -  |
+| **520** | Container image not found on local host. |  -  |
+| **530** | Local docker exception. |  -  |
+| **550** | No tag has been set for the image |  -  |
+| **551** | Operation has been aborted |  -  |
+| **553** | TorizonCore Builder error |  -  |
+
+[[Back to top]](#)
+[[Back to API list]](../README.md#documentation-for-api-endpoints)
+[[Back to Model list]](../README.md#documentation-for-models)
+[[Back to README]](../README.md)
+
+
+## ApplicationTcbIsolate
+
+> void ApplicationTcbIsolate (string applicationId, string host, string username, string password, string outputDir, string progressId = null)
+
+TorizonCore isolate command
+
+Get configuration changes from the target board.
+
+### Example
+
+```csharp
+using System.Collections.Generic;
+using System.Diagnostics;
+using TorizonRestAPI.Api;
+using TorizonRestAPI.Client;
+using TorizonRestAPI.Model;
+
+namespace Example
+{
+    public class ApplicationTcbIsolateExample
+    {
+        public static void Main()
+        {
+            Configuration.Default.BasePath = "http://localhost:5000/api";
+            var apiInstance = new ApplicationsApi(Configuration.Default);
+            var applicationId = applicationId_example;  // string | Id of an application (uuid)
+            var host = host_example;  // string | the hostname or ip address of the device to be deployed
+            var username = username_example;  // string | the Torizon username of the device to be deployed
+            var password = password_example;  // string | the Torizon password of the device to be deployed
+            var outputDir = outputDir_example;  // string | the direcotry path that the changes will be save
+            var progressId = progressId_example;  // string | Id of a progress cookie (uuid) (optional) 
+
+            try
+            {
+                // TorizonCore isolate command
+                apiInstance.ApplicationTcbIsolate(applicationId, host, username, password, outputDir, progressId);
+            }
+            catch (ApiException e)
+            {
+                Debug.Print("Exception when calling ApplicationsApi.ApplicationTcbIsolate: " + e.Message );
+                Debug.Print("Status Code: "+ e.ErrorCode);
+                Debug.Print(e.StackTrace);
+            }
+        }
+    }
+}
+```
+
+### Parameters
+
+
+Name | Type | Description  | Notes
+------------- | ------------- | ------------- | -------------
+ **applicationId** | **string**| Id of an application (uuid) | 
+ **host** | **string**| the hostname or ip address of the device to be deployed | 
+ **username** | **string**| the Torizon username of the device to be deployed | 
+ **password** | **string**| the Torizon password of the device to be deployed | 
+ **outputDir** | **string**| the direcotry path that the changes will be save | 
+ **progressId** | **string**| Id of a progress cookie (uuid) | [optional] 
+
+### Return type
+
+void (empty response body)
+
+### Authorization
+
+No authorization required
+
+### HTTP request headers
+
+- **Content-Type**: Not defined
+- **Accept**: application/json
+
+
+### HTTP response details
+| Status code | Description | Response headers |
+|-------------|-------------|------------------|
+| **200** | OK |  -  |
+| **520** | Container image not found on local host. |  -  |
+| **530** | Local docker exception. |  -  |
+| **550** | No tag has been set for the image |  -  |
+| **551** | Operation has been aborted |  -  |
+| **553** | TorizonCore Builder error |  -  |
+
+[[Back to top]](#)
+[[Back to API list]](../README.md#documentation-for-api-endpoints)
+[[Back to Model list]](../README.md#documentation-for-models)
+[[Back to README]](../README.md)
+
+
+## ApplicationTcbUnpack
+
+> void ApplicationTcbUnpack (string applicationId, string outputpath, string progressId = null)
+
+TorizonCore unpack command
+
+Unpack the output using TorizonCore Builder Docker image.
+
+### Example
+
+```csharp
+using System.Collections.Generic;
+using System.Diagnostics;
+using TorizonRestAPI.Api;
+using TorizonRestAPI.Client;
+using TorizonRestAPI.Model;
+
+namespace Example
+{
+    public class ApplicationTcbUnpackExample
+    {
+        public static void Main()
+        {
+            Configuration.Default.BasePath = "http://localhost:5000/api";
+            var apiInstance = new ApplicationsApi(Configuration.Default);
+            var applicationId = applicationId_example;  // string | Id of an application (uuid)
+            var outputpath = outputpath_example;  // string | the output directory created by TorizonCore builder from workspace path
+            var progressId = progressId_example;  // string | Id of a progress cookie (uuid) (optional) 
+
+            try
+            {
+                // TorizonCore unpack command
+                apiInstance.ApplicationTcbUnpack(applicationId, outputpath, progressId);
+            }
+            catch (ApiException e)
+            {
+                Debug.Print("Exception when calling ApplicationsApi.ApplicationTcbUnpack: " + e.Message );
+                Debug.Print("Status Code: "+ e.ErrorCode);
+                Debug.Print(e.StackTrace);
+            }
+        }
+    }
+}
+```
+
+### Parameters
+
+
+Name | Type | Description  | Notes
+------------- | ------------- | ------------- | -------------
+ **applicationId** | **string**| Id of an application (uuid) | 
+ **outputpath** | **string**| the output directory created by TorizonCore builder from workspace path | 
+ **progressId** | **string**| Id of a progress cookie (uuid) | [optional] 
+
+### Return type
+
+void (empty response body)
+
+### Authorization
+
+No authorization required
+
+### HTTP request headers
+
+- **Content-Type**: Not defined
+- **Accept**: application/json
+
+
+### HTTP response details
+| Status code | Description | Response headers |
+|-------------|-------------|------------------|
+| **200** | OK |  -  |
+| **520** | Container image not found on local host. |  -  |
+| **530** | Local docker exception. |  -  |
+| **550** | No tag has been set for the image |  -  |
+| **551** | Operation has been aborted |  -  |
+| **553** | TorizonCore Builder error |  -  |
 
 [[Back to top]](#)
 [[Back to API list]](../README.md#documentation-for-api-endpoints)

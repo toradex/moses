@@ -1620,6 +1620,461 @@ export class ApplicationsApi {
         });
     }
     /**
+     * Build the TorizonCore tcbuild.yaml using TorizonCore Builder Docker image.
+     * @summary Build the TorizonCore tcbuild.yaml
+     * @param applicationId Id of an application (uuid)
+     * @param yamlfilepath the yaml file name from workspace path
+     * @param progressId Id of a progress cookie (uuid)
+     */
+    public async applicationTcbBuildYaml (applicationId: string, yamlfilepath: string, progressId?: string, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<{ response: http.IncomingMessage; body?: any;  }> {
+        const localVarPath = this.basePath + '/applications/{application_id}/tcb_build_yaml'
+            .replace('{' + 'application_id' + '}', encodeURIComponent(String(applicationId)));
+        let localVarQueryParameters: any = {};
+        let localVarHeaderParams: any = (<any>Object).assign({}, this._defaultHeaders);
+        const produces = ['application/json'];
+        // give precedence to 'application/json'
+        if (produces.indexOf('application/json') >= 0) {
+            localVarHeaderParams.Accept = 'application/json';
+        } else {
+            localVarHeaderParams.Accept = produces.join(',');
+        }
+        let localVarFormParams: any = {};
+
+        // verify required parameter 'applicationId' is not null or undefined
+        if (applicationId === null || applicationId === undefined) {
+            throw new Error('Required parameter applicationId was null or undefined when calling applicationTcbBuildYaml.');
+        }
+
+        // verify required parameter 'yamlfilepath' is not null or undefined
+        if (yamlfilepath === null || yamlfilepath === undefined) {
+            throw new Error('Required parameter yamlfilepath was null or undefined when calling applicationTcbBuildYaml.');
+        }
+
+        if (yamlfilepath !== undefined) {
+            localVarQueryParameters['yamlfilepath'] = ObjectSerializer.serialize(yamlfilepath, "string");
+        }
+
+        if (progressId !== undefined) {
+            localVarQueryParameters['progress_id'] = ObjectSerializer.serialize(progressId, "string");
+        }
+
+        (<any>Object).assign(localVarHeaderParams, options.headers);
+
+        let localVarUseFormData = false;
+
+        let localVarRequestOptions: localVarRequest.Options = {
+            method: 'GET',
+            qs: localVarQueryParameters,
+            headers: localVarHeaderParams,
+            uri: localVarPath,
+            useQuerystring: this._useQuerystring,
+            json: true,
+        };
+
+        let authenticationPromise = Promise.resolve();
+        authenticationPromise = authenticationPromise.then(() => this.authentications.default.applyToRequest(localVarRequestOptions));
+
+        let interceptorPromise = authenticationPromise;
+        for (const interceptor of this.interceptors) {
+            interceptorPromise = interceptorPromise.then(() => interceptor(localVarRequestOptions));
+        }
+
+        return interceptorPromise.then(() => {
+            if (Object.keys(localVarFormParams).length) {
+                if (localVarUseFormData) {
+                    (<any>localVarRequestOptions).formData = localVarFormParams;
+                } else {
+                    localVarRequestOptions.form = localVarFormParams;
+                }
+            }
+            return new Promise<{ response: http.IncomingMessage; body?: any;  }>((resolve, reject) => {
+                localVarRequest(localVarRequestOptions, (error, response, body) => {
+                    if (error) {
+                        reject(error);
+                    } else {
+                        if (response.statusCode && response.statusCode >= 200 && response.statusCode <= 299) {
+                            resolve({ response: response, body: body });
+                        } else {
+                            reject(new HttpError(response, body, response.statusCode));
+                        }
+                    }
+                });
+            });
+        });
+    }
+    /**
+     * Unpack the output using TorizonCore Builder Docker image.
+     * @summary TorizonCore unpack command
+     * @param applicationId Id of an application (uuid)
+     * @param host the hostname or ip address of the device to be deployed
+     * @param username the Torizon username of the device to be deployed
+     * @param password the Torizon password of the device to be deployed
+     * @param progressId Id of a progress cookie (uuid)
+     */
+    public async applicationTcbDeploy (applicationId: string, host: string, username: string, password: string, progressId?: string, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<{ response: http.IncomingMessage; body?: any;  }> {
+        const localVarPath = this.basePath + '/applications/{application_id}/tcb_deploy'
+            .replace('{' + 'application_id' + '}', encodeURIComponent(String(applicationId)));
+        let localVarQueryParameters: any = {};
+        let localVarHeaderParams: any = (<any>Object).assign({}, this._defaultHeaders);
+        const produces = ['application/json'];
+        // give precedence to 'application/json'
+        if (produces.indexOf('application/json') >= 0) {
+            localVarHeaderParams.Accept = 'application/json';
+        } else {
+            localVarHeaderParams.Accept = produces.join(',');
+        }
+        let localVarFormParams: any = {};
+
+        // verify required parameter 'applicationId' is not null or undefined
+        if (applicationId === null || applicationId === undefined) {
+            throw new Error('Required parameter applicationId was null or undefined when calling applicationTcbDeploy.');
+        }
+
+        // verify required parameter 'host' is not null or undefined
+        if (host === null || host === undefined) {
+            throw new Error('Required parameter host was null or undefined when calling applicationTcbDeploy.');
+        }
+
+        // verify required parameter 'username' is not null or undefined
+        if (username === null || username === undefined) {
+            throw new Error('Required parameter username was null or undefined when calling applicationTcbDeploy.');
+        }
+
+        // verify required parameter 'password' is not null or undefined
+        if (password === null || password === undefined) {
+            throw new Error('Required parameter password was null or undefined when calling applicationTcbDeploy.');
+        }
+
+        if (host !== undefined) {
+            localVarQueryParameters['host'] = ObjectSerializer.serialize(host, "string");
+        }
+
+        if (username !== undefined) {
+            localVarQueryParameters['username'] = ObjectSerializer.serialize(username, "string");
+        }
+
+        if (password !== undefined) {
+            localVarQueryParameters['password'] = ObjectSerializer.serialize(password, "string");
+        }
+
+        if (progressId !== undefined) {
+            localVarQueryParameters['progress_id'] = ObjectSerializer.serialize(progressId, "string");
+        }
+
+        (<any>Object).assign(localVarHeaderParams, options.headers);
+
+        let localVarUseFormData = false;
+
+        let localVarRequestOptions: localVarRequest.Options = {
+            method: 'GET',
+            qs: localVarQueryParameters,
+            headers: localVarHeaderParams,
+            uri: localVarPath,
+            useQuerystring: this._useQuerystring,
+            json: true,
+        };
+
+        let authenticationPromise = Promise.resolve();
+        authenticationPromise = authenticationPromise.then(() => this.authentications.default.applyToRequest(localVarRequestOptions));
+
+        let interceptorPromise = authenticationPromise;
+        for (const interceptor of this.interceptors) {
+            interceptorPromise = interceptorPromise.then(() => interceptor(localVarRequestOptions));
+        }
+
+        return interceptorPromise.then(() => {
+            if (Object.keys(localVarFormParams).length) {
+                if (localVarUseFormData) {
+                    (<any>localVarRequestOptions).formData = localVarFormParams;
+                } else {
+                    localVarRequestOptions.form = localVarFormParams;
+                }
+            }
+            return new Promise<{ response: http.IncomingMessage; body?: any;  }>((resolve, reject) => {
+                localVarRequest(localVarRequestOptions, (error, response, body) => {
+                    if (error) {
+                        reject(error);
+                    } else {
+                        if (response.statusCode && response.statusCode >= 200 && response.statusCode <= 299) {
+                            resolve({ response: response, body: body });
+                        } else {
+                            reject(new HttpError(response, body, response.statusCode));
+                        }
+                    }
+                });
+            });
+        });
+    }
+    /**
+     * Checkout the device tree and overlays repository at https://github.com/toradex/device-trees
+     * @summary TorizonCore Device Tree repo checkout
+     * @param applicationId Id of an application (uuid)
+     * @param progressId Id of a progress cookie (uuid)
+     */
+    public async applicationTcbDtCheckout (applicationId: string, progressId?: string, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<{ response: http.IncomingMessage; body?: any;  }> {
+        const localVarPath = this.basePath + '/applications/{application_id}/tcb_dt_checkout'
+            .replace('{' + 'application_id' + '}', encodeURIComponent(String(applicationId)));
+        let localVarQueryParameters: any = {};
+        let localVarHeaderParams: any = (<any>Object).assign({}, this._defaultHeaders);
+        const produces = ['application/json'];
+        // give precedence to 'application/json'
+        if (produces.indexOf('application/json') >= 0) {
+            localVarHeaderParams.Accept = 'application/json';
+        } else {
+            localVarHeaderParams.Accept = produces.join(',');
+        }
+        let localVarFormParams: any = {};
+
+        // verify required parameter 'applicationId' is not null or undefined
+        if (applicationId === null || applicationId === undefined) {
+            throw new Error('Required parameter applicationId was null or undefined when calling applicationTcbDtCheckout.');
+        }
+
+        if (progressId !== undefined) {
+            localVarQueryParameters['progress_id'] = ObjectSerializer.serialize(progressId, "string");
+        }
+
+        (<any>Object).assign(localVarHeaderParams, options.headers);
+
+        let localVarUseFormData = false;
+
+        let localVarRequestOptions: localVarRequest.Options = {
+            method: 'GET',
+            qs: localVarQueryParameters,
+            headers: localVarHeaderParams,
+            uri: localVarPath,
+            useQuerystring: this._useQuerystring,
+            json: true,
+        };
+
+        let authenticationPromise = Promise.resolve();
+        authenticationPromise = authenticationPromise.then(() => this.authentications.default.applyToRequest(localVarRequestOptions));
+
+        let interceptorPromise = authenticationPromise;
+        for (const interceptor of this.interceptors) {
+            interceptorPromise = interceptorPromise.then(() => interceptor(localVarRequestOptions));
+        }
+
+        return interceptorPromise.then(() => {
+            if (Object.keys(localVarFormParams).length) {
+                if (localVarUseFormData) {
+                    (<any>localVarRequestOptions).formData = localVarFormParams;
+                } else {
+                    localVarRequestOptions.form = localVarFormParams;
+                }
+            }
+            return new Promise<{ response: http.IncomingMessage; body?: any;  }>((resolve, reject) => {
+                localVarRequest(localVarRequestOptions, (error, response, body) => {
+                    if (error) {
+                        reject(error);
+                    } else {
+                        if (response.statusCode && response.statusCode >= 200 && response.statusCode <= 299) {
+                            resolve({ response: response, body: body });
+                        } else {
+                            reject(new HttpError(response, body, response.statusCode));
+                        }
+                    }
+                });
+            });
+        });
+    }
+    /**
+     * Get configuration changes from the target board.
+     * @summary TorizonCore isolate command
+     * @param applicationId Id of an application (uuid)
+     * @param host the hostname or ip address of the device to be deployed
+     * @param username the Torizon username of the device to be deployed
+     * @param password the Torizon password of the device to be deployed
+     * @param outputDir the direcotry path that the changes will be save
+     * @param progressId Id of a progress cookie (uuid)
+     */
+    public async applicationTcbIsolate (applicationId: string, host: string, username: string, password: string, outputDir: string, progressId?: string, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<{ response: http.IncomingMessage; body?: any;  }> {
+        const localVarPath = this.basePath + '/applications/{application_id}/tcb_isolate'
+            .replace('{' + 'application_id' + '}', encodeURIComponent(String(applicationId)));
+        let localVarQueryParameters: any = {};
+        let localVarHeaderParams: any = (<any>Object).assign({}, this._defaultHeaders);
+        const produces = ['application/json'];
+        // give precedence to 'application/json'
+        if (produces.indexOf('application/json') >= 0) {
+            localVarHeaderParams.Accept = 'application/json';
+        } else {
+            localVarHeaderParams.Accept = produces.join(',');
+        }
+        let localVarFormParams: any = {};
+
+        // verify required parameter 'applicationId' is not null or undefined
+        if (applicationId === null || applicationId === undefined) {
+            throw new Error('Required parameter applicationId was null or undefined when calling applicationTcbIsolate.');
+        }
+
+        // verify required parameter 'host' is not null or undefined
+        if (host === null || host === undefined) {
+            throw new Error('Required parameter host was null or undefined when calling applicationTcbIsolate.');
+        }
+
+        // verify required parameter 'username' is not null or undefined
+        if (username === null || username === undefined) {
+            throw new Error('Required parameter username was null or undefined when calling applicationTcbIsolate.');
+        }
+
+        // verify required parameter 'password' is not null or undefined
+        if (password === null || password === undefined) {
+            throw new Error('Required parameter password was null or undefined when calling applicationTcbIsolate.');
+        }
+
+        // verify required parameter 'outputDir' is not null or undefined
+        if (outputDir === null || outputDir === undefined) {
+            throw new Error('Required parameter outputDir was null or undefined when calling applicationTcbIsolate.');
+        }
+
+        if (host !== undefined) {
+            localVarQueryParameters['host'] = ObjectSerializer.serialize(host, "string");
+        }
+
+        if (username !== undefined) {
+            localVarQueryParameters['username'] = ObjectSerializer.serialize(username, "string");
+        }
+
+        if (password !== undefined) {
+            localVarQueryParameters['password'] = ObjectSerializer.serialize(password, "string");
+        }
+
+        if (outputDir !== undefined) {
+            localVarQueryParameters['output_dir'] = ObjectSerializer.serialize(outputDir, "string");
+        }
+
+        if (progressId !== undefined) {
+            localVarQueryParameters['progress_id'] = ObjectSerializer.serialize(progressId, "string");
+        }
+
+        (<any>Object).assign(localVarHeaderParams, options.headers);
+
+        let localVarUseFormData = false;
+
+        let localVarRequestOptions: localVarRequest.Options = {
+            method: 'GET',
+            qs: localVarQueryParameters,
+            headers: localVarHeaderParams,
+            uri: localVarPath,
+            useQuerystring: this._useQuerystring,
+            json: true,
+        };
+
+        let authenticationPromise = Promise.resolve();
+        authenticationPromise = authenticationPromise.then(() => this.authentications.default.applyToRequest(localVarRequestOptions));
+
+        let interceptorPromise = authenticationPromise;
+        for (const interceptor of this.interceptors) {
+            interceptorPromise = interceptorPromise.then(() => interceptor(localVarRequestOptions));
+        }
+
+        return interceptorPromise.then(() => {
+            if (Object.keys(localVarFormParams).length) {
+                if (localVarUseFormData) {
+                    (<any>localVarRequestOptions).formData = localVarFormParams;
+                } else {
+                    localVarRequestOptions.form = localVarFormParams;
+                }
+            }
+            return new Promise<{ response: http.IncomingMessage; body?: any;  }>((resolve, reject) => {
+                localVarRequest(localVarRequestOptions, (error, response, body) => {
+                    if (error) {
+                        reject(error);
+                    } else {
+                        if (response.statusCode && response.statusCode >= 200 && response.statusCode <= 299) {
+                            resolve({ response: response, body: body });
+                        } else {
+                            reject(new HttpError(response, body, response.statusCode));
+                        }
+                    }
+                });
+            });
+        });
+    }
+    /**
+     * Unpack the output using TorizonCore Builder Docker image.
+     * @summary TorizonCore unpack command
+     * @param applicationId Id of an application (uuid)
+     * @param outputpath the output directory created by TorizonCore builder from workspace path
+     * @param progressId Id of a progress cookie (uuid)
+     */
+    public async applicationTcbUnpack (applicationId: string, outputpath: string, progressId?: string, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<{ response: http.IncomingMessage; body?: any;  }> {
+        const localVarPath = this.basePath + '/applications/{application_id}/tcb_unpack'
+            .replace('{' + 'application_id' + '}', encodeURIComponent(String(applicationId)));
+        let localVarQueryParameters: any = {};
+        let localVarHeaderParams: any = (<any>Object).assign({}, this._defaultHeaders);
+        const produces = ['application/json'];
+        // give precedence to 'application/json'
+        if (produces.indexOf('application/json') >= 0) {
+            localVarHeaderParams.Accept = 'application/json';
+        } else {
+            localVarHeaderParams.Accept = produces.join(',');
+        }
+        let localVarFormParams: any = {};
+
+        // verify required parameter 'applicationId' is not null or undefined
+        if (applicationId === null || applicationId === undefined) {
+            throw new Error('Required parameter applicationId was null or undefined when calling applicationTcbUnpack.');
+        }
+
+        // verify required parameter 'outputpath' is not null or undefined
+        if (outputpath === null || outputpath === undefined) {
+            throw new Error('Required parameter outputpath was null or undefined when calling applicationTcbUnpack.');
+        }
+
+        if (outputpath !== undefined) {
+            localVarQueryParameters['outputpath'] = ObjectSerializer.serialize(outputpath, "string");
+        }
+
+        if (progressId !== undefined) {
+            localVarQueryParameters['progress_id'] = ObjectSerializer.serialize(progressId, "string");
+        }
+
+        (<any>Object).assign(localVarHeaderParams, options.headers);
+
+        let localVarUseFormData = false;
+
+        let localVarRequestOptions: localVarRequest.Options = {
+            method: 'GET',
+            qs: localVarQueryParameters,
+            headers: localVarHeaderParams,
+            uri: localVarPath,
+            useQuerystring: this._useQuerystring,
+            json: true,
+        };
+
+        let authenticationPromise = Promise.resolve();
+        authenticationPromise = authenticationPromise.then(() => this.authentications.default.applyToRequest(localVarRequestOptions));
+
+        let interceptorPromise = authenticationPromise;
+        for (const interceptor of this.interceptors) {
+            interceptorPromise = interceptorPromise.then(() => interceptor(localVarRequestOptions));
+        }
+
+        return interceptorPromise.then(() => {
+            if (Object.keys(localVarFormParams).length) {
+                if (localVarUseFormData) {
+                    (<any>localVarRequestOptions).formData = localVarFormParams;
+                } else {
+                    localVarRequestOptions.form = localVarFormParams;
+                }
+            }
+            return new Promise<{ response: http.IncomingMessage; body?: any;  }>((resolve, reject) => {
+                localVarRequest(localVarRequestOptions, (error, response, body) => {
+                    if (error) {
+                        reject(error);
+                    } else {
+                        if (response.statusCode && response.statusCode >= 200 && response.statusCode <= 299) {
+                            resolve({ response: response, body: body });
+                        } else {
+                            reject(new HttpError(response, body, response.statusCode));
+                        }
+                    }
+                });
+            });
+        });
+    }
+    /**
      * Check if some properties have been changed after the last build of the configuration-specific container image
      * @summary Check if container image is up to date
      * @param applicationId Id of an application (uuid)

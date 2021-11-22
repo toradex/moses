@@ -476,6 +476,139 @@ namespace TorizonRestAPI.Api
         /// <returns>ApiResponse of Object(void)</returns>
         ApiResponse<Object> ApplicationSyncfoldersWithHttpInfo (string applicationId, string sourcefolder, string configuration, string deviceId, string destfolder, bool? sourceIsSdk = default(bool?), string progressId = default(string));
         /// <summary>
+        /// Build the TorizonCore tcbuild.yaml
+        /// </summary>
+        /// <remarks>
+        /// Build the TorizonCore tcbuild.yaml using TorizonCore Builder Docker image.
+        /// </remarks>
+        /// <exception cref="TorizonRestAPI.Client.ApiException">Thrown when fails to make API call</exception>
+        /// <param name="applicationId">Id of an application (uuid)</param>
+        /// <param name="yamlfilepath">the yaml file name from workspace path</param>
+        /// <param name="progressId">Id of a progress cookie (uuid) (optional)</param>
+        /// <returns></returns>
+        void ApplicationTcbBuildYaml (string applicationId, string yamlfilepath, string progressId = default(string));
+
+        /// <summary>
+        /// Build the TorizonCore tcbuild.yaml
+        /// </summary>
+        /// <remarks>
+        /// Build the TorizonCore tcbuild.yaml using TorizonCore Builder Docker image.
+        /// </remarks>
+        /// <exception cref="TorizonRestAPI.Client.ApiException">Thrown when fails to make API call</exception>
+        /// <param name="applicationId">Id of an application (uuid)</param>
+        /// <param name="yamlfilepath">the yaml file name from workspace path</param>
+        /// <param name="progressId">Id of a progress cookie (uuid) (optional)</param>
+        /// <returns>ApiResponse of Object(void)</returns>
+        ApiResponse<Object> ApplicationTcbBuildYamlWithHttpInfo (string applicationId, string yamlfilepath, string progressId = default(string));
+        /// <summary>
+        /// TorizonCore unpack command
+        /// </summary>
+        /// <remarks>
+        /// Unpack the output using TorizonCore Builder Docker image.
+        /// </remarks>
+        /// <exception cref="TorizonRestAPI.Client.ApiException">Thrown when fails to make API call</exception>
+        /// <param name="applicationId">Id of an application (uuid)</param>
+        /// <param name="host">the hostname or ip address of the device to be deployed</param>
+        /// <param name="username">the Torizon username of the device to be deployed</param>
+        /// <param name="password">the Torizon password of the device to be deployed</param>
+        /// <param name="progressId">Id of a progress cookie (uuid) (optional)</param>
+        /// <returns></returns>
+        void ApplicationTcbDeploy (string applicationId, string host, string username, string password, string progressId = default(string));
+
+        /// <summary>
+        /// TorizonCore unpack command
+        /// </summary>
+        /// <remarks>
+        /// Unpack the output using TorizonCore Builder Docker image.
+        /// </remarks>
+        /// <exception cref="TorizonRestAPI.Client.ApiException">Thrown when fails to make API call</exception>
+        /// <param name="applicationId">Id of an application (uuid)</param>
+        /// <param name="host">the hostname or ip address of the device to be deployed</param>
+        /// <param name="username">the Torizon username of the device to be deployed</param>
+        /// <param name="password">the Torizon password of the device to be deployed</param>
+        /// <param name="progressId">Id of a progress cookie (uuid) (optional)</param>
+        /// <returns>ApiResponse of Object(void)</returns>
+        ApiResponse<Object> ApplicationTcbDeployWithHttpInfo (string applicationId, string host, string username, string password, string progressId = default(string));
+        /// <summary>
+        /// TorizonCore Device Tree repo checkout
+        /// </summary>
+        /// <remarks>
+        /// Checkout the device tree and overlays repository at https://github.com/toradex/device-trees
+        /// </remarks>
+        /// <exception cref="TorizonRestAPI.Client.ApiException">Thrown when fails to make API call</exception>
+        /// <param name="applicationId">Id of an application (uuid)</param>
+        /// <param name="progressId">Id of a progress cookie (uuid) (optional)</param>
+        /// <returns></returns>
+        void ApplicationTcbDtCheckout (string applicationId, string progressId = default(string));
+
+        /// <summary>
+        /// TorizonCore Device Tree repo checkout
+        /// </summary>
+        /// <remarks>
+        /// Checkout the device tree and overlays repository at https://github.com/toradex/device-trees
+        /// </remarks>
+        /// <exception cref="TorizonRestAPI.Client.ApiException">Thrown when fails to make API call</exception>
+        /// <param name="applicationId">Id of an application (uuid)</param>
+        /// <param name="progressId">Id of a progress cookie (uuid) (optional)</param>
+        /// <returns>ApiResponse of Object(void)</returns>
+        ApiResponse<Object> ApplicationTcbDtCheckoutWithHttpInfo (string applicationId, string progressId = default(string));
+        /// <summary>
+        /// TorizonCore isolate command
+        /// </summary>
+        /// <remarks>
+        /// Get configuration changes from the target board.
+        /// </remarks>
+        /// <exception cref="TorizonRestAPI.Client.ApiException">Thrown when fails to make API call</exception>
+        /// <param name="applicationId">Id of an application (uuid)</param>
+        /// <param name="host">the hostname or ip address of the device to be deployed</param>
+        /// <param name="username">the Torizon username of the device to be deployed</param>
+        /// <param name="password">the Torizon password of the device to be deployed</param>
+        /// <param name="outputDir">the direcotry path that the changes will be save</param>
+        /// <param name="progressId">Id of a progress cookie (uuid) (optional)</param>
+        /// <returns></returns>
+        void ApplicationTcbIsolate (string applicationId, string host, string username, string password, string outputDir, string progressId = default(string));
+
+        /// <summary>
+        /// TorizonCore isolate command
+        /// </summary>
+        /// <remarks>
+        /// Get configuration changes from the target board.
+        /// </remarks>
+        /// <exception cref="TorizonRestAPI.Client.ApiException">Thrown when fails to make API call</exception>
+        /// <param name="applicationId">Id of an application (uuid)</param>
+        /// <param name="host">the hostname or ip address of the device to be deployed</param>
+        /// <param name="username">the Torizon username of the device to be deployed</param>
+        /// <param name="password">the Torizon password of the device to be deployed</param>
+        /// <param name="outputDir">the direcotry path that the changes will be save</param>
+        /// <param name="progressId">Id of a progress cookie (uuid) (optional)</param>
+        /// <returns>ApiResponse of Object(void)</returns>
+        ApiResponse<Object> ApplicationTcbIsolateWithHttpInfo (string applicationId, string host, string username, string password, string outputDir, string progressId = default(string));
+        /// <summary>
+        /// TorizonCore unpack command
+        /// </summary>
+        /// <remarks>
+        /// Unpack the output using TorizonCore Builder Docker image.
+        /// </remarks>
+        /// <exception cref="TorizonRestAPI.Client.ApiException">Thrown when fails to make API call</exception>
+        /// <param name="applicationId">Id of an application (uuid)</param>
+        /// <param name="outputpath">the output directory created by TorizonCore builder from workspace path</param>
+        /// <param name="progressId">Id of a progress cookie (uuid) (optional)</param>
+        /// <returns></returns>
+        void ApplicationTcbUnpack (string applicationId, string outputpath, string progressId = default(string));
+
+        /// <summary>
+        /// TorizonCore unpack command
+        /// </summary>
+        /// <remarks>
+        /// Unpack the output using TorizonCore Builder Docker image.
+        /// </remarks>
+        /// <exception cref="TorizonRestAPI.Client.ApiException">Thrown when fails to make API call</exception>
+        /// <param name="applicationId">Id of an application (uuid)</param>
+        /// <param name="outputpath">the output directory created by TorizonCore builder from workspace path</param>
+        /// <param name="progressId">Id of a progress cookie (uuid) (optional)</param>
+        /// <returns>ApiResponse of Object(void)</returns>
+        ApiResponse<Object> ApplicationTcbUnpackWithHttpInfo (string applicationId, string outputpath, string progressId = default(string));
+        /// <summary>
         /// Check if container image is up to date
         /// </summary>
         /// <remarks>
@@ -1144,6 +1277,149 @@ namespace TorizonRestAPI.Api
         /// <param name="cancellationToken">Cancellation Token to cancel request (optional) </param>
         /// <returns>Task of ApiResponse</returns>
         System.Threading.Tasks.Task<ApiResponse<Object>> ApplicationSyncfoldersWithHttpInfoAsync (string applicationId, string sourcefolder, string configuration, string deviceId, string destfolder, bool? sourceIsSdk = default(bool?), string progressId = default(string), CancellationToken cancellationToken = default(CancellationToken));
+        /// <summary>
+        /// Build the TorizonCore tcbuild.yaml
+        /// </summary>
+        /// <remarks>
+        /// Build the TorizonCore tcbuild.yaml using TorizonCore Builder Docker image.
+        /// </remarks>
+        /// <exception cref="TorizonRestAPI.Client.ApiException">Thrown when fails to make API call</exception>
+        /// <param name="applicationId">Id of an application (uuid)</param>
+        /// <param name="yamlfilepath">the yaml file name from workspace path</param>
+        /// <param name="progressId">Id of a progress cookie (uuid) (optional)</param>
+        /// <param name="cancellationToken">Cancellation Token to cancel request (optional) </param>
+        /// <returns>Task of void</returns>
+        System.Threading.Tasks.Task ApplicationTcbBuildYamlAsync (string applicationId, string yamlfilepath, string progressId = default(string), CancellationToken cancellationToken = default(CancellationToken));
+
+        /// <summary>
+        /// Build the TorizonCore tcbuild.yaml
+        /// </summary>
+        /// <remarks>
+        /// Build the TorizonCore tcbuild.yaml using TorizonCore Builder Docker image.
+        /// </remarks>
+        /// <exception cref="TorizonRestAPI.Client.ApiException">Thrown when fails to make API call</exception>
+        /// <param name="applicationId">Id of an application (uuid)</param>
+        /// <param name="yamlfilepath">the yaml file name from workspace path</param>
+        /// <param name="progressId">Id of a progress cookie (uuid) (optional)</param>
+        /// <param name="cancellationToken">Cancellation Token to cancel request (optional) </param>
+        /// <returns>Task of ApiResponse</returns>
+        System.Threading.Tasks.Task<ApiResponse<Object>> ApplicationTcbBuildYamlWithHttpInfoAsync (string applicationId, string yamlfilepath, string progressId = default(string), CancellationToken cancellationToken = default(CancellationToken));
+        /// <summary>
+        /// TorizonCore unpack command
+        /// </summary>
+        /// <remarks>
+        /// Unpack the output using TorizonCore Builder Docker image.
+        /// </remarks>
+        /// <exception cref="TorizonRestAPI.Client.ApiException">Thrown when fails to make API call</exception>
+        /// <param name="applicationId">Id of an application (uuid)</param>
+        /// <param name="host">the hostname or ip address of the device to be deployed</param>
+        /// <param name="username">the Torizon username of the device to be deployed</param>
+        /// <param name="password">the Torizon password of the device to be deployed</param>
+        /// <param name="progressId">Id of a progress cookie (uuid) (optional)</param>
+        /// <param name="cancellationToken">Cancellation Token to cancel request (optional) </param>
+        /// <returns>Task of void</returns>
+        System.Threading.Tasks.Task ApplicationTcbDeployAsync (string applicationId, string host, string username, string password, string progressId = default(string), CancellationToken cancellationToken = default(CancellationToken));
+
+        /// <summary>
+        /// TorizonCore unpack command
+        /// </summary>
+        /// <remarks>
+        /// Unpack the output using TorizonCore Builder Docker image.
+        /// </remarks>
+        /// <exception cref="TorizonRestAPI.Client.ApiException">Thrown when fails to make API call</exception>
+        /// <param name="applicationId">Id of an application (uuid)</param>
+        /// <param name="host">the hostname or ip address of the device to be deployed</param>
+        /// <param name="username">the Torizon username of the device to be deployed</param>
+        /// <param name="password">the Torizon password of the device to be deployed</param>
+        /// <param name="progressId">Id of a progress cookie (uuid) (optional)</param>
+        /// <param name="cancellationToken">Cancellation Token to cancel request (optional) </param>
+        /// <returns>Task of ApiResponse</returns>
+        System.Threading.Tasks.Task<ApiResponse<Object>> ApplicationTcbDeployWithHttpInfoAsync (string applicationId, string host, string username, string password, string progressId = default(string), CancellationToken cancellationToken = default(CancellationToken));
+        /// <summary>
+        /// TorizonCore Device Tree repo checkout
+        /// </summary>
+        /// <remarks>
+        /// Checkout the device tree and overlays repository at https://github.com/toradex/device-trees
+        /// </remarks>
+        /// <exception cref="TorizonRestAPI.Client.ApiException">Thrown when fails to make API call</exception>
+        /// <param name="applicationId">Id of an application (uuid)</param>
+        /// <param name="progressId">Id of a progress cookie (uuid) (optional)</param>
+        /// <param name="cancellationToken">Cancellation Token to cancel request (optional) </param>
+        /// <returns>Task of void</returns>
+        System.Threading.Tasks.Task ApplicationTcbDtCheckoutAsync (string applicationId, string progressId = default(string), CancellationToken cancellationToken = default(CancellationToken));
+
+        /// <summary>
+        /// TorizonCore Device Tree repo checkout
+        /// </summary>
+        /// <remarks>
+        /// Checkout the device tree and overlays repository at https://github.com/toradex/device-trees
+        /// </remarks>
+        /// <exception cref="TorizonRestAPI.Client.ApiException">Thrown when fails to make API call</exception>
+        /// <param name="applicationId">Id of an application (uuid)</param>
+        /// <param name="progressId">Id of a progress cookie (uuid) (optional)</param>
+        /// <param name="cancellationToken">Cancellation Token to cancel request (optional) </param>
+        /// <returns>Task of ApiResponse</returns>
+        System.Threading.Tasks.Task<ApiResponse<Object>> ApplicationTcbDtCheckoutWithHttpInfoAsync (string applicationId, string progressId = default(string), CancellationToken cancellationToken = default(CancellationToken));
+        /// <summary>
+        /// TorizonCore isolate command
+        /// </summary>
+        /// <remarks>
+        /// Get configuration changes from the target board.
+        /// </remarks>
+        /// <exception cref="TorizonRestAPI.Client.ApiException">Thrown when fails to make API call</exception>
+        /// <param name="applicationId">Id of an application (uuid)</param>
+        /// <param name="host">the hostname or ip address of the device to be deployed</param>
+        /// <param name="username">the Torizon username of the device to be deployed</param>
+        /// <param name="password">the Torizon password of the device to be deployed</param>
+        /// <param name="outputDir">the direcotry path that the changes will be save</param>
+        /// <param name="progressId">Id of a progress cookie (uuid) (optional)</param>
+        /// <param name="cancellationToken">Cancellation Token to cancel request (optional) </param>
+        /// <returns>Task of void</returns>
+        System.Threading.Tasks.Task ApplicationTcbIsolateAsync (string applicationId, string host, string username, string password, string outputDir, string progressId = default(string), CancellationToken cancellationToken = default(CancellationToken));
+
+        /// <summary>
+        /// TorizonCore isolate command
+        /// </summary>
+        /// <remarks>
+        /// Get configuration changes from the target board.
+        /// </remarks>
+        /// <exception cref="TorizonRestAPI.Client.ApiException">Thrown when fails to make API call</exception>
+        /// <param name="applicationId">Id of an application (uuid)</param>
+        /// <param name="host">the hostname or ip address of the device to be deployed</param>
+        /// <param name="username">the Torizon username of the device to be deployed</param>
+        /// <param name="password">the Torizon password of the device to be deployed</param>
+        /// <param name="outputDir">the direcotry path that the changes will be save</param>
+        /// <param name="progressId">Id of a progress cookie (uuid) (optional)</param>
+        /// <param name="cancellationToken">Cancellation Token to cancel request (optional) </param>
+        /// <returns>Task of ApiResponse</returns>
+        System.Threading.Tasks.Task<ApiResponse<Object>> ApplicationTcbIsolateWithHttpInfoAsync (string applicationId, string host, string username, string password, string outputDir, string progressId = default(string), CancellationToken cancellationToken = default(CancellationToken));
+        /// <summary>
+        /// TorizonCore unpack command
+        /// </summary>
+        /// <remarks>
+        /// Unpack the output using TorizonCore Builder Docker image.
+        /// </remarks>
+        /// <exception cref="TorizonRestAPI.Client.ApiException">Thrown when fails to make API call</exception>
+        /// <param name="applicationId">Id of an application (uuid)</param>
+        /// <param name="outputpath">the output directory created by TorizonCore builder from workspace path</param>
+        /// <param name="progressId">Id of a progress cookie (uuid) (optional)</param>
+        /// <param name="cancellationToken">Cancellation Token to cancel request (optional) </param>
+        /// <returns>Task of void</returns>
+        System.Threading.Tasks.Task ApplicationTcbUnpackAsync (string applicationId, string outputpath, string progressId = default(string), CancellationToken cancellationToken = default(CancellationToken));
+
+        /// <summary>
+        /// TorizonCore unpack command
+        /// </summary>
+        /// <remarks>
+        /// Unpack the output using TorizonCore Builder Docker image.
+        /// </remarks>
+        /// <exception cref="TorizonRestAPI.Client.ApiException">Thrown when fails to make API call</exception>
+        /// <param name="applicationId">Id of an application (uuid)</param>
+        /// <param name="outputpath">the output directory created by TorizonCore builder from workspace path</param>
+        /// <param name="progressId">Id of a progress cookie (uuid) (optional)</param>
+        /// <param name="cancellationToken">Cancellation Token to cancel request (optional) </param>
+        /// <returns>Task of ApiResponse</returns>
+        System.Threading.Tasks.Task<ApiResponse<Object>> ApplicationTcbUnpackWithHttpInfoAsync (string applicationId, string outputpath, string progressId = default(string), CancellationToken cancellationToken = default(CancellationToken));
         /// <summary>
         /// Check if container image is up to date
         /// </summary>
@@ -4236,6 +4512,809 @@ namespace TorizonRestAPI.Api
             if (ExceptionFactory != null)
             {
                 Exception exception = ExceptionFactory("ApplicationSyncfolders", localVarResponse);
+                if (exception != null) throw exception;
+            }
+
+            return new ApiResponse<Object>(localVarStatusCode,
+                localVarResponse.Headers.ToDictionary(x => x.Name, x => string.Join(",", x.Value)),
+                null);
+        }
+
+        /// <summary>
+        /// Build the TorizonCore tcbuild.yaml Build the TorizonCore tcbuild.yaml using TorizonCore Builder Docker image.
+        /// </summary>
+        /// <exception cref="TorizonRestAPI.Client.ApiException">Thrown when fails to make API call</exception>
+        /// <param name="applicationId">Id of an application (uuid)</param>
+        /// <param name="yamlfilepath">the yaml file name from workspace path</param>
+        /// <param name="progressId">Id of a progress cookie (uuid) (optional)</param>
+        /// <returns></returns>
+        public void ApplicationTcbBuildYaml (string applicationId, string yamlfilepath, string progressId = default(string))
+        {
+             ApplicationTcbBuildYamlWithHttpInfo(applicationId, yamlfilepath, progressId);
+        }
+
+        /// <summary>
+        /// Build the TorizonCore tcbuild.yaml Build the TorizonCore tcbuild.yaml using TorizonCore Builder Docker image.
+        /// </summary>
+        /// <exception cref="TorizonRestAPI.Client.ApiException">Thrown when fails to make API call</exception>
+        /// <param name="applicationId">Id of an application (uuid)</param>
+        /// <param name="yamlfilepath">the yaml file name from workspace path</param>
+        /// <param name="progressId">Id of a progress cookie (uuid) (optional)</param>
+        /// <returns>ApiResponse of Object(void)</returns>
+        public ApiResponse<Object> ApplicationTcbBuildYamlWithHttpInfo (string applicationId, string yamlfilepath, string progressId = default(string))
+        {
+            // verify the required parameter 'applicationId' is set
+            if (applicationId == null)
+                throw new ApiException(400, "Missing required parameter 'applicationId' when calling ApplicationsApi->ApplicationTcbBuildYaml");
+            // verify the required parameter 'yamlfilepath' is set
+            if (yamlfilepath == null)
+                throw new ApiException(400, "Missing required parameter 'yamlfilepath' when calling ApplicationsApi->ApplicationTcbBuildYaml");
+
+            var localVarPath = "/applications/{application_id}/tcb_build_yaml";
+            var localVarPathParams = new Dictionary<String, String>();
+            var localVarQueryParams = new List<KeyValuePair<String, String>>();
+            var localVarHeaderParams = new Dictionary<String, String>(this.Configuration.DefaultHeader);
+            var localVarFormParams = new Dictionary<String, String>();
+            var localVarFileParams = new Dictionary<String, FileParameter>();
+            Object localVarPostBody = null;
+
+            // to determine the Content-Type header
+            String[] localVarHttpContentTypes = new String[] {
+            };
+            String localVarHttpContentType = this.Configuration.ApiClient.SelectHeaderContentType(localVarHttpContentTypes);
+
+            // to determine the Accept header
+            String[] localVarHttpHeaderAccepts = new String[] {
+                "application/json"
+            };
+            String localVarHttpHeaderAccept = this.Configuration.ApiClient.SelectHeaderAccept(localVarHttpHeaderAccepts);
+            if (localVarHttpHeaderAccept != null)
+                localVarHeaderParams.Add("Accept", localVarHttpHeaderAccept);
+
+            if (applicationId != null) localVarPathParams.Add("application_id", this.Configuration.ApiClient.ParameterToString(applicationId)); // path parameter
+            if (yamlfilepath != null) localVarQueryParams.AddRange(this.Configuration.ApiClient.ParameterToKeyValuePairs("", "yamlfilepath", yamlfilepath)); // query parameter
+            if (progressId != null) localVarQueryParams.AddRange(this.Configuration.ApiClient.ParameterToKeyValuePairs("", "progress_id", progressId)); // query parameter
+
+
+            // make the HTTP request
+            IRestResponse localVarResponse = (IRestResponse) this.Configuration.ApiClient.CallApi(localVarPath,
+                Method.GET, localVarQueryParams, localVarPostBody, localVarHeaderParams, localVarFormParams, localVarFileParams,
+                localVarPathParams, localVarHttpContentType);
+
+            int localVarStatusCode = (int) localVarResponse.StatusCode;
+
+            if (ExceptionFactory != null)
+            {
+                Exception exception = ExceptionFactory("ApplicationTcbBuildYaml", localVarResponse);
+                if (exception != null) throw exception;
+            }
+
+            return new ApiResponse<Object>(localVarStatusCode,
+                localVarResponse.Headers.ToDictionary(x => x.Name, x => string.Join(",", x.Value)),
+                null);
+        }
+
+        /// <summary>
+        /// Build the TorizonCore tcbuild.yaml Build the TorizonCore tcbuild.yaml using TorizonCore Builder Docker image.
+        /// </summary>
+        /// <exception cref="TorizonRestAPI.Client.ApiException">Thrown when fails to make API call</exception>
+        /// <param name="applicationId">Id of an application (uuid)</param>
+        /// <param name="yamlfilepath">the yaml file name from workspace path</param>
+        /// <param name="progressId">Id of a progress cookie (uuid) (optional)</param>
+        /// <param name="cancellationToken">Cancellation Token to cancel request (optional) </param>
+        /// <returns>Task of void</returns>
+        public async System.Threading.Tasks.Task ApplicationTcbBuildYamlAsync (string applicationId, string yamlfilepath, string progressId = default(string), CancellationToken cancellationToken = default(CancellationToken))
+        {
+             await ApplicationTcbBuildYamlWithHttpInfoAsync(applicationId, yamlfilepath, progressId, cancellationToken);
+
+        }
+
+        /// <summary>
+        /// Build the TorizonCore tcbuild.yaml Build the TorizonCore tcbuild.yaml using TorizonCore Builder Docker image.
+        /// </summary>
+        /// <exception cref="TorizonRestAPI.Client.ApiException">Thrown when fails to make API call</exception>
+        /// <param name="applicationId">Id of an application (uuid)</param>
+        /// <param name="yamlfilepath">the yaml file name from workspace path</param>
+        /// <param name="progressId">Id of a progress cookie (uuid) (optional)</param>
+        /// <param name="cancellationToken">Cancellation Token to cancel request (optional) </param>
+        /// <returns>Task of ApiResponse</returns>
+        public async System.Threading.Tasks.Task<ApiResponse<Object>> ApplicationTcbBuildYamlWithHttpInfoAsync (string applicationId, string yamlfilepath, string progressId = default(string), CancellationToken cancellationToken = default(CancellationToken))
+        {
+            // verify the required parameter 'applicationId' is set
+            if (applicationId == null)
+                throw new ApiException(400, "Missing required parameter 'applicationId' when calling ApplicationsApi->ApplicationTcbBuildYaml");
+            // verify the required parameter 'yamlfilepath' is set
+            if (yamlfilepath == null)
+                throw new ApiException(400, "Missing required parameter 'yamlfilepath' when calling ApplicationsApi->ApplicationTcbBuildYaml");
+
+            var localVarPath = "/applications/{application_id}/tcb_build_yaml";
+            var localVarPathParams = new Dictionary<String, String>();
+            var localVarQueryParams = new List<KeyValuePair<String, String>>();
+            var localVarHeaderParams = new Dictionary<String, String>(this.Configuration.DefaultHeader);
+            var localVarFormParams = new Dictionary<String, String>();
+            var localVarFileParams = new Dictionary<String, FileParameter>();
+            Object localVarPostBody = null;
+
+            // to determine the Content-Type header
+            String[] localVarHttpContentTypes = new String[] {
+            };
+            String localVarHttpContentType = this.Configuration.ApiClient.SelectHeaderContentType(localVarHttpContentTypes);
+
+            // to determine the Accept header
+            String[] localVarHttpHeaderAccepts = new String[] {
+                "application/json"
+            };
+            String localVarHttpHeaderAccept = this.Configuration.ApiClient.SelectHeaderAccept(localVarHttpHeaderAccepts);
+            if (localVarHttpHeaderAccept != null)
+                localVarHeaderParams.Add("Accept", localVarHttpHeaderAccept);
+
+            if (applicationId != null) localVarPathParams.Add("application_id", this.Configuration.ApiClient.ParameterToString(applicationId)); // path parameter
+            if (yamlfilepath != null) localVarQueryParams.AddRange(this.Configuration.ApiClient.ParameterToKeyValuePairs("", "yamlfilepath", yamlfilepath)); // query parameter
+            if (progressId != null) localVarQueryParams.AddRange(this.Configuration.ApiClient.ParameterToKeyValuePairs("", "progress_id", progressId)); // query parameter
+
+
+            // make the HTTP request
+            IRestResponse localVarResponse = (IRestResponse) await this.Configuration.ApiClient.CallApiAsync(localVarPath,
+                Method.GET, localVarQueryParams, localVarPostBody, localVarHeaderParams, localVarFormParams, localVarFileParams,
+                localVarPathParams, localVarHttpContentType, cancellationToken);
+
+            int localVarStatusCode = (int) localVarResponse.StatusCode;
+
+            if (ExceptionFactory != null)
+            {
+                Exception exception = ExceptionFactory("ApplicationTcbBuildYaml", localVarResponse);
+                if (exception != null) throw exception;
+            }
+
+            return new ApiResponse<Object>(localVarStatusCode,
+                localVarResponse.Headers.ToDictionary(x => x.Name, x => string.Join(",", x.Value)),
+                null);
+        }
+
+        /// <summary>
+        /// TorizonCore unpack command Unpack the output using TorizonCore Builder Docker image.
+        /// </summary>
+        /// <exception cref="TorizonRestAPI.Client.ApiException">Thrown when fails to make API call</exception>
+        /// <param name="applicationId">Id of an application (uuid)</param>
+        /// <param name="host">the hostname or ip address of the device to be deployed</param>
+        /// <param name="username">the Torizon username of the device to be deployed</param>
+        /// <param name="password">the Torizon password of the device to be deployed</param>
+        /// <param name="progressId">Id of a progress cookie (uuid) (optional)</param>
+        /// <returns></returns>
+        public void ApplicationTcbDeploy (string applicationId, string host, string username, string password, string progressId = default(string))
+        {
+             ApplicationTcbDeployWithHttpInfo(applicationId, host, username, password, progressId);
+        }
+
+        /// <summary>
+        /// TorizonCore unpack command Unpack the output using TorizonCore Builder Docker image.
+        /// </summary>
+        /// <exception cref="TorizonRestAPI.Client.ApiException">Thrown when fails to make API call</exception>
+        /// <param name="applicationId">Id of an application (uuid)</param>
+        /// <param name="host">the hostname or ip address of the device to be deployed</param>
+        /// <param name="username">the Torizon username of the device to be deployed</param>
+        /// <param name="password">the Torizon password of the device to be deployed</param>
+        /// <param name="progressId">Id of a progress cookie (uuid) (optional)</param>
+        /// <returns>ApiResponse of Object(void)</returns>
+        public ApiResponse<Object> ApplicationTcbDeployWithHttpInfo (string applicationId, string host, string username, string password, string progressId = default(string))
+        {
+            // verify the required parameter 'applicationId' is set
+            if (applicationId == null)
+                throw new ApiException(400, "Missing required parameter 'applicationId' when calling ApplicationsApi->ApplicationTcbDeploy");
+            // verify the required parameter 'host' is set
+            if (host == null)
+                throw new ApiException(400, "Missing required parameter 'host' when calling ApplicationsApi->ApplicationTcbDeploy");
+            // verify the required parameter 'username' is set
+            if (username == null)
+                throw new ApiException(400, "Missing required parameter 'username' when calling ApplicationsApi->ApplicationTcbDeploy");
+            // verify the required parameter 'password' is set
+            if (password == null)
+                throw new ApiException(400, "Missing required parameter 'password' when calling ApplicationsApi->ApplicationTcbDeploy");
+
+            var localVarPath = "/applications/{application_id}/tcb_deploy";
+            var localVarPathParams = new Dictionary<String, String>();
+            var localVarQueryParams = new List<KeyValuePair<String, String>>();
+            var localVarHeaderParams = new Dictionary<String, String>(this.Configuration.DefaultHeader);
+            var localVarFormParams = new Dictionary<String, String>();
+            var localVarFileParams = new Dictionary<String, FileParameter>();
+            Object localVarPostBody = null;
+
+            // to determine the Content-Type header
+            String[] localVarHttpContentTypes = new String[] {
+            };
+            String localVarHttpContentType = this.Configuration.ApiClient.SelectHeaderContentType(localVarHttpContentTypes);
+
+            // to determine the Accept header
+            String[] localVarHttpHeaderAccepts = new String[] {
+                "application/json"
+            };
+            String localVarHttpHeaderAccept = this.Configuration.ApiClient.SelectHeaderAccept(localVarHttpHeaderAccepts);
+            if (localVarHttpHeaderAccept != null)
+                localVarHeaderParams.Add("Accept", localVarHttpHeaderAccept);
+
+            if (applicationId != null) localVarPathParams.Add("application_id", this.Configuration.ApiClient.ParameterToString(applicationId)); // path parameter
+            if (host != null) localVarQueryParams.AddRange(this.Configuration.ApiClient.ParameterToKeyValuePairs("", "host", host)); // query parameter
+            if (username != null) localVarQueryParams.AddRange(this.Configuration.ApiClient.ParameterToKeyValuePairs("", "username", username)); // query parameter
+            if (password != null) localVarQueryParams.AddRange(this.Configuration.ApiClient.ParameterToKeyValuePairs("", "password", password)); // query parameter
+            if (progressId != null) localVarQueryParams.AddRange(this.Configuration.ApiClient.ParameterToKeyValuePairs("", "progress_id", progressId)); // query parameter
+
+
+            // make the HTTP request
+            IRestResponse localVarResponse = (IRestResponse) this.Configuration.ApiClient.CallApi(localVarPath,
+                Method.GET, localVarQueryParams, localVarPostBody, localVarHeaderParams, localVarFormParams, localVarFileParams,
+                localVarPathParams, localVarHttpContentType);
+
+            int localVarStatusCode = (int) localVarResponse.StatusCode;
+
+            if (ExceptionFactory != null)
+            {
+                Exception exception = ExceptionFactory("ApplicationTcbDeploy", localVarResponse);
+                if (exception != null) throw exception;
+            }
+
+            return new ApiResponse<Object>(localVarStatusCode,
+                localVarResponse.Headers.ToDictionary(x => x.Name, x => string.Join(",", x.Value)),
+                null);
+        }
+
+        /// <summary>
+        /// TorizonCore unpack command Unpack the output using TorizonCore Builder Docker image.
+        /// </summary>
+        /// <exception cref="TorizonRestAPI.Client.ApiException">Thrown when fails to make API call</exception>
+        /// <param name="applicationId">Id of an application (uuid)</param>
+        /// <param name="host">the hostname or ip address of the device to be deployed</param>
+        /// <param name="username">the Torizon username of the device to be deployed</param>
+        /// <param name="password">the Torizon password of the device to be deployed</param>
+        /// <param name="progressId">Id of a progress cookie (uuid) (optional)</param>
+        /// <param name="cancellationToken">Cancellation Token to cancel request (optional) </param>
+        /// <returns>Task of void</returns>
+        public async System.Threading.Tasks.Task ApplicationTcbDeployAsync (string applicationId, string host, string username, string password, string progressId = default(string), CancellationToken cancellationToken = default(CancellationToken))
+        {
+             await ApplicationTcbDeployWithHttpInfoAsync(applicationId, host, username, password, progressId, cancellationToken);
+
+        }
+
+        /// <summary>
+        /// TorizonCore unpack command Unpack the output using TorizonCore Builder Docker image.
+        /// </summary>
+        /// <exception cref="TorizonRestAPI.Client.ApiException">Thrown when fails to make API call</exception>
+        /// <param name="applicationId">Id of an application (uuid)</param>
+        /// <param name="host">the hostname or ip address of the device to be deployed</param>
+        /// <param name="username">the Torizon username of the device to be deployed</param>
+        /// <param name="password">the Torizon password of the device to be deployed</param>
+        /// <param name="progressId">Id of a progress cookie (uuid) (optional)</param>
+        /// <param name="cancellationToken">Cancellation Token to cancel request (optional) </param>
+        /// <returns>Task of ApiResponse</returns>
+        public async System.Threading.Tasks.Task<ApiResponse<Object>> ApplicationTcbDeployWithHttpInfoAsync (string applicationId, string host, string username, string password, string progressId = default(string), CancellationToken cancellationToken = default(CancellationToken))
+        {
+            // verify the required parameter 'applicationId' is set
+            if (applicationId == null)
+                throw new ApiException(400, "Missing required parameter 'applicationId' when calling ApplicationsApi->ApplicationTcbDeploy");
+            // verify the required parameter 'host' is set
+            if (host == null)
+                throw new ApiException(400, "Missing required parameter 'host' when calling ApplicationsApi->ApplicationTcbDeploy");
+            // verify the required parameter 'username' is set
+            if (username == null)
+                throw new ApiException(400, "Missing required parameter 'username' when calling ApplicationsApi->ApplicationTcbDeploy");
+            // verify the required parameter 'password' is set
+            if (password == null)
+                throw new ApiException(400, "Missing required parameter 'password' when calling ApplicationsApi->ApplicationTcbDeploy");
+
+            var localVarPath = "/applications/{application_id}/tcb_deploy";
+            var localVarPathParams = new Dictionary<String, String>();
+            var localVarQueryParams = new List<KeyValuePair<String, String>>();
+            var localVarHeaderParams = new Dictionary<String, String>(this.Configuration.DefaultHeader);
+            var localVarFormParams = new Dictionary<String, String>();
+            var localVarFileParams = new Dictionary<String, FileParameter>();
+            Object localVarPostBody = null;
+
+            // to determine the Content-Type header
+            String[] localVarHttpContentTypes = new String[] {
+            };
+            String localVarHttpContentType = this.Configuration.ApiClient.SelectHeaderContentType(localVarHttpContentTypes);
+
+            // to determine the Accept header
+            String[] localVarHttpHeaderAccepts = new String[] {
+                "application/json"
+            };
+            String localVarHttpHeaderAccept = this.Configuration.ApiClient.SelectHeaderAccept(localVarHttpHeaderAccepts);
+            if (localVarHttpHeaderAccept != null)
+                localVarHeaderParams.Add("Accept", localVarHttpHeaderAccept);
+
+            if (applicationId != null) localVarPathParams.Add("application_id", this.Configuration.ApiClient.ParameterToString(applicationId)); // path parameter
+            if (host != null) localVarQueryParams.AddRange(this.Configuration.ApiClient.ParameterToKeyValuePairs("", "host", host)); // query parameter
+            if (username != null) localVarQueryParams.AddRange(this.Configuration.ApiClient.ParameterToKeyValuePairs("", "username", username)); // query parameter
+            if (password != null) localVarQueryParams.AddRange(this.Configuration.ApiClient.ParameterToKeyValuePairs("", "password", password)); // query parameter
+            if (progressId != null) localVarQueryParams.AddRange(this.Configuration.ApiClient.ParameterToKeyValuePairs("", "progress_id", progressId)); // query parameter
+
+
+            // make the HTTP request
+            IRestResponse localVarResponse = (IRestResponse) await this.Configuration.ApiClient.CallApiAsync(localVarPath,
+                Method.GET, localVarQueryParams, localVarPostBody, localVarHeaderParams, localVarFormParams, localVarFileParams,
+                localVarPathParams, localVarHttpContentType, cancellationToken);
+
+            int localVarStatusCode = (int) localVarResponse.StatusCode;
+
+            if (ExceptionFactory != null)
+            {
+                Exception exception = ExceptionFactory("ApplicationTcbDeploy", localVarResponse);
+                if (exception != null) throw exception;
+            }
+
+            return new ApiResponse<Object>(localVarStatusCode,
+                localVarResponse.Headers.ToDictionary(x => x.Name, x => string.Join(",", x.Value)),
+                null);
+        }
+
+        /// <summary>
+        /// TorizonCore Device Tree repo checkout Checkout the device tree and overlays repository at https://github.com/toradex/device-trees
+        /// </summary>
+        /// <exception cref="TorizonRestAPI.Client.ApiException">Thrown when fails to make API call</exception>
+        /// <param name="applicationId">Id of an application (uuid)</param>
+        /// <param name="progressId">Id of a progress cookie (uuid) (optional)</param>
+        /// <returns></returns>
+        public void ApplicationTcbDtCheckout (string applicationId, string progressId = default(string))
+        {
+             ApplicationTcbDtCheckoutWithHttpInfo(applicationId, progressId);
+        }
+
+        /// <summary>
+        /// TorizonCore Device Tree repo checkout Checkout the device tree and overlays repository at https://github.com/toradex/device-trees
+        /// </summary>
+        /// <exception cref="TorizonRestAPI.Client.ApiException">Thrown when fails to make API call</exception>
+        /// <param name="applicationId">Id of an application (uuid)</param>
+        /// <param name="progressId">Id of a progress cookie (uuid) (optional)</param>
+        /// <returns>ApiResponse of Object(void)</returns>
+        public ApiResponse<Object> ApplicationTcbDtCheckoutWithHttpInfo (string applicationId, string progressId = default(string))
+        {
+            // verify the required parameter 'applicationId' is set
+            if (applicationId == null)
+                throw new ApiException(400, "Missing required parameter 'applicationId' when calling ApplicationsApi->ApplicationTcbDtCheckout");
+
+            var localVarPath = "/applications/{application_id}/tcb_dt_checkout";
+            var localVarPathParams = new Dictionary<String, String>();
+            var localVarQueryParams = new List<KeyValuePair<String, String>>();
+            var localVarHeaderParams = new Dictionary<String, String>(this.Configuration.DefaultHeader);
+            var localVarFormParams = new Dictionary<String, String>();
+            var localVarFileParams = new Dictionary<String, FileParameter>();
+            Object localVarPostBody = null;
+
+            // to determine the Content-Type header
+            String[] localVarHttpContentTypes = new String[] {
+            };
+            String localVarHttpContentType = this.Configuration.ApiClient.SelectHeaderContentType(localVarHttpContentTypes);
+
+            // to determine the Accept header
+            String[] localVarHttpHeaderAccepts = new String[] {
+                "application/json"
+            };
+            String localVarHttpHeaderAccept = this.Configuration.ApiClient.SelectHeaderAccept(localVarHttpHeaderAccepts);
+            if (localVarHttpHeaderAccept != null)
+                localVarHeaderParams.Add("Accept", localVarHttpHeaderAccept);
+
+            if (applicationId != null) localVarPathParams.Add("application_id", this.Configuration.ApiClient.ParameterToString(applicationId)); // path parameter
+            if (progressId != null) localVarQueryParams.AddRange(this.Configuration.ApiClient.ParameterToKeyValuePairs("", "progress_id", progressId)); // query parameter
+
+
+            // make the HTTP request
+            IRestResponse localVarResponse = (IRestResponse) this.Configuration.ApiClient.CallApi(localVarPath,
+                Method.GET, localVarQueryParams, localVarPostBody, localVarHeaderParams, localVarFormParams, localVarFileParams,
+                localVarPathParams, localVarHttpContentType);
+
+            int localVarStatusCode = (int) localVarResponse.StatusCode;
+
+            if (ExceptionFactory != null)
+            {
+                Exception exception = ExceptionFactory("ApplicationTcbDtCheckout", localVarResponse);
+                if (exception != null) throw exception;
+            }
+
+            return new ApiResponse<Object>(localVarStatusCode,
+                localVarResponse.Headers.ToDictionary(x => x.Name, x => string.Join(",", x.Value)),
+                null);
+        }
+
+        /// <summary>
+        /// TorizonCore Device Tree repo checkout Checkout the device tree and overlays repository at https://github.com/toradex/device-trees
+        /// </summary>
+        /// <exception cref="TorizonRestAPI.Client.ApiException">Thrown when fails to make API call</exception>
+        /// <param name="applicationId">Id of an application (uuid)</param>
+        /// <param name="progressId">Id of a progress cookie (uuid) (optional)</param>
+        /// <param name="cancellationToken">Cancellation Token to cancel request (optional) </param>
+        /// <returns>Task of void</returns>
+        public async System.Threading.Tasks.Task ApplicationTcbDtCheckoutAsync (string applicationId, string progressId = default(string), CancellationToken cancellationToken = default(CancellationToken))
+        {
+             await ApplicationTcbDtCheckoutWithHttpInfoAsync(applicationId, progressId, cancellationToken);
+
+        }
+
+        /// <summary>
+        /// TorizonCore Device Tree repo checkout Checkout the device tree and overlays repository at https://github.com/toradex/device-trees
+        /// </summary>
+        /// <exception cref="TorizonRestAPI.Client.ApiException">Thrown when fails to make API call</exception>
+        /// <param name="applicationId">Id of an application (uuid)</param>
+        /// <param name="progressId">Id of a progress cookie (uuid) (optional)</param>
+        /// <param name="cancellationToken">Cancellation Token to cancel request (optional) </param>
+        /// <returns>Task of ApiResponse</returns>
+        public async System.Threading.Tasks.Task<ApiResponse<Object>> ApplicationTcbDtCheckoutWithHttpInfoAsync (string applicationId, string progressId = default(string), CancellationToken cancellationToken = default(CancellationToken))
+        {
+            // verify the required parameter 'applicationId' is set
+            if (applicationId == null)
+                throw new ApiException(400, "Missing required parameter 'applicationId' when calling ApplicationsApi->ApplicationTcbDtCheckout");
+
+            var localVarPath = "/applications/{application_id}/tcb_dt_checkout";
+            var localVarPathParams = new Dictionary<String, String>();
+            var localVarQueryParams = new List<KeyValuePair<String, String>>();
+            var localVarHeaderParams = new Dictionary<String, String>(this.Configuration.DefaultHeader);
+            var localVarFormParams = new Dictionary<String, String>();
+            var localVarFileParams = new Dictionary<String, FileParameter>();
+            Object localVarPostBody = null;
+
+            // to determine the Content-Type header
+            String[] localVarHttpContentTypes = new String[] {
+            };
+            String localVarHttpContentType = this.Configuration.ApiClient.SelectHeaderContentType(localVarHttpContentTypes);
+
+            // to determine the Accept header
+            String[] localVarHttpHeaderAccepts = new String[] {
+                "application/json"
+            };
+            String localVarHttpHeaderAccept = this.Configuration.ApiClient.SelectHeaderAccept(localVarHttpHeaderAccepts);
+            if (localVarHttpHeaderAccept != null)
+                localVarHeaderParams.Add("Accept", localVarHttpHeaderAccept);
+
+            if (applicationId != null) localVarPathParams.Add("application_id", this.Configuration.ApiClient.ParameterToString(applicationId)); // path parameter
+            if (progressId != null) localVarQueryParams.AddRange(this.Configuration.ApiClient.ParameterToKeyValuePairs("", "progress_id", progressId)); // query parameter
+
+
+            // make the HTTP request
+            IRestResponse localVarResponse = (IRestResponse) await this.Configuration.ApiClient.CallApiAsync(localVarPath,
+                Method.GET, localVarQueryParams, localVarPostBody, localVarHeaderParams, localVarFormParams, localVarFileParams,
+                localVarPathParams, localVarHttpContentType, cancellationToken);
+
+            int localVarStatusCode = (int) localVarResponse.StatusCode;
+
+            if (ExceptionFactory != null)
+            {
+                Exception exception = ExceptionFactory("ApplicationTcbDtCheckout", localVarResponse);
+                if (exception != null) throw exception;
+            }
+
+            return new ApiResponse<Object>(localVarStatusCode,
+                localVarResponse.Headers.ToDictionary(x => x.Name, x => string.Join(",", x.Value)),
+                null);
+        }
+
+        /// <summary>
+        /// TorizonCore isolate command Get configuration changes from the target board.
+        /// </summary>
+        /// <exception cref="TorizonRestAPI.Client.ApiException">Thrown when fails to make API call</exception>
+        /// <param name="applicationId">Id of an application (uuid)</param>
+        /// <param name="host">the hostname or ip address of the device to be deployed</param>
+        /// <param name="username">the Torizon username of the device to be deployed</param>
+        /// <param name="password">the Torizon password of the device to be deployed</param>
+        /// <param name="outputDir">the direcotry path that the changes will be save</param>
+        /// <param name="progressId">Id of a progress cookie (uuid) (optional)</param>
+        /// <returns></returns>
+        public void ApplicationTcbIsolate (string applicationId, string host, string username, string password, string outputDir, string progressId = default(string))
+        {
+             ApplicationTcbIsolateWithHttpInfo(applicationId, host, username, password, outputDir, progressId);
+        }
+
+        /// <summary>
+        /// TorizonCore isolate command Get configuration changes from the target board.
+        /// </summary>
+        /// <exception cref="TorizonRestAPI.Client.ApiException">Thrown when fails to make API call</exception>
+        /// <param name="applicationId">Id of an application (uuid)</param>
+        /// <param name="host">the hostname or ip address of the device to be deployed</param>
+        /// <param name="username">the Torizon username of the device to be deployed</param>
+        /// <param name="password">the Torizon password of the device to be deployed</param>
+        /// <param name="outputDir">the direcotry path that the changes will be save</param>
+        /// <param name="progressId">Id of a progress cookie (uuid) (optional)</param>
+        /// <returns>ApiResponse of Object(void)</returns>
+        public ApiResponse<Object> ApplicationTcbIsolateWithHttpInfo (string applicationId, string host, string username, string password, string outputDir, string progressId = default(string))
+        {
+            // verify the required parameter 'applicationId' is set
+            if (applicationId == null)
+                throw new ApiException(400, "Missing required parameter 'applicationId' when calling ApplicationsApi->ApplicationTcbIsolate");
+            // verify the required parameter 'host' is set
+            if (host == null)
+                throw new ApiException(400, "Missing required parameter 'host' when calling ApplicationsApi->ApplicationTcbIsolate");
+            // verify the required parameter 'username' is set
+            if (username == null)
+                throw new ApiException(400, "Missing required parameter 'username' when calling ApplicationsApi->ApplicationTcbIsolate");
+            // verify the required parameter 'password' is set
+            if (password == null)
+                throw new ApiException(400, "Missing required parameter 'password' when calling ApplicationsApi->ApplicationTcbIsolate");
+            // verify the required parameter 'outputDir' is set
+            if (outputDir == null)
+                throw new ApiException(400, "Missing required parameter 'outputDir' when calling ApplicationsApi->ApplicationTcbIsolate");
+
+            var localVarPath = "/applications/{application_id}/tcb_isolate";
+            var localVarPathParams = new Dictionary<String, String>();
+            var localVarQueryParams = new List<KeyValuePair<String, String>>();
+            var localVarHeaderParams = new Dictionary<String, String>(this.Configuration.DefaultHeader);
+            var localVarFormParams = new Dictionary<String, String>();
+            var localVarFileParams = new Dictionary<String, FileParameter>();
+            Object localVarPostBody = null;
+
+            // to determine the Content-Type header
+            String[] localVarHttpContentTypes = new String[] {
+            };
+            String localVarHttpContentType = this.Configuration.ApiClient.SelectHeaderContentType(localVarHttpContentTypes);
+
+            // to determine the Accept header
+            String[] localVarHttpHeaderAccepts = new String[] {
+                "application/json"
+            };
+            String localVarHttpHeaderAccept = this.Configuration.ApiClient.SelectHeaderAccept(localVarHttpHeaderAccepts);
+            if (localVarHttpHeaderAccept != null)
+                localVarHeaderParams.Add("Accept", localVarHttpHeaderAccept);
+
+            if (applicationId != null) localVarPathParams.Add("application_id", this.Configuration.ApiClient.ParameterToString(applicationId)); // path parameter
+            if (host != null) localVarQueryParams.AddRange(this.Configuration.ApiClient.ParameterToKeyValuePairs("", "host", host)); // query parameter
+            if (username != null) localVarQueryParams.AddRange(this.Configuration.ApiClient.ParameterToKeyValuePairs("", "username", username)); // query parameter
+            if (password != null) localVarQueryParams.AddRange(this.Configuration.ApiClient.ParameterToKeyValuePairs("", "password", password)); // query parameter
+            if (outputDir != null) localVarQueryParams.AddRange(this.Configuration.ApiClient.ParameterToKeyValuePairs("", "output_dir", outputDir)); // query parameter
+            if (progressId != null) localVarQueryParams.AddRange(this.Configuration.ApiClient.ParameterToKeyValuePairs("", "progress_id", progressId)); // query parameter
+
+
+            // make the HTTP request
+            IRestResponse localVarResponse = (IRestResponse) this.Configuration.ApiClient.CallApi(localVarPath,
+                Method.GET, localVarQueryParams, localVarPostBody, localVarHeaderParams, localVarFormParams, localVarFileParams,
+                localVarPathParams, localVarHttpContentType);
+
+            int localVarStatusCode = (int) localVarResponse.StatusCode;
+
+            if (ExceptionFactory != null)
+            {
+                Exception exception = ExceptionFactory("ApplicationTcbIsolate", localVarResponse);
+                if (exception != null) throw exception;
+            }
+
+            return new ApiResponse<Object>(localVarStatusCode,
+                localVarResponse.Headers.ToDictionary(x => x.Name, x => string.Join(",", x.Value)),
+                null);
+        }
+
+        /// <summary>
+        /// TorizonCore isolate command Get configuration changes from the target board.
+        /// </summary>
+        /// <exception cref="TorizonRestAPI.Client.ApiException">Thrown when fails to make API call</exception>
+        /// <param name="applicationId">Id of an application (uuid)</param>
+        /// <param name="host">the hostname or ip address of the device to be deployed</param>
+        /// <param name="username">the Torizon username of the device to be deployed</param>
+        /// <param name="password">the Torizon password of the device to be deployed</param>
+        /// <param name="outputDir">the direcotry path that the changes will be save</param>
+        /// <param name="progressId">Id of a progress cookie (uuid) (optional)</param>
+        /// <param name="cancellationToken">Cancellation Token to cancel request (optional) </param>
+        /// <returns>Task of void</returns>
+        public async System.Threading.Tasks.Task ApplicationTcbIsolateAsync (string applicationId, string host, string username, string password, string outputDir, string progressId = default(string), CancellationToken cancellationToken = default(CancellationToken))
+        {
+             await ApplicationTcbIsolateWithHttpInfoAsync(applicationId, host, username, password, outputDir, progressId, cancellationToken);
+
+        }
+
+        /// <summary>
+        /// TorizonCore isolate command Get configuration changes from the target board.
+        /// </summary>
+        /// <exception cref="TorizonRestAPI.Client.ApiException">Thrown when fails to make API call</exception>
+        /// <param name="applicationId">Id of an application (uuid)</param>
+        /// <param name="host">the hostname or ip address of the device to be deployed</param>
+        /// <param name="username">the Torizon username of the device to be deployed</param>
+        /// <param name="password">the Torizon password of the device to be deployed</param>
+        /// <param name="outputDir">the direcotry path that the changes will be save</param>
+        /// <param name="progressId">Id of a progress cookie (uuid) (optional)</param>
+        /// <param name="cancellationToken">Cancellation Token to cancel request (optional) </param>
+        /// <returns>Task of ApiResponse</returns>
+        public async System.Threading.Tasks.Task<ApiResponse<Object>> ApplicationTcbIsolateWithHttpInfoAsync (string applicationId, string host, string username, string password, string outputDir, string progressId = default(string), CancellationToken cancellationToken = default(CancellationToken))
+        {
+            // verify the required parameter 'applicationId' is set
+            if (applicationId == null)
+                throw new ApiException(400, "Missing required parameter 'applicationId' when calling ApplicationsApi->ApplicationTcbIsolate");
+            // verify the required parameter 'host' is set
+            if (host == null)
+                throw new ApiException(400, "Missing required parameter 'host' when calling ApplicationsApi->ApplicationTcbIsolate");
+            // verify the required parameter 'username' is set
+            if (username == null)
+                throw new ApiException(400, "Missing required parameter 'username' when calling ApplicationsApi->ApplicationTcbIsolate");
+            // verify the required parameter 'password' is set
+            if (password == null)
+                throw new ApiException(400, "Missing required parameter 'password' when calling ApplicationsApi->ApplicationTcbIsolate");
+            // verify the required parameter 'outputDir' is set
+            if (outputDir == null)
+                throw new ApiException(400, "Missing required parameter 'outputDir' when calling ApplicationsApi->ApplicationTcbIsolate");
+
+            var localVarPath = "/applications/{application_id}/tcb_isolate";
+            var localVarPathParams = new Dictionary<String, String>();
+            var localVarQueryParams = new List<KeyValuePair<String, String>>();
+            var localVarHeaderParams = new Dictionary<String, String>(this.Configuration.DefaultHeader);
+            var localVarFormParams = new Dictionary<String, String>();
+            var localVarFileParams = new Dictionary<String, FileParameter>();
+            Object localVarPostBody = null;
+
+            // to determine the Content-Type header
+            String[] localVarHttpContentTypes = new String[] {
+            };
+            String localVarHttpContentType = this.Configuration.ApiClient.SelectHeaderContentType(localVarHttpContentTypes);
+
+            // to determine the Accept header
+            String[] localVarHttpHeaderAccepts = new String[] {
+                "application/json"
+            };
+            String localVarHttpHeaderAccept = this.Configuration.ApiClient.SelectHeaderAccept(localVarHttpHeaderAccepts);
+            if (localVarHttpHeaderAccept != null)
+                localVarHeaderParams.Add("Accept", localVarHttpHeaderAccept);
+
+            if (applicationId != null) localVarPathParams.Add("application_id", this.Configuration.ApiClient.ParameterToString(applicationId)); // path parameter
+            if (host != null) localVarQueryParams.AddRange(this.Configuration.ApiClient.ParameterToKeyValuePairs("", "host", host)); // query parameter
+            if (username != null) localVarQueryParams.AddRange(this.Configuration.ApiClient.ParameterToKeyValuePairs("", "username", username)); // query parameter
+            if (password != null) localVarQueryParams.AddRange(this.Configuration.ApiClient.ParameterToKeyValuePairs("", "password", password)); // query parameter
+            if (outputDir != null) localVarQueryParams.AddRange(this.Configuration.ApiClient.ParameterToKeyValuePairs("", "output_dir", outputDir)); // query parameter
+            if (progressId != null) localVarQueryParams.AddRange(this.Configuration.ApiClient.ParameterToKeyValuePairs("", "progress_id", progressId)); // query parameter
+
+
+            // make the HTTP request
+            IRestResponse localVarResponse = (IRestResponse) await this.Configuration.ApiClient.CallApiAsync(localVarPath,
+                Method.GET, localVarQueryParams, localVarPostBody, localVarHeaderParams, localVarFormParams, localVarFileParams,
+                localVarPathParams, localVarHttpContentType, cancellationToken);
+
+            int localVarStatusCode = (int) localVarResponse.StatusCode;
+
+            if (ExceptionFactory != null)
+            {
+                Exception exception = ExceptionFactory("ApplicationTcbIsolate", localVarResponse);
+                if (exception != null) throw exception;
+            }
+
+            return new ApiResponse<Object>(localVarStatusCode,
+                localVarResponse.Headers.ToDictionary(x => x.Name, x => string.Join(",", x.Value)),
+                null);
+        }
+
+        /// <summary>
+        /// TorizonCore unpack command Unpack the output using TorizonCore Builder Docker image.
+        /// </summary>
+        /// <exception cref="TorizonRestAPI.Client.ApiException">Thrown when fails to make API call</exception>
+        /// <param name="applicationId">Id of an application (uuid)</param>
+        /// <param name="outputpath">the output directory created by TorizonCore builder from workspace path</param>
+        /// <param name="progressId">Id of a progress cookie (uuid) (optional)</param>
+        /// <returns></returns>
+        public void ApplicationTcbUnpack (string applicationId, string outputpath, string progressId = default(string))
+        {
+             ApplicationTcbUnpackWithHttpInfo(applicationId, outputpath, progressId);
+        }
+
+        /// <summary>
+        /// TorizonCore unpack command Unpack the output using TorizonCore Builder Docker image.
+        /// </summary>
+        /// <exception cref="TorizonRestAPI.Client.ApiException">Thrown when fails to make API call</exception>
+        /// <param name="applicationId">Id of an application (uuid)</param>
+        /// <param name="outputpath">the output directory created by TorizonCore builder from workspace path</param>
+        /// <param name="progressId">Id of a progress cookie (uuid) (optional)</param>
+        /// <returns>ApiResponse of Object(void)</returns>
+        public ApiResponse<Object> ApplicationTcbUnpackWithHttpInfo (string applicationId, string outputpath, string progressId = default(string))
+        {
+            // verify the required parameter 'applicationId' is set
+            if (applicationId == null)
+                throw new ApiException(400, "Missing required parameter 'applicationId' when calling ApplicationsApi->ApplicationTcbUnpack");
+            // verify the required parameter 'outputpath' is set
+            if (outputpath == null)
+                throw new ApiException(400, "Missing required parameter 'outputpath' when calling ApplicationsApi->ApplicationTcbUnpack");
+
+            var localVarPath = "/applications/{application_id}/tcb_unpack";
+            var localVarPathParams = new Dictionary<String, String>();
+            var localVarQueryParams = new List<KeyValuePair<String, String>>();
+            var localVarHeaderParams = new Dictionary<String, String>(this.Configuration.DefaultHeader);
+            var localVarFormParams = new Dictionary<String, String>();
+            var localVarFileParams = new Dictionary<String, FileParameter>();
+            Object localVarPostBody = null;
+
+            // to determine the Content-Type header
+            String[] localVarHttpContentTypes = new String[] {
+            };
+            String localVarHttpContentType = this.Configuration.ApiClient.SelectHeaderContentType(localVarHttpContentTypes);
+
+            // to determine the Accept header
+            String[] localVarHttpHeaderAccepts = new String[] {
+                "application/json"
+            };
+            String localVarHttpHeaderAccept = this.Configuration.ApiClient.SelectHeaderAccept(localVarHttpHeaderAccepts);
+            if (localVarHttpHeaderAccept != null)
+                localVarHeaderParams.Add("Accept", localVarHttpHeaderAccept);
+
+            if (applicationId != null) localVarPathParams.Add("application_id", this.Configuration.ApiClient.ParameterToString(applicationId)); // path parameter
+            if (outputpath != null) localVarQueryParams.AddRange(this.Configuration.ApiClient.ParameterToKeyValuePairs("", "outputpath", outputpath)); // query parameter
+            if (progressId != null) localVarQueryParams.AddRange(this.Configuration.ApiClient.ParameterToKeyValuePairs("", "progress_id", progressId)); // query parameter
+
+
+            // make the HTTP request
+            IRestResponse localVarResponse = (IRestResponse) this.Configuration.ApiClient.CallApi(localVarPath,
+                Method.GET, localVarQueryParams, localVarPostBody, localVarHeaderParams, localVarFormParams, localVarFileParams,
+                localVarPathParams, localVarHttpContentType);
+
+            int localVarStatusCode = (int) localVarResponse.StatusCode;
+
+            if (ExceptionFactory != null)
+            {
+                Exception exception = ExceptionFactory("ApplicationTcbUnpack", localVarResponse);
+                if (exception != null) throw exception;
+            }
+
+            return new ApiResponse<Object>(localVarStatusCode,
+                localVarResponse.Headers.ToDictionary(x => x.Name, x => string.Join(",", x.Value)),
+                null);
+        }
+
+        /// <summary>
+        /// TorizonCore unpack command Unpack the output using TorizonCore Builder Docker image.
+        /// </summary>
+        /// <exception cref="TorizonRestAPI.Client.ApiException">Thrown when fails to make API call</exception>
+        /// <param name="applicationId">Id of an application (uuid)</param>
+        /// <param name="outputpath">the output directory created by TorizonCore builder from workspace path</param>
+        /// <param name="progressId">Id of a progress cookie (uuid) (optional)</param>
+        /// <param name="cancellationToken">Cancellation Token to cancel request (optional) </param>
+        /// <returns>Task of void</returns>
+        public async System.Threading.Tasks.Task ApplicationTcbUnpackAsync (string applicationId, string outputpath, string progressId = default(string), CancellationToken cancellationToken = default(CancellationToken))
+        {
+             await ApplicationTcbUnpackWithHttpInfoAsync(applicationId, outputpath, progressId, cancellationToken);
+
+        }
+
+        /// <summary>
+        /// TorizonCore unpack command Unpack the output using TorizonCore Builder Docker image.
+        /// </summary>
+        /// <exception cref="TorizonRestAPI.Client.ApiException">Thrown when fails to make API call</exception>
+        /// <param name="applicationId">Id of an application (uuid)</param>
+        /// <param name="outputpath">the output directory created by TorizonCore builder from workspace path</param>
+        /// <param name="progressId">Id of a progress cookie (uuid) (optional)</param>
+        /// <param name="cancellationToken">Cancellation Token to cancel request (optional) </param>
+        /// <returns>Task of ApiResponse</returns>
+        public async System.Threading.Tasks.Task<ApiResponse<Object>> ApplicationTcbUnpackWithHttpInfoAsync (string applicationId, string outputpath, string progressId = default(string), CancellationToken cancellationToken = default(CancellationToken))
+        {
+            // verify the required parameter 'applicationId' is set
+            if (applicationId == null)
+                throw new ApiException(400, "Missing required parameter 'applicationId' when calling ApplicationsApi->ApplicationTcbUnpack");
+            // verify the required parameter 'outputpath' is set
+            if (outputpath == null)
+                throw new ApiException(400, "Missing required parameter 'outputpath' when calling ApplicationsApi->ApplicationTcbUnpack");
+
+            var localVarPath = "/applications/{application_id}/tcb_unpack";
+            var localVarPathParams = new Dictionary<String, String>();
+            var localVarQueryParams = new List<KeyValuePair<String, String>>();
+            var localVarHeaderParams = new Dictionary<String, String>(this.Configuration.DefaultHeader);
+            var localVarFormParams = new Dictionary<String, String>();
+            var localVarFileParams = new Dictionary<String, FileParameter>();
+            Object localVarPostBody = null;
+
+            // to determine the Content-Type header
+            String[] localVarHttpContentTypes = new String[] {
+            };
+            String localVarHttpContentType = this.Configuration.ApiClient.SelectHeaderContentType(localVarHttpContentTypes);
+
+            // to determine the Accept header
+            String[] localVarHttpHeaderAccepts = new String[] {
+                "application/json"
+            };
+            String localVarHttpHeaderAccept = this.Configuration.ApiClient.SelectHeaderAccept(localVarHttpHeaderAccepts);
+            if (localVarHttpHeaderAccept != null)
+                localVarHeaderParams.Add("Accept", localVarHttpHeaderAccept);
+
+            if (applicationId != null) localVarPathParams.Add("application_id", this.Configuration.ApiClient.ParameterToString(applicationId)); // path parameter
+            if (outputpath != null) localVarQueryParams.AddRange(this.Configuration.ApiClient.ParameterToKeyValuePairs("", "outputpath", outputpath)); // query parameter
+            if (progressId != null) localVarQueryParams.AddRange(this.Configuration.ApiClient.ParameterToKeyValuePairs("", "progress_id", progressId)); // query parameter
+
+
+            // make the HTTP request
+            IRestResponse localVarResponse = (IRestResponse) await this.Configuration.ApiClient.CallApiAsync(localVarPath,
+                Method.GET, localVarQueryParams, localVarPostBody, localVarHeaderParams, localVarFormParams, localVarFileParams,
+                localVarPathParams, localVarHttpContentType, cancellationToken);
+
+            int localVarStatusCode = (int) localVarResponse.StatusCode;
+
+            if (ExceptionFactory != null)
+            {
+                Exception exception = ExceptionFactory("ApplicationTcbUnpack", localVarResponse);
                 if (exception != null) throw exception;
             }
 

@@ -39,79 +39,7 @@ class ApplicationsApi(object):
         if api_client is None:
             api_client = ApiClient()
         self.api_client = api_client
-
-        def __application_build(
-            self,
-            application_id,
-            configuration,
-            **kwargs
-        ):
-            """Build container image  # noqa: E501
-
-            Build application release or debug container  # noqa: E501
-            This method makes a synchronous HTTP request by default. To make an
-            asynchronous HTTP request, please pass async_req=True
-
-            >>> thread = api.application_build(application_id, configuration, async_req=True)
-            >>> result = thread.get()
-
-            Args:
-                application_id (str): Id of an application (uuid)
-                configuration (str):
-
-            Keyword Args:
-                progress_id (str): Id of a progress cookie (uuid). [optional]
-                _return_http_data_only (bool): response data without head status
-                    code and headers. Default is True.
-                _preload_content (bool): if False, the urllib3.HTTPResponse object
-                    will be returned without reading/decoding response data.
-                    Default is True.
-                _request_timeout (int/float/tuple): timeout setting for this request. If
-                    one number provided, it will be total request timeout. It can also
-                    be a pair (tuple) of (connection, read) timeouts.
-                    Default is None.
-                _check_input_type (bool): specifies if type checking
-                    should be done one the data sent to the server.
-                    Default is True.
-                _check_return_type (bool): specifies if type checking
-                    should be done one the data received from the server.
-                    Default is True.
-                _host_index (int/None): specifies the index of the server
-                    that we want to use.
-                    Default is read from the configuration.
-                async_req (bool): execute request asynchronously
-
-            Returns:
-                None
-                    If the method is called asynchronously, returns the request
-                    thread.
-            """
-            kwargs['async_req'] = kwargs.get(
-                'async_req', False
-            )
-            kwargs['_return_http_data_only'] = kwargs.get(
-                '_return_http_data_only', True
-            )
-            kwargs['_preload_content'] = kwargs.get(
-                '_preload_content', True
-            )
-            kwargs['_request_timeout'] = kwargs.get(
-                '_request_timeout', None
-            )
-            kwargs['_check_input_type'] = kwargs.get(
-                '_check_input_type', True
-            )
-            kwargs['_check_return_type'] = kwargs.get(
-                '_check_return_type', True
-            )
-            kwargs['_host_index'] = kwargs.get('_host_index')
-            kwargs['application_id'] = \
-                application_id
-            kwargs['configuration'] = \
-                configuration
-            return self.call_with_http_info(**kwargs)
-
-        self.application_build = _Endpoint(
+        self.application_build_endpoint = _Endpoint(
             settings={
                 'response_type': None,
                 'auth': [],
@@ -190,77 +118,9 @@ class ApplicationsApi(object):
                 ],
                 'content_type': [],
             },
-            api_client=api_client,
-            callable=__application_build
+            api_client=api_client
         )
-
-        def __application_delete(
-            self,
-            application_id,
-            **kwargs
-        ):
-            """Remove an application  # noqa: E501
-
-            Remove an application and all the associated data and containers  # noqa: E501
-            This method makes a synchronous HTTP request by default. To make an
-            asynchronous HTTP request, please pass async_req=True
-
-            >>> thread = api.application_delete(application_id, async_req=True)
-            >>> result = thread.get()
-
-            Args:
-                application_id (str): Id of an application (uuid)
-
-            Keyword Args:
-                _return_http_data_only (bool): response data without head status
-                    code and headers. Default is True.
-                _preload_content (bool): if False, the urllib3.HTTPResponse object
-                    will be returned without reading/decoding response data.
-                    Default is True.
-                _request_timeout (int/float/tuple): timeout setting for this request. If
-                    one number provided, it will be total request timeout. It can also
-                    be a pair (tuple) of (connection, read) timeouts.
-                    Default is None.
-                _check_input_type (bool): specifies if type checking
-                    should be done one the data sent to the server.
-                    Default is True.
-                _check_return_type (bool): specifies if type checking
-                    should be done one the data received from the server.
-                    Default is True.
-                _host_index (int/None): specifies the index of the server
-                    that we want to use.
-                    Default is read from the configuration.
-                async_req (bool): execute request asynchronously
-
-            Returns:
-                None
-                    If the method is called asynchronously, returns the request
-                    thread.
-            """
-            kwargs['async_req'] = kwargs.get(
-                'async_req', False
-            )
-            kwargs['_return_http_data_only'] = kwargs.get(
-                '_return_http_data_only', True
-            )
-            kwargs['_preload_content'] = kwargs.get(
-                '_preload_content', True
-            )
-            kwargs['_request_timeout'] = kwargs.get(
-                '_request_timeout', None
-            )
-            kwargs['_check_input_type'] = kwargs.get(
-                '_check_input_type', True
-            )
-            kwargs['_check_return_type'] = kwargs.get(
-                '_check_return_type', True
-            )
-            kwargs['_host_index'] = kwargs.get('_host_index')
-            kwargs['application_id'] = \
-                application_id
-            return self.call_with_http_info(**kwargs)
-
-        self.application_delete = _Endpoint(
+        self.application_delete_endpoint = _Endpoint(
             settings={
                 'response_type': None,
                 'auth': [],
@@ -314,86 +174,9 @@ class ApplicationsApi(object):
                 ],
                 'content_type': [],
             },
-            api_client=api_client,
-            callable=__application_delete
+            api_client=api_client
         )
-
-        def __application_deploy(
-            self,
-            application_id,
-            configuration,
-            device_id,
-            **kwargs
-        ):
-            """Deploy container image  # noqa: E501
-
-            Deploy application container to target  # noqa: E501
-            This method makes a synchronous HTTP request by default. To make an
-            asynchronous HTTP request, please pass async_req=True
-
-            >>> thread = api.application_deploy(application_id, configuration, device_id, async_req=True)
-            >>> result = thread.get()
-
-            Args:
-                application_id (str): Id of an application (uuid)
-                configuration (str):
-                device_id (str): Target device serial number
-
-            Keyword Args:
-                progress_id (str): Id of a progress cookie (uuid). [optional]
-                _return_http_data_only (bool): response data without head status
-                    code and headers. Default is True.
-                _preload_content (bool): if False, the urllib3.HTTPResponse object
-                    will be returned without reading/decoding response data.
-                    Default is True.
-                _request_timeout (int/float/tuple): timeout setting for this request. If
-                    one number provided, it will be total request timeout. It can also
-                    be a pair (tuple) of (connection, read) timeouts.
-                    Default is None.
-                _check_input_type (bool): specifies if type checking
-                    should be done one the data sent to the server.
-                    Default is True.
-                _check_return_type (bool): specifies if type checking
-                    should be done one the data received from the server.
-                    Default is True.
-                _host_index (int/None): specifies the index of the server
-                    that we want to use.
-                    Default is read from the configuration.
-                async_req (bool): execute request asynchronously
-
-            Returns:
-                None
-                    If the method is called asynchronously, returns the request
-                    thread.
-            """
-            kwargs['async_req'] = kwargs.get(
-                'async_req', False
-            )
-            kwargs['_return_http_data_only'] = kwargs.get(
-                '_return_http_data_only', True
-            )
-            kwargs['_preload_content'] = kwargs.get(
-                '_preload_content', True
-            )
-            kwargs['_request_timeout'] = kwargs.get(
-                '_request_timeout', None
-            )
-            kwargs['_check_input_type'] = kwargs.get(
-                '_check_input_type', True
-            )
-            kwargs['_check_return_type'] = kwargs.get(
-                '_check_return_type', True
-            )
-            kwargs['_host_index'] = kwargs.get('_host_index')
-            kwargs['application_id'] = \
-                application_id
-            kwargs['configuration'] = \
-                configuration
-            kwargs['device_id'] = \
-                device_id
-            return self.call_with_http_info(**kwargs)
-
-        self.application_deploy = _Endpoint(
+        self.application_deploy_endpoint = _Endpoint(
             settings={
                 'response_type': None,
                 'auth': [],
@@ -485,77 +268,9 @@ class ApplicationsApi(object):
                 ],
                 'content_type': [],
             },
-            api_client=api_client,
-            callable=__application_deploy
+            api_client=api_client
         )
-
-        def __application_get(
-            self,
-            application_id,
-            **kwargs
-        ):
-            """Get application  # noqa: E501
-
-            Returns a specified application, knowing its id  # noqa: E501
-            This method makes a synchronous HTTP request by default. To make an
-            asynchronous HTTP request, please pass async_req=True
-
-            >>> thread = api.application_get(application_id, async_req=True)
-            >>> result = thread.get()
-
-            Args:
-                application_id (str): Id of an application (uuid)
-
-            Keyword Args:
-                _return_http_data_only (bool): response data without head status
-                    code and headers. Default is True.
-                _preload_content (bool): if False, the urllib3.HTTPResponse object
-                    will be returned without reading/decoding response data.
-                    Default is True.
-                _request_timeout (int/float/tuple): timeout setting for this request. If
-                    one number provided, it will be total request timeout. It can also
-                    be a pair (tuple) of (connection, read) timeouts.
-                    Default is None.
-                _check_input_type (bool): specifies if type checking
-                    should be done one the data sent to the server.
-                    Default is True.
-                _check_return_type (bool): specifies if type checking
-                    should be done one the data received from the server.
-                    Default is True.
-                _host_index (int/None): specifies the index of the server
-                    that we want to use.
-                    Default is read from the configuration.
-                async_req (bool): execute request asynchronously
-
-            Returns:
-                Application
-                    If the method is called asynchronously, returns the request
-                    thread.
-            """
-            kwargs['async_req'] = kwargs.get(
-                'async_req', False
-            )
-            kwargs['_return_http_data_only'] = kwargs.get(
-                '_return_http_data_only', True
-            )
-            kwargs['_preload_content'] = kwargs.get(
-                '_preload_content', True
-            )
-            kwargs['_request_timeout'] = kwargs.get(
-                '_request_timeout', None
-            )
-            kwargs['_check_input_type'] = kwargs.get(
-                '_check_input_type', True
-            )
-            kwargs['_check_return_type'] = kwargs.get(
-                '_check_return_type', True
-            )
-            kwargs['_host_index'] = kwargs.get('_host_index')
-            kwargs['application_id'] = \
-                application_id
-            return self.call_with_http_info(**kwargs)
-
-        self.application_get = _Endpoint(
+        self.application_get_endpoint = _Endpoint(
             settings={
                 'response_type': (Application,),
                 'auth': [],
@@ -609,85 +324,9 @@ class ApplicationsApi(object):
                 ],
                 'content_type': [],
             },
-            api_client=api_client,
-            callable=__application_get
+            api_client=api_client
         )
-
-        def __application_getcontainer(
-            self,
-            application_id,
-            configuration,
-            device_id,
-            **kwargs
-        ):
-            """Get container information  # noqa: E501
-
-            Get detailed informations about container  # noqa: E501
-            This method makes a synchronous HTTP request by default. To make an
-            asynchronous HTTP request, please pass async_req=True
-
-            >>> thread = api.application_getcontainer(application_id, configuration, device_id, async_req=True)
-            >>> result = thread.get()
-
-            Args:
-                application_id (str): Id of an application (uuid)
-                configuration (str):
-                device_id (str): Target device serial number
-
-            Keyword Args:
-                _return_http_data_only (bool): response data without head status
-                    code and headers. Default is True.
-                _preload_content (bool): if False, the urllib3.HTTPResponse object
-                    will be returned without reading/decoding response data.
-                    Default is True.
-                _request_timeout (int/float/tuple): timeout setting for this request. If
-                    one number provided, it will be total request timeout. It can also
-                    be a pair (tuple) of (connection, read) timeouts.
-                    Default is None.
-                _check_input_type (bool): specifies if type checking
-                    should be done one the data sent to the server.
-                    Default is True.
-                _check_return_type (bool): specifies if type checking
-                    should be done one the data received from the server.
-                    Default is True.
-                _host_index (int/None): specifies the index of the server
-                    that we want to use.
-                    Default is read from the configuration.
-                async_req (bool): execute request asynchronously
-
-            Returns:
-                DockerContainer
-                    If the method is called asynchronously, returns the request
-                    thread.
-            """
-            kwargs['async_req'] = kwargs.get(
-                'async_req', False
-            )
-            kwargs['_return_http_data_only'] = kwargs.get(
-                '_return_http_data_only', True
-            )
-            kwargs['_preload_content'] = kwargs.get(
-                '_preload_content', True
-            )
-            kwargs['_request_timeout'] = kwargs.get(
-                '_request_timeout', None
-            )
-            kwargs['_check_input_type'] = kwargs.get(
-                '_check_input_type', True
-            )
-            kwargs['_check_return_type'] = kwargs.get(
-                '_check_return_type', True
-            )
-            kwargs['_host_index'] = kwargs.get('_host_index')
-            kwargs['application_id'] = \
-                application_id
-            kwargs['configuration'] = \
-                configuration
-            kwargs['device_id'] = \
-                device_id
-            return self.call_with_http_info(**kwargs)
-
-        self.application_getcontainer = _Endpoint(
+        self.application_getcontainer_endpoint = _Endpoint(
             settings={
                 'response_type': (DockerContainer,),
                 'auth': [],
@@ -767,86 +406,9 @@ class ApplicationsApi(object):
                 ],
                 'content_type': [],
             },
-            api_client=api_client,
-            callable=__application_getcontainer
+            api_client=api_client
         )
-
-        def __application_getcontainer_logs(
-            self,
-            application_id,
-            configuration,
-            device_id,
-            **kwargs
-        ):
-            """Get one of more lines from container logs  # noqa: E501
-
-            Return one chunk of log (one or more lines), blocking if no data is available  # noqa: E501
-            This method makes a synchronous HTTP request by default. To make an
-            asynchronous HTTP request, please pass async_req=True
-
-            >>> thread = api.application_getcontainer_logs(application_id, configuration, device_id, async_req=True)
-            >>> result = thread.get()
-
-            Args:
-                application_id (str): Id of an application (uuid)
-                configuration (str):
-                device_id (str): Target device serial number
-
-            Keyword Args:
-                restart (bool): when true reads the lock back from beginning. [optional] if omitted the server will use the default value of False
-                _return_http_data_only (bool): response data without head status
-                    code and headers. Default is True.
-                _preload_content (bool): if False, the urllib3.HTTPResponse object
-                    will be returned without reading/decoding response data.
-                    Default is True.
-                _request_timeout (int/float/tuple): timeout setting for this request. If
-                    one number provided, it will be total request timeout. It can also
-                    be a pair (tuple) of (connection, read) timeouts.
-                    Default is None.
-                _check_input_type (bool): specifies if type checking
-                    should be done one the data sent to the server.
-                    Default is True.
-                _check_return_type (bool): specifies if type checking
-                    should be done one the data received from the server.
-                    Default is True.
-                _host_index (int/None): specifies the index of the server
-                    that we want to use.
-                    Default is read from the configuration.
-                async_req (bool): execute request asynchronously
-
-            Returns:
-                str
-                    If the method is called asynchronously, returns the request
-                    thread.
-            """
-            kwargs['async_req'] = kwargs.get(
-                'async_req', False
-            )
-            kwargs['_return_http_data_only'] = kwargs.get(
-                '_return_http_data_only', True
-            )
-            kwargs['_preload_content'] = kwargs.get(
-                '_preload_content', True
-            )
-            kwargs['_request_timeout'] = kwargs.get(
-                '_request_timeout', None
-            )
-            kwargs['_check_input_type'] = kwargs.get(
-                '_check_input_type', True
-            )
-            kwargs['_check_return_type'] = kwargs.get(
-                '_check_return_type', True
-            )
-            kwargs['_host_index'] = kwargs.get('_host_index')
-            kwargs['application_id'] = \
-                application_id
-            kwargs['configuration'] = \
-                configuration
-            kwargs['device_id'] = \
-                device_id
-            return self.call_with_http_info(**kwargs)
-
-        self.application_getcontainer_logs = _Endpoint(
+        self.application_getcontainer_logs_endpoint = _Endpoint(
             settings={
                 'response_type': (str,),
                 'auth': [],
@@ -931,81 +493,9 @@ class ApplicationsApi(object):
                 ],
                 'content_type': [],
             },
-            api_client=api_client,
-            callable=__application_getcontainer_logs
+            api_client=api_client
         )
-
-        def __application_getdocker_commandline(
-            self,
-            application_id,
-            configuration,
-            **kwargs
-        ):
-            """Get docker command line to run the application/json  # noqa: E501
-
-            Return the full docker command line that can be used to run the application container  # noqa: E501
-            This method makes a synchronous HTTP request by default. To make an
-            asynchronous HTTP request, please pass async_req=True
-
-            >>> thread = api.application_getdocker_commandline(application_id, configuration, async_req=True)
-            >>> result = thread.get()
-
-            Args:
-                application_id (str): Id of an application (uuid)
-                configuration (str):
-
-            Keyword Args:
-                _return_http_data_only (bool): response data without head status
-                    code and headers. Default is True.
-                _preload_content (bool): if False, the urllib3.HTTPResponse object
-                    will be returned without reading/decoding response data.
-                    Default is True.
-                _request_timeout (int/float/tuple): timeout setting for this request. If
-                    one number provided, it will be total request timeout. It can also
-                    be a pair (tuple) of (connection, read) timeouts.
-                    Default is None.
-                _check_input_type (bool): specifies if type checking
-                    should be done one the data sent to the server.
-                    Default is True.
-                _check_return_type (bool): specifies if type checking
-                    should be done one the data received from the server.
-                    Default is True.
-                _host_index (int/None): specifies the index of the server
-                    that we want to use.
-                    Default is read from the configuration.
-                async_req (bool): execute request asynchronously
-
-            Returns:
-                str
-                    If the method is called asynchronously, returns the request
-                    thread.
-            """
-            kwargs['async_req'] = kwargs.get(
-                'async_req', False
-            )
-            kwargs['_return_http_data_only'] = kwargs.get(
-                '_return_http_data_only', True
-            )
-            kwargs['_preload_content'] = kwargs.get(
-                '_preload_content', True
-            )
-            kwargs['_request_timeout'] = kwargs.get(
-                '_request_timeout', None
-            )
-            kwargs['_check_input_type'] = kwargs.get(
-                '_check_input_type', True
-            )
-            kwargs['_check_return_type'] = kwargs.get(
-                '_check_return_type', True
-            )
-            kwargs['_host_index'] = kwargs.get('_host_index')
-            kwargs['application_id'] = \
-                application_id
-            kwargs['configuration'] = \
-                configuration
-            return self.call_with_http_info(**kwargs)
-
-        self.application_getdocker_commandline = _Endpoint(
+        self.application_getdocker_commandline_endpoint = _Endpoint(
             settings={
                 'response_type': (str,),
                 'auth': [],
@@ -1072,81 +562,9 @@ class ApplicationsApi(object):
                 ],
                 'content_type': [],
             },
-            api_client=api_client,
-            callable=__application_getdocker_commandline
+            api_client=api_client
         )
-
-        def __application_getdocker_composefile(
-            self,
-            application_id,
-            configuration,
-            **kwargs
-        ):
-            """Get docker compose file  # noqa: E501
-
-            Return docker-compose file that can be used to run the application container and its dependencies  # noqa: E501
-            This method makes a synchronous HTTP request by default. To make an
-            asynchronous HTTP request, please pass async_req=True
-
-            >>> thread = api.application_getdocker_composefile(application_id, configuration, async_req=True)
-            >>> result = thread.get()
-
-            Args:
-                application_id (str): Id of an application (uuid)
-                configuration (str):
-
-            Keyword Args:
-                _return_http_data_only (bool): response data without head status
-                    code and headers. Default is True.
-                _preload_content (bool): if False, the urllib3.HTTPResponse object
-                    will be returned without reading/decoding response data.
-                    Default is True.
-                _request_timeout (int/float/tuple): timeout setting for this request. If
-                    one number provided, it will be total request timeout. It can also
-                    be a pair (tuple) of (connection, read) timeouts.
-                    Default is None.
-                _check_input_type (bool): specifies if type checking
-                    should be done one the data sent to the server.
-                    Default is True.
-                _check_return_type (bool): specifies if type checking
-                    should be done one the data received from the server.
-                    Default is True.
-                _host_index (int/None): specifies the index of the server
-                    that we want to use.
-                    Default is read from the configuration.
-                async_req (bool): execute request asynchronously
-
-            Returns:
-                str
-                    If the method is called asynchronously, returns the request
-                    thread.
-            """
-            kwargs['async_req'] = kwargs.get(
-                'async_req', False
-            )
-            kwargs['_return_http_data_only'] = kwargs.get(
-                '_return_http_data_only', True
-            )
-            kwargs['_preload_content'] = kwargs.get(
-                '_preload_content', True
-            )
-            kwargs['_request_timeout'] = kwargs.get(
-                '_request_timeout', None
-            )
-            kwargs['_check_input_type'] = kwargs.get(
-                '_check_input_type', True
-            )
-            kwargs['_check_return_type'] = kwargs.get(
-                '_check_return_type', True
-            )
-            kwargs['_host_index'] = kwargs.get('_host_index')
-            kwargs['application_id'] = \
-                application_id
-            kwargs['configuration'] = \
-                configuration
-            return self.call_with_http_info(**kwargs)
-
-        self.application_getdocker_composefile = _Endpoint(
+        self.application_getdocker_composefile_endpoint = _Endpoint(
             settings={
                 'response_type': (str,),
                 'auth': [],
@@ -1213,77 +631,9 @@ class ApplicationsApi(object):
                 ],
                 'content_type': [],
             },
-            api_client=api_client,
-            callable=__application_getdocker_composefile
+            api_client=api_client
         )
-
-        def __application_getprivatekey(
-            self,
-            application_id,
-            **kwargs
-        ):
-            """Get the path of the RSA private key  # noqa: E501
-
-            Retrieve the path of the private key that allows passwordless connection to the container. The application stores the public key inside the container if ssh is enabled (usually for debug builds only)  # noqa: E501
-            This method makes a synchronous HTTP request by default. To make an
-            asynchronous HTTP request, please pass async_req=True
-
-            >>> thread = api.application_getprivatekey(application_id, async_req=True)
-            >>> result = thread.get()
-
-            Args:
-                application_id (str): Id of an application (uuid)
-
-            Keyword Args:
-                _return_http_data_only (bool): response data without head status
-                    code and headers. Default is True.
-                _preload_content (bool): if False, the urllib3.HTTPResponse object
-                    will be returned without reading/decoding response data.
-                    Default is True.
-                _request_timeout (int/float/tuple): timeout setting for this request. If
-                    one number provided, it will be total request timeout. It can also
-                    be a pair (tuple) of (connection, read) timeouts.
-                    Default is None.
-                _check_input_type (bool): specifies if type checking
-                    should be done one the data sent to the server.
-                    Default is True.
-                _check_return_type (bool): specifies if type checking
-                    should be done one the data received from the server.
-                    Default is True.
-                _host_index (int/None): specifies the index of the server
-                    that we want to use.
-                    Default is read from the configuration.
-                async_req (bool): execute request asynchronously
-
-            Returns:
-                str
-                    If the method is called asynchronously, returns the request
-                    thread.
-            """
-            kwargs['async_req'] = kwargs.get(
-                'async_req', False
-            )
-            kwargs['_return_http_data_only'] = kwargs.get(
-                '_return_http_data_only', True
-            )
-            kwargs['_preload_content'] = kwargs.get(
-                '_preload_content', True
-            )
-            kwargs['_request_timeout'] = kwargs.get(
-                '_request_timeout', None
-            )
-            kwargs['_check_input_type'] = kwargs.get(
-                '_check_input_type', True
-            )
-            kwargs['_check_return_type'] = kwargs.get(
-                '_check_return_type', True
-            )
-            kwargs['_host_index'] = kwargs.get('_host_index')
-            kwargs['application_id'] = \
-                application_id
-            return self.call_with_http_info(**kwargs)
-
-        self.application_getprivatekey = _Endpoint(
+        self.application_getprivatekey_endpoint = _Endpoint(
             settings={
                 'response_type': (str,),
                 'auth': [],
@@ -1337,78 +687,9 @@ class ApplicationsApi(object):
                 ],
                 'content_type': [],
             },
-            api_client=api_client,
-            callable=__application_getprivatekey
+            api_client=api_client
         )
-
-        def __application_modify(
-            self,
-            application_id,
-            **kwargs
-        ):
-            """Change application properties  # noqa: E501
-
-            Changes specified properties on an application  # noqa: E501
-            This method makes a synchronous HTTP request by default. To make an
-            asynchronous HTTP request, please pass async_req=True
-
-            >>> thread = api.application_modify(application_id, async_req=True)
-            >>> result = thread.get()
-
-            Args:
-                application_id (str): Id of an application (uuid)
-
-            Keyword Args:
-                application (Application): [optional]
-                _return_http_data_only (bool): response data without head status
-                    code and headers. Default is True.
-                _preload_content (bool): if False, the urllib3.HTTPResponse object
-                    will be returned without reading/decoding response data.
-                    Default is True.
-                _request_timeout (int/float/tuple): timeout setting for this request. If
-                    one number provided, it will be total request timeout. It can also
-                    be a pair (tuple) of (connection, read) timeouts.
-                    Default is None.
-                _check_input_type (bool): specifies if type checking
-                    should be done one the data sent to the server.
-                    Default is True.
-                _check_return_type (bool): specifies if type checking
-                    should be done one the data received from the server.
-                    Default is True.
-                _host_index (int/None): specifies the index of the server
-                    that we want to use.
-                    Default is read from the configuration.
-                async_req (bool): execute request asynchronously
-
-            Returns:
-                Application
-                    If the method is called asynchronously, returns the request
-                    thread.
-            """
-            kwargs['async_req'] = kwargs.get(
-                'async_req', False
-            )
-            kwargs['_return_http_data_only'] = kwargs.get(
-                '_return_http_data_only', True
-            )
-            kwargs['_preload_content'] = kwargs.get(
-                '_preload_content', True
-            )
-            kwargs['_request_timeout'] = kwargs.get(
-                '_request_timeout', None
-            )
-            kwargs['_check_input_type'] = kwargs.get(
-                '_check_input_type', True
-            )
-            kwargs['_check_return_type'] = kwargs.get(
-                '_check_return_type', True
-            )
-            kwargs['_host_index'] = kwargs.get('_host_index')
-            kwargs['application_id'] = \
-                application_id
-            return self.call_with_http_info(**kwargs)
-
-        self.application_modify = _Endpoint(
+        self.application_modify_endpoint = _Endpoint(
             settings={
                 'response_type': (Application,),
                 'auth': [],
@@ -1468,90 +749,9 @@ class ApplicationsApi(object):
                     'application/json'
                 ]
             },
-            api_client=api_client,
-            callable=__application_modify
+            api_client=api_client
         )
-
-        def __application_publish(
-            self,
-            application_id,
-            credentials,
-            dockeruser,
-            dockerpass,
-            **kwargs
-        ):
-            """Publish a new version of the application on Torizon OTA  # noqa: E501
-
-            Publishes a new package version for the application, if no credentials are provided, then only docker-compose file is generated.  # noqa: E501
-            This method makes a synchronous HTTP request by default. To make an
-            asynchronous HTTP request, please pass async_req=True
-
-            >>> thread = api.application_publish(application_id, credentials, dockeruser, dockerpass, async_req=True)
-            >>> result = thread.get()
-
-            Args:
-                application_id (str): Id of an application (uuid)
-                credentials (str): credentials file
-                dockeruser (str): user for docker registry login
-                dockerpass (str): password for docker registry login
-
-            Keyword Args:
-                progress_id (str): Id of a progress cookie (uuid). [optional]
-                _return_http_data_only (bool): response data without head status
-                    code and headers. Default is True.
-                _preload_content (bool): if False, the urllib3.HTTPResponse object
-                    will be returned without reading/decoding response data.
-                    Default is True.
-                _request_timeout (int/float/tuple): timeout setting for this request. If
-                    one number provided, it will be total request timeout. It can also
-                    be a pair (tuple) of (connection, read) timeouts.
-                    Default is None.
-                _check_input_type (bool): specifies if type checking
-                    should be done one the data sent to the server.
-                    Default is True.
-                _check_return_type (bool): specifies if type checking
-                    should be done one the data received from the server.
-                    Default is True.
-                _host_index (int/None): specifies the index of the server
-                    that we want to use.
-                    Default is read from the configuration.
-                async_req (bool): execute request asynchronously
-
-            Returns:
-                None
-                    If the method is called asynchronously, returns the request
-                    thread.
-            """
-            kwargs['async_req'] = kwargs.get(
-                'async_req', False
-            )
-            kwargs['_return_http_data_only'] = kwargs.get(
-                '_return_http_data_only', True
-            )
-            kwargs['_preload_content'] = kwargs.get(
-                '_preload_content', True
-            )
-            kwargs['_request_timeout'] = kwargs.get(
-                '_request_timeout', None
-            )
-            kwargs['_check_input_type'] = kwargs.get(
-                '_check_input_type', True
-            )
-            kwargs['_check_return_type'] = kwargs.get(
-                '_check_return_type', True
-            )
-            kwargs['_host_index'] = kwargs.get('_host_index')
-            kwargs['application_id'] = \
-                application_id
-            kwargs['credentials'] = \
-                credentials
-            kwargs['dockeruser'] = \
-                dockeruser
-            kwargs['dockerpass'] = \
-                dockerpass
-            return self.call_with_http_info(**kwargs)
-
-        self.application_publish = _Endpoint(
+        self.application_publish_endpoint = _Endpoint(
             settings={
                 'response_type': None,
                 'auth': [],
@@ -1635,90 +835,9 @@ class ApplicationsApi(object):
                 ],
                 'content_type': [],
             },
-            api_client=api_client,
-            callable=__application_publish
+            api_client=api_client
         )
-
-        def __application_push_to_registry(
-            self,
-            application_id,
-            configuration,
-            username,
-            password,
-            **kwargs
-        ):
-            """Push application to docker registry  # noqa: E501
-
-            Push application's container to a docker registry, using authentication  # noqa: E501
-            This method makes a synchronous HTTP request by default. To make an
-            asynchronous HTTP request, please pass async_req=True
-
-            >>> thread = api.application_push_to_registry(application_id, configuration, username, password, async_req=True)
-            >>> result = thread.get()
-
-            Args:
-                application_id (str): Id of an application (uuid)
-                configuration (str):
-                username (str):
-                password (str):
-
-            Keyword Args:
-                progress_id (str): Id of a progress cookie (uuid). [optional]
-                _return_http_data_only (bool): response data without head status
-                    code and headers. Default is True.
-                _preload_content (bool): if False, the urllib3.HTTPResponse object
-                    will be returned without reading/decoding response data.
-                    Default is True.
-                _request_timeout (int/float/tuple): timeout setting for this request. If
-                    one number provided, it will be total request timeout. It can also
-                    be a pair (tuple) of (connection, read) timeouts.
-                    Default is None.
-                _check_input_type (bool): specifies if type checking
-                    should be done one the data sent to the server.
-                    Default is True.
-                _check_return_type (bool): specifies if type checking
-                    should be done one the data received from the server.
-                    Default is True.
-                _host_index (int/None): specifies the index of the server
-                    that we want to use.
-                    Default is read from the configuration.
-                async_req (bool): execute request asynchronously
-
-            Returns:
-                None
-                    If the method is called asynchronously, returns the request
-                    thread.
-            """
-            kwargs['async_req'] = kwargs.get(
-                'async_req', False
-            )
-            kwargs['_return_http_data_only'] = kwargs.get(
-                '_return_http_data_only', True
-            )
-            kwargs['_preload_content'] = kwargs.get(
-                '_preload_content', True
-            )
-            kwargs['_request_timeout'] = kwargs.get(
-                '_request_timeout', None
-            )
-            kwargs['_check_input_type'] = kwargs.get(
-                '_check_input_type', True
-            )
-            kwargs['_check_return_type'] = kwargs.get(
-                '_check_return_type', True
-            )
-            kwargs['_host_index'] = kwargs.get('_host_index')
-            kwargs['application_id'] = \
-                application_id
-            kwargs['configuration'] = \
-                configuration
-            kwargs['username'] = \
-                username
-            kwargs['password'] = \
-                password
-            return self.call_with_http_info(**kwargs)
-
-        self.application_push_to_registry = _Endpoint(
+        self.application_push_to_registry_endpoint = _Endpoint(
             settings={
                 'response_type': None,
                 'auth': [],
@@ -1809,77 +928,9 @@ class ApplicationsApi(object):
                 ],
                 'content_type': [],
             },
-            api_client=api_client,
-            callable=__application_push_to_registry
+            api_client=api_client
         )
-
-        def __application_reseal(
-            self,
-            application_id,
-            **kwargs
-        ):
-            """Clean id and keys from application configuration  # noqa: E501
-
-            This operation make the application no longer valid, but allow you to upload it to a git repo from where it can be cloned/forked. Id and keys will be re-generated on next re-opening of the application, leading to different names for the images etc.  # noqa: E501
-            This method makes a synchronous HTTP request by default. To make an
-            asynchronous HTTP request, please pass async_req=True
-
-            >>> thread = api.application_reseal(application_id, async_req=True)
-            >>> result = thread.get()
-
-            Args:
-                application_id (str): Id of an application (uuid)
-
-            Keyword Args:
-                _return_http_data_only (bool): response data without head status
-                    code and headers. Default is True.
-                _preload_content (bool): if False, the urllib3.HTTPResponse object
-                    will be returned without reading/decoding response data.
-                    Default is True.
-                _request_timeout (int/float/tuple): timeout setting for this request. If
-                    one number provided, it will be total request timeout. It can also
-                    be a pair (tuple) of (connection, read) timeouts.
-                    Default is None.
-                _check_input_type (bool): specifies if type checking
-                    should be done one the data sent to the server.
-                    Default is True.
-                _check_return_type (bool): specifies if type checking
-                    should be done one the data received from the server.
-                    Default is True.
-                _host_index (int/None): specifies the index of the server
-                    that we want to use.
-                    Default is read from the configuration.
-                async_req (bool): execute request asynchronously
-
-            Returns:
-                None
-                    If the method is called asynchronously, returns the request
-                    thread.
-            """
-            kwargs['async_req'] = kwargs.get(
-                'async_req', False
-            )
-            kwargs['_return_http_data_only'] = kwargs.get(
-                '_return_http_data_only', True
-            )
-            kwargs['_preload_content'] = kwargs.get(
-                '_preload_content', True
-            )
-            kwargs['_request_timeout'] = kwargs.get(
-                '_request_timeout', None
-            )
-            kwargs['_check_input_type'] = kwargs.get(
-                '_check_input_type', True
-            )
-            kwargs['_check_return_type'] = kwargs.get(
-                '_check_return_type', True
-            )
-            kwargs['_host_index'] = kwargs.get('_host_index')
-            kwargs['application_id'] = \
-                application_id
-            return self.call_with_http_info(**kwargs)
-
-        self.application_reseal = _Endpoint(
+        self.application_reseal_endpoint = _Endpoint(
             settings={
                 'response_type': None,
                 'auth': [],
@@ -1931,86 +982,9 @@ class ApplicationsApi(object):
                 'accept': [],
                 'content_type': [],
             },
-            api_client=api_client,
-            callable=__application_reseal
+            api_client=api_client
         )
-
-        def __application_run(
-            self,
-            application_id,
-            configuration,
-            device_id,
-            **kwargs
-        ):
-            """Run container image  # noqa: E501
-
-            Run the application release or debug container on target, if the application is already running, restarts it  # noqa: E501
-            This method makes a synchronous HTTP request by default. To make an
-            asynchronous HTTP request, please pass async_req=True
-
-            >>> thread = api.application_run(application_id, configuration, device_id, async_req=True)
-            >>> result = thread.get()
-
-            Args:
-                application_id (str): Id of an application (uuid)
-                configuration (str):
-                device_id (str): Target device serial number
-
-            Keyword Args:
-                progress_id (str): Id of a progress cookie (uuid). [optional]
-                _return_http_data_only (bool): response data without head status
-                    code and headers. Default is True.
-                _preload_content (bool): if False, the urllib3.HTTPResponse object
-                    will be returned without reading/decoding response data.
-                    Default is True.
-                _request_timeout (int/float/tuple): timeout setting for this request. If
-                    one number provided, it will be total request timeout. It can also
-                    be a pair (tuple) of (connection, read) timeouts.
-                    Default is None.
-                _check_input_type (bool): specifies if type checking
-                    should be done one the data sent to the server.
-                    Default is True.
-                _check_return_type (bool): specifies if type checking
-                    should be done one the data received from the server.
-                    Default is True.
-                _host_index (int/None): specifies the index of the server
-                    that we want to use.
-                    Default is read from the configuration.
-                async_req (bool): execute request asynchronously
-
-            Returns:
-                DockerContainer
-                    If the method is called asynchronously, returns the request
-                    thread.
-            """
-            kwargs['async_req'] = kwargs.get(
-                'async_req', False
-            )
-            kwargs['_return_http_data_only'] = kwargs.get(
-                '_return_http_data_only', True
-            )
-            kwargs['_preload_content'] = kwargs.get(
-                '_preload_content', True
-            )
-            kwargs['_request_timeout'] = kwargs.get(
-                '_request_timeout', None
-            )
-            kwargs['_check_input_type'] = kwargs.get(
-                '_check_input_type', True
-            )
-            kwargs['_check_return_type'] = kwargs.get(
-                '_check_return_type', True
-            )
-            kwargs['_host_index'] = kwargs.get('_host_index')
-            kwargs['application_id'] = \
-                application_id
-            kwargs['configuration'] = \
-                configuration
-            kwargs['device_id'] = \
-                device_id
-            return self.call_with_http_info(**kwargs)
-
-        self.application_run = _Endpoint(
+        self.application_run_endpoint = _Endpoint(
             settings={
                 'response_type': (DockerContainer,),
                 'auth': [],
@@ -2102,83 +1076,9 @@ class ApplicationsApi(object):
                 ],
                 'content_type': [],
             },
-            api_client=api_client,
-            callable=__application_run
+            api_client=api_client
         )
-
-        def __application_runsdk(
-            self,
-            application_id,
-            configuration,
-            **kwargs
-        ):
-            """Run SDK containers  # noqa: E501
-
-            Run SDK container and return its IP and SSH port  # noqa: E501
-            This method makes a synchronous HTTP request by default. To make an
-            asynchronous HTTP request, please pass async_req=True
-
-            >>> thread = api.application_runsdk(application_id, configuration, async_req=True)
-            >>> result = thread.get()
-
-            Args:
-                application_id (str): Id of an application (uuid)
-                configuration (str):
-
-            Keyword Args:
-                build (bool): [optional] if omitted the server will use the default value of True
-                progress_id (str): Id of a progress cookie (uuid). [optional]
-                _return_http_data_only (bool): response data without head status
-                    code and headers. Default is True.
-                _preload_content (bool): if False, the urllib3.HTTPResponse object
-                    will be returned without reading/decoding response data.
-                    Default is True.
-                _request_timeout (int/float/tuple): timeout setting for this request. If
-                    one number provided, it will be total request timeout. It can also
-                    be a pair (tuple) of (connection, read) timeouts.
-                    Default is None.
-                _check_input_type (bool): specifies if type checking
-                    should be done one the data sent to the server.
-                    Default is True.
-                _check_return_type (bool): specifies if type checking
-                    should be done one the data received from the server.
-                    Default is True.
-                _host_index (int/None): specifies the index of the server
-                    that we want to use.
-                    Default is read from the configuration.
-                async_req (bool): execute request asynchronously
-
-            Returns:
-                InlineResponse200
-                    If the method is called asynchronously, returns the request
-                    thread.
-            """
-            kwargs['async_req'] = kwargs.get(
-                'async_req', False
-            )
-            kwargs['_return_http_data_only'] = kwargs.get(
-                '_return_http_data_only', True
-            )
-            kwargs['_preload_content'] = kwargs.get(
-                '_preload_content', True
-            )
-            kwargs['_request_timeout'] = kwargs.get(
-                '_request_timeout', None
-            )
-            kwargs['_check_input_type'] = kwargs.get(
-                '_check_input_type', True
-            )
-            kwargs['_check_return_type'] = kwargs.get(
-                '_check_return_type', True
-            )
-            kwargs['_host_index'] = kwargs.get('_host_index')
-            kwargs['application_id'] = \
-                application_id
-            kwargs['configuration'] = \
-                configuration
-            return self.call_with_http_info(**kwargs)
-
-        self.application_runsdk = _Endpoint(
+        self.application_runsdk_endpoint = _Endpoint(
             settings={
                 'response_type': (InlineResponse200,),
                 'auth': [],
@@ -2262,81 +1162,9 @@ class ApplicationsApi(object):
                 ],
                 'content_type': [],
             },
-            api_client=api_client,
-            callable=__application_runsdk
+            api_client=api_client
         )
-
-        def __application_sdk_container(
-            self,
-            application_id,
-            configuration,
-            **kwargs
-        ):
-            """Get SDK container  # noqa: E501
-
-            Get SDK container information (can be used to check if it's running)  # noqa: E501
-            This method makes a synchronous HTTP request by default. To make an
-            asynchronous HTTP request, please pass async_req=True
-
-            >>> thread = api.application_sdk_container(application_id, configuration, async_req=True)
-            >>> result = thread.get()
-
-            Args:
-                application_id (str): Id of an application (uuid)
-                configuration (str):
-
-            Keyword Args:
-                _return_http_data_only (bool): response data without head status
-                    code and headers. Default is True.
-                _preload_content (bool): if False, the urllib3.HTTPResponse object
-                    will be returned without reading/decoding response data.
-                    Default is True.
-                _request_timeout (int/float/tuple): timeout setting for this request. If
-                    one number provided, it will be total request timeout. It can also
-                    be a pair (tuple) of (connection, read) timeouts.
-                    Default is None.
-                _check_input_type (bool): specifies if type checking
-                    should be done one the data sent to the server.
-                    Default is True.
-                _check_return_type (bool): specifies if type checking
-                    should be done one the data received from the server.
-                    Default is True.
-                _host_index (int/None): specifies the index of the server
-                    that we want to use.
-                    Default is read from the configuration.
-                async_req (bool): execute request asynchronously
-
-            Returns:
-                DockerContainer
-                    If the method is called asynchronously, returns the request
-                    thread.
-            """
-            kwargs['async_req'] = kwargs.get(
-                'async_req', False
-            )
-            kwargs['_return_http_data_only'] = kwargs.get(
-                '_return_http_data_only', True
-            )
-            kwargs['_preload_content'] = kwargs.get(
-                '_preload_content', True
-            )
-            kwargs['_request_timeout'] = kwargs.get(
-                '_request_timeout', None
-            )
-            kwargs['_check_input_type'] = kwargs.get(
-                '_check_input_type', True
-            )
-            kwargs['_check_return_type'] = kwargs.get(
-                '_check_return_type', True
-            )
-            kwargs['_host_index'] = kwargs.get('_host_index')
-            kwargs['application_id'] = \
-                application_id
-            kwargs['configuration'] = \
-                configuration
-            return self.call_with_http_info(**kwargs)
-
-        self.application_sdk_container = _Endpoint(
+        self.application_sdk_container_endpoint = _Endpoint(
             settings={
                 'response_type': (DockerContainer,),
                 'auth': [],
@@ -2403,85 +1231,9 @@ class ApplicationsApi(object):
                 ],
                 'content_type': [],
             },
-            api_client=api_client,
-            callable=__application_sdk_container
+            api_client=api_client
         )
-
-        def __application_stop(
-            self,
-            application_id,
-            configuration,
-            device_id,
-            **kwargs
-        ):
-            """Stop running container image  # noqa: E501
-
-            Stop application release or debug container currently running on target, operation succeeds even if the container is not running  # noqa: E501
-            This method makes a synchronous HTTP request by default. To make an
-            asynchronous HTTP request, please pass async_req=True
-
-            >>> thread = api.application_stop(application_id, configuration, device_id, async_req=True)
-            >>> result = thread.get()
-
-            Args:
-                application_id (str): Id of an application (uuid)
-                configuration (str):
-                device_id (str): Target device serial number
-
-            Keyword Args:
-                _return_http_data_only (bool): response data without head status
-                    code and headers. Default is True.
-                _preload_content (bool): if False, the urllib3.HTTPResponse object
-                    will be returned without reading/decoding response data.
-                    Default is True.
-                _request_timeout (int/float/tuple): timeout setting for this request. If
-                    one number provided, it will be total request timeout. It can also
-                    be a pair (tuple) of (connection, read) timeouts.
-                    Default is None.
-                _check_input_type (bool): specifies if type checking
-                    should be done one the data sent to the server.
-                    Default is True.
-                _check_return_type (bool): specifies if type checking
-                    should be done one the data received from the server.
-                    Default is True.
-                _host_index (int/None): specifies the index of the server
-                    that we want to use.
-                    Default is read from the configuration.
-                async_req (bool): execute request asynchronously
-
-            Returns:
-                None
-                    If the method is called asynchronously, returns the request
-                    thread.
-            """
-            kwargs['async_req'] = kwargs.get(
-                'async_req', False
-            )
-            kwargs['_return_http_data_only'] = kwargs.get(
-                '_return_http_data_only', True
-            )
-            kwargs['_preload_content'] = kwargs.get(
-                '_preload_content', True
-            )
-            kwargs['_request_timeout'] = kwargs.get(
-                '_request_timeout', None
-            )
-            kwargs['_check_input_type'] = kwargs.get(
-                '_check_input_type', True
-            )
-            kwargs['_check_return_type'] = kwargs.get(
-                '_check_return_type', True
-            )
-            kwargs['_host_index'] = kwargs.get('_host_index')
-            kwargs['application_id'] = \
-                application_id
-            kwargs['configuration'] = \
-                configuration
-            kwargs['device_id'] = \
-                device_id
-            return self.call_with_http_info(**kwargs)
-
-        self.application_stop = _Endpoint(
+        self.application_stop_endpoint = _Endpoint(
             settings={
                 'response_type': None,
                 'auth': [],
@@ -2561,95 +1313,9 @@ class ApplicationsApi(object):
                 ],
                 'content_type': [],
             },
-            api_client=api_client,
-            callable=__application_stop
+            api_client=api_client
         )
-
-        def __application_syncfolders(
-            self,
-            application_id,
-            sourcefolder,
-            configuration,
-            device_id,
-            destfolder,
-            **kwargs
-        ):
-            """Synchronize folders  # noqa: E501
-
-            Synchronizes folders between host/SDK container and the application container  # noqa: E501
-            This method makes a synchronous HTTP request by default. To make an
-            asynchronous HTTP request, please pass async_req=True
-
-            >>> thread = api.application_syncfolders(application_id, sourcefolder, configuration, device_id, destfolder, async_req=True)
-            >>> result = thread.get()
-
-            Args:
-                application_id (str): Id of an application (uuid)
-                sourcefolder (str):
-                configuration (str):
-                device_id (str): Target device serial number
-                destfolder (str):
-
-            Keyword Args:
-                source_is_sdk (bool): [optional]
-                progress_id (str): Id of a progress cookie (uuid). [optional]
-                _return_http_data_only (bool): response data without head status
-                    code and headers. Default is True.
-                _preload_content (bool): if False, the urllib3.HTTPResponse object
-                    will be returned without reading/decoding response data.
-                    Default is True.
-                _request_timeout (int/float/tuple): timeout setting for this request. If
-                    one number provided, it will be total request timeout. It can also
-                    be a pair (tuple) of (connection, read) timeouts.
-                    Default is None.
-                _check_input_type (bool): specifies if type checking
-                    should be done one the data sent to the server.
-                    Default is True.
-                _check_return_type (bool): specifies if type checking
-                    should be done one the data received from the server.
-                    Default is True.
-                _host_index (int/None): specifies the index of the server
-                    that we want to use.
-                    Default is read from the configuration.
-                async_req (bool): execute request asynchronously
-
-            Returns:
-                None
-                    If the method is called asynchronously, returns the request
-                    thread.
-            """
-            kwargs['async_req'] = kwargs.get(
-                'async_req', False
-            )
-            kwargs['_return_http_data_only'] = kwargs.get(
-                '_return_http_data_only', True
-            )
-            kwargs['_preload_content'] = kwargs.get(
-                '_preload_content', True
-            )
-            kwargs['_request_timeout'] = kwargs.get(
-                '_request_timeout', None
-            )
-            kwargs['_check_input_type'] = kwargs.get(
-                '_check_input_type', True
-            )
-            kwargs['_check_return_type'] = kwargs.get(
-                '_check_return_type', True
-            )
-            kwargs['_host_index'] = kwargs.get('_host_index')
-            kwargs['application_id'] = \
-                application_id
-            kwargs['sourcefolder'] = \
-                sourcefolder
-            kwargs['configuration'] = \
-                configuration
-            kwargs['device_id'] = \
-                device_id
-            kwargs['destfolder'] = \
-                destfolder
-            return self.call_with_http_info(**kwargs)
-
-        self.application_syncfolders = _Endpoint(
+        self.application_syncfolders_endpoint = _Endpoint(
             settings={
                 'response_type': None,
                 'auth': [],
@@ -2758,81 +1424,403 @@ class ApplicationsApi(object):
                 ],
                 'content_type': [],
             },
-            api_client=api_client,
-            callable=__application_syncfolders
+            api_client=api_client
         )
+        self.application_tcb_build_yaml_endpoint = _Endpoint(
+            settings={
+                'response_type': None,
+                'auth': [],
+                'endpoint_path': '/applications/{application_id}/tcb_build_yaml',
+                'operation_id': 'application_tcb_build_yaml',
+                'http_method': 'GET',
+                'servers': None,
+            },
+            params_map={
+                'all': [
+                    'application_id',
+                    'yamlfilepath',
+                    'progress_id',
+                ],
+                'required': [
+                    'application_id',
+                    'yamlfilepath',
+                ],
+                'nullable': [
+                ],
+                'enum': [
+                ],
+                'validation': [
+                    'application_id',
+                    'progress_id',
+                ]
+            },
+            root_map={
+                'validations': {
+                    ('application_id',): {
 
-        def __application_updated(
-            self,
-            application_id,
-            configuration,
-            **kwargs
-        ):
-            """Check if container image is up to date  # noqa: E501
+                        'regex': {
+                            'pattern': r'^[0-9,a-f,A-F]{8}-[0-9,a-f,A-F]{4}-[0-9,a-f,A-F]{4}-[0-9,a-f,A-F]{4}-[0-9,a-f,A-F]{12}$',  # noqa: E501
+                        },
+                    },
+                    ('progress_id',): {
 
-            Check if some properties have been changed after the last build of the configuration-specific container image  # noqa: E501
-            This method makes a synchronous HTTP request by default. To make an
-            asynchronous HTTP request, please pass async_req=True
+                        'regex': {
+                            'pattern': r'^$|[0-9,a-f,A-F]{8}-[0-9,a-f,A-F]{4}-[0-9,a-f,A-F]{4}-[0-9,a-f,A-F]{4}-[0-9,a-f,A-F]{12}$',  # noqa: E501
+                        },
+                    },
+                },
+                'allowed_values': {
+                },
+                'openapi_types': {
+                    'application_id':
+                        (str,),
+                    'yamlfilepath':
+                        (str,),
+                    'progress_id':
+                        (str,),
+                },
+                'attribute_map': {
+                    'application_id': 'application_id',
+                    'yamlfilepath': 'yamlfilepath',
+                    'progress_id': 'progress_id',
+                },
+                'location_map': {
+                    'application_id': 'path',
+                    'yamlfilepath': 'query',
+                    'progress_id': 'query',
+                },
+                'collection_format_map': {
+                }
+            },
+            headers_map={
+                'accept': [
+                    'application/json'
+                ],
+                'content_type': [],
+            },
+            api_client=api_client
+        )
+        self.application_tcb_deploy_endpoint = _Endpoint(
+            settings={
+                'response_type': None,
+                'auth': [],
+                'endpoint_path': '/applications/{application_id}/tcb_deploy',
+                'operation_id': 'application_tcb_deploy',
+                'http_method': 'GET',
+                'servers': None,
+            },
+            params_map={
+                'all': [
+                    'application_id',
+                    'host',
+                    'username',
+                    'password',
+                    'progress_id',
+                ],
+                'required': [
+                    'application_id',
+                    'host',
+                    'username',
+                    'password',
+                ],
+                'nullable': [
+                ],
+                'enum': [
+                ],
+                'validation': [
+                    'application_id',
+                    'progress_id',
+                ]
+            },
+            root_map={
+                'validations': {
+                    ('application_id',): {
 
-            >>> thread = api.application_updated(application_id, configuration, async_req=True)
-            >>> result = thread.get()
+                        'regex': {
+                            'pattern': r'^[0-9,a-f,A-F]{8}-[0-9,a-f,A-F]{4}-[0-9,a-f,A-F]{4}-[0-9,a-f,A-F]{4}-[0-9,a-f,A-F]{12}$',  # noqa: E501
+                        },
+                    },
+                    ('progress_id',): {
 
-            Args:
-                application_id (str): Id of an application (uuid)
-                configuration (str):
+                        'regex': {
+                            'pattern': r'^$|[0-9,a-f,A-F]{8}-[0-9,a-f,A-F]{4}-[0-9,a-f,A-F]{4}-[0-9,a-f,A-F]{4}-[0-9,a-f,A-F]{12}$',  # noqa: E501
+                        },
+                    },
+                },
+                'allowed_values': {
+                },
+                'openapi_types': {
+                    'application_id':
+                        (str,),
+                    'host':
+                        (str,),
+                    'username':
+                        (str,),
+                    'password':
+                        (str,),
+                    'progress_id':
+                        (str,),
+                },
+                'attribute_map': {
+                    'application_id': 'application_id',
+                    'host': 'host',
+                    'username': 'username',
+                    'password': 'password',
+                    'progress_id': 'progress_id',
+                },
+                'location_map': {
+                    'application_id': 'path',
+                    'host': 'query',
+                    'username': 'query',
+                    'password': 'query',
+                    'progress_id': 'query',
+                },
+                'collection_format_map': {
+                }
+            },
+            headers_map={
+                'accept': [
+                    'application/json'
+                ],
+                'content_type': [],
+            },
+            api_client=api_client
+        )
+        self.application_tcb_dt_checkout_endpoint = _Endpoint(
+            settings={
+                'response_type': None,
+                'auth': [],
+                'endpoint_path': '/applications/{application_id}/tcb_dt_checkout',
+                'operation_id': 'application_tcb_dt_checkout',
+                'http_method': 'GET',
+                'servers': None,
+            },
+            params_map={
+                'all': [
+                    'application_id',
+                    'progress_id',
+                ],
+                'required': [
+                    'application_id',
+                ],
+                'nullable': [
+                ],
+                'enum': [
+                ],
+                'validation': [
+                    'application_id',
+                    'progress_id',
+                ]
+            },
+            root_map={
+                'validations': {
+                    ('application_id',): {
 
-            Keyword Args:
-                _return_http_data_only (bool): response data without head status
-                    code and headers. Default is True.
-                _preload_content (bool): if False, the urllib3.HTTPResponse object
-                    will be returned without reading/decoding response data.
-                    Default is True.
-                _request_timeout (int/float/tuple): timeout setting for this request. If
-                    one number provided, it will be total request timeout. It can also
-                    be a pair (tuple) of (connection, read) timeouts.
-                    Default is None.
-                _check_input_type (bool): specifies if type checking
-                    should be done one the data sent to the server.
-                    Default is True.
-                _check_return_type (bool): specifies if type checking
-                    should be done one the data received from the server.
-                    Default is True.
-                _host_index (int/None): specifies the index of the server
-                    that we want to use.
-                    Default is read from the configuration.
-                async_req (bool): execute request asynchronously
+                        'regex': {
+                            'pattern': r'^[0-9,a-f,A-F]{8}-[0-9,a-f,A-F]{4}-[0-9,a-f,A-F]{4}-[0-9,a-f,A-F]{4}-[0-9,a-f,A-F]{12}$',  # noqa: E501
+                        },
+                    },
+                    ('progress_id',): {
 
-            Returns:
-                bool
-                    If the method is called asynchronously, returns the request
-                    thread.
-            """
-            kwargs['async_req'] = kwargs.get(
-                'async_req', False
-            )
-            kwargs['_return_http_data_only'] = kwargs.get(
-                '_return_http_data_only', True
-            )
-            kwargs['_preload_content'] = kwargs.get(
-                '_preload_content', True
-            )
-            kwargs['_request_timeout'] = kwargs.get(
-                '_request_timeout', None
-            )
-            kwargs['_check_input_type'] = kwargs.get(
-                '_check_input_type', True
-            )
-            kwargs['_check_return_type'] = kwargs.get(
-                '_check_return_type', True
-            )
-            kwargs['_host_index'] = kwargs.get('_host_index')
-            kwargs['application_id'] = \
-                application_id
-            kwargs['configuration'] = \
-                configuration
-            return self.call_with_http_info(**kwargs)
+                        'regex': {
+                            'pattern': r'^$|[0-9,a-f,A-F]{8}-[0-9,a-f,A-F]{4}-[0-9,a-f,A-F]{4}-[0-9,a-f,A-F]{4}-[0-9,a-f,A-F]{12}$',  # noqa: E501
+                        },
+                    },
+                },
+                'allowed_values': {
+                },
+                'openapi_types': {
+                    'application_id':
+                        (str,),
+                    'progress_id':
+                        (str,),
+                },
+                'attribute_map': {
+                    'application_id': 'application_id',
+                    'progress_id': 'progress_id',
+                },
+                'location_map': {
+                    'application_id': 'path',
+                    'progress_id': 'query',
+                },
+                'collection_format_map': {
+                }
+            },
+            headers_map={
+                'accept': [
+                    'application/json'
+                ],
+                'content_type': [],
+            },
+            api_client=api_client
+        )
+        self.application_tcb_isolate_endpoint = _Endpoint(
+            settings={
+                'response_type': None,
+                'auth': [],
+                'endpoint_path': '/applications/{application_id}/tcb_isolate',
+                'operation_id': 'application_tcb_isolate',
+                'http_method': 'GET',
+                'servers': None,
+            },
+            params_map={
+                'all': [
+                    'application_id',
+                    'host',
+                    'username',
+                    'password',
+                    'output_dir',
+                    'progress_id',
+                ],
+                'required': [
+                    'application_id',
+                    'host',
+                    'username',
+                    'password',
+                    'output_dir',
+                ],
+                'nullable': [
+                ],
+                'enum': [
+                ],
+                'validation': [
+                    'application_id',
+                    'progress_id',
+                ]
+            },
+            root_map={
+                'validations': {
+                    ('application_id',): {
 
-        self.application_updated = _Endpoint(
+                        'regex': {
+                            'pattern': r'^[0-9,a-f,A-F]{8}-[0-9,a-f,A-F]{4}-[0-9,a-f,A-F]{4}-[0-9,a-f,A-F]{4}-[0-9,a-f,A-F]{12}$',  # noqa: E501
+                        },
+                    },
+                    ('progress_id',): {
+
+                        'regex': {
+                            'pattern': r'^$|[0-9,a-f,A-F]{8}-[0-9,a-f,A-F]{4}-[0-9,a-f,A-F]{4}-[0-9,a-f,A-F]{4}-[0-9,a-f,A-F]{12}$',  # noqa: E501
+                        },
+                    },
+                },
+                'allowed_values': {
+                },
+                'openapi_types': {
+                    'application_id':
+                        (str,),
+                    'host':
+                        (str,),
+                    'username':
+                        (str,),
+                    'password':
+                        (str,),
+                    'output_dir':
+                        (str,),
+                    'progress_id':
+                        (str,),
+                },
+                'attribute_map': {
+                    'application_id': 'application_id',
+                    'host': 'host',
+                    'username': 'username',
+                    'password': 'password',
+                    'output_dir': 'output_dir',
+                    'progress_id': 'progress_id',
+                },
+                'location_map': {
+                    'application_id': 'path',
+                    'host': 'query',
+                    'username': 'query',
+                    'password': 'query',
+                    'output_dir': 'query',
+                    'progress_id': 'query',
+                },
+                'collection_format_map': {
+                }
+            },
+            headers_map={
+                'accept': [
+                    'application/json'
+                ],
+                'content_type': [],
+            },
+            api_client=api_client
+        )
+        self.application_tcb_unpack_endpoint = _Endpoint(
+            settings={
+                'response_type': None,
+                'auth': [],
+                'endpoint_path': '/applications/{application_id}/tcb_unpack',
+                'operation_id': 'application_tcb_unpack',
+                'http_method': 'GET',
+                'servers': None,
+            },
+            params_map={
+                'all': [
+                    'application_id',
+                    'outputpath',
+                    'progress_id',
+                ],
+                'required': [
+                    'application_id',
+                    'outputpath',
+                ],
+                'nullable': [
+                ],
+                'enum': [
+                ],
+                'validation': [
+                    'application_id',
+                    'progress_id',
+                ]
+            },
+            root_map={
+                'validations': {
+                    ('application_id',): {
+
+                        'regex': {
+                            'pattern': r'^[0-9,a-f,A-F]{8}-[0-9,a-f,A-F]{4}-[0-9,a-f,A-F]{4}-[0-9,a-f,A-F]{4}-[0-9,a-f,A-F]{12}$',  # noqa: E501
+                        },
+                    },
+                    ('progress_id',): {
+
+                        'regex': {
+                            'pattern': r'^$|[0-9,a-f,A-F]{8}-[0-9,a-f,A-F]{4}-[0-9,a-f,A-F]{4}-[0-9,a-f,A-F]{4}-[0-9,a-f,A-F]{12}$',  # noqa: E501
+                        },
+                    },
+                },
+                'allowed_values': {
+                },
+                'openapi_types': {
+                    'application_id':
+                        (str,),
+                    'outputpath':
+                        (str,),
+                    'progress_id':
+                        (str,),
+                },
+                'attribute_map': {
+                    'application_id': 'application_id',
+                    'outputpath': 'outputpath',
+                    'progress_id': 'progress_id',
+                },
+                'location_map': {
+                    'application_id': 'path',
+                    'outputpath': 'query',
+                    'progress_id': 'query',
+                },
+                'collection_format_map': {
+                }
+            },
+            headers_map={
+                'accept': [
+                    'application/json'
+                ],
+                'content_type': [],
+            },
+            api_client=api_client
+        )
+        self.application_updated_endpoint = _Endpoint(
             settings={
                 'response_type': (bool,),
                 'auth': [],
@@ -2899,82 +1887,9 @@ class ApplicationsApi(object):
                 ],
                 'content_type': [],
             },
-            api_client=api_client,
-            callable=__application_updated
+            api_client=api_client
         )
-
-        def __application_updatesdk(
-            self,
-            application_id,
-            configuration,
-            **kwargs
-        ):
-            """Update SDK container  # noqa: E501
-
-            Update the SDK container by adding new dev libraries or synchronizing sysroots  # noqa: E501
-            This method makes a synchronous HTTP request by default. To make an
-            asynchronous HTTP request, please pass async_req=True
-
-            >>> thread = api.application_updatesdk(application_id, configuration, async_req=True)
-            >>> result = thread.get()
-
-            Args:
-                application_id (str): Id of an application (uuid)
-                configuration (str):
-
-            Keyword Args:
-                progress_id (str): Id of a progress cookie (uuid). [optional]
-                _return_http_data_only (bool): response data without head status
-                    code and headers. Default is True.
-                _preload_content (bool): if False, the urllib3.HTTPResponse object
-                    will be returned without reading/decoding response data.
-                    Default is True.
-                _request_timeout (int/float/tuple): timeout setting for this request. If
-                    one number provided, it will be total request timeout. It can also
-                    be a pair (tuple) of (connection, read) timeouts.
-                    Default is None.
-                _check_input_type (bool): specifies if type checking
-                    should be done one the data sent to the server.
-                    Default is True.
-                _check_return_type (bool): specifies if type checking
-                    should be done one the data received from the server.
-                    Default is True.
-                _host_index (int/None): specifies the index of the server
-                    that we want to use.
-                    Default is read from the configuration.
-                async_req (bool): execute request asynchronously
-
-            Returns:
-                None
-                    If the method is called asynchronously, returns the request
-                    thread.
-            """
-            kwargs['async_req'] = kwargs.get(
-                'async_req', False
-            )
-            kwargs['_return_http_data_only'] = kwargs.get(
-                '_return_http_data_only', True
-            )
-            kwargs['_preload_content'] = kwargs.get(
-                '_preload_content', True
-            )
-            kwargs['_request_timeout'] = kwargs.get(
-                '_request_timeout', None
-            )
-            kwargs['_check_input_type'] = kwargs.get(
-                '_check_input_type', True
-            )
-            kwargs['_check_return_type'] = kwargs.get(
-                '_check_return_type', True
-            )
-            kwargs['_host_index'] = kwargs.get('_host_index')
-            kwargs['application_id'] = \
-                application_id
-            kwargs['configuration'] = \
-                configuration
-            return self.call_with_http_info(**kwargs)
-
-        self.application_updatesdk = _Endpoint(
+        self.application_updatesdk_endpoint = _Endpoint(
             settings={
                 'response_type': None,
                 'auth': [],
@@ -3053,93 +1968,9 @@ class ApplicationsApi(object):
                 ],
                 'content_type': [],
             },
-            api_client=api_client,
-            callable=__application_updatesdk
+            api_client=api_client
         )
-
-        def __application_validate_array_item(
-            self,
-            application_id,
-            configuration,
-            parameter,
-            value,
-            index,
-            **kwargs
-        ):
-            """Validates a value for a parameter  # noqa: E501
-
-            Validates a parameter, allowing UI to report problems before applying it.  # noqa: E501
-            This method makes a synchronous HTTP request by default. To make an
-            asynchronous HTTP request, please pass async_req=True
-
-            >>> thread = api.application_validate_array_item(application_id, configuration, parameter, value, index, async_req=True)
-            >>> result = thread.get()
-
-            Args:
-                application_id (str): Id of an application (uuid)
-                configuration (str):
-                parameter (str):
-                value (str):
-                index (int):
-
-            Keyword Args:
-                _return_http_data_only (bool): response data without head status
-                    code and headers. Default is True.
-                _preload_content (bool): if False, the urllib3.HTTPResponse object
-                    will be returned without reading/decoding response data.
-                    Default is True.
-                _request_timeout (int/float/tuple): timeout setting for this request. If
-                    one number provided, it will be total request timeout. It can also
-                    be a pair (tuple) of (connection, read) timeouts.
-                    Default is None.
-                _check_input_type (bool): specifies if type checking
-                    should be done one the data sent to the server.
-                    Default is True.
-                _check_return_type (bool): specifies if type checking
-                    should be done one the data received from the server.
-                    Default is True.
-                _host_index (int/None): specifies the index of the server
-                    that we want to use.
-                    Default is read from the configuration.
-                async_req (bool): execute request asynchronously
-
-            Returns:
-                ValidationResult
-                    If the method is called asynchronously, returns the request
-                    thread.
-            """
-            kwargs['async_req'] = kwargs.get(
-                'async_req', False
-            )
-            kwargs['_return_http_data_only'] = kwargs.get(
-                '_return_http_data_only', True
-            )
-            kwargs['_preload_content'] = kwargs.get(
-                '_preload_content', True
-            )
-            kwargs['_request_timeout'] = kwargs.get(
-                '_request_timeout', None
-            )
-            kwargs['_check_input_type'] = kwargs.get(
-                '_check_input_type', True
-            )
-            kwargs['_check_return_type'] = kwargs.get(
-                '_check_return_type', True
-            )
-            kwargs['_host_index'] = kwargs.get('_host_index')
-            kwargs['application_id'] = \
-                application_id
-            kwargs['configuration'] = \
-                configuration
-            kwargs['parameter'] = \
-                parameter
-            kwargs['value'] = \
-                value
-            kwargs['index'] = \
-                index
-            return self.call_with_http_info(**kwargs)
-
-        self.application_validate_array_item = _Endpoint(
+        self.application_validate_array_item_endpoint = _Endpoint(
             settings={
                 'response_type': (ValidationResult,),
                 'auth': [],
@@ -3224,97 +2055,9 @@ class ApplicationsApi(object):
                 ],
                 'content_type': [],
             },
-            api_client=api_client,
-            callable=__application_validate_array_item
+            api_client=api_client
         )
-
-        def __application_validate_dictionary_entry(
-            self,
-            application_id,
-            configuration,
-            parameter,
-            key,
-            value,
-            newitem,
-            **kwargs
-        ):
-            """Validates a value for a parameter  # noqa: E501
-
-            Validates a parameter, allowing UI to report problems before applying it.  # noqa: E501
-            This method makes a synchronous HTTP request by default. To make an
-            asynchronous HTTP request, please pass async_req=True
-
-            >>> thread = api.application_validate_dictionary_entry(application_id, configuration, parameter, key, value, newitem, async_req=True)
-            >>> result = thread.get()
-
-            Args:
-                application_id (str): Id of an application (uuid)
-                configuration (str):
-                parameter (str):
-                key (str):
-                value (str):
-                newitem (bool):
-
-            Keyword Args:
-                _return_http_data_only (bool): response data without head status
-                    code and headers. Default is True.
-                _preload_content (bool): if False, the urllib3.HTTPResponse object
-                    will be returned without reading/decoding response data.
-                    Default is True.
-                _request_timeout (int/float/tuple): timeout setting for this request. If
-                    one number provided, it will be total request timeout. It can also
-                    be a pair (tuple) of (connection, read) timeouts.
-                    Default is None.
-                _check_input_type (bool): specifies if type checking
-                    should be done one the data sent to the server.
-                    Default is True.
-                _check_return_type (bool): specifies if type checking
-                    should be done one the data received from the server.
-                    Default is True.
-                _host_index (int/None): specifies the index of the server
-                    that we want to use.
-                    Default is read from the configuration.
-                async_req (bool): execute request asynchronously
-
-            Returns:
-                ValidationResult
-                    If the method is called asynchronously, returns the request
-                    thread.
-            """
-            kwargs['async_req'] = kwargs.get(
-                'async_req', False
-            )
-            kwargs['_return_http_data_only'] = kwargs.get(
-                '_return_http_data_only', True
-            )
-            kwargs['_preload_content'] = kwargs.get(
-                '_preload_content', True
-            )
-            kwargs['_request_timeout'] = kwargs.get(
-                '_request_timeout', None
-            )
-            kwargs['_check_input_type'] = kwargs.get(
-                '_check_input_type', True
-            )
-            kwargs['_check_return_type'] = kwargs.get(
-                '_check_return_type', True
-            )
-            kwargs['_host_index'] = kwargs.get('_host_index')
-            kwargs['application_id'] = \
-                application_id
-            kwargs['configuration'] = \
-                configuration
-            kwargs['parameter'] = \
-                parameter
-            kwargs['key'] = \
-                key
-            kwargs['value'] = \
-                value
-            kwargs['newitem'] = \
-                newitem
-            return self.call_with_http_info(**kwargs)
-
-        self.application_validate_dictionary_entry = _Endpoint(
+        self.application_validate_dictionary_entry_endpoint = _Endpoint(
             settings={
                 'response_type': (ValidationResult,),
                 'auth': [],
@@ -3405,89 +2148,9 @@ class ApplicationsApi(object):
                 ],
                 'content_type': [],
             },
-            api_client=api_client,
-            callable=__application_validate_dictionary_entry
+            api_client=api_client
         )
-
-        def __application_validate_parameter(
-            self,
-            application_id,
-            configuration,
-            parameter,
-            value,
-            **kwargs
-        ):
-            """Validates a value for a parameter  # noqa: E501
-
-            Validates a parameter, allowing UI to report problems before applying it.  # noqa: E501
-            This method makes a synchronous HTTP request by default. To make an
-            asynchronous HTTP request, please pass async_req=True
-
-            >>> thread = api.application_validate_parameter(application_id, configuration, parameter, value, async_req=True)
-            >>> result = thread.get()
-
-            Args:
-                application_id (str): Id of an application (uuid)
-                configuration (str):
-                parameter (str):
-                value (str):
-
-            Keyword Args:
-                _return_http_data_only (bool): response data without head status
-                    code and headers. Default is True.
-                _preload_content (bool): if False, the urllib3.HTTPResponse object
-                    will be returned without reading/decoding response data.
-                    Default is True.
-                _request_timeout (int/float/tuple): timeout setting for this request. If
-                    one number provided, it will be total request timeout. It can also
-                    be a pair (tuple) of (connection, read) timeouts.
-                    Default is None.
-                _check_input_type (bool): specifies if type checking
-                    should be done one the data sent to the server.
-                    Default is True.
-                _check_return_type (bool): specifies if type checking
-                    should be done one the data received from the server.
-                    Default is True.
-                _host_index (int/None): specifies the index of the server
-                    that we want to use.
-                    Default is read from the configuration.
-                async_req (bool): execute request asynchronously
-
-            Returns:
-                ValidationResult
-                    If the method is called asynchronously, returns the request
-                    thread.
-            """
-            kwargs['async_req'] = kwargs.get(
-                'async_req', False
-            )
-            kwargs['_return_http_data_only'] = kwargs.get(
-                '_return_http_data_only', True
-            )
-            kwargs['_preload_content'] = kwargs.get(
-                '_preload_content', True
-            )
-            kwargs['_request_timeout'] = kwargs.get(
-                '_request_timeout', None
-            )
-            kwargs['_check_input_type'] = kwargs.get(
-                '_check_input_type', True
-            )
-            kwargs['_check_return_type'] = kwargs.get(
-                '_check_return_type', True
-            )
-            kwargs['_host_index'] = kwargs.get('_host_index')
-            kwargs['application_id'] = \
-                application_id
-            kwargs['configuration'] = \
-                configuration
-            kwargs['parameter'] = \
-                parameter
-            kwargs['value'] = \
-                value
-            return self.call_with_http_info(**kwargs)
-
-        self.application_validate_parameter = _Endpoint(
+        self.application_validate_parameter_endpoint = _Endpoint(
             settings={
                 'response_type': (ValidationResult,),
                 'auth': [],
@@ -3566,82 +2229,9 @@ class ApplicationsApi(object):
                 ],
                 'content_type': [],
             },
-            api_client=api_client,
-            callable=__application_validate_parameter
+            api_client=api_client
         )
-
-        def __applications_create(
-            self,
-            platform_id,
-            path,
-            **kwargs
-        ):
-            """Create an application configuration  # noqa: E501
-
-            Create a new application configuration  # noqa: E501
-            This method makes a synchronous HTTP request by default. To make an
-            asynchronous HTTP request, please pass async_req=True
-
-            >>> thread = api.applications_create(platform_id, path, async_req=True)
-            >>> result = thread.get()
-
-            Args:
-                platform_id (str):
-                path (str):
-
-            Keyword Args:
-                username (str): [optional]
-                _return_http_data_only (bool): response data without head status
-                    code and headers. Default is True.
-                _preload_content (bool): if False, the urllib3.HTTPResponse object
-                    will be returned without reading/decoding response data.
-                    Default is True.
-                _request_timeout (int/float/tuple): timeout setting for this request. If
-                    one number provided, it will be total request timeout. It can also
-                    be a pair (tuple) of (connection, read) timeouts.
-                    Default is None.
-                _check_input_type (bool): specifies if type checking
-                    should be done one the data sent to the server.
-                    Default is True.
-                _check_return_type (bool): specifies if type checking
-                    should be done one the data received from the server.
-                    Default is True.
-                _host_index (int/None): specifies the index of the server
-                    that we want to use.
-                    Default is read from the configuration.
-                async_req (bool): execute request asynchronously
-
-            Returns:
-                Application
-                    If the method is called asynchronously, returns the request
-                    thread.
-            """
-            kwargs['async_req'] = kwargs.get(
-                'async_req', False
-            )
-            kwargs['_return_http_data_only'] = kwargs.get(
-                '_return_http_data_only', True
-            )
-            kwargs['_preload_content'] = kwargs.get(
-                '_preload_content', True
-            )
-            kwargs['_request_timeout'] = kwargs.get(
-                '_request_timeout', None
-            )
-            kwargs['_check_input_type'] = kwargs.get(
-                '_check_input_type', True
-            )
-            kwargs['_check_return_type'] = kwargs.get(
-                '_check_return_type', True
-            )
-            kwargs['_host_index'] = kwargs.get('_host_index')
-            kwargs['platform_id'] = \
-                platform_id
-            kwargs['path'] = \
-                path
-            return self.call_with_http_info(**kwargs)
-
-        self.applications_create = _Endpoint(
+        self.applications_create_endpoint = _Endpoint(
             settings={
                 'response_type': (Application,),
                 'auth': [],
@@ -3699,77 +2289,9 @@ class ApplicationsApi(object):
                 ],
                 'content_type': [],
             },
-            api_client=api_client,
-            callable=__applications_create
+            api_client=api_client
         )
-
-        def __applications_load(
-            self,
-            path,
-            **kwargs
-        ):
-            """Load an application configuration  # noqa: E501
-
-            Load an application configuration from the local filesystem  # noqa: E501
-            This method makes a synchronous HTTP request by default. To make an
-            asynchronous HTTP request, please pass async_req=True
-
-            >>> thread = api.applications_load(path, async_req=True)
-            >>> result = thread.get()
-
-            Args:
-                path (str):
-
-            Keyword Args:
-                _return_http_data_only (bool): response data without head status
-                    code and headers. Default is True.
-                _preload_content (bool): if False, the urllib3.HTTPResponse object
-                    will be returned without reading/decoding response data.
-                    Default is True.
-                _request_timeout (int/float/tuple): timeout setting for this request. If
-                    one number provided, it will be total request timeout. It can also
-                    be a pair (tuple) of (connection, read) timeouts.
-                    Default is None.
-                _check_input_type (bool): specifies if type checking
-                    should be done one the data sent to the server.
-                    Default is True.
-                _check_return_type (bool): specifies if type checking
-                    should be done one the data received from the server.
-                    Default is True.
-                _host_index (int/None): specifies the index of the server
-                    that we want to use.
-                    Default is read from the configuration.
-                async_req (bool): execute request asynchronously
-
-            Returns:
-                Application
-                    If the method is called asynchronously, returns the request
-                    thread.
-            """
-            kwargs['async_req'] = kwargs.get(
-                'async_req', False
-            )
-            kwargs['_return_http_data_only'] = kwargs.get(
-                '_return_http_data_only', True
-            )
-            kwargs['_preload_content'] = kwargs.get(
-                '_preload_content', True
-            )
-            kwargs['_request_timeout'] = kwargs.get(
-                '_request_timeout', None
-            )
-            kwargs['_check_input_type'] = kwargs.get(
-                '_check_input_type', True
-            )
-            kwargs['_check_return_type'] = kwargs.get(
-                '_check_return_type', True
-            )
-            kwargs['_host_index'] = kwargs.get('_host_index')
-            kwargs['path'] = \
-                path
-            return self.call_with_http_info(**kwargs)
-
-        self.applications_load = _Endpoint(
+        self.applications_load_endpoint = _Endpoint(
             settings={
                 'response_type': (Application,),
                 'auth': [],
@@ -3816,6 +2338,2200 @@ class ApplicationsApi(object):
                 ],
                 'content_type': [],
             },
-            api_client=api_client,
-            callable=__applications_load
+            api_client=api_client
         )
+
+    def application_build(
+        self,
+        application_id,
+        configuration,
+        **kwargs
+    ):
+        """Build container image  # noqa: E501
+
+        Build application release or debug container  # noqa: E501
+        This method makes a synchronous HTTP request by default. To make an
+        asynchronous HTTP request, please pass async_req=True
+
+        >>> thread = api.application_build(application_id, configuration, async_req=True)
+        >>> result = thread.get()
+
+        Args:
+            application_id (str): Id of an application (uuid)
+            configuration (str):
+
+        Keyword Args:
+            progress_id (str): Id of a progress cookie (uuid). [optional]
+            _return_http_data_only (bool): response data without head status
+                code and headers. Default is True.
+            _preload_content (bool): if False, the urllib3.HTTPResponse object
+                will be returned without reading/decoding response data.
+                Default is True.
+            _request_timeout (int/float/tuple): timeout setting for this request. If
+                one number provided, it will be total request timeout. It can also
+                be a pair (tuple) of (connection, read) timeouts.
+                Default is None.
+            _check_input_type (bool): specifies if type checking
+                should be done one the data sent to the server.
+                Default is True.
+            _check_return_type (bool): specifies if type checking
+                should be done one the data received from the server.
+                Default is True.
+            _host_index (int/None): specifies the index of the server
+                that we want to use.
+                Default is read from the configuration.
+            async_req (bool): execute request asynchronously
+
+        Returns:
+            None
+                If the method is called asynchronously, returns the request
+                thread.
+        """
+        kwargs['async_req'] = kwargs.get(
+            'async_req', False
+        )
+        kwargs['_return_http_data_only'] = kwargs.get(
+            '_return_http_data_only', True
+        )
+        kwargs['_preload_content'] = kwargs.get(
+            '_preload_content', True
+        )
+        kwargs['_request_timeout'] = kwargs.get(
+            '_request_timeout', None
+        )
+        kwargs['_check_input_type'] = kwargs.get(
+            '_check_input_type', True
+        )
+        kwargs['_check_return_type'] = kwargs.get(
+            '_check_return_type', True
+        )
+        kwargs['_host_index'] = kwargs.get('_host_index')
+        kwargs['application_id'] = \
+            application_id
+        kwargs['configuration'] = \
+            configuration
+        return self.application_build_endpoint.call_with_http_info(**kwargs)
+
+    def application_delete(
+        self,
+        application_id,
+        **kwargs
+    ):
+        """Remove an application  # noqa: E501
+
+        Remove an application and all the associated data and containers  # noqa: E501
+        This method makes a synchronous HTTP request by default. To make an
+        asynchronous HTTP request, please pass async_req=True
+
+        >>> thread = api.application_delete(application_id, async_req=True)
+        >>> result = thread.get()
+
+        Args:
+            application_id (str): Id of an application (uuid)
+
+        Keyword Args:
+            _return_http_data_only (bool): response data without head status
+                code and headers. Default is True.
+            _preload_content (bool): if False, the urllib3.HTTPResponse object
+                will be returned without reading/decoding response data.
+                Default is True.
+            _request_timeout (int/float/tuple): timeout setting for this request. If
+                one number provided, it will be total request timeout. It can also
+                be a pair (tuple) of (connection, read) timeouts.
+                Default is None.
+            _check_input_type (bool): specifies if type checking
+                should be done one the data sent to the server.
+                Default is True.
+            _check_return_type (bool): specifies if type checking
+                should be done one the data received from the server.
+                Default is True.
+            _host_index (int/None): specifies the index of the server
+                that we want to use.
+                Default is read from the configuration.
+            async_req (bool): execute request asynchronously
+
+        Returns:
+            None
+                If the method is called asynchronously, returns the request
+                thread.
+        """
+        kwargs['async_req'] = kwargs.get(
+            'async_req', False
+        )
+        kwargs['_return_http_data_only'] = kwargs.get(
+            '_return_http_data_only', True
+        )
+        kwargs['_preload_content'] = kwargs.get(
+            '_preload_content', True
+        )
+        kwargs['_request_timeout'] = kwargs.get(
+            '_request_timeout', None
+        )
+        kwargs['_check_input_type'] = kwargs.get(
+            '_check_input_type', True
+        )
+        kwargs['_check_return_type'] = kwargs.get(
+            '_check_return_type', True
+        )
+        kwargs['_host_index'] = kwargs.get('_host_index')
+        kwargs['application_id'] = \
+            application_id
+        return self.application_delete_endpoint.call_with_http_info(**kwargs)
+
+    def application_deploy(
+        self,
+        application_id,
+        configuration,
+        device_id,
+        **kwargs
+    ):
+        """Deploy container image  # noqa: E501
+
+        Deploy application container to target  # noqa: E501
+        This method makes a synchronous HTTP request by default. To make an
+        asynchronous HTTP request, please pass async_req=True
+
+        >>> thread = api.application_deploy(application_id, configuration, device_id, async_req=True)
+        >>> result = thread.get()
+
+        Args:
+            application_id (str): Id of an application (uuid)
+            configuration (str):
+            device_id (str): Target device serial number
+
+        Keyword Args:
+            progress_id (str): Id of a progress cookie (uuid). [optional]
+            _return_http_data_only (bool): response data without head status
+                code and headers. Default is True.
+            _preload_content (bool): if False, the urllib3.HTTPResponse object
+                will be returned without reading/decoding response data.
+                Default is True.
+            _request_timeout (int/float/tuple): timeout setting for this request. If
+                one number provided, it will be total request timeout. It can also
+                be a pair (tuple) of (connection, read) timeouts.
+                Default is None.
+            _check_input_type (bool): specifies if type checking
+                should be done one the data sent to the server.
+                Default is True.
+            _check_return_type (bool): specifies if type checking
+                should be done one the data received from the server.
+                Default is True.
+            _host_index (int/None): specifies the index of the server
+                that we want to use.
+                Default is read from the configuration.
+            async_req (bool): execute request asynchronously
+
+        Returns:
+            None
+                If the method is called asynchronously, returns the request
+                thread.
+        """
+        kwargs['async_req'] = kwargs.get(
+            'async_req', False
+        )
+        kwargs['_return_http_data_only'] = kwargs.get(
+            '_return_http_data_only', True
+        )
+        kwargs['_preload_content'] = kwargs.get(
+            '_preload_content', True
+        )
+        kwargs['_request_timeout'] = kwargs.get(
+            '_request_timeout', None
+        )
+        kwargs['_check_input_type'] = kwargs.get(
+            '_check_input_type', True
+        )
+        kwargs['_check_return_type'] = kwargs.get(
+            '_check_return_type', True
+        )
+        kwargs['_host_index'] = kwargs.get('_host_index')
+        kwargs['application_id'] = \
+            application_id
+        kwargs['configuration'] = \
+            configuration
+        kwargs['device_id'] = \
+            device_id
+        return self.application_deploy_endpoint.call_with_http_info(**kwargs)
+
+    def application_get(
+        self,
+        application_id,
+        **kwargs
+    ):
+        """Get application  # noqa: E501
+
+        Returns a specified application, knowing its id  # noqa: E501
+        This method makes a synchronous HTTP request by default. To make an
+        asynchronous HTTP request, please pass async_req=True
+
+        >>> thread = api.application_get(application_id, async_req=True)
+        >>> result = thread.get()
+
+        Args:
+            application_id (str): Id of an application (uuid)
+
+        Keyword Args:
+            _return_http_data_only (bool): response data without head status
+                code and headers. Default is True.
+            _preload_content (bool): if False, the urllib3.HTTPResponse object
+                will be returned without reading/decoding response data.
+                Default is True.
+            _request_timeout (int/float/tuple): timeout setting for this request. If
+                one number provided, it will be total request timeout. It can also
+                be a pair (tuple) of (connection, read) timeouts.
+                Default is None.
+            _check_input_type (bool): specifies if type checking
+                should be done one the data sent to the server.
+                Default is True.
+            _check_return_type (bool): specifies if type checking
+                should be done one the data received from the server.
+                Default is True.
+            _host_index (int/None): specifies the index of the server
+                that we want to use.
+                Default is read from the configuration.
+            async_req (bool): execute request asynchronously
+
+        Returns:
+            Application
+                If the method is called asynchronously, returns the request
+                thread.
+        """
+        kwargs['async_req'] = kwargs.get(
+            'async_req', False
+        )
+        kwargs['_return_http_data_only'] = kwargs.get(
+            '_return_http_data_only', True
+        )
+        kwargs['_preload_content'] = kwargs.get(
+            '_preload_content', True
+        )
+        kwargs['_request_timeout'] = kwargs.get(
+            '_request_timeout', None
+        )
+        kwargs['_check_input_type'] = kwargs.get(
+            '_check_input_type', True
+        )
+        kwargs['_check_return_type'] = kwargs.get(
+            '_check_return_type', True
+        )
+        kwargs['_host_index'] = kwargs.get('_host_index')
+        kwargs['application_id'] = \
+            application_id
+        return self.application_get_endpoint.call_with_http_info(**kwargs)
+
+    def application_getcontainer(
+        self,
+        application_id,
+        configuration,
+        device_id,
+        **kwargs
+    ):
+        """Get container information  # noqa: E501
+
+        Get detailed informations about container  # noqa: E501
+        This method makes a synchronous HTTP request by default. To make an
+        asynchronous HTTP request, please pass async_req=True
+
+        >>> thread = api.application_getcontainer(application_id, configuration, device_id, async_req=True)
+        >>> result = thread.get()
+
+        Args:
+            application_id (str): Id of an application (uuid)
+            configuration (str):
+            device_id (str): Target device serial number
+
+        Keyword Args:
+            _return_http_data_only (bool): response data without head status
+                code and headers. Default is True.
+            _preload_content (bool): if False, the urllib3.HTTPResponse object
+                will be returned without reading/decoding response data.
+                Default is True.
+            _request_timeout (int/float/tuple): timeout setting for this request. If
+                one number provided, it will be total request timeout. It can also
+                be a pair (tuple) of (connection, read) timeouts.
+                Default is None.
+            _check_input_type (bool): specifies if type checking
+                should be done one the data sent to the server.
+                Default is True.
+            _check_return_type (bool): specifies if type checking
+                should be done one the data received from the server.
+                Default is True.
+            _host_index (int/None): specifies the index of the server
+                that we want to use.
+                Default is read from the configuration.
+            async_req (bool): execute request asynchronously
+
+        Returns:
+            DockerContainer
+                If the method is called asynchronously, returns the request
+                thread.
+        """
+        kwargs['async_req'] = kwargs.get(
+            'async_req', False
+        )
+        kwargs['_return_http_data_only'] = kwargs.get(
+            '_return_http_data_only', True
+        )
+        kwargs['_preload_content'] = kwargs.get(
+            '_preload_content', True
+        )
+        kwargs['_request_timeout'] = kwargs.get(
+            '_request_timeout', None
+        )
+        kwargs['_check_input_type'] = kwargs.get(
+            '_check_input_type', True
+        )
+        kwargs['_check_return_type'] = kwargs.get(
+            '_check_return_type', True
+        )
+        kwargs['_host_index'] = kwargs.get('_host_index')
+        kwargs['application_id'] = \
+            application_id
+        kwargs['configuration'] = \
+            configuration
+        kwargs['device_id'] = \
+            device_id
+        return self.application_getcontainer_endpoint.call_with_http_info(**kwargs)
+
+    def application_getcontainer_logs(
+        self,
+        application_id,
+        configuration,
+        device_id,
+        **kwargs
+    ):
+        """Get one of more lines from container logs  # noqa: E501
+
+        Return one chunk of log (one or more lines), blocking if no data is available  # noqa: E501
+        This method makes a synchronous HTTP request by default. To make an
+        asynchronous HTTP request, please pass async_req=True
+
+        >>> thread = api.application_getcontainer_logs(application_id, configuration, device_id, async_req=True)
+        >>> result = thread.get()
+
+        Args:
+            application_id (str): Id of an application (uuid)
+            configuration (str):
+            device_id (str): Target device serial number
+
+        Keyword Args:
+            restart (bool): when true reads the lock back from beginning. [optional] if omitted the server will use the default value of False
+            _return_http_data_only (bool): response data without head status
+                code and headers. Default is True.
+            _preload_content (bool): if False, the urllib3.HTTPResponse object
+                will be returned without reading/decoding response data.
+                Default is True.
+            _request_timeout (int/float/tuple): timeout setting for this request. If
+                one number provided, it will be total request timeout. It can also
+                be a pair (tuple) of (connection, read) timeouts.
+                Default is None.
+            _check_input_type (bool): specifies if type checking
+                should be done one the data sent to the server.
+                Default is True.
+            _check_return_type (bool): specifies if type checking
+                should be done one the data received from the server.
+                Default is True.
+            _host_index (int/None): specifies the index of the server
+                that we want to use.
+                Default is read from the configuration.
+            async_req (bool): execute request asynchronously
+
+        Returns:
+            str
+                If the method is called asynchronously, returns the request
+                thread.
+        """
+        kwargs['async_req'] = kwargs.get(
+            'async_req', False
+        )
+        kwargs['_return_http_data_only'] = kwargs.get(
+            '_return_http_data_only', True
+        )
+        kwargs['_preload_content'] = kwargs.get(
+            '_preload_content', True
+        )
+        kwargs['_request_timeout'] = kwargs.get(
+            '_request_timeout', None
+        )
+        kwargs['_check_input_type'] = kwargs.get(
+            '_check_input_type', True
+        )
+        kwargs['_check_return_type'] = kwargs.get(
+            '_check_return_type', True
+        )
+        kwargs['_host_index'] = kwargs.get('_host_index')
+        kwargs['application_id'] = \
+            application_id
+        kwargs['configuration'] = \
+            configuration
+        kwargs['device_id'] = \
+            device_id
+        return self.application_getcontainer_logs_endpoint.call_with_http_info(**kwargs)
+
+    def application_getdocker_commandline(
+        self,
+        application_id,
+        configuration,
+        **kwargs
+    ):
+        """Get docker command line to run the application/json  # noqa: E501
+
+        Return the full docker command line that can be used to run the application container  # noqa: E501
+        This method makes a synchronous HTTP request by default. To make an
+        asynchronous HTTP request, please pass async_req=True
+
+        >>> thread = api.application_getdocker_commandline(application_id, configuration, async_req=True)
+        >>> result = thread.get()
+
+        Args:
+            application_id (str): Id of an application (uuid)
+            configuration (str):
+
+        Keyword Args:
+            _return_http_data_only (bool): response data without head status
+                code and headers. Default is True.
+            _preload_content (bool): if False, the urllib3.HTTPResponse object
+                will be returned without reading/decoding response data.
+                Default is True.
+            _request_timeout (int/float/tuple): timeout setting for this request. If
+                one number provided, it will be total request timeout. It can also
+                be a pair (tuple) of (connection, read) timeouts.
+                Default is None.
+            _check_input_type (bool): specifies if type checking
+                should be done one the data sent to the server.
+                Default is True.
+            _check_return_type (bool): specifies if type checking
+                should be done one the data received from the server.
+                Default is True.
+            _host_index (int/None): specifies the index of the server
+                that we want to use.
+                Default is read from the configuration.
+            async_req (bool): execute request asynchronously
+
+        Returns:
+            str
+                If the method is called asynchronously, returns the request
+                thread.
+        """
+        kwargs['async_req'] = kwargs.get(
+            'async_req', False
+        )
+        kwargs['_return_http_data_only'] = kwargs.get(
+            '_return_http_data_only', True
+        )
+        kwargs['_preload_content'] = kwargs.get(
+            '_preload_content', True
+        )
+        kwargs['_request_timeout'] = kwargs.get(
+            '_request_timeout', None
+        )
+        kwargs['_check_input_type'] = kwargs.get(
+            '_check_input_type', True
+        )
+        kwargs['_check_return_type'] = kwargs.get(
+            '_check_return_type', True
+        )
+        kwargs['_host_index'] = kwargs.get('_host_index')
+        kwargs['application_id'] = \
+            application_id
+        kwargs['configuration'] = \
+            configuration
+        return self.application_getdocker_commandline_endpoint.call_with_http_info(**kwargs)
+
+    def application_getdocker_composefile(
+        self,
+        application_id,
+        configuration,
+        **kwargs
+    ):
+        """Get docker compose file  # noqa: E501
+
+        Return docker-compose file that can be used to run the application container and its dependencies  # noqa: E501
+        This method makes a synchronous HTTP request by default. To make an
+        asynchronous HTTP request, please pass async_req=True
+
+        >>> thread = api.application_getdocker_composefile(application_id, configuration, async_req=True)
+        >>> result = thread.get()
+
+        Args:
+            application_id (str): Id of an application (uuid)
+            configuration (str):
+
+        Keyword Args:
+            _return_http_data_only (bool): response data without head status
+                code and headers. Default is True.
+            _preload_content (bool): if False, the urllib3.HTTPResponse object
+                will be returned without reading/decoding response data.
+                Default is True.
+            _request_timeout (int/float/tuple): timeout setting for this request. If
+                one number provided, it will be total request timeout. It can also
+                be a pair (tuple) of (connection, read) timeouts.
+                Default is None.
+            _check_input_type (bool): specifies if type checking
+                should be done one the data sent to the server.
+                Default is True.
+            _check_return_type (bool): specifies if type checking
+                should be done one the data received from the server.
+                Default is True.
+            _host_index (int/None): specifies the index of the server
+                that we want to use.
+                Default is read from the configuration.
+            async_req (bool): execute request asynchronously
+
+        Returns:
+            str
+                If the method is called asynchronously, returns the request
+                thread.
+        """
+        kwargs['async_req'] = kwargs.get(
+            'async_req', False
+        )
+        kwargs['_return_http_data_only'] = kwargs.get(
+            '_return_http_data_only', True
+        )
+        kwargs['_preload_content'] = kwargs.get(
+            '_preload_content', True
+        )
+        kwargs['_request_timeout'] = kwargs.get(
+            '_request_timeout', None
+        )
+        kwargs['_check_input_type'] = kwargs.get(
+            '_check_input_type', True
+        )
+        kwargs['_check_return_type'] = kwargs.get(
+            '_check_return_type', True
+        )
+        kwargs['_host_index'] = kwargs.get('_host_index')
+        kwargs['application_id'] = \
+            application_id
+        kwargs['configuration'] = \
+            configuration
+        return self.application_getdocker_composefile_endpoint.call_with_http_info(**kwargs)
+
+    def application_getprivatekey(
+        self,
+        application_id,
+        **kwargs
+    ):
+        """Get the path of the RSA private key  # noqa: E501
+
+        Retrieve the path of the private key that allows passwordless connection to the container. The application stores the public key inside the container if ssh is enabled (usually for debug builds only)  # noqa: E501
+        This method makes a synchronous HTTP request by default. To make an
+        asynchronous HTTP request, please pass async_req=True
+
+        >>> thread = api.application_getprivatekey(application_id, async_req=True)
+        >>> result = thread.get()
+
+        Args:
+            application_id (str): Id of an application (uuid)
+
+        Keyword Args:
+            _return_http_data_only (bool): response data without head status
+                code and headers. Default is True.
+            _preload_content (bool): if False, the urllib3.HTTPResponse object
+                will be returned without reading/decoding response data.
+                Default is True.
+            _request_timeout (int/float/tuple): timeout setting for this request. If
+                one number provided, it will be total request timeout. It can also
+                be a pair (tuple) of (connection, read) timeouts.
+                Default is None.
+            _check_input_type (bool): specifies if type checking
+                should be done one the data sent to the server.
+                Default is True.
+            _check_return_type (bool): specifies if type checking
+                should be done one the data received from the server.
+                Default is True.
+            _host_index (int/None): specifies the index of the server
+                that we want to use.
+                Default is read from the configuration.
+            async_req (bool): execute request asynchronously
+
+        Returns:
+            str
+                If the method is called asynchronously, returns the request
+                thread.
+        """
+        kwargs['async_req'] = kwargs.get(
+            'async_req', False
+        )
+        kwargs['_return_http_data_only'] = kwargs.get(
+            '_return_http_data_only', True
+        )
+        kwargs['_preload_content'] = kwargs.get(
+            '_preload_content', True
+        )
+        kwargs['_request_timeout'] = kwargs.get(
+            '_request_timeout', None
+        )
+        kwargs['_check_input_type'] = kwargs.get(
+            '_check_input_type', True
+        )
+        kwargs['_check_return_type'] = kwargs.get(
+            '_check_return_type', True
+        )
+        kwargs['_host_index'] = kwargs.get('_host_index')
+        kwargs['application_id'] = \
+            application_id
+        return self.application_getprivatekey_endpoint.call_with_http_info(**kwargs)
+
+    def application_modify(
+        self,
+        application_id,
+        **kwargs
+    ):
+        """Change application properties  # noqa: E501
+
+        Changes specified properties on an application  # noqa: E501
+        This method makes a synchronous HTTP request by default. To make an
+        asynchronous HTTP request, please pass async_req=True
+
+        >>> thread = api.application_modify(application_id, async_req=True)
+        >>> result = thread.get()
+
+        Args:
+            application_id (str): Id of an application (uuid)
+
+        Keyword Args:
+            application (Application): [optional]
+            _return_http_data_only (bool): response data without head status
+                code and headers. Default is True.
+            _preload_content (bool): if False, the urllib3.HTTPResponse object
+                will be returned without reading/decoding response data.
+                Default is True.
+            _request_timeout (int/float/tuple): timeout setting for this request. If
+                one number provided, it will be total request timeout. It can also
+                be a pair (tuple) of (connection, read) timeouts.
+                Default is None.
+            _check_input_type (bool): specifies if type checking
+                should be done one the data sent to the server.
+                Default is True.
+            _check_return_type (bool): specifies if type checking
+                should be done one the data received from the server.
+                Default is True.
+            _host_index (int/None): specifies the index of the server
+                that we want to use.
+                Default is read from the configuration.
+            async_req (bool): execute request asynchronously
+
+        Returns:
+            Application
+                If the method is called asynchronously, returns the request
+                thread.
+        """
+        kwargs['async_req'] = kwargs.get(
+            'async_req', False
+        )
+        kwargs['_return_http_data_only'] = kwargs.get(
+            '_return_http_data_only', True
+        )
+        kwargs['_preload_content'] = kwargs.get(
+            '_preload_content', True
+        )
+        kwargs['_request_timeout'] = kwargs.get(
+            '_request_timeout', None
+        )
+        kwargs['_check_input_type'] = kwargs.get(
+            '_check_input_type', True
+        )
+        kwargs['_check_return_type'] = kwargs.get(
+            '_check_return_type', True
+        )
+        kwargs['_host_index'] = kwargs.get('_host_index')
+        kwargs['application_id'] = \
+            application_id
+        return self.application_modify_endpoint.call_with_http_info(**kwargs)
+
+    def application_publish(
+        self,
+        application_id,
+        credentials,
+        dockeruser,
+        dockerpass,
+        **kwargs
+    ):
+        """Publish a new version of the application on Torizon OTA  # noqa: E501
+
+        Publishes a new package version for the application, if no credentials are provided, then only docker-compose file is generated.  # noqa: E501
+        This method makes a synchronous HTTP request by default. To make an
+        asynchronous HTTP request, please pass async_req=True
+
+        >>> thread = api.application_publish(application_id, credentials, dockeruser, dockerpass, async_req=True)
+        >>> result = thread.get()
+
+        Args:
+            application_id (str): Id of an application (uuid)
+            credentials (str): credentials file
+            dockeruser (str): user for docker registry login
+            dockerpass (str): password for docker registry login
+
+        Keyword Args:
+            progress_id (str): Id of a progress cookie (uuid). [optional]
+            _return_http_data_only (bool): response data without head status
+                code and headers. Default is True.
+            _preload_content (bool): if False, the urllib3.HTTPResponse object
+                will be returned without reading/decoding response data.
+                Default is True.
+            _request_timeout (int/float/tuple): timeout setting for this request. If
+                one number provided, it will be total request timeout. It can also
+                be a pair (tuple) of (connection, read) timeouts.
+                Default is None.
+            _check_input_type (bool): specifies if type checking
+                should be done one the data sent to the server.
+                Default is True.
+            _check_return_type (bool): specifies if type checking
+                should be done one the data received from the server.
+                Default is True.
+            _host_index (int/None): specifies the index of the server
+                that we want to use.
+                Default is read from the configuration.
+            async_req (bool): execute request asynchronously
+
+        Returns:
+            None
+                If the method is called asynchronously, returns the request
+                thread.
+        """
+        kwargs['async_req'] = kwargs.get(
+            'async_req', False
+        )
+        kwargs['_return_http_data_only'] = kwargs.get(
+            '_return_http_data_only', True
+        )
+        kwargs['_preload_content'] = kwargs.get(
+            '_preload_content', True
+        )
+        kwargs['_request_timeout'] = kwargs.get(
+            '_request_timeout', None
+        )
+        kwargs['_check_input_type'] = kwargs.get(
+            '_check_input_type', True
+        )
+        kwargs['_check_return_type'] = kwargs.get(
+            '_check_return_type', True
+        )
+        kwargs['_host_index'] = kwargs.get('_host_index')
+        kwargs['application_id'] = \
+            application_id
+        kwargs['credentials'] = \
+            credentials
+        kwargs['dockeruser'] = \
+            dockeruser
+        kwargs['dockerpass'] = \
+            dockerpass
+        return self.application_publish_endpoint.call_with_http_info(**kwargs)
+
+    def application_push_to_registry(
+        self,
+        application_id,
+        configuration,
+        username,
+        password,
+        **kwargs
+    ):
+        """Push application to docker registry  # noqa: E501
+
+        Push application's container to a docker registry, using authentication  # noqa: E501
+        This method makes a synchronous HTTP request by default. To make an
+        asynchronous HTTP request, please pass async_req=True
+
+        >>> thread = api.application_push_to_registry(application_id, configuration, username, password, async_req=True)
+        >>> result = thread.get()
+
+        Args:
+            application_id (str): Id of an application (uuid)
+            configuration (str):
+            username (str):
+            password (str):
+
+        Keyword Args:
+            progress_id (str): Id of a progress cookie (uuid). [optional]
+            _return_http_data_only (bool): response data without head status
+                code and headers. Default is True.
+            _preload_content (bool): if False, the urllib3.HTTPResponse object
+                will be returned without reading/decoding response data.
+                Default is True.
+            _request_timeout (int/float/tuple): timeout setting for this request. If
+                one number provided, it will be total request timeout. It can also
+                be a pair (tuple) of (connection, read) timeouts.
+                Default is None.
+            _check_input_type (bool): specifies if type checking
+                should be done one the data sent to the server.
+                Default is True.
+            _check_return_type (bool): specifies if type checking
+                should be done one the data received from the server.
+                Default is True.
+            _host_index (int/None): specifies the index of the server
+                that we want to use.
+                Default is read from the configuration.
+            async_req (bool): execute request asynchronously
+
+        Returns:
+            None
+                If the method is called asynchronously, returns the request
+                thread.
+        """
+        kwargs['async_req'] = kwargs.get(
+            'async_req', False
+        )
+        kwargs['_return_http_data_only'] = kwargs.get(
+            '_return_http_data_only', True
+        )
+        kwargs['_preload_content'] = kwargs.get(
+            '_preload_content', True
+        )
+        kwargs['_request_timeout'] = kwargs.get(
+            '_request_timeout', None
+        )
+        kwargs['_check_input_type'] = kwargs.get(
+            '_check_input_type', True
+        )
+        kwargs['_check_return_type'] = kwargs.get(
+            '_check_return_type', True
+        )
+        kwargs['_host_index'] = kwargs.get('_host_index')
+        kwargs['application_id'] = \
+            application_id
+        kwargs['configuration'] = \
+            configuration
+        kwargs['username'] = \
+            username
+        kwargs['password'] = \
+            password
+        return self.application_push_to_registry_endpoint.call_with_http_info(**kwargs)
+
+    def application_reseal(
+        self,
+        application_id,
+        **kwargs
+    ):
+        """Clean id and keys from application configuration  # noqa: E501
+
+        This operation make the application no longer valid, but allow you to upload it to a git repo from where it can be cloned/forked. Id and keys will be re-generated on next re-opening of the application, leading to different names for the images etc.  # noqa: E501
+        This method makes a synchronous HTTP request by default. To make an
+        asynchronous HTTP request, please pass async_req=True
+
+        >>> thread = api.application_reseal(application_id, async_req=True)
+        >>> result = thread.get()
+
+        Args:
+            application_id (str): Id of an application (uuid)
+
+        Keyword Args:
+            _return_http_data_only (bool): response data without head status
+                code and headers. Default is True.
+            _preload_content (bool): if False, the urllib3.HTTPResponse object
+                will be returned without reading/decoding response data.
+                Default is True.
+            _request_timeout (int/float/tuple): timeout setting for this request. If
+                one number provided, it will be total request timeout. It can also
+                be a pair (tuple) of (connection, read) timeouts.
+                Default is None.
+            _check_input_type (bool): specifies if type checking
+                should be done one the data sent to the server.
+                Default is True.
+            _check_return_type (bool): specifies if type checking
+                should be done one the data received from the server.
+                Default is True.
+            _host_index (int/None): specifies the index of the server
+                that we want to use.
+                Default is read from the configuration.
+            async_req (bool): execute request asynchronously
+
+        Returns:
+            None
+                If the method is called asynchronously, returns the request
+                thread.
+        """
+        kwargs['async_req'] = kwargs.get(
+            'async_req', False
+        )
+        kwargs['_return_http_data_only'] = kwargs.get(
+            '_return_http_data_only', True
+        )
+        kwargs['_preload_content'] = kwargs.get(
+            '_preload_content', True
+        )
+        kwargs['_request_timeout'] = kwargs.get(
+            '_request_timeout', None
+        )
+        kwargs['_check_input_type'] = kwargs.get(
+            '_check_input_type', True
+        )
+        kwargs['_check_return_type'] = kwargs.get(
+            '_check_return_type', True
+        )
+        kwargs['_host_index'] = kwargs.get('_host_index')
+        kwargs['application_id'] = \
+            application_id
+        return self.application_reseal_endpoint.call_with_http_info(**kwargs)
+
+    def application_run(
+        self,
+        application_id,
+        configuration,
+        device_id,
+        **kwargs
+    ):
+        """Run container image  # noqa: E501
+
+        Run the application release or debug container on target, if the application is already running, restarts it  # noqa: E501
+        This method makes a synchronous HTTP request by default. To make an
+        asynchronous HTTP request, please pass async_req=True
+
+        >>> thread = api.application_run(application_id, configuration, device_id, async_req=True)
+        >>> result = thread.get()
+
+        Args:
+            application_id (str): Id of an application (uuid)
+            configuration (str):
+            device_id (str): Target device serial number
+
+        Keyword Args:
+            progress_id (str): Id of a progress cookie (uuid). [optional]
+            _return_http_data_only (bool): response data without head status
+                code and headers. Default is True.
+            _preload_content (bool): if False, the urllib3.HTTPResponse object
+                will be returned without reading/decoding response data.
+                Default is True.
+            _request_timeout (int/float/tuple): timeout setting for this request. If
+                one number provided, it will be total request timeout. It can also
+                be a pair (tuple) of (connection, read) timeouts.
+                Default is None.
+            _check_input_type (bool): specifies if type checking
+                should be done one the data sent to the server.
+                Default is True.
+            _check_return_type (bool): specifies if type checking
+                should be done one the data received from the server.
+                Default is True.
+            _host_index (int/None): specifies the index of the server
+                that we want to use.
+                Default is read from the configuration.
+            async_req (bool): execute request asynchronously
+
+        Returns:
+            DockerContainer
+                If the method is called asynchronously, returns the request
+                thread.
+        """
+        kwargs['async_req'] = kwargs.get(
+            'async_req', False
+        )
+        kwargs['_return_http_data_only'] = kwargs.get(
+            '_return_http_data_only', True
+        )
+        kwargs['_preload_content'] = kwargs.get(
+            '_preload_content', True
+        )
+        kwargs['_request_timeout'] = kwargs.get(
+            '_request_timeout', None
+        )
+        kwargs['_check_input_type'] = kwargs.get(
+            '_check_input_type', True
+        )
+        kwargs['_check_return_type'] = kwargs.get(
+            '_check_return_type', True
+        )
+        kwargs['_host_index'] = kwargs.get('_host_index')
+        kwargs['application_id'] = \
+            application_id
+        kwargs['configuration'] = \
+            configuration
+        kwargs['device_id'] = \
+            device_id
+        return self.application_run_endpoint.call_with_http_info(**kwargs)
+
+    def application_runsdk(
+        self,
+        application_id,
+        configuration,
+        **kwargs
+    ):
+        """Run SDK containers  # noqa: E501
+
+        Run SDK container and return its IP and SSH port  # noqa: E501
+        This method makes a synchronous HTTP request by default. To make an
+        asynchronous HTTP request, please pass async_req=True
+
+        >>> thread = api.application_runsdk(application_id, configuration, async_req=True)
+        >>> result = thread.get()
+
+        Args:
+            application_id (str): Id of an application (uuid)
+            configuration (str):
+
+        Keyword Args:
+            build (bool): [optional] if omitted the server will use the default value of True
+            progress_id (str): Id of a progress cookie (uuid). [optional]
+            _return_http_data_only (bool): response data without head status
+                code and headers. Default is True.
+            _preload_content (bool): if False, the urllib3.HTTPResponse object
+                will be returned without reading/decoding response data.
+                Default is True.
+            _request_timeout (int/float/tuple): timeout setting for this request. If
+                one number provided, it will be total request timeout. It can also
+                be a pair (tuple) of (connection, read) timeouts.
+                Default is None.
+            _check_input_type (bool): specifies if type checking
+                should be done one the data sent to the server.
+                Default is True.
+            _check_return_type (bool): specifies if type checking
+                should be done one the data received from the server.
+                Default is True.
+            _host_index (int/None): specifies the index of the server
+                that we want to use.
+                Default is read from the configuration.
+            async_req (bool): execute request asynchronously
+
+        Returns:
+            InlineResponse200
+                If the method is called asynchronously, returns the request
+                thread.
+        """
+        kwargs['async_req'] = kwargs.get(
+            'async_req', False
+        )
+        kwargs['_return_http_data_only'] = kwargs.get(
+            '_return_http_data_only', True
+        )
+        kwargs['_preload_content'] = kwargs.get(
+            '_preload_content', True
+        )
+        kwargs['_request_timeout'] = kwargs.get(
+            '_request_timeout', None
+        )
+        kwargs['_check_input_type'] = kwargs.get(
+            '_check_input_type', True
+        )
+        kwargs['_check_return_type'] = kwargs.get(
+            '_check_return_type', True
+        )
+        kwargs['_host_index'] = kwargs.get('_host_index')
+        kwargs['application_id'] = \
+            application_id
+        kwargs['configuration'] = \
+            configuration
+        return self.application_runsdk_endpoint.call_with_http_info(**kwargs)
+
+    def application_sdk_container(
+        self,
+        application_id,
+        configuration,
+        **kwargs
+    ):
+        """Get SDK container  # noqa: E501
+
+        Get SDK container information (can be used to check if it's running)  # noqa: E501
+        This method makes a synchronous HTTP request by default. To make an
+        asynchronous HTTP request, please pass async_req=True
+
+        >>> thread = api.application_sdk_container(application_id, configuration, async_req=True)
+        >>> result = thread.get()
+
+        Args:
+            application_id (str): Id of an application (uuid)
+            configuration (str):
+
+        Keyword Args:
+            _return_http_data_only (bool): response data without head status
+                code and headers. Default is True.
+            _preload_content (bool): if False, the urllib3.HTTPResponse object
+                will be returned without reading/decoding response data.
+                Default is True.
+            _request_timeout (int/float/tuple): timeout setting for this request. If
+                one number provided, it will be total request timeout. It can also
+                be a pair (tuple) of (connection, read) timeouts.
+                Default is None.
+            _check_input_type (bool): specifies if type checking
+                should be done one the data sent to the server.
+                Default is True.
+            _check_return_type (bool): specifies if type checking
+                should be done one the data received from the server.
+                Default is True.
+            _host_index (int/None): specifies the index of the server
+                that we want to use.
+                Default is read from the configuration.
+            async_req (bool): execute request asynchronously
+
+        Returns:
+            DockerContainer
+                If the method is called asynchronously, returns the request
+                thread.
+        """
+        kwargs['async_req'] = kwargs.get(
+            'async_req', False
+        )
+        kwargs['_return_http_data_only'] = kwargs.get(
+            '_return_http_data_only', True
+        )
+        kwargs['_preload_content'] = kwargs.get(
+            '_preload_content', True
+        )
+        kwargs['_request_timeout'] = kwargs.get(
+            '_request_timeout', None
+        )
+        kwargs['_check_input_type'] = kwargs.get(
+            '_check_input_type', True
+        )
+        kwargs['_check_return_type'] = kwargs.get(
+            '_check_return_type', True
+        )
+        kwargs['_host_index'] = kwargs.get('_host_index')
+        kwargs['application_id'] = \
+            application_id
+        kwargs['configuration'] = \
+            configuration
+        return self.application_sdk_container_endpoint.call_with_http_info(**kwargs)
+
+    def application_stop(
+        self,
+        application_id,
+        configuration,
+        device_id,
+        **kwargs
+    ):
+        """Stop running container image  # noqa: E501
+
+        Stop application release or debug container currently running on target, operation succeeds even if the container is not running  # noqa: E501
+        This method makes a synchronous HTTP request by default. To make an
+        asynchronous HTTP request, please pass async_req=True
+
+        >>> thread = api.application_stop(application_id, configuration, device_id, async_req=True)
+        >>> result = thread.get()
+
+        Args:
+            application_id (str): Id of an application (uuid)
+            configuration (str):
+            device_id (str): Target device serial number
+
+        Keyword Args:
+            _return_http_data_only (bool): response data without head status
+                code and headers. Default is True.
+            _preload_content (bool): if False, the urllib3.HTTPResponse object
+                will be returned without reading/decoding response data.
+                Default is True.
+            _request_timeout (int/float/tuple): timeout setting for this request. If
+                one number provided, it will be total request timeout. It can also
+                be a pair (tuple) of (connection, read) timeouts.
+                Default is None.
+            _check_input_type (bool): specifies if type checking
+                should be done one the data sent to the server.
+                Default is True.
+            _check_return_type (bool): specifies if type checking
+                should be done one the data received from the server.
+                Default is True.
+            _host_index (int/None): specifies the index of the server
+                that we want to use.
+                Default is read from the configuration.
+            async_req (bool): execute request asynchronously
+
+        Returns:
+            None
+                If the method is called asynchronously, returns the request
+                thread.
+        """
+        kwargs['async_req'] = kwargs.get(
+            'async_req', False
+        )
+        kwargs['_return_http_data_only'] = kwargs.get(
+            '_return_http_data_only', True
+        )
+        kwargs['_preload_content'] = kwargs.get(
+            '_preload_content', True
+        )
+        kwargs['_request_timeout'] = kwargs.get(
+            '_request_timeout', None
+        )
+        kwargs['_check_input_type'] = kwargs.get(
+            '_check_input_type', True
+        )
+        kwargs['_check_return_type'] = kwargs.get(
+            '_check_return_type', True
+        )
+        kwargs['_host_index'] = kwargs.get('_host_index')
+        kwargs['application_id'] = \
+            application_id
+        kwargs['configuration'] = \
+            configuration
+        kwargs['device_id'] = \
+            device_id
+        return self.application_stop_endpoint.call_with_http_info(**kwargs)
+
+    def application_syncfolders(
+        self,
+        application_id,
+        sourcefolder,
+        configuration,
+        device_id,
+        destfolder,
+        **kwargs
+    ):
+        """Synchronize folders  # noqa: E501
+
+        Synchronizes folders between host/SDK container and the application container  # noqa: E501
+        This method makes a synchronous HTTP request by default. To make an
+        asynchronous HTTP request, please pass async_req=True
+
+        >>> thread = api.application_syncfolders(application_id, sourcefolder, configuration, device_id, destfolder, async_req=True)
+        >>> result = thread.get()
+
+        Args:
+            application_id (str): Id of an application (uuid)
+            sourcefolder (str):
+            configuration (str):
+            device_id (str): Target device serial number
+            destfolder (str):
+
+        Keyword Args:
+            source_is_sdk (bool): [optional]
+            progress_id (str): Id of a progress cookie (uuid). [optional]
+            _return_http_data_only (bool): response data without head status
+                code and headers. Default is True.
+            _preload_content (bool): if False, the urllib3.HTTPResponse object
+                will be returned without reading/decoding response data.
+                Default is True.
+            _request_timeout (int/float/tuple): timeout setting for this request. If
+                one number provided, it will be total request timeout. It can also
+                be a pair (tuple) of (connection, read) timeouts.
+                Default is None.
+            _check_input_type (bool): specifies if type checking
+                should be done one the data sent to the server.
+                Default is True.
+            _check_return_type (bool): specifies if type checking
+                should be done one the data received from the server.
+                Default is True.
+            _host_index (int/None): specifies the index of the server
+                that we want to use.
+                Default is read from the configuration.
+            async_req (bool): execute request asynchronously
+
+        Returns:
+            None
+                If the method is called asynchronously, returns the request
+                thread.
+        """
+        kwargs['async_req'] = kwargs.get(
+            'async_req', False
+        )
+        kwargs['_return_http_data_only'] = kwargs.get(
+            '_return_http_data_only', True
+        )
+        kwargs['_preload_content'] = kwargs.get(
+            '_preload_content', True
+        )
+        kwargs['_request_timeout'] = kwargs.get(
+            '_request_timeout', None
+        )
+        kwargs['_check_input_type'] = kwargs.get(
+            '_check_input_type', True
+        )
+        kwargs['_check_return_type'] = kwargs.get(
+            '_check_return_type', True
+        )
+        kwargs['_host_index'] = kwargs.get('_host_index')
+        kwargs['application_id'] = \
+            application_id
+        kwargs['sourcefolder'] = \
+            sourcefolder
+        kwargs['configuration'] = \
+            configuration
+        kwargs['device_id'] = \
+            device_id
+        kwargs['destfolder'] = \
+            destfolder
+        return self.application_syncfolders_endpoint.call_with_http_info(**kwargs)
+
+    def application_tcb_build_yaml(
+        self,
+        application_id,
+        yamlfilepath,
+        **kwargs
+    ):
+        """Build the TorizonCore tcbuild.yaml  # noqa: E501
+
+        Build the TorizonCore tcbuild.yaml using TorizonCore Builder Docker image.  # noqa: E501
+        This method makes a synchronous HTTP request by default. To make an
+        asynchronous HTTP request, please pass async_req=True
+
+        >>> thread = api.application_tcb_build_yaml(application_id, yamlfilepath, async_req=True)
+        >>> result = thread.get()
+
+        Args:
+            application_id (str): Id of an application (uuid)
+            yamlfilepath (str): the yaml file name from workspace path
+
+        Keyword Args:
+            progress_id (str): Id of a progress cookie (uuid). [optional]
+            _return_http_data_only (bool): response data without head status
+                code and headers. Default is True.
+            _preload_content (bool): if False, the urllib3.HTTPResponse object
+                will be returned without reading/decoding response data.
+                Default is True.
+            _request_timeout (int/float/tuple): timeout setting for this request. If
+                one number provided, it will be total request timeout. It can also
+                be a pair (tuple) of (connection, read) timeouts.
+                Default is None.
+            _check_input_type (bool): specifies if type checking
+                should be done one the data sent to the server.
+                Default is True.
+            _check_return_type (bool): specifies if type checking
+                should be done one the data received from the server.
+                Default is True.
+            _host_index (int/None): specifies the index of the server
+                that we want to use.
+                Default is read from the configuration.
+            async_req (bool): execute request asynchronously
+
+        Returns:
+            None
+                If the method is called asynchronously, returns the request
+                thread.
+        """
+        kwargs['async_req'] = kwargs.get(
+            'async_req', False
+        )
+        kwargs['_return_http_data_only'] = kwargs.get(
+            '_return_http_data_only', True
+        )
+        kwargs['_preload_content'] = kwargs.get(
+            '_preload_content', True
+        )
+        kwargs['_request_timeout'] = kwargs.get(
+            '_request_timeout', None
+        )
+        kwargs['_check_input_type'] = kwargs.get(
+            '_check_input_type', True
+        )
+        kwargs['_check_return_type'] = kwargs.get(
+            '_check_return_type', True
+        )
+        kwargs['_host_index'] = kwargs.get('_host_index')
+        kwargs['application_id'] = \
+            application_id
+        kwargs['yamlfilepath'] = \
+            yamlfilepath
+        return self.application_tcb_build_yaml_endpoint.call_with_http_info(**kwargs)
+
+    def application_tcb_deploy(
+        self,
+        application_id,
+        host,
+        username,
+        password,
+        **kwargs
+    ):
+        """TorizonCore unpack command  # noqa: E501
+
+        Unpack the output using TorizonCore Builder Docker image.  # noqa: E501
+        This method makes a synchronous HTTP request by default. To make an
+        asynchronous HTTP request, please pass async_req=True
+
+        >>> thread = api.application_tcb_deploy(application_id, host, username, password, async_req=True)
+        >>> result = thread.get()
+
+        Args:
+            application_id (str): Id of an application (uuid)
+            host (str): the hostname or ip address of the device to be deployed
+            username (str): the Torizon username of the device to be deployed
+            password (str): the Torizon password of the device to be deployed
+
+        Keyword Args:
+            progress_id (str): Id of a progress cookie (uuid). [optional]
+            _return_http_data_only (bool): response data without head status
+                code and headers. Default is True.
+            _preload_content (bool): if False, the urllib3.HTTPResponse object
+                will be returned without reading/decoding response data.
+                Default is True.
+            _request_timeout (int/float/tuple): timeout setting for this request. If
+                one number provided, it will be total request timeout. It can also
+                be a pair (tuple) of (connection, read) timeouts.
+                Default is None.
+            _check_input_type (bool): specifies if type checking
+                should be done one the data sent to the server.
+                Default is True.
+            _check_return_type (bool): specifies if type checking
+                should be done one the data received from the server.
+                Default is True.
+            _host_index (int/None): specifies the index of the server
+                that we want to use.
+                Default is read from the configuration.
+            async_req (bool): execute request asynchronously
+
+        Returns:
+            None
+                If the method is called asynchronously, returns the request
+                thread.
+        """
+        kwargs['async_req'] = kwargs.get(
+            'async_req', False
+        )
+        kwargs['_return_http_data_only'] = kwargs.get(
+            '_return_http_data_only', True
+        )
+        kwargs['_preload_content'] = kwargs.get(
+            '_preload_content', True
+        )
+        kwargs['_request_timeout'] = kwargs.get(
+            '_request_timeout', None
+        )
+        kwargs['_check_input_type'] = kwargs.get(
+            '_check_input_type', True
+        )
+        kwargs['_check_return_type'] = kwargs.get(
+            '_check_return_type', True
+        )
+        kwargs['_host_index'] = kwargs.get('_host_index')
+        kwargs['application_id'] = \
+            application_id
+        kwargs['host'] = \
+            host
+        kwargs['username'] = \
+            username
+        kwargs['password'] = \
+            password
+        return self.application_tcb_deploy_endpoint.call_with_http_info(**kwargs)
+
+    def application_tcb_dt_checkout(
+        self,
+        application_id,
+        **kwargs
+    ):
+        """TorizonCore Device Tree repo checkout  # noqa: E501
+
+        Checkout the device tree and overlays repository at https://github.com/toradex/device-trees  # noqa: E501
+        This method makes a synchronous HTTP request by default. To make an
+        asynchronous HTTP request, please pass async_req=True
+
+        >>> thread = api.application_tcb_dt_checkout(application_id, async_req=True)
+        >>> result = thread.get()
+
+        Args:
+            application_id (str): Id of an application (uuid)
+
+        Keyword Args:
+            progress_id (str): Id of a progress cookie (uuid). [optional]
+            _return_http_data_only (bool): response data without head status
+                code and headers. Default is True.
+            _preload_content (bool): if False, the urllib3.HTTPResponse object
+                will be returned without reading/decoding response data.
+                Default is True.
+            _request_timeout (int/float/tuple): timeout setting for this request. If
+                one number provided, it will be total request timeout. It can also
+                be a pair (tuple) of (connection, read) timeouts.
+                Default is None.
+            _check_input_type (bool): specifies if type checking
+                should be done one the data sent to the server.
+                Default is True.
+            _check_return_type (bool): specifies if type checking
+                should be done one the data received from the server.
+                Default is True.
+            _host_index (int/None): specifies the index of the server
+                that we want to use.
+                Default is read from the configuration.
+            async_req (bool): execute request asynchronously
+
+        Returns:
+            None
+                If the method is called asynchronously, returns the request
+                thread.
+        """
+        kwargs['async_req'] = kwargs.get(
+            'async_req', False
+        )
+        kwargs['_return_http_data_only'] = kwargs.get(
+            '_return_http_data_only', True
+        )
+        kwargs['_preload_content'] = kwargs.get(
+            '_preload_content', True
+        )
+        kwargs['_request_timeout'] = kwargs.get(
+            '_request_timeout', None
+        )
+        kwargs['_check_input_type'] = kwargs.get(
+            '_check_input_type', True
+        )
+        kwargs['_check_return_type'] = kwargs.get(
+            '_check_return_type', True
+        )
+        kwargs['_host_index'] = kwargs.get('_host_index')
+        kwargs['application_id'] = \
+            application_id
+        return self.application_tcb_dt_checkout_endpoint.call_with_http_info(**kwargs)
+
+    def application_tcb_isolate(
+        self,
+        application_id,
+        host,
+        username,
+        password,
+        output_dir,
+        **kwargs
+    ):
+        """TorizonCore isolate command  # noqa: E501
+
+        Get configuration changes from the target board.  # noqa: E501
+        This method makes a synchronous HTTP request by default. To make an
+        asynchronous HTTP request, please pass async_req=True
+
+        >>> thread = api.application_tcb_isolate(application_id, host, username, password, output_dir, async_req=True)
+        >>> result = thread.get()
+
+        Args:
+            application_id (str): Id of an application (uuid)
+            host (str): the hostname or ip address of the device to be deployed
+            username (str): the Torizon username of the device to be deployed
+            password (str): the Torizon password of the device to be deployed
+            output_dir (str): the direcotry path that the changes will be save
+
+        Keyword Args:
+            progress_id (str): Id of a progress cookie (uuid). [optional]
+            _return_http_data_only (bool): response data without head status
+                code and headers. Default is True.
+            _preload_content (bool): if False, the urllib3.HTTPResponse object
+                will be returned without reading/decoding response data.
+                Default is True.
+            _request_timeout (int/float/tuple): timeout setting for this request. If
+                one number provided, it will be total request timeout. It can also
+                be a pair (tuple) of (connection, read) timeouts.
+                Default is None.
+            _check_input_type (bool): specifies if type checking
+                should be done one the data sent to the server.
+                Default is True.
+            _check_return_type (bool): specifies if type checking
+                should be done one the data received from the server.
+                Default is True.
+            _host_index (int/None): specifies the index of the server
+                that we want to use.
+                Default is read from the configuration.
+            async_req (bool): execute request asynchronously
+
+        Returns:
+            None
+                If the method is called asynchronously, returns the request
+                thread.
+        """
+        kwargs['async_req'] = kwargs.get(
+            'async_req', False
+        )
+        kwargs['_return_http_data_only'] = kwargs.get(
+            '_return_http_data_only', True
+        )
+        kwargs['_preload_content'] = kwargs.get(
+            '_preload_content', True
+        )
+        kwargs['_request_timeout'] = kwargs.get(
+            '_request_timeout', None
+        )
+        kwargs['_check_input_type'] = kwargs.get(
+            '_check_input_type', True
+        )
+        kwargs['_check_return_type'] = kwargs.get(
+            '_check_return_type', True
+        )
+        kwargs['_host_index'] = kwargs.get('_host_index')
+        kwargs['application_id'] = \
+            application_id
+        kwargs['host'] = \
+            host
+        kwargs['username'] = \
+            username
+        kwargs['password'] = \
+            password
+        kwargs['output_dir'] = \
+            output_dir
+        return self.application_tcb_isolate_endpoint.call_with_http_info(**kwargs)
+
+    def application_tcb_unpack(
+        self,
+        application_id,
+        outputpath,
+        **kwargs
+    ):
+        """TorizonCore unpack command  # noqa: E501
+
+        Unpack the output using TorizonCore Builder Docker image.  # noqa: E501
+        This method makes a synchronous HTTP request by default. To make an
+        asynchronous HTTP request, please pass async_req=True
+
+        >>> thread = api.application_tcb_unpack(application_id, outputpath, async_req=True)
+        >>> result = thread.get()
+
+        Args:
+            application_id (str): Id of an application (uuid)
+            outputpath (str): the output directory created by TorizonCore builder from workspace path
+
+        Keyword Args:
+            progress_id (str): Id of a progress cookie (uuid). [optional]
+            _return_http_data_only (bool): response data without head status
+                code and headers. Default is True.
+            _preload_content (bool): if False, the urllib3.HTTPResponse object
+                will be returned without reading/decoding response data.
+                Default is True.
+            _request_timeout (int/float/tuple): timeout setting for this request. If
+                one number provided, it will be total request timeout. It can also
+                be a pair (tuple) of (connection, read) timeouts.
+                Default is None.
+            _check_input_type (bool): specifies if type checking
+                should be done one the data sent to the server.
+                Default is True.
+            _check_return_type (bool): specifies if type checking
+                should be done one the data received from the server.
+                Default is True.
+            _host_index (int/None): specifies the index of the server
+                that we want to use.
+                Default is read from the configuration.
+            async_req (bool): execute request asynchronously
+
+        Returns:
+            None
+                If the method is called asynchronously, returns the request
+                thread.
+        """
+        kwargs['async_req'] = kwargs.get(
+            'async_req', False
+        )
+        kwargs['_return_http_data_only'] = kwargs.get(
+            '_return_http_data_only', True
+        )
+        kwargs['_preload_content'] = kwargs.get(
+            '_preload_content', True
+        )
+        kwargs['_request_timeout'] = kwargs.get(
+            '_request_timeout', None
+        )
+        kwargs['_check_input_type'] = kwargs.get(
+            '_check_input_type', True
+        )
+        kwargs['_check_return_type'] = kwargs.get(
+            '_check_return_type', True
+        )
+        kwargs['_host_index'] = kwargs.get('_host_index')
+        kwargs['application_id'] = \
+            application_id
+        kwargs['outputpath'] = \
+            outputpath
+        return self.application_tcb_unpack_endpoint.call_with_http_info(**kwargs)
+
+    def application_updated(
+        self,
+        application_id,
+        configuration,
+        **kwargs
+    ):
+        """Check if container image is up to date  # noqa: E501
+
+        Check if some properties have been changed after the last build of the configuration-specific container image  # noqa: E501
+        This method makes a synchronous HTTP request by default. To make an
+        asynchronous HTTP request, please pass async_req=True
+
+        >>> thread = api.application_updated(application_id, configuration, async_req=True)
+        >>> result = thread.get()
+
+        Args:
+            application_id (str): Id of an application (uuid)
+            configuration (str):
+
+        Keyword Args:
+            _return_http_data_only (bool): response data without head status
+                code and headers. Default is True.
+            _preload_content (bool): if False, the urllib3.HTTPResponse object
+                will be returned without reading/decoding response data.
+                Default is True.
+            _request_timeout (int/float/tuple): timeout setting for this request. If
+                one number provided, it will be total request timeout. It can also
+                be a pair (tuple) of (connection, read) timeouts.
+                Default is None.
+            _check_input_type (bool): specifies if type checking
+                should be done one the data sent to the server.
+                Default is True.
+            _check_return_type (bool): specifies if type checking
+                should be done one the data received from the server.
+                Default is True.
+            _host_index (int/None): specifies the index of the server
+                that we want to use.
+                Default is read from the configuration.
+            async_req (bool): execute request asynchronously
+
+        Returns:
+            bool
+                If the method is called asynchronously, returns the request
+                thread.
+        """
+        kwargs['async_req'] = kwargs.get(
+            'async_req', False
+        )
+        kwargs['_return_http_data_only'] = kwargs.get(
+            '_return_http_data_only', True
+        )
+        kwargs['_preload_content'] = kwargs.get(
+            '_preload_content', True
+        )
+        kwargs['_request_timeout'] = kwargs.get(
+            '_request_timeout', None
+        )
+        kwargs['_check_input_type'] = kwargs.get(
+            '_check_input_type', True
+        )
+        kwargs['_check_return_type'] = kwargs.get(
+            '_check_return_type', True
+        )
+        kwargs['_host_index'] = kwargs.get('_host_index')
+        kwargs['application_id'] = \
+            application_id
+        kwargs['configuration'] = \
+            configuration
+        return self.application_updated_endpoint.call_with_http_info(**kwargs)
+
+    def application_updatesdk(
+        self,
+        application_id,
+        configuration,
+        **kwargs
+    ):
+        """Update SDK container  # noqa: E501
+
+        Update the SDK container by adding new dev libraries or synchronizing sysroots  # noqa: E501
+        This method makes a synchronous HTTP request by default. To make an
+        asynchronous HTTP request, please pass async_req=True
+
+        >>> thread = api.application_updatesdk(application_id, configuration, async_req=True)
+        >>> result = thread.get()
+
+        Args:
+            application_id (str): Id of an application (uuid)
+            configuration (str):
+
+        Keyword Args:
+            progress_id (str): Id of a progress cookie (uuid). [optional]
+            _return_http_data_only (bool): response data without head status
+                code and headers. Default is True.
+            _preload_content (bool): if False, the urllib3.HTTPResponse object
+                will be returned without reading/decoding response data.
+                Default is True.
+            _request_timeout (int/float/tuple): timeout setting for this request. If
+                one number provided, it will be total request timeout. It can also
+                be a pair (tuple) of (connection, read) timeouts.
+                Default is None.
+            _check_input_type (bool): specifies if type checking
+                should be done one the data sent to the server.
+                Default is True.
+            _check_return_type (bool): specifies if type checking
+                should be done one the data received from the server.
+                Default is True.
+            _host_index (int/None): specifies the index of the server
+                that we want to use.
+                Default is read from the configuration.
+            async_req (bool): execute request asynchronously
+
+        Returns:
+            None
+                If the method is called asynchronously, returns the request
+                thread.
+        """
+        kwargs['async_req'] = kwargs.get(
+            'async_req', False
+        )
+        kwargs['_return_http_data_only'] = kwargs.get(
+            '_return_http_data_only', True
+        )
+        kwargs['_preload_content'] = kwargs.get(
+            '_preload_content', True
+        )
+        kwargs['_request_timeout'] = kwargs.get(
+            '_request_timeout', None
+        )
+        kwargs['_check_input_type'] = kwargs.get(
+            '_check_input_type', True
+        )
+        kwargs['_check_return_type'] = kwargs.get(
+            '_check_return_type', True
+        )
+        kwargs['_host_index'] = kwargs.get('_host_index')
+        kwargs['application_id'] = \
+            application_id
+        kwargs['configuration'] = \
+            configuration
+        return self.application_updatesdk_endpoint.call_with_http_info(**kwargs)
+
+    def application_validate_array_item(
+        self,
+        application_id,
+        configuration,
+        parameter,
+        value,
+        index,
+        **kwargs
+    ):
+        """Validates a value for a parameter  # noqa: E501
+
+        Validates a parameter, allowing UI to report problems before applying it.  # noqa: E501
+        This method makes a synchronous HTTP request by default. To make an
+        asynchronous HTTP request, please pass async_req=True
+
+        >>> thread = api.application_validate_array_item(application_id, configuration, parameter, value, index, async_req=True)
+        >>> result = thread.get()
+
+        Args:
+            application_id (str): Id of an application (uuid)
+            configuration (str):
+            parameter (str):
+            value (str):
+            index (int):
+
+        Keyword Args:
+            _return_http_data_only (bool): response data without head status
+                code and headers. Default is True.
+            _preload_content (bool): if False, the urllib3.HTTPResponse object
+                will be returned without reading/decoding response data.
+                Default is True.
+            _request_timeout (int/float/tuple): timeout setting for this request. If
+                one number provided, it will be total request timeout. It can also
+                be a pair (tuple) of (connection, read) timeouts.
+                Default is None.
+            _check_input_type (bool): specifies if type checking
+                should be done one the data sent to the server.
+                Default is True.
+            _check_return_type (bool): specifies if type checking
+                should be done one the data received from the server.
+                Default is True.
+            _host_index (int/None): specifies the index of the server
+                that we want to use.
+                Default is read from the configuration.
+            async_req (bool): execute request asynchronously
+
+        Returns:
+            ValidationResult
+                If the method is called asynchronously, returns the request
+                thread.
+        """
+        kwargs['async_req'] = kwargs.get(
+            'async_req', False
+        )
+        kwargs['_return_http_data_only'] = kwargs.get(
+            '_return_http_data_only', True
+        )
+        kwargs['_preload_content'] = kwargs.get(
+            '_preload_content', True
+        )
+        kwargs['_request_timeout'] = kwargs.get(
+            '_request_timeout', None
+        )
+        kwargs['_check_input_type'] = kwargs.get(
+            '_check_input_type', True
+        )
+        kwargs['_check_return_type'] = kwargs.get(
+            '_check_return_type', True
+        )
+        kwargs['_host_index'] = kwargs.get('_host_index')
+        kwargs['application_id'] = \
+            application_id
+        kwargs['configuration'] = \
+            configuration
+        kwargs['parameter'] = \
+            parameter
+        kwargs['value'] = \
+            value
+        kwargs['index'] = \
+            index
+        return self.application_validate_array_item_endpoint.call_with_http_info(**kwargs)
+
+    def application_validate_dictionary_entry(
+        self,
+        application_id,
+        configuration,
+        parameter,
+        key,
+        value,
+        newitem,
+        **kwargs
+    ):
+        """Validates a value for a parameter  # noqa: E501
+
+        Validates a parameter, allowing UI to report problems before applying it.  # noqa: E501
+        This method makes a synchronous HTTP request by default. To make an
+        asynchronous HTTP request, please pass async_req=True
+
+        >>> thread = api.application_validate_dictionary_entry(application_id, configuration, parameter, key, value, newitem, async_req=True)
+        >>> result = thread.get()
+
+        Args:
+            application_id (str): Id of an application (uuid)
+            configuration (str):
+            parameter (str):
+            key (str):
+            value (str):
+            newitem (bool):
+
+        Keyword Args:
+            _return_http_data_only (bool): response data without head status
+                code and headers. Default is True.
+            _preload_content (bool): if False, the urllib3.HTTPResponse object
+                will be returned without reading/decoding response data.
+                Default is True.
+            _request_timeout (int/float/tuple): timeout setting for this request. If
+                one number provided, it will be total request timeout. It can also
+                be a pair (tuple) of (connection, read) timeouts.
+                Default is None.
+            _check_input_type (bool): specifies if type checking
+                should be done one the data sent to the server.
+                Default is True.
+            _check_return_type (bool): specifies if type checking
+                should be done one the data received from the server.
+                Default is True.
+            _host_index (int/None): specifies the index of the server
+                that we want to use.
+                Default is read from the configuration.
+            async_req (bool): execute request asynchronously
+
+        Returns:
+            ValidationResult
+                If the method is called asynchronously, returns the request
+                thread.
+        """
+        kwargs['async_req'] = kwargs.get(
+            'async_req', False
+        )
+        kwargs['_return_http_data_only'] = kwargs.get(
+            '_return_http_data_only', True
+        )
+        kwargs['_preload_content'] = kwargs.get(
+            '_preload_content', True
+        )
+        kwargs['_request_timeout'] = kwargs.get(
+            '_request_timeout', None
+        )
+        kwargs['_check_input_type'] = kwargs.get(
+            '_check_input_type', True
+        )
+        kwargs['_check_return_type'] = kwargs.get(
+            '_check_return_type', True
+        )
+        kwargs['_host_index'] = kwargs.get('_host_index')
+        kwargs['application_id'] = \
+            application_id
+        kwargs['configuration'] = \
+            configuration
+        kwargs['parameter'] = \
+            parameter
+        kwargs['key'] = \
+            key
+        kwargs['value'] = \
+            value
+        kwargs['newitem'] = \
+            newitem
+        return self.application_validate_dictionary_entry_endpoint.call_with_http_info(**kwargs)
+
+    def application_validate_parameter(
+        self,
+        application_id,
+        configuration,
+        parameter,
+        value,
+        **kwargs
+    ):
+        """Validates a value for a parameter  # noqa: E501
+
+        Validates a parameter, allowing UI to report problems before applying it.  # noqa: E501
+        This method makes a synchronous HTTP request by default. To make an
+        asynchronous HTTP request, please pass async_req=True
+
+        >>> thread = api.application_validate_parameter(application_id, configuration, parameter, value, async_req=True)
+        >>> result = thread.get()
+
+        Args:
+            application_id (str): Id of an application (uuid)
+            configuration (str):
+            parameter (str):
+            value (str):
+
+        Keyword Args:
+            _return_http_data_only (bool): response data without head status
+                code and headers. Default is True.
+            _preload_content (bool): if False, the urllib3.HTTPResponse object
+                will be returned without reading/decoding response data.
+                Default is True.
+            _request_timeout (int/float/tuple): timeout setting for this request. If
+                one number provided, it will be total request timeout. It can also
+                be a pair (tuple) of (connection, read) timeouts.
+                Default is None.
+            _check_input_type (bool): specifies if type checking
+                should be done one the data sent to the server.
+                Default is True.
+            _check_return_type (bool): specifies if type checking
+                should be done one the data received from the server.
+                Default is True.
+            _host_index (int/None): specifies the index of the server
+                that we want to use.
+                Default is read from the configuration.
+            async_req (bool): execute request asynchronously
+
+        Returns:
+            ValidationResult
+                If the method is called asynchronously, returns the request
+                thread.
+        """
+        kwargs['async_req'] = kwargs.get(
+            'async_req', False
+        )
+        kwargs['_return_http_data_only'] = kwargs.get(
+            '_return_http_data_only', True
+        )
+        kwargs['_preload_content'] = kwargs.get(
+            '_preload_content', True
+        )
+        kwargs['_request_timeout'] = kwargs.get(
+            '_request_timeout', None
+        )
+        kwargs['_check_input_type'] = kwargs.get(
+            '_check_input_type', True
+        )
+        kwargs['_check_return_type'] = kwargs.get(
+            '_check_return_type', True
+        )
+        kwargs['_host_index'] = kwargs.get('_host_index')
+        kwargs['application_id'] = \
+            application_id
+        kwargs['configuration'] = \
+            configuration
+        kwargs['parameter'] = \
+            parameter
+        kwargs['value'] = \
+            value
+        return self.application_validate_parameter_endpoint.call_with_http_info(**kwargs)
+
+    def applications_create(
+        self,
+        platform_id,
+        path,
+        **kwargs
+    ):
+        """Create an application configuration  # noqa: E501
+
+        Create a new application configuration  # noqa: E501
+        This method makes a synchronous HTTP request by default. To make an
+        asynchronous HTTP request, please pass async_req=True
+
+        >>> thread = api.applications_create(platform_id, path, async_req=True)
+        >>> result = thread.get()
+
+        Args:
+            platform_id (str):
+            path (str):
+
+        Keyword Args:
+            username (str): [optional]
+            _return_http_data_only (bool): response data without head status
+                code and headers. Default is True.
+            _preload_content (bool): if False, the urllib3.HTTPResponse object
+                will be returned without reading/decoding response data.
+                Default is True.
+            _request_timeout (int/float/tuple): timeout setting for this request. If
+                one number provided, it will be total request timeout. It can also
+                be a pair (tuple) of (connection, read) timeouts.
+                Default is None.
+            _check_input_type (bool): specifies if type checking
+                should be done one the data sent to the server.
+                Default is True.
+            _check_return_type (bool): specifies if type checking
+                should be done one the data received from the server.
+                Default is True.
+            _host_index (int/None): specifies the index of the server
+                that we want to use.
+                Default is read from the configuration.
+            async_req (bool): execute request asynchronously
+
+        Returns:
+            Application
+                If the method is called asynchronously, returns the request
+                thread.
+        """
+        kwargs['async_req'] = kwargs.get(
+            'async_req', False
+        )
+        kwargs['_return_http_data_only'] = kwargs.get(
+            '_return_http_data_only', True
+        )
+        kwargs['_preload_content'] = kwargs.get(
+            '_preload_content', True
+        )
+        kwargs['_request_timeout'] = kwargs.get(
+            '_request_timeout', None
+        )
+        kwargs['_check_input_type'] = kwargs.get(
+            '_check_input_type', True
+        )
+        kwargs['_check_return_type'] = kwargs.get(
+            '_check_return_type', True
+        )
+        kwargs['_host_index'] = kwargs.get('_host_index')
+        kwargs['platform_id'] = \
+            platform_id
+        kwargs['path'] = \
+            path
+        return self.applications_create_endpoint.call_with_http_info(**kwargs)
+
+    def applications_load(
+        self,
+        path,
+        **kwargs
+    ):
+        """Load an application configuration  # noqa: E501
+
+        Load an application configuration from the local filesystem  # noqa: E501
+        This method makes a synchronous HTTP request by default. To make an
+        asynchronous HTTP request, please pass async_req=True
+
+        >>> thread = api.applications_load(path, async_req=True)
+        >>> result = thread.get()
+
+        Args:
+            path (str):
+
+        Keyword Args:
+            _return_http_data_only (bool): response data without head status
+                code and headers. Default is True.
+            _preload_content (bool): if False, the urllib3.HTTPResponse object
+                will be returned without reading/decoding response data.
+                Default is True.
+            _request_timeout (int/float/tuple): timeout setting for this request. If
+                one number provided, it will be total request timeout. It can also
+                be a pair (tuple) of (connection, read) timeouts.
+                Default is None.
+            _check_input_type (bool): specifies if type checking
+                should be done one the data sent to the server.
+                Default is True.
+            _check_return_type (bool): specifies if type checking
+                should be done one the data received from the server.
+                Default is True.
+            _host_index (int/None): specifies the index of the server
+                that we want to use.
+                Default is read from the configuration.
+            async_req (bool): execute request asynchronously
+
+        Returns:
+            Application
+                If the method is called asynchronously, returns the request
+                thread.
+        """
+        kwargs['async_req'] = kwargs.get(
+            'async_req', False
+        )
+        kwargs['_return_http_data_only'] = kwargs.get(
+            '_return_http_data_only', True
+        )
+        kwargs['_preload_content'] = kwargs.get(
+            '_preload_content', True
+        )
+        kwargs['_request_timeout'] = kwargs.get(
+            '_request_timeout', None
+        )
+        kwargs['_check_input_type'] = kwargs.get(
+            '_check_input_type', True
+        )
+        kwargs['_check_return_type'] = kwargs.get(
+            '_check_return_type', True
+        )
+        kwargs['_host_index'] = kwargs.get('_host_index')
+        kwargs['path'] = \
+            path
+        return self.applications_load_endpoint.call_with_http_info(**kwargs)
+

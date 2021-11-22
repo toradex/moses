@@ -22,6 +22,11 @@ Method | HTTP request | Description
 [**application_sdk_container**](ApplicationsApi.md#application_sdk_container) | **GET** /applications/{application_id}/sdk/container | Get SDK container
 [**application_stop**](ApplicationsApi.md#application_stop) | **GET** /applications/{application_id}/stop | Stop running container image
 [**application_syncfolders**](ApplicationsApi.md#application_syncfolders) | **GET** /applications/{application_id}/syncfolders | Synchronize folders
+[**application_tcb_build_yaml**](ApplicationsApi.md#application_tcb_build_yaml) | **GET** /applications/{application_id}/tcb_build_yaml | Build the TorizonCore tcbuild.yaml
+[**application_tcb_deploy**](ApplicationsApi.md#application_tcb_deploy) | **GET** /applications/{application_id}/tcb_deploy | TorizonCore unpack command
+[**application_tcb_dt_checkout**](ApplicationsApi.md#application_tcb_dt_checkout) | **GET** /applications/{application_id}/tcb_dt_checkout | TorizonCore Device Tree repo checkout
+[**application_tcb_isolate**](ApplicationsApi.md#application_tcb_isolate) | **GET** /applications/{application_id}/tcb_isolate | TorizonCore isolate command
+[**application_tcb_unpack**](ApplicationsApi.md#application_tcb_unpack) | **GET** /applications/{application_id}/tcb_unpack | TorizonCore unpack command
 [**application_updated**](ApplicationsApi.md#application_updated) | **GET** /applications/{application_id}/updated | Check if container image is up to date
 [**application_updatesdk**](ApplicationsApi.md#application_updatesdk) | **GET** /applications/{application_id}/sdk/update | Update SDK container
 [**application_validate_array_item**](ApplicationsApi.md#application_validate_array_item) | **GET** /applications/{application_id}/validate_array_item | Validates a value for a parameter
@@ -1525,6 +1530,433 @@ No authorization required
 **541** | SDK container is not running. |  -  |
 **549** | Container does not support SSH |  -  |
 **551** | Operation has been aborted |  -  |
+
+[[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
+
+# **application_tcb_build_yaml**
+> application_tcb_build_yaml(application_id, yamlfilepath)
+
+Build the TorizonCore tcbuild.yaml
+
+Build the TorizonCore tcbuild.yaml using TorizonCore Builder Docker image.
+
+### Example
+
+
+```python
+import time
+import moses_client
+from moses_client.api import applications_api
+from moses_client.model.error_info import ErrorInfo
+from pprint import pprint
+# Defining the host is optional and defaults to http://localhost:5000/api
+# See configuration.py for a list of all supported configuration parameters.
+configuration = moses_client.Configuration(
+    host = "http://localhost:5000/api"
+)
+
+
+# Enter a context with an instance of the API client
+with moses_client.ApiClient() as api_client:
+    # Create an instance of the API class
+    api_instance = applications_api.ApplicationsApi(api_client)
+    application_id = "555914d4-d6Ea-18e3-e53E-03fEE4Bc7d,," # str | Id of an application (uuid)
+    yamlfilepath = "yamlfilepath_example" # str | the yaml file name from workspace path
+    progress_id = "55914d4d-6Ea1-8e3e-53E0-3fEE4Bc7d,,c" # str | Id of a progress cookie (uuid) (optional)
+
+    # example passing only required values which don't have defaults set
+    try:
+        # Build the TorizonCore tcbuild.yaml
+        api_instance.application_tcb_build_yaml(application_id, yamlfilepath)
+    except moses_client.ApiException as e:
+        print("Exception when calling ApplicationsApi->application_tcb_build_yaml: %s\n" % e)
+
+    # example passing only required values which don't have defaults set
+    # and optional values
+    try:
+        # Build the TorizonCore tcbuild.yaml
+        api_instance.application_tcb_build_yaml(application_id, yamlfilepath, progress_id=progress_id)
+    except moses_client.ApiException as e:
+        print("Exception when calling ApplicationsApi->application_tcb_build_yaml: %s\n" % e)
+```
+
+
+### Parameters
+
+Name | Type | Description  | Notes
+------------- | ------------- | ------------- | -------------
+ **application_id** | **str**| Id of an application (uuid) |
+ **yamlfilepath** | **str**| the yaml file name from workspace path |
+ **progress_id** | **str**| Id of a progress cookie (uuid) | [optional]
+
+### Return type
+
+void (empty response body)
+
+### Authorization
+
+No authorization required
+
+### HTTP request headers
+
+ - **Content-Type**: Not defined
+ - **Accept**: application/json
+
+
+### HTTP response details
+
+| Status code | Description | Response headers |
+|-------------|-------------|------------------|
+**200** | OK |  -  |
+**404** | Application not found |  -  |
+**500** | Unexpected exception. |  -  |
+**520** | Container image not found on local host. |  -  |
+**530** | Local docker exception. |  -  |
+**550** | No tag has been set for the image |  -  |
+**551** | Operation has been aborted |  -  |
+**553** | TorizonCore Builder error |  -  |
+
+[[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
+
+# **application_tcb_deploy**
+> application_tcb_deploy(application_id, host, username, password)
+
+TorizonCore unpack command
+
+Unpack the output using TorizonCore Builder Docker image.
+
+### Example
+
+
+```python
+import time
+import moses_client
+from moses_client.api import applications_api
+from moses_client.model.error_info import ErrorInfo
+from pprint import pprint
+# Defining the host is optional and defaults to http://localhost:5000/api
+# See configuration.py for a list of all supported configuration parameters.
+configuration = moses_client.Configuration(
+    host = "http://localhost:5000/api"
+)
+
+
+# Enter a context with an instance of the API client
+with moses_client.ApiClient() as api_client:
+    # Create an instance of the API class
+    api_instance = applications_api.ApplicationsApi(api_client)
+    application_id = "555914d4-d6Ea-18e3-e53E-03fEE4Bc7d,," # str | Id of an application (uuid)
+    host = "host_example" # str | the hostname or ip address of the device to be deployed
+    username = "username_example" # str | the Torizon username of the device to be deployed
+    password = "password_example" # str | the Torizon password of the device to be deployed
+    progress_id = "55914d4d-6Ea1-8e3e-53E0-3fEE4Bc7d,,c" # str | Id of a progress cookie (uuid) (optional)
+
+    # example passing only required values which don't have defaults set
+    try:
+        # TorizonCore unpack command
+        api_instance.application_tcb_deploy(application_id, host, username, password)
+    except moses_client.ApiException as e:
+        print("Exception when calling ApplicationsApi->application_tcb_deploy: %s\n" % e)
+
+    # example passing only required values which don't have defaults set
+    # and optional values
+    try:
+        # TorizonCore unpack command
+        api_instance.application_tcb_deploy(application_id, host, username, password, progress_id=progress_id)
+    except moses_client.ApiException as e:
+        print("Exception when calling ApplicationsApi->application_tcb_deploy: %s\n" % e)
+```
+
+
+### Parameters
+
+Name | Type | Description  | Notes
+------------- | ------------- | ------------- | -------------
+ **application_id** | **str**| Id of an application (uuid) |
+ **host** | **str**| the hostname or ip address of the device to be deployed |
+ **username** | **str**| the Torizon username of the device to be deployed |
+ **password** | **str**| the Torizon password of the device to be deployed |
+ **progress_id** | **str**| Id of a progress cookie (uuid) | [optional]
+
+### Return type
+
+void (empty response body)
+
+### Authorization
+
+No authorization required
+
+### HTTP request headers
+
+ - **Content-Type**: Not defined
+ - **Accept**: application/json
+
+
+### HTTP response details
+
+| Status code | Description | Response headers |
+|-------------|-------------|------------------|
+**200** | OK |  -  |
+**520** | Container image not found on local host. |  -  |
+**530** | Local docker exception. |  -  |
+**550** | No tag has been set for the image |  -  |
+**551** | Operation has been aborted |  -  |
+**553** | TorizonCore Builder error |  -  |
+
+[[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
+
+# **application_tcb_dt_checkout**
+> application_tcb_dt_checkout(application_id)
+
+TorizonCore Device Tree repo checkout
+
+Checkout the device tree and overlays repository at https://github.com/toradex/device-trees
+
+### Example
+
+
+```python
+import time
+import moses_client
+from moses_client.api import applications_api
+from moses_client.model.error_info import ErrorInfo
+from pprint import pprint
+# Defining the host is optional and defaults to http://localhost:5000/api
+# See configuration.py for a list of all supported configuration parameters.
+configuration = moses_client.Configuration(
+    host = "http://localhost:5000/api"
+)
+
+
+# Enter a context with an instance of the API client
+with moses_client.ApiClient() as api_client:
+    # Create an instance of the API class
+    api_instance = applications_api.ApplicationsApi(api_client)
+    application_id = "555914d4-d6Ea-18e3-e53E-03fEE4Bc7d,," # str | Id of an application (uuid)
+    progress_id = "55914d4d-6Ea1-8e3e-53E0-3fEE4Bc7d,,c" # str | Id of a progress cookie (uuid) (optional)
+
+    # example passing only required values which don't have defaults set
+    try:
+        # TorizonCore Device Tree repo checkout
+        api_instance.application_tcb_dt_checkout(application_id)
+    except moses_client.ApiException as e:
+        print("Exception when calling ApplicationsApi->application_tcb_dt_checkout: %s\n" % e)
+
+    # example passing only required values which don't have defaults set
+    # and optional values
+    try:
+        # TorizonCore Device Tree repo checkout
+        api_instance.application_tcb_dt_checkout(application_id, progress_id=progress_id)
+    except moses_client.ApiException as e:
+        print("Exception when calling ApplicationsApi->application_tcb_dt_checkout: %s\n" % e)
+```
+
+
+### Parameters
+
+Name | Type | Description  | Notes
+------------- | ------------- | ------------- | -------------
+ **application_id** | **str**| Id of an application (uuid) |
+ **progress_id** | **str**| Id of a progress cookie (uuid) | [optional]
+
+### Return type
+
+void (empty response body)
+
+### Authorization
+
+No authorization required
+
+### HTTP request headers
+
+ - **Content-Type**: Not defined
+ - **Accept**: application/json
+
+
+### HTTP response details
+
+| Status code | Description | Response headers |
+|-------------|-------------|------------------|
+**200** | OK |  -  |
+**404** | Application not found |  -  |
+**500** | Unexpected exception. |  -  |
+**520** | Container image not found on local host. |  -  |
+**530** | Local docker exception. |  -  |
+**550** | No tag has been set for the image |  -  |
+**551** | Operation has been aborted |  -  |
+**553** | TorizonCore Builder error |  -  |
+
+[[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
+
+# **application_tcb_isolate**
+> application_tcb_isolate(application_id, host, username, password, output_dir)
+
+TorizonCore isolate command
+
+Get configuration changes from the target board.
+
+### Example
+
+
+```python
+import time
+import moses_client
+from moses_client.api import applications_api
+from moses_client.model.error_info import ErrorInfo
+from pprint import pprint
+# Defining the host is optional and defaults to http://localhost:5000/api
+# See configuration.py for a list of all supported configuration parameters.
+configuration = moses_client.Configuration(
+    host = "http://localhost:5000/api"
+)
+
+
+# Enter a context with an instance of the API client
+with moses_client.ApiClient() as api_client:
+    # Create an instance of the API class
+    api_instance = applications_api.ApplicationsApi(api_client)
+    application_id = "555914d4-d6Ea-18e3-e53E-03fEE4Bc7d,," # str | Id of an application (uuid)
+    host = "host_example" # str | the hostname or ip address of the device to be deployed
+    username = "username_example" # str | the Torizon username of the device to be deployed
+    password = "password_example" # str | the Torizon password of the device to be deployed
+    output_dir = "output_dir_example" # str | the direcotry path that the changes will be save
+    progress_id = "55914d4d-6Ea1-8e3e-53E0-3fEE4Bc7d,,c" # str | Id of a progress cookie (uuid) (optional)
+
+    # example passing only required values which don't have defaults set
+    try:
+        # TorizonCore isolate command
+        api_instance.application_tcb_isolate(application_id, host, username, password, output_dir)
+    except moses_client.ApiException as e:
+        print("Exception when calling ApplicationsApi->application_tcb_isolate: %s\n" % e)
+
+    # example passing only required values which don't have defaults set
+    # and optional values
+    try:
+        # TorizonCore isolate command
+        api_instance.application_tcb_isolate(application_id, host, username, password, output_dir, progress_id=progress_id)
+    except moses_client.ApiException as e:
+        print("Exception when calling ApplicationsApi->application_tcb_isolate: %s\n" % e)
+```
+
+
+### Parameters
+
+Name | Type | Description  | Notes
+------------- | ------------- | ------------- | -------------
+ **application_id** | **str**| Id of an application (uuid) |
+ **host** | **str**| the hostname or ip address of the device to be deployed |
+ **username** | **str**| the Torizon username of the device to be deployed |
+ **password** | **str**| the Torizon password of the device to be deployed |
+ **output_dir** | **str**| the direcotry path that the changes will be save |
+ **progress_id** | **str**| Id of a progress cookie (uuid) | [optional]
+
+### Return type
+
+void (empty response body)
+
+### Authorization
+
+No authorization required
+
+### HTTP request headers
+
+ - **Content-Type**: Not defined
+ - **Accept**: application/json
+
+
+### HTTP response details
+
+| Status code | Description | Response headers |
+|-------------|-------------|------------------|
+**200** | OK |  -  |
+**520** | Container image not found on local host. |  -  |
+**530** | Local docker exception. |  -  |
+**550** | No tag has been set for the image |  -  |
+**551** | Operation has been aborted |  -  |
+**553** | TorizonCore Builder error |  -  |
+
+[[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
+
+# **application_tcb_unpack**
+> application_tcb_unpack(application_id, outputpath)
+
+TorizonCore unpack command
+
+Unpack the output using TorizonCore Builder Docker image.
+
+### Example
+
+
+```python
+import time
+import moses_client
+from moses_client.api import applications_api
+from moses_client.model.error_info import ErrorInfo
+from pprint import pprint
+# Defining the host is optional and defaults to http://localhost:5000/api
+# See configuration.py for a list of all supported configuration parameters.
+configuration = moses_client.Configuration(
+    host = "http://localhost:5000/api"
+)
+
+
+# Enter a context with an instance of the API client
+with moses_client.ApiClient() as api_client:
+    # Create an instance of the API class
+    api_instance = applications_api.ApplicationsApi(api_client)
+    application_id = "555914d4-d6Ea-18e3-e53E-03fEE4Bc7d,," # str | Id of an application (uuid)
+    outputpath = "outputpath_example" # str | the output directory created by TorizonCore builder from workspace path
+    progress_id = "55914d4d-6Ea1-8e3e-53E0-3fEE4Bc7d,,c" # str | Id of a progress cookie (uuid) (optional)
+
+    # example passing only required values which don't have defaults set
+    try:
+        # TorizonCore unpack command
+        api_instance.application_tcb_unpack(application_id, outputpath)
+    except moses_client.ApiException as e:
+        print("Exception when calling ApplicationsApi->application_tcb_unpack: %s\n" % e)
+
+    # example passing only required values which don't have defaults set
+    # and optional values
+    try:
+        # TorizonCore unpack command
+        api_instance.application_tcb_unpack(application_id, outputpath, progress_id=progress_id)
+    except moses_client.ApiException as e:
+        print("Exception when calling ApplicationsApi->application_tcb_unpack: %s\n" % e)
+```
+
+
+### Parameters
+
+Name | Type | Description  | Notes
+------------- | ------------- | ------------- | -------------
+ **application_id** | **str**| Id of an application (uuid) |
+ **outputpath** | **str**| the output directory created by TorizonCore builder from workspace path |
+ **progress_id** | **str**| Id of a progress cookie (uuid) | [optional]
+
+### Return type
+
+void (empty response body)
+
+### Authorization
+
+No authorization required
+
+### HTTP request headers
+
+ - **Content-Type**: Not defined
+ - **Accept**: application/json
+
+
+### HTTP response details
+
+| Status code | Description | Response headers |
+|-------------|-------------|------------------|
+**200** | OK |  -  |
+**520** | Container image not found on local host. |  -  |
+**530** | Local docker exception. |  -  |
+**550** | No tag has been set for the image |  -  |
+**551** | Operation has been aborted |  -  |
+**553** | TorizonCore Builder error |  -  |
 
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
 

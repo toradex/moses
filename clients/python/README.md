@@ -102,6 +102,11 @@ Class | Method | HTTP request | Description
 *ApplicationsApi* | [**application_sdk_container**](docs/ApplicationsApi.md#application_sdk_container) | **GET** /applications/{application_id}/sdk/container | Get SDK container
 *ApplicationsApi* | [**application_stop**](docs/ApplicationsApi.md#application_stop) | **GET** /applications/{application_id}/stop | Stop running container image
 *ApplicationsApi* | [**application_syncfolders**](docs/ApplicationsApi.md#application_syncfolders) | **GET** /applications/{application_id}/syncfolders | Synchronize folders
+*ApplicationsApi* | [**application_tcb_build_yaml**](docs/ApplicationsApi.md#application_tcb_build_yaml) | **GET** /applications/{application_id}/tcb_build_yaml | Build the TorizonCore tcbuild.yaml
+*ApplicationsApi* | [**application_tcb_deploy**](docs/ApplicationsApi.md#application_tcb_deploy) | **GET** /applications/{application_id}/tcb_deploy | TorizonCore unpack command
+*ApplicationsApi* | [**application_tcb_dt_checkout**](docs/ApplicationsApi.md#application_tcb_dt_checkout) | **GET** /applications/{application_id}/tcb_dt_checkout | TorizonCore Device Tree repo checkout
+*ApplicationsApi* | [**application_tcb_isolate**](docs/ApplicationsApi.md#application_tcb_isolate) | **GET** /applications/{application_id}/tcb_isolate | TorizonCore isolate command
+*ApplicationsApi* | [**application_tcb_unpack**](docs/ApplicationsApi.md#application_tcb_unpack) | **GET** /applications/{application_id}/tcb_unpack | TorizonCore unpack command
 *ApplicationsApi* | [**application_updated**](docs/ApplicationsApi.md#application_updated) | **GET** /applications/{application_id}/updated | Check if container image is up to date
 *ApplicationsApi* | [**application_updatesdk**](docs/ApplicationsApi.md#application_updatesdk) | **GET** /applications/{application_id}/sdk/update | Update SDK container
 *ApplicationsApi* | [**application_validate_array_item**](docs/ApplicationsApi.md#application_validate_array_item) | **GET** /applications/{application_id}/validate_array_item | Validates a value for a parameter
