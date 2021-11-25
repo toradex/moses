@@ -32,15 +32,15 @@ export class DockerContainerConfig {
     /**
     * Whether to attach to `stdin`.
     */
-    'attachStdin'?: boolean;
+    'attachStdin'?: boolean = false;
     /**
     * Whether to attach to `stdout`.
     */
-    'attachStdout'?: boolean;
+    'attachStdout'?: boolean = true;
     /**
     * Whether to attach to `stderr`.
     */
-    'attachStderr'?: boolean;
+    'attachStderr'?: boolean = true;
     /**
     * An object mapping ports to an empty object in the form:  `{\"<port>/<tcp|udp|sctp>\": {}}` 
     */
@@ -48,15 +48,15 @@ export class DockerContainerConfig {
     /**
     * Attach standard streams to a TTY, including `stdin` if it is not closed.
     */
-    'tty'?: boolean;
+    'tty'?: boolean = false;
     /**
     * Open `stdin`
     */
-    'openStdin'?: boolean;
+    'openStdin'?: boolean = false;
     /**
     * Close `stdin` after one attached client disconnects
     */
-    'stdinOnce'?: boolean;
+    'stdinOnce'?: boolean = false;
     /**
     * A list of environment variables to set inside the container in the form `[\"VAR=value\", ...]`. A variable without `=` is removed from the environment, rather than to have an empty value. 
     */
@@ -105,7 +105,7 @@ export class DockerContainerConfig {
     /**
     * Signal to stop a container as a string or unsigned integer.
     */
-    'stopSignal'?: string;
+    'stopSignal'?: string = 'SIGTERM';
     /**
     * Timeout to stop a container in seconds.
     */

@@ -20,7 +20,7 @@ export class DockerMountVolumeOptions {
     /**
     * Populate volume with data from the target.
     */
-    'noCopy'?: boolean;
+    'noCopy'?: boolean = false;
     /**
     * User-defined key/value metadata.
     */

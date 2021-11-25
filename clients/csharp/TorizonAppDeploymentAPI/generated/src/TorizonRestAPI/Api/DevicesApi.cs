@@ -554,6 +554,29 @@ namespace TorizonRestAPI.Api
         /// <returns>ApiResponse of int</returns>
         ApiResponse<int> DeviceOpensshWithHttpInfo (string deviceId, int? port = default(int?));
         /// <summary>
+        /// Reboot the device
+        /// </summary>
+        /// <remarks>
+        /// Perform a reboot on a specified device
+        /// </remarks>
+        /// <exception cref="TorizonRestAPI.Client.ApiException">Thrown when fails to make API call</exception>
+        /// <param name="deviceId">Target device serial number</param>
+        /// <param name="password"></param>
+        /// <returns>int</returns>
+        int DeviceReboot (string deviceId, string password);
+
+        /// <summary>
+        /// Reboot the device
+        /// </summary>
+        /// <remarks>
+        /// Perform a reboot on a specified device
+        /// </remarks>
+        /// <exception cref="TorizonRestAPI.Client.ApiException">Thrown when fails to make API call</exception>
+        /// <param name="deviceId">Target device serial number</param>
+        /// <param name="password"></param>
+        /// <returns>ApiResponse of int</returns>
+        ApiResponse<int> DeviceRebootWithHttpInfo (string deviceId, string password);
+        /// <summary>
         /// Synchronize folders
         /// </summary>
         /// <remarks>
@@ -1319,6 +1342,31 @@ namespace TorizonRestAPI.Api
         /// <param name="cancellationToken">Cancellation Token to cancel request (optional) </param>
         /// <returns>Task of ApiResponse (int)</returns>
         System.Threading.Tasks.Task<ApiResponse<int>> DeviceOpensshWithHttpInfoAsync (string deviceId, int? port = default(int?), CancellationToken cancellationToken = default(CancellationToken));
+        /// <summary>
+        /// Reboot the device
+        /// </summary>
+        /// <remarks>
+        /// Perform a reboot on a specified device
+        /// </remarks>
+        /// <exception cref="TorizonRestAPI.Client.ApiException">Thrown when fails to make API call</exception>
+        /// <param name="deviceId">Target device serial number</param>
+        /// <param name="password"></param>
+        /// <param name="cancellationToken">Cancellation Token to cancel request (optional) </param>
+        /// <returns>Task of int</returns>
+        System.Threading.Tasks.Task<int> DeviceRebootAsync (string deviceId, string password, CancellationToken cancellationToken = default(CancellationToken));
+
+        /// <summary>
+        /// Reboot the device
+        /// </summary>
+        /// <remarks>
+        /// Perform a reboot on a specified device
+        /// </remarks>
+        /// <exception cref="TorizonRestAPI.Client.ApiException">Thrown when fails to make API call</exception>
+        /// <param name="deviceId">Target device serial number</param>
+        /// <param name="password"></param>
+        /// <param name="cancellationToken">Cancellation Token to cancel request (optional) </param>
+        /// <returns>Task of ApiResponse (int)</returns>
+        System.Threading.Tasks.Task<ApiResponse<int>> DeviceRebootWithHttpInfoAsync (string deviceId, string password, CancellationToken cancellationToken = default(CancellationToken));
         /// <summary>
         /// Synchronize folders
         /// </summary>
@@ -4994,6 +5042,153 @@ namespace TorizonRestAPI.Api
             if (ExceptionFactory != null)
             {
                 Exception exception = ExceptionFactory("DeviceOpenssh", localVarResponse);
+                if (exception != null) throw exception;
+            }
+
+            return new ApiResponse<int>(localVarStatusCode,
+                localVarResponse.Headers.ToDictionary(x => x.Name, x => string.Join(",", x.Value)),
+                (int) this.Configuration.ApiClient.Deserialize(localVarResponse, typeof(int)));
+        }
+
+        /// <summary>
+        /// Reboot the device Perform a reboot on a specified device
+        /// </summary>
+        /// <exception cref="TorizonRestAPI.Client.ApiException">Thrown when fails to make API call</exception>
+        /// <param name="deviceId">Target device serial number</param>
+        /// <param name="password"></param>
+        /// <returns>int</returns>
+        public int DeviceReboot (string deviceId, string password)
+        {
+             ApiResponse<int> localVarResponse = DeviceRebootWithHttpInfo(deviceId, password);
+             return localVarResponse.Data;
+        }
+
+        /// <summary>
+        /// Reboot the device Perform a reboot on a specified device
+        /// </summary>
+        /// <exception cref="TorizonRestAPI.Client.ApiException">Thrown when fails to make API call</exception>
+        /// <param name="deviceId">Target device serial number</param>
+        /// <param name="password"></param>
+        /// <returns>ApiResponse of int</returns>
+        public ApiResponse<int> DeviceRebootWithHttpInfo (string deviceId, string password)
+        {
+            // verify the required parameter 'deviceId' is set
+            if (deviceId == null)
+                throw new ApiException(400, "Missing required parameter 'deviceId' when calling DevicesApi->DeviceReboot");
+            // verify the required parameter 'password' is set
+            if (password == null)
+                throw new ApiException(400, "Missing required parameter 'password' when calling DevicesApi->DeviceReboot");
+
+            var localVarPath = "/devices/{device_id}/reboot";
+            var localVarPathParams = new Dictionary<String, String>();
+            var localVarQueryParams = new List<KeyValuePair<String, String>>();
+            var localVarHeaderParams = new Dictionary<String, String>(this.Configuration.DefaultHeader);
+            var localVarFormParams = new Dictionary<String, String>();
+            var localVarFileParams = new Dictionary<String, FileParameter>();
+            Object localVarPostBody = null;
+
+            // to determine the Content-Type header
+            String[] localVarHttpContentTypes = new String[] {
+            };
+            String localVarHttpContentType = this.Configuration.ApiClient.SelectHeaderContentType(localVarHttpContentTypes);
+
+            // to determine the Accept header
+            String[] localVarHttpHeaderAccepts = new String[] {
+                "application/json"
+            };
+            String localVarHttpHeaderAccept = this.Configuration.ApiClient.SelectHeaderAccept(localVarHttpHeaderAccepts);
+            if (localVarHttpHeaderAccept != null)
+                localVarHeaderParams.Add("Accept", localVarHttpHeaderAccept);
+
+            if (deviceId != null) localVarPathParams.Add("device_id", this.Configuration.ApiClient.ParameterToString(deviceId)); // path parameter
+            if (password != null) localVarQueryParams.AddRange(this.Configuration.ApiClient.ParameterToKeyValuePairs("", "password", password)); // query parameter
+
+
+            // make the HTTP request
+            IRestResponse localVarResponse = (IRestResponse) this.Configuration.ApiClient.CallApi(localVarPath,
+                Method.GET, localVarQueryParams, localVarPostBody, localVarHeaderParams, localVarFormParams, localVarFileParams,
+                localVarPathParams, localVarHttpContentType);
+
+            int localVarStatusCode = (int) localVarResponse.StatusCode;
+
+            if (ExceptionFactory != null)
+            {
+                Exception exception = ExceptionFactory("DeviceReboot", localVarResponse);
+                if (exception != null) throw exception;
+            }
+
+            return new ApiResponse<int>(localVarStatusCode,
+                localVarResponse.Headers.ToDictionary(x => x.Name, x => string.Join(",", x.Value)),
+                (int) this.Configuration.ApiClient.Deserialize(localVarResponse, typeof(int)));
+        }
+
+        /// <summary>
+        /// Reboot the device Perform a reboot on a specified device
+        /// </summary>
+        /// <exception cref="TorizonRestAPI.Client.ApiException">Thrown when fails to make API call</exception>
+        /// <param name="deviceId">Target device serial number</param>
+        /// <param name="password"></param>
+        /// <param name="cancellationToken">Cancellation Token to cancel request (optional) </param>
+        /// <returns>Task of int</returns>
+        public async System.Threading.Tasks.Task<int> DeviceRebootAsync (string deviceId, string password, CancellationToken cancellationToken = default(CancellationToken))
+        {
+             ApiResponse<int> localVarResponse = await DeviceRebootWithHttpInfoAsync(deviceId, password, cancellationToken);
+             return localVarResponse.Data;
+
+        }
+
+        /// <summary>
+        /// Reboot the device Perform a reboot on a specified device
+        /// </summary>
+        /// <exception cref="TorizonRestAPI.Client.ApiException">Thrown when fails to make API call</exception>
+        /// <param name="deviceId">Target device serial number</param>
+        /// <param name="password"></param>
+        /// <param name="cancellationToken">Cancellation Token to cancel request (optional) </param>
+        /// <returns>Task of ApiResponse (int)</returns>
+        public async System.Threading.Tasks.Task<ApiResponse<int>> DeviceRebootWithHttpInfoAsync (string deviceId, string password, CancellationToken cancellationToken = default(CancellationToken))
+        {
+            // verify the required parameter 'deviceId' is set
+            if (deviceId == null)
+                throw new ApiException(400, "Missing required parameter 'deviceId' when calling DevicesApi->DeviceReboot");
+            // verify the required parameter 'password' is set
+            if (password == null)
+                throw new ApiException(400, "Missing required parameter 'password' when calling DevicesApi->DeviceReboot");
+
+            var localVarPath = "/devices/{device_id}/reboot";
+            var localVarPathParams = new Dictionary<String, String>();
+            var localVarQueryParams = new List<KeyValuePair<String, String>>();
+            var localVarHeaderParams = new Dictionary<String, String>(this.Configuration.DefaultHeader);
+            var localVarFormParams = new Dictionary<String, String>();
+            var localVarFileParams = new Dictionary<String, FileParameter>();
+            Object localVarPostBody = null;
+
+            // to determine the Content-Type header
+            String[] localVarHttpContentTypes = new String[] {
+            };
+            String localVarHttpContentType = this.Configuration.ApiClient.SelectHeaderContentType(localVarHttpContentTypes);
+
+            // to determine the Accept header
+            String[] localVarHttpHeaderAccepts = new String[] {
+                "application/json"
+            };
+            String localVarHttpHeaderAccept = this.Configuration.ApiClient.SelectHeaderAccept(localVarHttpHeaderAccepts);
+            if (localVarHttpHeaderAccept != null)
+                localVarHeaderParams.Add("Accept", localVarHttpHeaderAccept);
+
+            if (deviceId != null) localVarPathParams.Add("device_id", this.Configuration.ApiClient.ParameterToString(deviceId)); // path parameter
+            if (password != null) localVarQueryParams.AddRange(this.Configuration.ApiClient.ParameterToKeyValuePairs("", "password", password)); // query parameter
+
+
+            // make the HTTP request
+            IRestResponse localVarResponse = (IRestResponse) await this.Configuration.ApiClient.CallApiAsync(localVarPath,
+                Method.GET, localVarQueryParams, localVarPostBody, localVarHeaderParams, localVarFormParams, localVarFileParams,
+                localVarPathParams, localVarHttpContentType, cancellationToken);
+
+            int localVarStatusCode = (int) localVarResponse.StatusCode;
+
+            if (ExceptionFactory != null)
+            {
+                Exception exception = ExceptionFactory("DeviceReboot", localVarResponse);
                 if (exception != null) throw exception;
             }
 
