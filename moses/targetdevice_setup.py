@@ -102,6 +102,20 @@ def reboot_device(console_: console.GenericConsole,
     except TimeoutError:
         pass
 
+def shutdown_device(console_: console.GenericConsole,
+                  password: str) -> None:
+    """Shutdown target device at the end of setup process.
+
+    :param console: serial or SSH console
+    :type console: console.GenericConsole
+    :param password: password
+    :type password: str
+
+    """
+    try:
+        console_.send_cmd("echo " + password + " | sudo -S poweroff", 0)
+    except TimeoutError:
+        pass
 
 def enable_docker_interface(
     console_: console.GenericConsole, timeout: int, password: str

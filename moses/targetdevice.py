@@ -393,6 +393,33 @@ class TargetDevice(config.ConfigurableKeysObject):
         except Exception as exception:
             raise InternalServerError(exception) from exception
 
+    def reboot_device(self,password: str) -> None:
+        """Perform a reboot on the device, sending the reboot command over SSH.
+
+        :param password: password
+        :type password: str
+
+        """
+        with sshconsole.SSHConsole(self.hostname) as console_:
+            assert self.username is not None
+            assert self.privatekey is not None
+            console_.connect(self.username, self.privatekey)
+            targetdevice_setup.reboot_device(console_,password)
+
+    def shutdown_device(self,password: str) -> None:
+        """Perform a shutdown on the device by sending the poweroff command over SSH.
+
+        :param password: password
+        :type password: str
+
+        """
+        with sshconsole.SSHConsole(self.hostname) as console_:
+            assert self.username is not None
+            assert self.privatekey is not None
+            console_.connect(self.username, self.privatekey)
+            targetdevice_setup.shutdown_device(console_,password)
+
+
     def get_process_list(self) -> List[Dict[str, Any]]:
         """Return jsonizable list of local processes.
 

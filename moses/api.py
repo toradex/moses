@@ -384,6 +384,45 @@ def devices_device_ssh_port_get(device_id: str) -> Any:
     port = device.get_ssh_port()
     return (port, 200)
 
+def devices_device_reboot_get(device_id: str, password: str) -> Any:
+    """Reboot a specified device.
+
+    :param device_id: device id
+    :type device_id: str
+    :param password: password
+    :param password: str
+
+    :returns: API tuple with object and return code
+
+    """
+    devices = targetdevice.TargetDevices()
+
+    if device_id not in devices:
+        return ("Device not found", 404)
+
+    device = devices[device_id]
+    device.reboot_device(password)
+    return (connexion.NoContent, 200)
+
+def devices_device_shutdown_get(device_id: str, password: str) -> Any:
+    """Shutdown a specified device.
+
+    :param device_id: device id
+    :type device_id: str
+    :param passwornd: password
+    :param password: str
+
+    :returns: API tuple with object and return code
+
+    """
+    devices = targetdevice.TargetDevices()
+
+    if device_id not in devices:
+        return ("Device not found", 404)
+
+    device = devices[device_id]
+    device.shutdown_device(password)
+    return (connexion.NoContent, 200)
 
 def devices_device_processes_get(device_id: str) -> Any:
     """Return a list of the processes running on the device.
