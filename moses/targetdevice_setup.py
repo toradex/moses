@@ -289,7 +289,7 @@ def setup_device_from_console(dev: "targetdevice.TargetDevice",
         # Check if the board in running arm or arm64
         archcheck = console_.send_cmd("arch", timeout).rstrip("\x00")
 
-        if "arm" not in archcheck:
+        if "arm" not in archcheck and "aarch64" not in archcheck:
             logging.info("Unsupported architecture %s", archcheck)
             raise InvalidDeviceError(dev)
 
