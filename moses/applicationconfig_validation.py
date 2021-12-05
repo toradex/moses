@@ -79,7 +79,7 @@ dictionary_validation_table : Dict[str,
         (True, validation.validate_non_empty_key, None),
         (True, validation.validate_unique_keys, None),
         (True, validation.validate_non_empty_string, None),
-        (True, validation.validate_key, (validation.validate_remote_path, None)),
+        (True, validation.validate_key, (validation.validate_path, None)),
         (True, validation.validate_mount_info, None),
     ],
     "extraparms": [

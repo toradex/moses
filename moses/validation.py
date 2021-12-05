@@ -387,7 +387,7 @@ def validate_path(self: Any,
     :param userarg: not used
     :type userarg: Any
     """
-    if not validate_regexp(self, value, RELATIVE_FILE_REGEXP) is None:
+    if not validate_regexp(self, value, RELATIVE_OR_ABSOLUTE_PATH_REGEXP) is None:
         return "Value does not appear to be a valid relative file path."
     return None
 
@@ -716,7 +716,7 @@ def validate_mount_info(self: Any,
         if parts[-1] in ["ro","rw"]:
             path=",".join(parts[:-1])
 
-    if validate_remote_path(self, path, userarg) is not None:
+    if validate_path(self, path, userarg) is not None:
         return "Invalid mount point"
 
     return None
