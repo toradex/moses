@@ -8,6 +8,7 @@ as first parameter.
 import os
 import logging
 from typing import Optional, Dict, Callable, Tuple, Any, List
+import ast
 import yaml
 import docker
 import docker.models.containers
@@ -430,7 +431,12 @@ def _translate_mounts(mounts: List[Dict[str,Any]]) -> list:
     return compose_mounts
 
 _compose_parms: Dict[str, Optional[Callable]] = {
-    "cap_add": None,
+    "cap_add": (
+        lambda x: (
+            "cap_add",
+            _yaml_string_arrays_to_python_arrays(x[1])
+        )
+    ),
     "cap_drop": None,
     "cgroup_parent": None,
     "command": None,
@@ -614,6 +620,16 @@ def _setup_extraparams(
             else:
                 service[parm] = value
 
+def _yaml_string_arrays_to_python_arrays(value: str) -> List[str]:
+    if '-' in value:
+        return [ value.replace('-', '').strip() ]
+
+    if '\"' in value or '\'' in value:
+        return ast.literal_eval(value)
+
+    array_prepare = value.replace("[", "").replace("]", "").strip()
+    array_ret = array_prepare.split(",")
+    return array_ret
 
 def push_to_registry(self: ApplicationConfigBase, configuration: str, username: str,
                      password: str, progress: Optional[progresscookie.ProgressCookie]) -> None:
