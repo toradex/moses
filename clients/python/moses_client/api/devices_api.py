@@ -1573,6 +1573,68 @@ class DevicesApi(object):
             },
             api_client=api_client
         )
+        self.device_shutdown_endpoint = _Endpoint(
+            settings={
+                'response_type': (int,),
+                'auth': [],
+                'endpoint_path': '/devices/{device_id}/shutdown',
+                'operation_id': 'device_shutdown',
+                'http_method': 'GET',
+                'servers': None,
+            },
+            params_map={
+                'all': [
+                    'device_id',
+                    'password',
+                ],
+                'required': [
+                    'device_id',
+                    'password',
+                ],
+                'nullable': [
+                ],
+                'enum': [
+                ],
+                'validation': [
+                    'device_id',
+                ]
+            },
+            root_map={
+                'validations': {
+                    ('device_id',): {
+
+                        'regex': {
+                            'pattern': r'^[-0-9a-zA-Z.]*$',  # noqa: E501
+                        },
+                    },
+                },
+                'allowed_values': {
+                },
+                'openapi_types': {
+                    'device_id':
+                        (str,),
+                    'password':
+                        (str,),
+                },
+                'attribute_map': {
+                    'device_id': 'device_id',
+                    'password': 'password',
+                },
+                'location_map': {
+                    'device_id': 'path',
+                    'password': 'query',
+                },
+                'collection_format_map': {
+                }
+            },
+            headers_map={
+                'accept': [
+                    'application/json'
+                ],
+                'content_type': [],
+            },
+            api_client=api_client
+        )
         self.device_syncfolders_endpoint = _Endpoint(
             settings={
                 'response_type': None,
@@ -3769,6 +3831,76 @@ class DevicesApi(object):
         kwargs['password'] = \
             password
         return self.device_reboot_endpoint.call_with_http_info(**kwargs)
+
+    def device_shutdown(
+        self,
+        device_id,
+        password,
+        **kwargs
+    ):
+        """Shutdown the device  # noqa: E501
+
+        Perform a shutdown on a specified device  # noqa: E501
+        This method makes a synchronous HTTP request by default. To make an
+        asynchronous HTTP request, please pass async_req=True
+
+        >>> thread = api.device_shutdown(device_id, password, async_req=True)
+        >>> result = thread.get()
+
+        Args:
+            device_id (str): Target device serial number
+            password (str):
+
+        Keyword Args:
+            _return_http_data_only (bool): response data without head status
+                code and headers. Default is True.
+            _preload_content (bool): if False, the urllib3.HTTPResponse object
+                will be returned without reading/decoding response data.
+                Default is True.
+            _request_timeout (int/float/tuple): timeout setting for this request. If
+                one number provided, it will be total request timeout. It can also
+                be a pair (tuple) of (connection, read) timeouts.
+                Default is None.
+            _check_input_type (bool): specifies if type checking
+                should be done one the data sent to the server.
+                Default is True.
+            _check_return_type (bool): specifies if type checking
+                should be done one the data received from the server.
+                Default is True.
+            _host_index (int/None): specifies the index of the server
+                that we want to use.
+                Default is read from the configuration.
+            async_req (bool): execute request asynchronously
+
+        Returns:
+            int
+                If the method is called asynchronously, returns the request
+                thread.
+        """
+        kwargs['async_req'] = kwargs.get(
+            'async_req', False
+        )
+        kwargs['_return_http_data_only'] = kwargs.get(
+            '_return_http_data_only', True
+        )
+        kwargs['_preload_content'] = kwargs.get(
+            '_preload_content', True
+        )
+        kwargs['_request_timeout'] = kwargs.get(
+            '_request_timeout', None
+        )
+        kwargs['_check_input_type'] = kwargs.get(
+            '_check_input_type', True
+        )
+        kwargs['_check_return_type'] = kwargs.get(
+            '_check_return_type', True
+        )
+        kwargs['_host_index'] = kwargs.get('_host_index')
+        kwargs['device_id'] = \
+            device_id
+        kwargs['password'] = \
+            password
+        return self.device_shutdown_endpoint.call_with_http_info(**kwargs)
 
     def device_syncfolders(
         self,

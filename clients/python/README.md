@@ -139,6 +139,7 @@ Class | Method | HTTP request | Description
 *DevicesApi* | [**device_opendocker**](docs/DevicesApi.md#device_opendocker) | **GET** /devices/{device_id}/docker/open | Expose remote docker
 *DevicesApi* | [**device_openssh**](docs/DevicesApi.md#device_openssh) | **GET** /devices/{device_id}/ssh/open | Expose shell via SSH
 *DevicesApi* | [**device_reboot**](docs/DevicesApi.md#device_reboot) | **GET** /devices/{device_id}/reboot | Reboot the device
+*DevicesApi* | [**device_shutdown**](docs/DevicesApi.md#device_shutdown) | **GET** /devices/{device_id}/shutdown | Shutdown the device
 *DevicesApi* | [**device_syncfolders**](docs/DevicesApi.md#device_syncfolders) | **GET** /devices/{device_id}/syncfolders | Synchronize folders
 *DevicesApi* | [**device_update**](docs/DevicesApi.md#device_update) | **GET** /devices/{device_id}/update | Update device information
 *DevicesApi* | [**device_validate_parameter**](docs/DevicesApi.md#device_validate_parameter) | **GET** /devices/{device_id}/validate_parameter | Validates a value for a parameter

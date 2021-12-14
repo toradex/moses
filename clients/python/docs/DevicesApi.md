@@ -29,6 +29,7 @@ Method | HTTP request | Description
 [**device_opendocker**](DevicesApi.md#device_opendocker) | **GET** /devices/{device_id}/docker/open | Expose remote docker
 [**device_openssh**](DevicesApi.md#device_openssh) | **GET** /devices/{device_id}/ssh/open | Expose shell via SSH
 [**device_reboot**](DevicesApi.md#device_reboot) | **GET** /devices/{device_id}/reboot | Reboot the device
+[**device_shutdown**](DevicesApi.md#device_shutdown) | **GET** /devices/{device_id}/shutdown | Shutdown the device
 [**device_syncfolders**](DevicesApi.md#device_syncfolders) | **GET** /devices/{device_id}/syncfolders | Synchronize folders
 [**device_update**](DevicesApi.md#device_update) | **GET** /devices/{device_id}/update | Update device information
 [**device_validate_parameter**](DevicesApi.md#device_validate_parameter) | **GET** /devices/{device_id}/validate_parameter | Validates a value for a parameter
@@ -1854,6 +1855,79 @@ with moses_client.ApiClient() as api_client:
         pprint(api_response)
     except moses_client.ApiException as e:
         print("Exception when calling DevicesApi->device_reboot: %s\n" % e)
+```
+
+
+### Parameters
+
+Name | Type | Description  | Notes
+------------- | ------------- | ------------- | -------------
+ **device_id** | **str**| Target device serial number |
+ **password** | **str**|  |
+
+### Return type
+
+**int**
+
+### Authorization
+
+No authorization required
+
+### HTTP request headers
+
+ - **Content-Type**: Not defined
+ - **Accept**: application/json
+
+
+### HTTP response details
+
+| Status code | Description | Response headers |
+|-------------|-------------|------------------|
+**200** | Local port for SSH shell |  -  |
+**404** | Device not found |  -  |
+**500** | Unexpected exception. |  -  |
+**533** | SSH error. |  -  |
+**539** | SSH tunnel error. |  -  |
+
+[[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
+
+# **device_shutdown**
+> int device_shutdown(device_id, password)
+
+Shutdown the device
+
+Perform a shutdown on a specified device
+
+### Example
+
+
+```python
+import time
+import moses_client
+from moses_client.api import devices_api
+from moses_client.model.error_info import ErrorInfo
+from pprint import pprint
+# Defining the host is optional and defaults to http://localhost:5000/api
+# See configuration.py for a list of all supported configuration parameters.
+configuration = moses_client.Configuration(
+    host = "http://localhost:5000/api"
+)
+
+
+# Enter a context with an instance of the API client
+with moses_client.ApiClient() as api_client:
+    # Create an instance of the API class
+    api_instance = devices_api.DevicesApi(api_client)
+    device_id = "zA9LCSLv1C1ylmgd0.Y2TA" # str | Target device serial number
+    password = "password_example" # str | 
+
+    # example passing only required values which don't have defaults set
+    try:
+        # Shutdown the device
+        api_response = api_instance.device_shutdown(device_id, password)
+        pprint(api_response)
+    except moses_client.ApiException as e:
+        print("Exception when calling DevicesApi->device_shutdown: %s\n" % e)
 ```
 
 

@@ -442,6 +442,34 @@ paths:
         539:
           $ref: "#/responses/SSHTunnelError_539"
 
+  /devices/{device_id}/shutdown:
+
+    get:
+      operationId: device_shutdown
+      tags:
+        - Devices
+      summary: Shutdown the device
+      description: Perform a shutdown on a specified device
+      parameters:
+        - $ref: "#/parameters/device_id"
+        - name: password
+          in: query
+          type: string
+          required: true
+      responses:
+        200:
+          description: Local port for SSH shell
+          schema:
+            type: integer
+        404:
+          description: Device not found
+        500:
+          $ref: "#/responses/InternalServerError_500"
+        533:
+          $ref: "#/responses/SSHError_533"
+        539:
+          $ref: "#/responses/SSHTunnelError_539"
+
   /devices/{device_id}/processes:
 
     get:
