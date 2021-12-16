@@ -16,7 +16,7 @@ class TorizonCoreBuilderUtils:
     """Class with static methods for run Torizon Core Builder commands."""
 
     TCBUILDER_REPO = "torizon/torizoncore-builder"
-    TCBUILDER_TAG = "3.1"
+    TCBUILDER_TAG = "3.2"
 
     @staticmethod
     def pull_docker_image(
