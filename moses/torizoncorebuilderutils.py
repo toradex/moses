@@ -139,6 +139,23 @@ class TorizonCoreBuilderUtils:
         )
 
     @staticmethod
+    def union (branch: str,
+        workspacepath:str,
+        progress: Optional[progresscookie.ProgressCookie]) -> None:
+        """Run Torizo Core Builder Union."""
+        volumes = [
+            "deploy:/deploy",
+            f"{workspacepath}:/workdir",
+            "storage:/storage"
+        ]
+
+        TorizonCoreBuilderUtils.__run_tcbuilder(
+            f"union {branch}",
+            volumes,
+            progress
+        )
+
+    @staticmethod
     def dt_checkout (workspacepath:str,
         progress: Optional[progresscookie.ProgressCookie]) -> None:
         """Run Torizon Core Builder dt checkout."""

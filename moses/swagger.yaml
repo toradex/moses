@@ -2002,6 +2002,40 @@ paths:
           $ref: "#/responses/AbortError_551"
         553:
           $ref: "#/responses/TorizonCoreBuilderError_553"
+  
+  /applications/{application_id}/tcb_union:
+
+    get:
+      operationId: application_tcb_union
+      tags:
+        - Applications
+      summary: TorizonCore Builder union command.
+      description: union makes an OSTree branch (containing the commit for changes) for all changes provided by the user to be made in OSTree rootfs of unpacked base Torizon image.
+      parameters:
+        - $ref: "#/parameters/application_id"
+        - name: branch
+          description: union branch string
+          in: query
+          type: string
+          required: true
+        - $ref: "#/parameters/progress_id"
+      responses:
+        200:
+          description: OK
+        404:
+          description: Application not found
+        500:
+          $ref: "#/responses/InternalServerError_500"
+        520:
+          $ref: "#/responses/ImageNotFoundError_520"
+        530:
+          $ref: "#/responses/LocalDockerError_530"
+        550:
+          $ref: "#/responses/NoTagError_550"
+        551:
+          $ref: "#/responses/AbortError_551"
+        553:
+          $ref: "#/responses/TorizonCoreBuilderError_553"
 
   /setup/pullcontainers:
     get:
