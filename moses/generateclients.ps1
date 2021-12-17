@@ -2,6 +2,7 @@
 
 # csharp
 docker run `
+    --rm `
     -v ${PWD}/..:/local `
     openapitools/openapi-generator-cli `
     generate `
@@ -13,6 +14,7 @@ docker run `
 
 # python
 docker run `
+    --rm `
     -v ${PWD}/..:/local `
     openapitools/openapi-generator-cli `
     generate `
@@ -23,6 +25,7 @@ docker run `
 
 # typescript
 docker run `
+    --rm `
     -v ${PWD}/..:/local `
     openapitools/openapi-generator-cli `
     generate `
