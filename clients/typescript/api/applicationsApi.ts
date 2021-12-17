@@ -1992,6 +1992,182 @@ export class ApplicationsApi {
         });
     }
     /**
+     * The command push from TorizonCore Builder can be used to push a new TorizonCore image to Torizon OTA.
+     * @summary TorizonCore Builder push command.
+     * @param applicationId Id of an application (uuid)
+     * @param branch union branch string
+     * @param credentials credentials file path
+     * @param progressId Id of a progress cookie (uuid)
+     */
+    public async applicationTcbPush (applicationId: string, branch: string, credentials: string, progressId?: string, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<{ response: http.IncomingMessage; body?: any;  }> {
+        const localVarPath = this.basePath + '/applications/{application_id}/tcb_push'
+            .replace('{' + 'application_id' + '}', encodeURIComponent(String(applicationId)));
+        let localVarQueryParameters: any = {};
+        let localVarHeaderParams: any = (<any>Object).assign({}, this._defaultHeaders);
+        const produces = ['application/json'];
+        // give precedence to 'application/json'
+        if (produces.indexOf('application/json') >= 0) {
+            localVarHeaderParams.Accept = 'application/json';
+        } else {
+            localVarHeaderParams.Accept = produces.join(',');
+        }
+        let localVarFormParams: any = {};
+
+        // verify required parameter 'applicationId' is not null or undefined
+        if (applicationId === null || applicationId === undefined) {
+            throw new Error('Required parameter applicationId was null or undefined when calling applicationTcbPush.');
+        }
+
+        // verify required parameter 'branch' is not null or undefined
+        if (branch === null || branch === undefined) {
+            throw new Error('Required parameter branch was null or undefined when calling applicationTcbPush.');
+        }
+
+        // verify required parameter 'credentials' is not null or undefined
+        if (credentials === null || credentials === undefined) {
+            throw new Error('Required parameter credentials was null or undefined when calling applicationTcbPush.');
+        }
+
+        if (branch !== undefined) {
+            localVarQueryParameters['branch'] = ObjectSerializer.serialize(branch, "string");
+        }
+
+        if (credentials !== undefined) {
+            localVarQueryParameters['credentials'] = ObjectSerializer.serialize(credentials, "string");
+        }
+
+        if (progressId !== undefined) {
+            localVarQueryParameters['progress_id'] = ObjectSerializer.serialize(progressId, "string");
+        }
+
+        (<any>Object).assign(localVarHeaderParams, options.headers);
+
+        let localVarUseFormData = false;
+
+        let localVarRequestOptions: localVarRequest.Options = {
+            method: 'GET',
+            qs: localVarQueryParameters,
+            headers: localVarHeaderParams,
+            uri: localVarPath,
+            useQuerystring: this._useQuerystring,
+            json: true,
+        };
+
+        let authenticationPromise = Promise.resolve();
+        authenticationPromise = authenticationPromise.then(() => this.authentications.default.applyToRequest(localVarRequestOptions));
+
+        let interceptorPromise = authenticationPromise;
+        for (const interceptor of this.interceptors) {
+            interceptorPromise = interceptorPromise.then(() => interceptor(localVarRequestOptions));
+        }
+
+        return interceptorPromise.then(() => {
+            if (Object.keys(localVarFormParams).length) {
+                if (localVarUseFormData) {
+                    (<any>localVarRequestOptions).formData = localVarFormParams;
+                } else {
+                    localVarRequestOptions.form = localVarFormParams;
+                }
+            }
+            return new Promise<{ response: http.IncomingMessage; body?: any;  }>((resolve, reject) => {
+                localVarRequest(localVarRequestOptions, (error, response, body) => {
+                    if (error) {
+                        reject(error);
+                    } else {
+                        if (response.statusCode && response.statusCode >= 200 && response.statusCode <= 299) {
+                            resolve({ response: response, body: body });
+                        } else {
+                            reject(new HttpError(response, body, response.statusCode));
+                        }
+                    }
+                });
+            });
+        });
+    }
+    /**
+     * union makes an OSTree branch (containing the commit for changes) for all changes provided by the user to be made in OSTree rootfs of unpacked base Torizon image.
+     * @summary TorizonCore Builder union command.
+     * @param applicationId Id of an application (uuid)
+     * @param branch union branch string
+     * @param progressId Id of a progress cookie (uuid)
+     */
+    public async applicationTcbUnion (applicationId: string, branch: string, progressId?: string, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<{ response: http.IncomingMessage; body?: any;  }> {
+        const localVarPath = this.basePath + '/applications/{application_id}/tcb_union'
+            .replace('{' + 'application_id' + '}', encodeURIComponent(String(applicationId)));
+        let localVarQueryParameters: any = {};
+        let localVarHeaderParams: any = (<any>Object).assign({}, this._defaultHeaders);
+        const produces = ['application/json'];
+        // give precedence to 'application/json'
+        if (produces.indexOf('application/json') >= 0) {
+            localVarHeaderParams.Accept = 'application/json';
+        } else {
+            localVarHeaderParams.Accept = produces.join(',');
+        }
+        let localVarFormParams: any = {};
+
+        // verify required parameter 'applicationId' is not null or undefined
+        if (applicationId === null || applicationId === undefined) {
+            throw new Error('Required parameter applicationId was null or undefined when calling applicationTcbUnion.');
+        }
+
+        // verify required parameter 'branch' is not null or undefined
+        if (branch === null || branch === undefined) {
+            throw new Error('Required parameter branch was null or undefined when calling applicationTcbUnion.');
+        }
+
+        if (branch !== undefined) {
+            localVarQueryParameters['branch'] = ObjectSerializer.serialize(branch, "string");
+        }
+
+        if (progressId !== undefined) {
+            localVarQueryParameters['progress_id'] = ObjectSerializer.serialize(progressId, "string");
+        }
+
+        (<any>Object).assign(localVarHeaderParams, options.headers);
+
+        let localVarUseFormData = false;
+
+        let localVarRequestOptions: localVarRequest.Options = {
+            method: 'GET',
+            qs: localVarQueryParameters,
+            headers: localVarHeaderParams,
+            uri: localVarPath,
+            useQuerystring: this._useQuerystring,
+            json: true,
+        };
+
+        let authenticationPromise = Promise.resolve();
+        authenticationPromise = authenticationPromise.then(() => this.authentications.default.applyToRequest(localVarRequestOptions));
+
+        let interceptorPromise = authenticationPromise;
+        for (const interceptor of this.interceptors) {
+            interceptorPromise = interceptorPromise.then(() => interceptor(localVarRequestOptions));
+        }
+
+        return interceptorPromise.then(() => {
+            if (Object.keys(localVarFormParams).length) {
+                if (localVarUseFormData) {
+                    (<any>localVarRequestOptions).formData = localVarFormParams;
+                } else {
+                    localVarRequestOptions.form = localVarFormParams;
+                }
+            }
+            return new Promise<{ response: http.IncomingMessage; body?: any;  }>((resolve, reject) => {
+                localVarRequest(localVarRequestOptions, (error, response, body) => {
+                    if (error) {
+                        reject(error);
+                    } else {
+                        if (response.statusCode && response.statusCode >= 200 && response.statusCode <= 299) {
+                            resolve({ response: response, body: body });
+                        } else {
+                            reject(new HttpError(response, body, response.statusCode));
+                        }
+                    }
+                });
+            });
+        });
+    }
+    /**
      * Unpack the output using TorizonCore Builder Docker image.
      * @summary TorizonCore unpack command
      * @param applicationId Id of an application (uuid)

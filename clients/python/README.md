@@ -106,6 +106,8 @@ Class | Method | HTTP request | Description
 *ApplicationsApi* | [**application_tcb_deploy**](docs/ApplicationsApi.md#application_tcb_deploy) | **GET** /applications/{application_id}/tcb_deploy | TorizonCore unpack command
 *ApplicationsApi* | [**application_tcb_dt_checkout**](docs/ApplicationsApi.md#application_tcb_dt_checkout) | **GET** /applications/{application_id}/tcb_dt_checkout | TorizonCore Device Tree repo checkout
 *ApplicationsApi* | [**application_tcb_isolate**](docs/ApplicationsApi.md#application_tcb_isolate) | **GET** /applications/{application_id}/tcb_isolate | TorizonCore isolate command
+*ApplicationsApi* | [**application_tcb_push**](docs/ApplicationsApi.md#application_tcb_push) | **GET** /applications/{application_id}/tcb_push | TorizonCore Builder push command.
+*ApplicationsApi* | [**application_tcb_union**](docs/ApplicationsApi.md#application_tcb_union) | **GET** /applications/{application_id}/tcb_union | TorizonCore Builder union command.
 *ApplicationsApi* | [**application_tcb_unpack**](docs/ApplicationsApi.md#application_tcb_unpack) | **GET** /applications/{application_id}/tcb_unpack | TorizonCore unpack command
 *ApplicationsApi* | [**application_updated**](docs/ApplicationsApi.md#application_updated) | **GET** /applications/{application_id}/updated | Check if container image is up to date
 *ApplicationsApi* | [**application_updatesdk**](docs/ApplicationsApi.md#application_updatesdk) | **GET** /applications/{application_id}/sdk/update | Update SDK container

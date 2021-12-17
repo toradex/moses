@@ -1746,6 +1746,160 @@ class ApplicationsApi(object):
             },
             api_client=api_client
         )
+        self.application_tcb_push_endpoint = _Endpoint(
+            settings={
+                'response_type': None,
+                'auth': [],
+                'endpoint_path': '/applications/{application_id}/tcb_push',
+                'operation_id': 'application_tcb_push',
+                'http_method': 'GET',
+                'servers': None,
+            },
+            params_map={
+                'all': [
+                    'application_id',
+                    'branch',
+                    'credentials',
+                    'progress_id',
+                ],
+                'required': [
+                    'application_id',
+                    'branch',
+                    'credentials',
+                ],
+                'nullable': [
+                ],
+                'enum': [
+                ],
+                'validation': [
+                    'application_id',
+                    'progress_id',
+                ]
+            },
+            root_map={
+                'validations': {
+                    ('application_id',): {
+
+                        'regex': {
+                            'pattern': r'^[0-9,a-f,A-F]{8}-[0-9,a-f,A-F]{4}-[0-9,a-f,A-F]{4}-[0-9,a-f,A-F]{4}-[0-9,a-f,A-F]{12}$',  # noqa: E501
+                        },
+                    },
+                    ('progress_id',): {
+
+                        'regex': {
+                            'pattern': r'^$|[0-9,a-f,A-F]{8}-[0-9,a-f,A-F]{4}-[0-9,a-f,A-F]{4}-[0-9,a-f,A-F]{4}-[0-9,a-f,A-F]{12}$',  # noqa: E501
+                        },
+                    },
+                },
+                'allowed_values': {
+                },
+                'openapi_types': {
+                    'application_id':
+                        (str,),
+                    'branch':
+                        (str,),
+                    'credentials':
+                        (str,),
+                    'progress_id':
+                        (str,),
+                },
+                'attribute_map': {
+                    'application_id': 'application_id',
+                    'branch': 'branch',
+                    'credentials': 'credentials',
+                    'progress_id': 'progress_id',
+                },
+                'location_map': {
+                    'application_id': 'path',
+                    'branch': 'query',
+                    'credentials': 'query',
+                    'progress_id': 'query',
+                },
+                'collection_format_map': {
+                }
+            },
+            headers_map={
+                'accept': [
+                    'application/json'
+                ],
+                'content_type': [],
+            },
+            api_client=api_client
+        )
+        self.application_tcb_union_endpoint = _Endpoint(
+            settings={
+                'response_type': None,
+                'auth': [],
+                'endpoint_path': '/applications/{application_id}/tcb_union',
+                'operation_id': 'application_tcb_union',
+                'http_method': 'GET',
+                'servers': None,
+            },
+            params_map={
+                'all': [
+                    'application_id',
+                    'branch',
+                    'progress_id',
+                ],
+                'required': [
+                    'application_id',
+                    'branch',
+                ],
+                'nullable': [
+                ],
+                'enum': [
+                ],
+                'validation': [
+                    'application_id',
+                    'progress_id',
+                ]
+            },
+            root_map={
+                'validations': {
+                    ('application_id',): {
+
+                        'regex': {
+                            'pattern': r'^[0-9,a-f,A-F]{8}-[0-9,a-f,A-F]{4}-[0-9,a-f,A-F]{4}-[0-9,a-f,A-F]{4}-[0-9,a-f,A-F]{12}$',  # noqa: E501
+                        },
+                    },
+                    ('progress_id',): {
+
+                        'regex': {
+                            'pattern': r'^$|[0-9,a-f,A-F]{8}-[0-9,a-f,A-F]{4}-[0-9,a-f,A-F]{4}-[0-9,a-f,A-F]{4}-[0-9,a-f,A-F]{12}$',  # noqa: E501
+                        },
+                    },
+                },
+                'allowed_values': {
+                },
+                'openapi_types': {
+                    'application_id':
+                        (str,),
+                    'branch':
+                        (str,),
+                    'progress_id':
+                        (str,),
+                },
+                'attribute_map': {
+                    'application_id': 'application_id',
+                    'branch': 'branch',
+                    'progress_id': 'progress_id',
+                },
+                'location_map': {
+                    'application_id': 'path',
+                    'branch': 'query',
+                    'progress_id': 'query',
+                },
+                'collection_format_map': {
+                }
+            },
+            headers_map={
+                'accept': [
+                    'application/json'
+                ],
+                'content_type': [],
+            },
+            api_client=api_client
+        )
         self.application_tcb_unpack_endpoint = _Endpoint(
             settings={
                 'response_type': None,
@@ -4049,6 +4203,152 @@ class ApplicationsApi(object):
         kwargs['output_dir'] = \
             output_dir
         return self.application_tcb_isolate_endpoint.call_with_http_info(**kwargs)
+
+    def application_tcb_push(
+        self,
+        application_id,
+        branch,
+        credentials,
+        **kwargs
+    ):
+        """TorizonCore Builder push command.  # noqa: E501
+
+        The command push from TorizonCore Builder can be used to push a new TorizonCore image to Torizon OTA.  # noqa: E501
+        This method makes a synchronous HTTP request by default. To make an
+        asynchronous HTTP request, please pass async_req=True
+
+        >>> thread = api.application_tcb_push(application_id, branch, credentials, async_req=True)
+        >>> result = thread.get()
+
+        Args:
+            application_id (str): Id of an application (uuid)
+            branch (str): union branch string
+            credentials (str): credentials file path
+
+        Keyword Args:
+            progress_id (str): Id of a progress cookie (uuid). [optional]
+            _return_http_data_only (bool): response data without head status
+                code and headers. Default is True.
+            _preload_content (bool): if False, the urllib3.HTTPResponse object
+                will be returned without reading/decoding response data.
+                Default is True.
+            _request_timeout (int/float/tuple): timeout setting for this request. If
+                one number provided, it will be total request timeout. It can also
+                be a pair (tuple) of (connection, read) timeouts.
+                Default is None.
+            _check_input_type (bool): specifies if type checking
+                should be done one the data sent to the server.
+                Default is True.
+            _check_return_type (bool): specifies if type checking
+                should be done one the data received from the server.
+                Default is True.
+            _host_index (int/None): specifies the index of the server
+                that we want to use.
+                Default is read from the configuration.
+            async_req (bool): execute request asynchronously
+
+        Returns:
+            None
+                If the method is called asynchronously, returns the request
+                thread.
+        """
+        kwargs['async_req'] = kwargs.get(
+            'async_req', False
+        )
+        kwargs['_return_http_data_only'] = kwargs.get(
+            '_return_http_data_only', True
+        )
+        kwargs['_preload_content'] = kwargs.get(
+            '_preload_content', True
+        )
+        kwargs['_request_timeout'] = kwargs.get(
+            '_request_timeout', None
+        )
+        kwargs['_check_input_type'] = kwargs.get(
+            '_check_input_type', True
+        )
+        kwargs['_check_return_type'] = kwargs.get(
+            '_check_return_type', True
+        )
+        kwargs['_host_index'] = kwargs.get('_host_index')
+        kwargs['application_id'] = \
+            application_id
+        kwargs['branch'] = \
+            branch
+        kwargs['credentials'] = \
+            credentials
+        return self.application_tcb_push_endpoint.call_with_http_info(**kwargs)
+
+    def application_tcb_union(
+        self,
+        application_id,
+        branch,
+        **kwargs
+    ):
+        """TorizonCore Builder union command.  # noqa: E501
+
+        union makes an OSTree branch (containing the commit for changes) for all changes provided by the user to be made in OSTree rootfs of unpacked base Torizon image.  # noqa: E501
+        This method makes a synchronous HTTP request by default. To make an
+        asynchronous HTTP request, please pass async_req=True
+
+        >>> thread = api.application_tcb_union(application_id, branch, async_req=True)
+        >>> result = thread.get()
+
+        Args:
+            application_id (str): Id of an application (uuid)
+            branch (str): union branch string
+
+        Keyword Args:
+            progress_id (str): Id of a progress cookie (uuid). [optional]
+            _return_http_data_only (bool): response data without head status
+                code and headers. Default is True.
+            _preload_content (bool): if False, the urllib3.HTTPResponse object
+                will be returned without reading/decoding response data.
+                Default is True.
+            _request_timeout (int/float/tuple): timeout setting for this request. If
+                one number provided, it will be total request timeout. It can also
+                be a pair (tuple) of (connection, read) timeouts.
+                Default is None.
+            _check_input_type (bool): specifies if type checking
+                should be done one the data sent to the server.
+                Default is True.
+            _check_return_type (bool): specifies if type checking
+                should be done one the data received from the server.
+                Default is True.
+            _host_index (int/None): specifies the index of the server
+                that we want to use.
+                Default is read from the configuration.
+            async_req (bool): execute request asynchronously
+
+        Returns:
+            None
+                If the method is called asynchronously, returns the request
+                thread.
+        """
+        kwargs['async_req'] = kwargs.get(
+            'async_req', False
+        )
+        kwargs['_return_http_data_only'] = kwargs.get(
+            '_return_http_data_only', True
+        )
+        kwargs['_preload_content'] = kwargs.get(
+            '_preload_content', True
+        )
+        kwargs['_request_timeout'] = kwargs.get(
+            '_request_timeout', None
+        )
+        kwargs['_check_input_type'] = kwargs.get(
+            '_check_input_type', True
+        )
+        kwargs['_check_return_type'] = kwargs.get(
+            '_check_return_type', True
+        )
+        kwargs['_host_index'] = kwargs.get('_host_index')
+        kwargs['application_id'] = \
+            application_id
+        kwargs['branch'] = \
+            branch
+        return self.application_tcb_union_endpoint.call_with_http_info(**kwargs)
 
     def application_tcb_unpack(
         self,

@@ -26,6 +26,8 @@ Method | HTTP request | Description
 [**application_tcb_deploy**](ApplicationsApi.md#application_tcb_deploy) | **GET** /applications/{application_id}/tcb_deploy | TorizonCore unpack command
 [**application_tcb_dt_checkout**](ApplicationsApi.md#application_tcb_dt_checkout) | **GET** /applications/{application_id}/tcb_dt_checkout | TorizonCore Device Tree repo checkout
 [**application_tcb_isolate**](ApplicationsApi.md#application_tcb_isolate) | **GET** /applications/{application_id}/tcb_isolate | TorizonCore isolate command
+[**application_tcb_push**](ApplicationsApi.md#application_tcb_push) | **GET** /applications/{application_id}/tcb_push | TorizonCore Builder push command.
+[**application_tcb_union**](ApplicationsApi.md#application_tcb_union) | **GET** /applications/{application_id}/tcb_union | TorizonCore Builder union command.
 [**application_tcb_unpack**](ApplicationsApi.md#application_tcb_unpack) | **GET** /applications/{application_id}/tcb_unpack | TorizonCore unpack command
 [**application_updated**](ApplicationsApi.md#application_updated) | **GET** /applications/{application_id}/updated | Check if container image is up to date
 [**application_updatesdk**](ApplicationsApi.md#application_updatesdk) | **GET** /applications/{application_id}/sdk/update | Update SDK container
@@ -1869,6 +1871,178 @@ No authorization required
 | Status code | Description | Response headers |
 |-------------|-------------|------------------|
 **200** | OK |  -  |
+**520** | Container image not found on local host. |  -  |
+**530** | Local docker exception. |  -  |
+**550** | No tag has been set for the image |  -  |
+**551** | Operation has been aborted |  -  |
+**553** | TorizonCore Builder error |  -  |
+
+[[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
+
+# **application_tcb_push**
+> application_tcb_push(application_id, branch, credentials)
+
+TorizonCore Builder push command.
+
+The command push from TorizonCore Builder can be used to push a new TorizonCore image to Torizon OTA.
+
+### Example
+
+
+```python
+import time
+import moses_client
+from moses_client.api import applications_api
+from moses_client.model.error_info import ErrorInfo
+from pprint import pprint
+# Defining the host is optional and defaults to http://localhost:5000/api
+# See configuration.py for a list of all supported configuration parameters.
+configuration = moses_client.Configuration(
+    host = "http://localhost:5000/api"
+)
+
+
+# Enter a context with an instance of the API client
+with moses_client.ApiClient() as api_client:
+    # Create an instance of the API class
+    api_instance = applications_api.ApplicationsApi(api_client)
+    application_id = "555914d4-d6Ea-18e3-e53E-03fEE4Bc7d,," # str | Id of an application (uuid)
+    branch = "branch_example" # str | union branch string
+    credentials = "credentials_example" # str | credentials file path
+    progress_id = "55914d4d-6Ea1-8e3e-53E0-3fEE4Bc7d,,c" # str | Id of a progress cookie (uuid) (optional)
+
+    # example passing only required values which don't have defaults set
+    try:
+        # TorizonCore Builder push command.
+        api_instance.application_tcb_push(application_id, branch, credentials)
+    except moses_client.ApiException as e:
+        print("Exception when calling ApplicationsApi->application_tcb_push: %s\n" % e)
+
+    # example passing only required values which don't have defaults set
+    # and optional values
+    try:
+        # TorizonCore Builder push command.
+        api_instance.application_tcb_push(application_id, branch, credentials, progress_id=progress_id)
+    except moses_client.ApiException as e:
+        print("Exception when calling ApplicationsApi->application_tcb_push: %s\n" % e)
+```
+
+
+### Parameters
+
+Name | Type | Description  | Notes
+------------- | ------------- | ------------- | -------------
+ **application_id** | **str**| Id of an application (uuid) |
+ **branch** | **str**| union branch string |
+ **credentials** | **str**| credentials file path |
+ **progress_id** | **str**| Id of a progress cookie (uuid) | [optional]
+
+### Return type
+
+void (empty response body)
+
+### Authorization
+
+No authorization required
+
+### HTTP request headers
+
+ - **Content-Type**: Not defined
+ - **Accept**: application/json
+
+
+### HTTP response details
+
+| Status code | Description | Response headers |
+|-------------|-------------|------------------|
+**200** | OK |  -  |
+**404** | Application not found |  -  |
+**500** | Unexpected exception. |  -  |
+**520** | Container image not found on local host. |  -  |
+**530** | Local docker exception. |  -  |
+**550** | No tag has been set for the image |  -  |
+**551** | Operation has been aborted |  -  |
+**553** | TorizonCore Builder error |  -  |
+
+[[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
+
+# **application_tcb_union**
+> application_tcb_union(application_id, branch)
+
+TorizonCore Builder union command.
+
+union makes an OSTree branch (containing the commit for changes) for all changes provided by the user to be made in OSTree rootfs of unpacked base Torizon image.
+
+### Example
+
+
+```python
+import time
+import moses_client
+from moses_client.api import applications_api
+from moses_client.model.error_info import ErrorInfo
+from pprint import pprint
+# Defining the host is optional and defaults to http://localhost:5000/api
+# See configuration.py for a list of all supported configuration parameters.
+configuration = moses_client.Configuration(
+    host = "http://localhost:5000/api"
+)
+
+
+# Enter a context with an instance of the API client
+with moses_client.ApiClient() as api_client:
+    # Create an instance of the API class
+    api_instance = applications_api.ApplicationsApi(api_client)
+    application_id = "555914d4-d6Ea-18e3-e53E-03fEE4Bc7d,," # str | Id of an application (uuid)
+    branch = "branch_example" # str | union branch string
+    progress_id = "55914d4d-6Ea1-8e3e-53E0-3fEE4Bc7d,,c" # str | Id of a progress cookie (uuid) (optional)
+
+    # example passing only required values which don't have defaults set
+    try:
+        # TorizonCore Builder union command.
+        api_instance.application_tcb_union(application_id, branch)
+    except moses_client.ApiException as e:
+        print("Exception when calling ApplicationsApi->application_tcb_union: %s\n" % e)
+
+    # example passing only required values which don't have defaults set
+    # and optional values
+    try:
+        # TorizonCore Builder union command.
+        api_instance.application_tcb_union(application_id, branch, progress_id=progress_id)
+    except moses_client.ApiException as e:
+        print("Exception when calling ApplicationsApi->application_tcb_union: %s\n" % e)
+```
+
+
+### Parameters
+
+Name | Type | Description  | Notes
+------------- | ------------- | ------------- | -------------
+ **application_id** | **str**| Id of an application (uuid) |
+ **branch** | **str**| union branch string |
+ **progress_id** | **str**| Id of a progress cookie (uuid) | [optional]
+
+### Return type
+
+void (empty response body)
+
+### Authorization
+
+No authorization required
+
+### HTTP request headers
+
+ - **Content-Type**: Not defined
+ - **Accept**: application/json
+
+
+### HTTP response details
+
+| Status code | Description | Response headers |
+|-------------|-------------|------------------|
+**200** | OK |  -  |
+**404** | Application not found |  -  |
+**500** | Unexpected exception. |  -  |
 **520** | Container image not found on local host. |  -  |
 **530** | Local docker exception. |  -  |
 **550** | No tag has been set for the image |  -  |

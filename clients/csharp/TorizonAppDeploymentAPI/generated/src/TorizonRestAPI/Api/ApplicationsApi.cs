@@ -584,6 +584,58 @@ namespace TorizonRestAPI.Api
         /// <returns>ApiResponse of Object(void)</returns>
         ApiResponse<Object> ApplicationTcbIsolateWithHttpInfo (string applicationId, string host, string username, string password, string outputDir, string progressId = default(string));
         /// <summary>
+        /// TorizonCore Builder push command.
+        /// </summary>
+        /// <remarks>
+        /// The command push from TorizonCore Builder can be used to push a new TorizonCore image to Torizon OTA.
+        /// </remarks>
+        /// <exception cref="TorizonRestAPI.Client.ApiException">Thrown when fails to make API call</exception>
+        /// <param name="applicationId">Id of an application (uuid)</param>
+        /// <param name="branch">union branch string</param>
+        /// <param name="credentials">credentials file path</param>
+        /// <param name="progressId">Id of a progress cookie (uuid) (optional)</param>
+        /// <returns></returns>
+        void ApplicationTcbPush (string applicationId, string branch, string credentials, string progressId = default(string));
+
+        /// <summary>
+        /// TorizonCore Builder push command.
+        /// </summary>
+        /// <remarks>
+        /// The command push from TorizonCore Builder can be used to push a new TorizonCore image to Torizon OTA.
+        /// </remarks>
+        /// <exception cref="TorizonRestAPI.Client.ApiException">Thrown when fails to make API call</exception>
+        /// <param name="applicationId">Id of an application (uuid)</param>
+        /// <param name="branch">union branch string</param>
+        /// <param name="credentials">credentials file path</param>
+        /// <param name="progressId">Id of a progress cookie (uuid) (optional)</param>
+        /// <returns>ApiResponse of Object(void)</returns>
+        ApiResponse<Object> ApplicationTcbPushWithHttpInfo (string applicationId, string branch, string credentials, string progressId = default(string));
+        /// <summary>
+        /// TorizonCore Builder union command.
+        /// </summary>
+        /// <remarks>
+        /// union makes an OSTree branch (containing the commit for changes) for all changes provided by the user to be made in OSTree rootfs of unpacked base Torizon image.
+        /// </remarks>
+        /// <exception cref="TorizonRestAPI.Client.ApiException">Thrown when fails to make API call</exception>
+        /// <param name="applicationId">Id of an application (uuid)</param>
+        /// <param name="branch">union branch string</param>
+        /// <param name="progressId">Id of a progress cookie (uuid) (optional)</param>
+        /// <returns></returns>
+        void ApplicationTcbUnion (string applicationId, string branch, string progressId = default(string));
+
+        /// <summary>
+        /// TorizonCore Builder union command.
+        /// </summary>
+        /// <remarks>
+        /// union makes an OSTree branch (containing the commit for changes) for all changes provided by the user to be made in OSTree rootfs of unpacked base Torizon image.
+        /// </remarks>
+        /// <exception cref="TorizonRestAPI.Client.ApiException">Thrown when fails to make API call</exception>
+        /// <param name="applicationId">Id of an application (uuid)</param>
+        /// <param name="branch">union branch string</param>
+        /// <param name="progressId">Id of a progress cookie (uuid) (optional)</param>
+        /// <returns>ApiResponse of Object(void)</returns>
+        ApiResponse<Object> ApplicationTcbUnionWithHttpInfo (string applicationId, string branch, string progressId = default(string));
+        /// <summary>
         /// TorizonCore unpack command
         /// </summary>
         /// <remarks>
@@ -1393,6 +1445,62 @@ namespace TorizonRestAPI.Api
         /// <param name="cancellationToken">Cancellation Token to cancel request (optional) </param>
         /// <returns>Task of ApiResponse</returns>
         System.Threading.Tasks.Task<ApiResponse<Object>> ApplicationTcbIsolateWithHttpInfoAsync (string applicationId, string host, string username, string password, string outputDir, string progressId = default(string), CancellationToken cancellationToken = default(CancellationToken));
+        /// <summary>
+        /// TorizonCore Builder push command.
+        /// </summary>
+        /// <remarks>
+        /// The command push from TorizonCore Builder can be used to push a new TorizonCore image to Torizon OTA.
+        /// </remarks>
+        /// <exception cref="TorizonRestAPI.Client.ApiException">Thrown when fails to make API call</exception>
+        /// <param name="applicationId">Id of an application (uuid)</param>
+        /// <param name="branch">union branch string</param>
+        /// <param name="credentials">credentials file path</param>
+        /// <param name="progressId">Id of a progress cookie (uuid) (optional)</param>
+        /// <param name="cancellationToken">Cancellation Token to cancel request (optional) </param>
+        /// <returns>Task of void</returns>
+        System.Threading.Tasks.Task ApplicationTcbPushAsync (string applicationId, string branch, string credentials, string progressId = default(string), CancellationToken cancellationToken = default(CancellationToken));
+
+        /// <summary>
+        /// TorizonCore Builder push command.
+        /// </summary>
+        /// <remarks>
+        /// The command push from TorizonCore Builder can be used to push a new TorizonCore image to Torizon OTA.
+        /// </remarks>
+        /// <exception cref="TorizonRestAPI.Client.ApiException">Thrown when fails to make API call</exception>
+        /// <param name="applicationId">Id of an application (uuid)</param>
+        /// <param name="branch">union branch string</param>
+        /// <param name="credentials">credentials file path</param>
+        /// <param name="progressId">Id of a progress cookie (uuid) (optional)</param>
+        /// <param name="cancellationToken">Cancellation Token to cancel request (optional) </param>
+        /// <returns>Task of ApiResponse</returns>
+        System.Threading.Tasks.Task<ApiResponse<Object>> ApplicationTcbPushWithHttpInfoAsync (string applicationId, string branch, string credentials, string progressId = default(string), CancellationToken cancellationToken = default(CancellationToken));
+        /// <summary>
+        /// TorizonCore Builder union command.
+        /// </summary>
+        /// <remarks>
+        /// union makes an OSTree branch (containing the commit for changes) for all changes provided by the user to be made in OSTree rootfs of unpacked base Torizon image.
+        /// </remarks>
+        /// <exception cref="TorizonRestAPI.Client.ApiException">Thrown when fails to make API call</exception>
+        /// <param name="applicationId">Id of an application (uuid)</param>
+        /// <param name="branch">union branch string</param>
+        /// <param name="progressId">Id of a progress cookie (uuid) (optional)</param>
+        /// <param name="cancellationToken">Cancellation Token to cancel request (optional) </param>
+        /// <returns>Task of void</returns>
+        System.Threading.Tasks.Task ApplicationTcbUnionAsync (string applicationId, string branch, string progressId = default(string), CancellationToken cancellationToken = default(CancellationToken));
+
+        /// <summary>
+        /// TorizonCore Builder union command.
+        /// </summary>
+        /// <remarks>
+        /// union makes an OSTree branch (containing the commit for changes) for all changes provided by the user to be made in OSTree rootfs of unpacked base Torizon image.
+        /// </remarks>
+        /// <exception cref="TorizonRestAPI.Client.ApiException">Thrown when fails to make API call</exception>
+        /// <param name="applicationId">Id of an application (uuid)</param>
+        /// <param name="branch">union branch string</param>
+        /// <param name="progressId">Id of a progress cookie (uuid) (optional)</param>
+        /// <param name="cancellationToken">Cancellation Token to cancel request (optional) </param>
+        /// <returns>Task of ApiResponse</returns>
+        System.Threading.Tasks.Task<ApiResponse<Object>> ApplicationTcbUnionWithHttpInfoAsync (string applicationId, string branch, string progressId = default(string), CancellationToken cancellationToken = default(CancellationToken));
         /// <summary>
         /// TorizonCore unpack command
         /// </summary>
@@ -5164,6 +5272,320 @@ namespace TorizonRestAPI.Api
             if (ExceptionFactory != null)
             {
                 Exception exception = ExceptionFactory("ApplicationTcbIsolate", localVarResponse);
+                if (exception != null) throw exception;
+            }
+
+            return new ApiResponse<Object>(localVarStatusCode,
+                localVarResponse.Headers.ToDictionary(x => x.Name, x => string.Join(",", x.Value)),
+                null);
+        }
+
+        /// <summary>
+        /// TorizonCore Builder push command. The command push from TorizonCore Builder can be used to push a new TorizonCore image to Torizon OTA.
+        /// </summary>
+        /// <exception cref="TorizonRestAPI.Client.ApiException">Thrown when fails to make API call</exception>
+        /// <param name="applicationId">Id of an application (uuid)</param>
+        /// <param name="branch">union branch string</param>
+        /// <param name="credentials">credentials file path</param>
+        /// <param name="progressId">Id of a progress cookie (uuid) (optional)</param>
+        /// <returns></returns>
+        public void ApplicationTcbPush (string applicationId, string branch, string credentials, string progressId = default(string))
+        {
+             ApplicationTcbPushWithHttpInfo(applicationId, branch, credentials, progressId);
+        }
+
+        /// <summary>
+        /// TorizonCore Builder push command. The command push from TorizonCore Builder can be used to push a new TorizonCore image to Torizon OTA.
+        /// </summary>
+        /// <exception cref="TorizonRestAPI.Client.ApiException">Thrown when fails to make API call</exception>
+        /// <param name="applicationId">Id of an application (uuid)</param>
+        /// <param name="branch">union branch string</param>
+        /// <param name="credentials">credentials file path</param>
+        /// <param name="progressId">Id of a progress cookie (uuid) (optional)</param>
+        /// <returns>ApiResponse of Object(void)</returns>
+        public ApiResponse<Object> ApplicationTcbPushWithHttpInfo (string applicationId, string branch, string credentials, string progressId = default(string))
+        {
+            // verify the required parameter 'applicationId' is set
+            if (applicationId == null)
+                throw new ApiException(400, "Missing required parameter 'applicationId' when calling ApplicationsApi->ApplicationTcbPush");
+            // verify the required parameter 'branch' is set
+            if (branch == null)
+                throw new ApiException(400, "Missing required parameter 'branch' when calling ApplicationsApi->ApplicationTcbPush");
+            // verify the required parameter 'credentials' is set
+            if (credentials == null)
+                throw new ApiException(400, "Missing required parameter 'credentials' when calling ApplicationsApi->ApplicationTcbPush");
+
+            var localVarPath = "/applications/{application_id}/tcb_push";
+            var localVarPathParams = new Dictionary<String, String>();
+            var localVarQueryParams = new List<KeyValuePair<String, String>>();
+            var localVarHeaderParams = new Dictionary<String, String>(this.Configuration.DefaultHeader);
+            var localVarFormParams = new Dictionary<String, String>();
+            var localVarFileParams = new Dictionary<String, FileParameter>();
+            Object localVarPostBody = null;
+
+            // to determine the Content-Type header
+            String[] localVarHttpContentTypes = new String[] {
+            };
+            String localVarHttpContentType = this.Configuration.ApiClient.SelectHeaderContentType(localVarHttpContentTypes);
+
+            // to determine the Accept header
+            String[] localVarHttpHeaderAccepts = new String[] {
+                "application/json"
+            };
+            String localVarHttpHeaderAccept = this.Configuration.ApiClient.SelectHeaderAccept(localVarHttpHeaderAccepts);
+            if (localVarHttpHeaderAccept != null)
+                localVarHeaderParams.Add("Accept", localVarHttpHeaderAccept);
+
+            if (applicationId != null) localVarPathParams.Add("application_id", this.Configuration.ApiClient.ParameterToString(applicationId)); // path parameter
+            if (branch != null) localVarQueryParams.AddRange(this.Configuration.ApiClient.ParameterToKeyValuePairs("", "branch", branch)); // query parameter
+            if (credentials != null) localVarQueryParams.AddRange(this.Configuration.ApiClient.ParameterToKeyValuePairs("", "credentials", credentials)); // query parameter
+            if (progressId != null) localVarQueryParams.AddRange(this.Configuration.ApiClient.ParameterToKeyValuePairs("", "progress_id", progressId)); // query parameter
+
+
+            // make the HTTP request
+            IRestResponse localVarResponse = (IRestResponse) this.Configuration.ApiClient.CallApi(localVarPath,
+                Method.GET, localVarQueryParams, localVarPostBody, localVarHeaderParams, localVarFormParams, localVarFileParams,
+                localVarPathParams, localVarHttpContentType);
+
+            int localVarStatusCode = (int) localVarResponse.StatusCode;
+
+            if (ExceptionFactory != null)
+            {
+                Exception exception = ExceptionFactory("ApplicationTcbPush", localVarResponse);
+                if (exception != null) throw exception;
+            }
+
+            return new ApiResponse<Object>(localVarStatusCode,
+                localVarResponse.Headers.ToDictionary(x => x.Name, x => string.Join(",", x.Value)),
+                null);
+        }
+
+        /// <summary>
+        /// TorizonCore Builder push command. The command push from TorizonCore Builder can be used to push a new TorizonCore image to Torizon OTA.
+        /// </summary>
+        /// <exception cref="TorizonRestAPI.Client.ApiException">Thrown when fails to make API call</exception>
+        /// <param name="applicationId">Id of an application (uuid)</param>
+        /// <param name="branch">union branch string</param>
+        /// <param name="credentials">credentials file path</param>
+        /// <param name="progressId">Id of a progress cookie (uuid) (optional)</param>
+        /// <param name="cancellationToken">Cancellation Token to cancel request (optional) </param>
+        /// <returns>Task of void</returns>
+        public async System.Threading.Tasks.Task ApplicationTcbPushAsync (string applicationId, string branch, string credentials, string progressId = default(string), CancellationToken cancellationToken = default(CancellationToken))
+        {
+             await ApplicationTcbPushWithHttpInfoAsync(applicationId, branch, credentials, progressId, cancellationToken);
+
+        }
+
+        /// <summary>
+        /// TorizonCore Builder push command. The command push from TorizonCore Builder can be used to push a new TorizonCore image to Torizon OTA.
+        /// </summary>
+        /// <exception cref="TorizonRestAPI.Client.ApiException">Thrown when fails to make API call</exception>
+        /// <param name="applicationId">Id of an application (uuid)</param>
+        /// <param name="branch">union branch string</param>
+        /// <param name="credentials">credentials file path</param>
+        /// <param name="progressId">Id of a progress cookie (uuid) (optional)</param>
+        /// <param name="cancellationToken">Cancellation Token to cancel request (optional) </param>
+        /// <returns>Task of ApiResponse</returns>
+        public async System.Threading.Tasks.Task<ApiResponse<Object>> ApplicationTcbPushWithHttpInfoAsync (string applicationId, string branch, string credentials, string progressId = default(string), CancellationToken cancellationToken = default(CancellationToken))
+        {
+            // verify the required parameter 'applicationId' is set
+            if (applicationId == null)
+                throw new ApiException(400, "Missing required parameter 'applicationId' when calling ApplicationsApi->ApplicationTcbPush");
+            // verify the required parameter 'branch' is set
+            if (branch == null)
+                throw new ApiException(400, "Missing required parameter 'branch' when calling ApplicationsApi->ApplicationTcbPush");
+            // verify the required parameter 'credentials' is set
+            if (credentials == null)
+                throw new ApiException(400, "Missing required parameter 'credentials' when calling ApplicationsApi->ApplicationTcbPush");
+
+            var localVarPath = "/applications/{application_id}/tcb_push";
+            var localVarPathParams = new Dictionary<String, String>();
+            var localVarQueryParams = new List<KeyValuePair<String, String>>();
+            var localVarHeaderParams = new Dictionary<String, String>(this.Configuration.DefaultHeader);
+            var localVarFormParams = new Dictionary<String, String>();
+            var localVarFileParams = new Dictionary<String, FileParameter>();
+            Object localVarPostBody = null;
+
+            // to determine the Content-Type header
+            String[] localVarHttpContentTypes = new String[] {
+            };
+            String localVarHttpContentType = this.Configuration.ApiClient.SelectHeaderContentType(localVarHttpContentTypes);
+
+            // to determine the Accept header
+            String[] localVarHttpHeaderAccepts = new String[] {
+                "application/json"
+            };
+            String localVarHttpHeaderAccept = this.Configuration.ApiClient.SelectHeaderAccept(localVarHttpHeaderAccepts);
+            if (localVarHttpHeaderAccept != null)
+                localVarHeaderParams.Add("Accept", localVarHttpHeaderAccept);
+
+            if (applicationId != null) localVarPathParams.Add("application_id", this.Configuration.ApiClient.ParameterToString(applicationId)); // path parameter
+            if (branch != null) localVarQueryParams.AddRange(this.Configuration.ApiClient.ParameterToKeyValuePairs("", "branch", branch)); // query parameter
+            if (credentials != null) localVarQueryParams.AddRange(this.Configuration.ApiClient.ParameterToKeyValuePairs("", "credentials", credentials)); // query parameter
+            if (progressId != null) localVarQueryParams.AddRange(this.Configuration.ApiClient.ParameterToKeyValuePairs("", "progress_id", progressId)); // query parameter
+
+
+            // make the HTTP request
+            IRestResponse localVarResponse = (IRestResponse) await this.Configuration.ApiClient.CallApiAsync(localVarPath,
+                Method.GET, localVarQueryParams, localVarPostBody, localVarHeaderParams, localVarFormParams, localVarFileParams,
+                localVarPathParams, localVarHttpContentType, cancellationToken);
+
+            int localVarStatusCode = (int) localVarResponse.StatusCode;
+
+            if (ExceptionFactory != null)
+            {
+                Exception exception = ExceptionFactory("ApplicationTcbPush", localVarResponse);
+                if (exception != null) throw exception;
+            }
+
+            return new ApiResponse<Object>(localVarStatusCode,
+                localVarResponse.Headers.ToDictionary(x => x.Name, x => string.Join(",", x.Value)),
+                null);
+        }
+
+        /// <summary>
+        /// TorizonCore Builder union command. union makes an OSTree branch (containing the commit for changes) for all changes provided by the user to be made in OSTree rootfs of unpacked base Torizon image.
+        /// </summary>
+        /// <exception cref="TorizonRestAPI.Client.ApiException">Thrown when fails to make API call</exception>
+        /// <param name="applicationId">Id of an application (uuid)</param>
+        /// <param name="branch">union branch string</param>
+        /// <param name="progressId">Id of a progress cookie (uuid) (optional)</param>
+        /// <returns></returns>
+        public void ApplicationTcbUnion (string applicationId, string branch, string progressId = default(string))
+        {
+             ApplicationTcbUnionWithHttpInfo(applicationId, branch, progressId);
+        }
+
+        /// <summary>
+        /// TorizonCore Builder union command. union makes an OSTree branch (containing the commit for changes) for all changes provided by the user to be made in OSTree rootfs of unpacked base Torizon image.
+        /// </summary>
+        /// <exception cref="TorizonRestAPI.Client.ApiException">Thrown when fails to make API call</exception>
+        /// <param name="applicationId">Id of an application (uuid)</param>
+        /// <param name="branch">union branch string</param>
+        /// <param name="progressId">Id of a progress cookie (uuid) (optional)</param>
+        /// <returns>ApiResponse of Object(void)</returns>
+        public ApiResponse<Object> ApplicationTcbUnionWithHttpInfo (string applicationId, string branch, string progressId = default(string))
+        {
+            // verify the required parameter 'applicationId' is set
+            if (applicationId == null)
+                throw new ApiException(400, "Missing required parameter 'applicationId' when calling ApplicationsApi->ApplicationTcbUnion");
+            // verify the required parameter 'branch' is set
+            if (branch == null)
+                throw new ApiException(400, "Missing required parameter 'branch' when calling ApplicationsApi->ApplicationTcbUnion");
+
+            var localVarPath = "/applications/{application_id}/tcb_union";
+            var localVarPathParams = new Dictionary<String, String>();
+            var localVarQueryParams = new List<KeyValuePair<String, String>>();
+            var localVarHeaderParams = new Dictionary<String, String>(this.Configuration.DefaultHeader);
+            var localVarFormParams = new Dictionary<String, String>();
+            var localVarFileParams = new Dictionary<String, FileParameter>();
+            Object localVarPostBody = null;
+
+            // to determine the Content-Type header
+            String[] localVarHttpContentTypes = new String[] {
+            };
+            String localVarHttpContentType = this.Configuration.ApiClient.SelectHeaderContentType(localVarHttpContentTypes);
+
+            // to determine the Accept header
+            String[] localVarHttpHeaderAccepts = new String[] {
+                "application/json"
+            };
+            String localVarHttpHeaderAccept = this.Configuration.ApiClient.SelectHeaderAccept(localVarHttpHeaderAccepts);
+            if (localVarHttpHeaderAccept != null)
+                localVarHeaderParams.Add("Accept", localVarHttpHeaderAccept);
+
+            if (applicationId != null) localVarPathParams.Add("application_id", this.Configuration.ApiClient.ParameterToString(applicationId)); // path parameter
+            if (branch != null) localVarQueryParams.AddRange(this.Configuration.ApiClient.ParameterToKeyValuePairs("", "branch", branch)); // query parameter
+            if (progressId != null) localVarQueryParams.AddRange(this.Configuration.ApiClient.ParameterToKeyValuePairs("", "progress_id", progressId)); // query parameter
+
+
+            // make the HTTP request
+            IRestResponse localVarResponse = (IRestResponse) this.Configuration.ApiClient.CallApi(localVarPath,
+                Method.GET, localVarQueryParams, localVarPostBody, localVarHeaderParams, localVarFormParams, localVarFileParams,
+                localVarPathParams, localVarHttpContentType);
+
+            int localVarStatusCode = (int) localVarResponse.StatusCode;
+
+            if (ExceptionFactory != null)
+            {
+                Exception exception = ExceptionFactory("ApplicationTcbUnion", localVarResponse);
+                if (exception != null) throw exception;
+            }
+
+            return new ApiResponse<Object>(localVarStatusCode,
+                localVarResponse.Headers.ToDictionary(x => x.Name, x => string.Join(",", x.Value)),
+                null);
+        }
+
+        /// <summary>
+        /// TorizonCore Builder union command. union makes an OSTree branch (containing the commit for changes) for all changes provided by the user to be made in OSTree rootfs of unpacked base Torizon image.
+        /// </summary>
+        /// <exception cref="TorizonRestAPI.Client.ApiException">Thrown when fails to make API call</exception>
+        /// <param name="applicationId">Id of an application (uuid)</param>
+        /// <param name="branch">union branch string</param>
+        /// <param name="progressId">Id of a progress cookie (uuid) (optional)</param>
+        /// <param name="cancellationToken">Cancellation Token to cancel request (optional) </param>
+        /// <returns>Task of void</returns>
+        public async System.Threading.Tasks.Task ApplicationTcbUnionAsync (string applicationId, string branch, string progressId = default(string), CancellationToken cancellationToken = default(CancellationToken))
+        {
+             await ApplicationTcbUnionWithHttpInfoAsync(applicationId, branch, progressId, cancellationToken);
+
+        }
+
+        /// <summary>
+        /// TorizonCore Builder union command. union makes an OSTree branch (containing the commit for changes) for all changes provided by the user to be made in OSTree rootfs of unpacked base Torizon image.
+        /// </summary>
+        /// <exception cref="TorizonRestAPI.Client.ApiException">Thrown when fails to make API call</exception>
+        /// <param name="applicationId">Id of an application (uuid)</param>
+        /// <param name="branch">union branch string</param>
+        /// <param name="progressId">Id of a progress cookie (uuid) (optional)</param>
+        /// <param name="cancellationToken">Cancellation Token to cancel request (optional) </param>
+        /// <returns>Task of ApiResponse</returns>
+        public async System.Threading.Tasks.Task<ApiResponse<Object>> ApplicationTcbUnionWithHttpInfoAsync (string applicationId, string branch, string progressId = default(string), CancellationToken cancellationToken = default(CancellationToken))
+        {
+            // verify the required parameter 'applicationId' is set
+            if (applicationId == null)
+                throw new ApiException(400, "Missing required parameter 'applicationId' when calling ApplicationsApi->ApplicationTcbUnion");
+            // verify the required parameter 'branch' is set
+            if (branch == null)
+                throw new ApiException(400, "Missing required parameter 'branch' when calling ApplicationsApi->ApplicationTcbUnion");
+
+            var localVarPath = "/applications/{application_id}/tcb_union";
+            var localVarPathParams = new Dictionary<String, String>();
+            var localVarQueryParams = new List<KeyValuePair<String, String>>();
+            var localVarHeaderParams = new Dictionary<String, String>(this.Configuration.DefaultHeader);
+            var localVarFormParams = new Dictionary<String, String>();
+            var localVarFileParams = new Dictionary<String, FileParameter>();
+            Object localVarPostBody = null;
+
+            // to determine the Content-Type header
+            String[] localVarHttpContentTypes = new String[] {
+            };
+            String localVarHttpContentType = this.Configuration.ApiClient.SelectHeaderContentType(localVarHttpContentTypes);
+
+            // to determine the Accept header
+            String[] localVarHttpHeaderAccepts = new String[] {
+                "application/json"
+            };
+            String localVarHttpHeaderAccept = this.Configuration.ApiClient.SelectHeaderAccept(localVarHttpHeaderAccepts);
+            if (localVarHttpHeaderAccept != null)
+                localVarHeaderParams.Add("Accept", localVarHttpHeaderAccept);
+
+            if (applicationId != null) localVarPathParams.Add("application_id", this.Configuration.ApiClient.ParameterToString(applicationId)); // path parameter
+            if (branch != null) localVarQueryParams.AddRange(this.Configuration.ApiClient.ParameterToKeyValuePairs("", "branch", branch)); // query parameter
+            if (progressId != null) localVarQueryParams.AddRange(this.Configuration.ApiClient.ParameterToKeyValuePairs("", "progress_id", progressId)); // query parameter
+
+
+            // make the HTTP request
+            IRestResponse localVarResponse = (IRestResponse) await this.Configuration.ApiClient.CallApiAsync(localVarPath,
+                Method.GET, localVarQueryParams, localVarPostBody, localVarHeaderParams, localVarFormParams, localVarFileParams,
+                localVarPathParams, localVarHttpContentType, cancellationToken);
+
+            int localVarStatusCode = (int) localVarResponse.StatusCode;
+
+            if (ExceptionFactory != null)
+            {
+                Exception exception = ExceptionFactory("ApplicationTcbUnion", localVarResponse);
                 if (exception != null) throw exception;
             }
 

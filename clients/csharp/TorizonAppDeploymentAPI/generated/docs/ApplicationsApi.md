@@ -26,6 +26,8 @@ Method | HTTP request | Description
 [**ApplicationTcbDeploy**](ApplicationsApi.md#applicationtcbdeploy) | **GET** /applications/{application_id}/tcb_deploy | TorizonCore unpack command
 [**ApplicationTcbDtCheckout**](ApplicationsApi.md#applicationtcbdtcheckout) | **GET** /applications/{application_id}/tcb_dt_checkout | TorizonCore Device Tree repo checkout
 [**ApplicationTcbIsolate**](ApplicationsApi.md#applicationtcbisolate) | **GET** /applications/{application_id}/tcb_isolate | TorizonCore isolate command
+[**ApplicationTcbPush**](ApplicationsApi.md#applicationtcbpush) | **GET** /applications/{application_id}/tcb_push | TorizonCore Builder push command.
+[**ApplicationTcbUnion**](ApplicationsApi.md#applicationtcbunion) | **GET** /applications/{application_id}/tcb_union | TorizonCore Builder union command.
 [**ApplicationTcbUnpack**](ApplicationsApi.md#applicationtcbunpack) | **GET** /applications/{application_id}/tcb_unpack | TorizonCore unpack command
 [**ApplicationUpdated**](ApplicationsApi.md#applicationupdated) | **GET** /applications/{application_id}/updated | Check if container image is up to date
 [**ApplicationUpdatesdk**](ApplicationsApi.md#applicationupdatesdk) | **GET** /applications/{application_id}/sdk/update | Update SDK container
@@ -1896,6 +1898,180 @@ No authorization required
 | Status code | Description | Response headers |
 |-------------|-------------|------------------|
 | **200** | OK |  -  |
+| **520** | Container image not found on local host. |  -  |
+| **530** | Local docker exception. |  -  |
+| **550** | No tag has been set for the image |  -  |
+| **551** | Operation has been aborted |  -  |
+| **553** | TorizonCore Builder error |  -  |
+
+[[Back to top]](#)
+[[Back to API list]](../README.md#documentation-for-api-endpoints)
+[[Back to Model list]](../README.md#documentation-for-models)
+[[Back to README]](../README.md)
+
+
+## ApplicationTcbPush
+
+> void ApplicationTcbPush (string applicationId, string branch, string credentials, string progressId = null)
+
+TorizonCore Builder push command.
+
+The command push from TorizonCore Builder can be used to push a new TorizonCore image to Torizon OTA.
+
+### Example
+
+```csharp
+using System.Collections.Generic;
+using System.Diagnostics;
+using TorizonRestAPI.Api;
+using TorizonRestAPI.Client;
+using TorizonRestAPI.Model;
+
+namespace Example
+{
+    public class ApplicationTcbPushExample
+    {
+        public static void Main()
+        {
+            Configuration.Default.BasePath = "http://localhost:5000/api";
+            var apiInstance = new ApplicationsApi(Configuration.Default);
+            var applicationId = applicationId_example;  // string | Id of an application (uuid)
+            var branch = branch_example;  // string | union branch string
+            var credentials = credentials_example;  // string | credentials file path
+            var progressId = progressId_example;  // string | Id of a progress cookie (uuid) (optional) 
+
+            try
+            {
+                // TorizonCore Builder push command.
+                apiInstance.ApplicationTcbPush(applicationId, branch, credentials, progressId);
+            }
+            catch (ApiException e)
+            {
+                Debug.Print("Exception when calling ApplicationsApi.ApplicationTcbPush: " + e.Message );
+                Debug.Print("Status Code: "+ e.ErrorCode);
+                Debug.Print(e.StackTrace);
+            }
+        }
+    }
+}
+```
+
+### Parameters
+
+
+Name | Type | Description  | Notes
+------------- | ------------- | ------------- | -------------
+ **applicationId** | **string**| Id of an application (uuid) | 
+ **branch** | **string**| union branch string | 
+ **credentials** | **string**| credentials file path | 
+ **progressId** | **string**| Id of a progress cookie (uuid) | [optional] 
+
+### Return type
+
+void (empty response body)
+
+### Authorization
+
+No authorization required
+
+### HTTP request headers
+
+- **Content-Type**: Not defined
+- **Accept**: application/json
+
+
+### HTTP response details
+| Status code | Description | Response headers |
+|-------------|-------------|------------------|
+| **200** | OK |  -  |
+| **404** | Application not found |  -  |
+| **500** | Unexpected exception. |  -  |
+| **520** | Container image not found on local host. |  -  |
+| **530** | Local docker exception. |  -  |
+| **550** | No tag has been set for the image |  -  |
+| **551** | Operation has been aborted |  -  |
+| **553** | TorizonCore Builder error |  -  |
+
+[[Back to top]](#)
+[[Back to API list]](../README.md#documentation-for-api-endpoints)
+[[Back to Model list]](../README.md#documentation-for-models)
+[[Back to README]](../README.md)
+
+
+## ApplicationTcbUnion
+
+> void ApplicationTcbUnion (string applicationId, string branch, string progressId = null)
+
+TorizonCore Builder union command.
+
+union makes an OSTree branch (containing the commit for changes) for all changes provided by the user to be made in OSTree rootfs of unpacked base Torizon image.
+
+### Example
+
+```csharp
+using System.Collections.Generic;
+using System.Diagnostics;
+using TorizonRestAPI.Api;
+using TorizonRestAPI.Client;
+using TorizonRestAPI.Model;
+
+namespace Example
+{
+    public class ApplicationTcbUnionExample
+    {
+        public static void Main()
+        {
+            Configuration.Default.BasePath = "http://localhost:5000/api";
+            var apiInstance = new ApplicationsApi(Configuration.Default);
+            var applicationId = applicationId_example;  // string | Id of an application (uuid)
+            var branch = branch_example;  // string | union branch string
+            var progressId = progressId_example;  // string | Id of a progress cookie (uuid) (optional) 
+
+            try
+            {
+                // TorizonCore Builder union command.
+                apiInstance.ApplicationTcbUnion(applicationId, branch, progressId);
+            }
+            catch (ApiException e)
+            {
+                Debug.Print("Exception when calling ApplicationsApi.ApplicationTcbUnion: " + e.Message );
+                Debug.Print("Status Code: "+ e.ErrorCode);
+                Debug.Print(e.StackTrace);
+            }
+        }
+    }
+}
+```
+
+### Parameters
+
+
+Name | Type | Description  | Notes
+------------- | ------------- | ------------- | -------------
+ **applicationId** | **string**| Id of an application (uuid) | 
+ **branch** | **string**| union branch string | 
+ **progressId** | **string**| Id of a progress cookie (uuid) | [optional] 
+
+### Return type
+
+void (empty response body)
+
+### Authorization
+
+No authorization required
+
+### HTTP request headers
+
+- **Content-Type**: Not defined
+- **Accept**: application/json
+
+
+### HTTP response details
+| Status code | Description | Response headers |
+|-------------|-------------|------------------|
+| **200** | OK |  -  |
+| **404** | Application not found |  -  |
+| **500** | Unexpected exception. |  -  |
 | **520** | Container image not found on local host. |  -  |
 | **530** | Local docker exception. |  -  |
 | **550** | No tag has been set for the image |  -  |
