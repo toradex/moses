@@ -2051,6 +2051,48 @@ def applications_application_tcb_union_get(
         progresscookie.progress_report_error(progress, exception)
         raise
 
+def applications_application_tcb_push_get(
+        application_id: str,
+        branch: str,
+        credentials: str,
+        progress_id: str = None) -> Any:
+    """Torizoncore Builder push command."""
+    cookies = progresscookie.ProgressCookies()
+    progress = None
+
+    if progress_id is not None and progress_id in cookies:
+        progress = cookies[progress_id]
+
+    try:
+        applications = applicationconfig.ApplicationConfigs()
+
+        if application_id not in applications:
+            raise moses_exceptions.ObjectNotFound(
+                "Application", application_id)
+
+        app = applications[application_id]
+
+        # app.folder can be Path | None
+        # so, to pass to mypy check we need to make sure to use joinpath
+        # only if app.folder is not None
+        workdir = app.folder
+        if workdir is not None:
+            workdir = workdir.joinpath("..")
+
+        TorizonCoreBuilderUtils.push(
+            branch,
+            str(workdir),
+            credentials,
+            progress
+        )
+
+        progresscookie.progress_completed(progress)
+
+        return (connexion.NoContent, 200)
+    except Exception as exception:
+        progresscookie.progress_report_error(progress, exception)
+        raise
+
 # pylint: disable=too-many-nested-blocks
 # pylint: disable=too-many-branches
 # pylint: disable=too-many-statements
