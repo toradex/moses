@@ -353,8 +353,6 @@ def validate_hostname(self: Any,
         return None
     return "Value does not appear to be a valid hostname or IP address."
 
-REMOTE_PATH_REGEXP = re.compile(r"^(\/[\w^ ]+)+\/?([\w.])+[^.]$")
-
 def validate_remote_path(self: Any,
                              value: str,
                              userarg: Any) -> Optional[str]:
@@ -367,7 +365,7 @@ def validate_remote_path(self: Any,
     :param userarg: not used
     :type userarg: Any
     """
-    if not validate_regexp(self, value, REMOTE_PATH_REGEXP) is None:
+    if not validate_regexp(self, value, RELATIVE_OR_ABSOLUTE_PATH_REGEXP ) is None:
         return "Value does not appear to be a valid path."
     return None
 
