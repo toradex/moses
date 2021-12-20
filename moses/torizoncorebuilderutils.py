@@ -204,7 +204,7 @@ class TorizonCoreBuilderUtils:
             pass
 
         container = dockerclient.containers.run(
-            ":".join([
+            image=":".join([
                 TorizonCoreBuilderUtils.TCBUILDER_REPO,
                 TorizonCoreBuilderUtils.TCBUILDER_TAG
             ]),
