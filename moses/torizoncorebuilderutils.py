@@ -210,6 +210,7 @@ class TorizonCoreBuilderUtils:
             ]),
             command=cmdline,
             volumes=volumes,
+            network_mode="host",
             remove=True,
             detach=True
         )
