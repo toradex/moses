@@ -15,8 +15,8 @@ from moses_exceptions import TorizonCoreBuilderError
 class TorizonCoreBuilderUtils:
     """Class with static methods for run Torizon Core Builder commands."""
 
-    TCBUILDER_REPO = "torizon/torizoncore-builder"
-    TCBUILDER_TAG = "3.2"
+    TCBUILDER_REPO = "torizonextras/tcb"
+    TCBUILDER_TAG = "latest"
 
     @staticmethod
     def pull_docker_image(
