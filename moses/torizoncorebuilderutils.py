@@ -39,7 +39,8 @@ class TorizonCoreBuilderUtils:
         volumes = [
             "deploy:/deploy",
             f"{workspacepath}:/workdir",
-            "storage:/storage"
+            "storage:/storage",
+            "/var/run/docker.sock:/var/run/docker.sock"
         ]
 
         TorizonCoreBuilderUtils.__run_tcbuilder(
@@ -62,7 +63,8 @@ class TorizonCoreBuilderUtils:
         volumes = [
             "deploy:/deploy",
             f"{workspacepath}:/workdir",
-            "storage:/storage"
+            "storage:/storage",
+            "/var/run/docker.sock:/var/run/docker.sock"
         ]
 
         TorizonCoreBuilderUtils.__run_tcbuilder(
@@ -83,7 +85,8 @@ class TorizonCoreBuilderUtils:
         volumes = [
             "deploy:/deploy",
             f"{workspacepath}:/workdir",
-            "storage:/storage"
+            "storage:/storage",
+            "/var/run/docker.sock:/var/run/docker.sock"
         ]
 
         TorizonCoreBuilderUtils.__run_tcbuilder(
@@ -105,7 +108,8 @@ class TorizonCoreBuilderUtils:
         volumes = [
             "deploy:/deploy",
             f"{workspacepath}:/workdir",
-            "storage:/storage"
+            "storage:/storage",
+            "/var/run/docker.sock:/var/run/docker.sock"
         ]
 
         TorizonCoreBuilderUtils.__run_tcbuilder(
@@ -146,7 +150,8 @@ class TorizonCoreBuilderUtils:
         volumes = [
             "deploy:/deploy",
             f"{workspacepath}:/workdir",
-            "storage:/storage"
+            "storage:/storage",
+            "/var/run/docker.sock:/var/run/docker.sock"
         ]
 
         TorizonCoreBuilderUtils.__run_tcbuilder(
@@ -164,7 +169,8 @@ class TorizonCoreBuilderUtils:
         volumes = [
             "deploy:/deploy",
             f"{workspacepath}:/workdir",
-            "storage:/storage"
+            "storage:/storage",
+            "/var/run/docker.sock:/var/run/docker.sock"
         ]
 
         TorizonCoreBuilderUtils.__run_tcbuilder(
@@ -180,7 +186,8 @@ class TorizonCoreBuilderUtils:
         volumes = [
             "deploy:/deploy",
             f"{workspacepath}:/workdir",
-            "storage:/storage"
+            "storage:/storage",
+            "/var/run/docker.sock:/var/run/docker.sock"
         ]
 
         TorizonCoreBuilderUtils.__run_tcbuilder(
