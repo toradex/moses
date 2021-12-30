@@ -81,7 +81,7 @@ namespace TorizonAppDeploymentAPI
 
         public string[] ReadOnlyProperties { get { return new string[] { "Id", "Model", "Hwrev", "Kernelversion", "Kernelrelease", "Distroversion" }; } }
 
-        public async Task RefreshAsync(Action OnRefreshCompleted, bool full)
+        public async Task RefreshAsync(Action OnRefreshCompleted, bool full, bool reboot = false)
         {
             try
             {
@@ -108,7 +108,7 @@ namespace TorizonAppDeploymentAPI
             }
             catch (Exception e)
             {
-                if ((State != ConnectionState.Disconnected) || (ErrorMessage != e.Message))
+                if (((State != ConnectionState.Disconnected) || (ErrorMessage != e.Message)) && (reboot == false))
                 {
                     State = ConnectionState.Disconnected;
                     ErrorMessage = e.Message;
@@ -149,7 +149,26 @@ namespace TorizonAppDeploymentAPI
 
             return ip.Trim(trim);
         }
+
+        public async Task RebootDeviceAsync(string id, string password)
+        {
+            await api.DeviceRebootAsync(id, password);
+
+            State = ConnectionState.Unknown;
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs("State"));
+        }
+
+        public async Task ShutdownDeviceAsync(string id, string password)
+        {
+            await api.DeviceShutdownAsync(id, password);
+            State = ConnectionState.Disconnected;
+
+            ErrorMessage = "Device disconnected";
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs("State"));
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs("ErrorMessage"));
+        }
     }
+
     public class TargetDeviceInstantiator : IObjectsCollectionInstantiator<TargetDevice, TorizonRestAPI.Model.TargetDevice>
     {
         public TargetDevice NewObjectFromModel(TorizonRestAPI.Model.TargetDevice model)
@@ -178,7 +197,7 @@ namespace TorizonAppDeploymentAPI
             api = TorizonAPIManager.GetDevicesApi();
         }
 
-        public async Task RefreshAsync(Action OnRefreshCompleted, bool full)
+        public async Task RefreshAsync(Action OnRefreshCompleted, bool full, bool reboot = false)
         {
             List<TorizonRestAPI.Model.TargetDevice> modeldevices = Utils.ObjectOrException<List<TorizonRestAPI.Model.TargetDevice>>(await api.DevicesGetAsync());
 

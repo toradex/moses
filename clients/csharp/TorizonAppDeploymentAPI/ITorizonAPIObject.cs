@@ -8,7 +8,7 @@ namespace TorizonAppDeploymentAPI
 {
     public interface ITorizonAPPDeploymentAPIObject
     {
-        Task RefreshAsync(Action OnRefreshCompleted, bool full);
+        Task RefreshAsync(Action OnRefreshCompleted, bool full, bool reboot = false);
         Task CommitAsync(Action OnCommitCompleted);
     }
 }

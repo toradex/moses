@@ -21,7 +21,7 @@ namespace TorizonAppDeploymentAPI
             this.api = TorizonAPIManager.GetPlatformsApi();
         }
 
-        public async Task RefreshAsync(Action OnRefreshCompleted, bool full)
+        public async Task RefreshAsync(Action OnRefreshCompleted, bool full, bool reboot = false)
         {
             TorizonRestAPI.Model.Platform model = Utils.ObjectOrException<TorizonRestAPI.Model.Platform>(await api.PlatformGetAsync(this.Id));
 
@@ -81,7 +81,7 @@ namespace TorizonAppDeploymentAPI
             api = TorizonAPIManager.GetPlatformsApi();
         }
 
-        public async Task RefreshAsync(Action OnRefreshCompleted,bool full)
+        public async Task RefreshAsync(Action OnRefreshCompleted,bool full, bool reboot = false)
         {
             List<TorizonRestAPI.Model.Platform> modelplatforms = Utils.ObjectOrException<List<TorizonRestAPI.Model.Platform>>(await api.PlatformsGetAsync(this.runtime));
 

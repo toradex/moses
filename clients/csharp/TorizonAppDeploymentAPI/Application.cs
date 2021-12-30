@@ -80,7 +80,7 @@ namespace TorizonAppDeploymentAPI
             Utils.CopyProperties<TorizonRestAPI.Model.Application>(model, this, PropertyChanged);
         }
 
-        public async Task RefreshAsync(Action OnRefreshCompleted, bool full)
+        public async Task RefreshAsync(Action OnRefreshCompleted, bool full, bool reboot = false)
         {
             TorizonRestAPI.Model.Application model = Utils.ObjectOrException<TorizonRestAPI.Model.Application>(await api.ApplicationGetAsync(this.Id));
             Utils.CopyProperties<TorizonRestAPI.Model.Application>(model, this, PropertyChanged, true);

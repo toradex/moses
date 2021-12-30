@@ -53,7 +53,7 @@ namespace TorizonAppDeploymentAPI
             await api.ImagesDeleteimageAsync(this.Device.Id,this.Id);
         }
 
-        public async Task RefreshAsync(Action OnRefreshCompleted, bool full)
+        public async Task RefreshAsync(Action OnRefreshCompleted, bool full, bool reboot = false)
         {
             TorizonRestAPI.Model.DockerImage model = Utils.ObjectOrException<TorizonRestAPI.Model.DockerImage>(await api.ImagesGetimageAsync(this.Device.Id,this.Id));
             this.Update(model);
@@ -96,7 +96,7 @@ namespace TorizonAppDeploymentAPI
             this.device = device;
         }
 
-        public async Task RefreshAsync(Action OnRefreshCompleted, bool full)
+        public async Task RefreshAsync(Action OnRefreshCompleted, bool full, bool reboot = false)
         {
             List<TorizonRestAPI.Model.DockerImage> imagelist = Utils.ObjectOrException<List<TorizonRestAPI.Model.DockerImage>>(await api.DeviceGetimagesAsync(this.device.Id));
 

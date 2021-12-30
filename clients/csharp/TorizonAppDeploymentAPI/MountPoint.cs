@@ -54,7 +54,7 @@ namespace TorizonAppDeploymentAPI
             throw new NotImplementedException();
         }
 
-        public async Task RefreshAsync(Action OnRefreshCompleted, bool full)
+        public async Task RefreshAsync(Action OnRefreshCompleted, bool full, bool reboot = false)
         {
             List<TorizonRestAPI.Model.MountPoint> mountpointsList = null;
 
