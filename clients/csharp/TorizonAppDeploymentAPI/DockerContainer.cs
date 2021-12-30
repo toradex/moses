@@ -87,7 +87,7 @@ namespace TorizonAppDeploymentAPI
             await api.ContainersDeletecontainerAsync(this.Device.Id, this.Id);
         }
 
-        public async Task RefreshAsync(Action OnRefreshCompleted, bool full)
+        public async Task RefreshAsync(Action OnRefreshCompleted, bool full, bool reboot = false)
         {
             TorizonRestAPI.Model.DockerContainer model = Utils.ObjectOrException<TorizonRestAPI.Model.DockerContainer>(await api.ContainersGetcontainerAsync(this.Device.Id,this.Id));
             this.Update(model);
@@ -163,7 +163,7 @@ namespace TorizonAppDeploymentAPI
             this.images = device.Images;
         }
 
-        public async Task RefreshAsync(Action OnRefreshCompleted,bool full)
+        public async Task RefreshAsync(Action OnRefreshCompleted,bool full, bool reboot = false)
         {
             List<TorizonRestAPI.Model.DockerContainer> containerslist = Utils.ObjectOrException<List<TorizonRestAPI.Model.DockerContainer>>(await api.DeviceGetcontainersAsync(this.device.Id));
 

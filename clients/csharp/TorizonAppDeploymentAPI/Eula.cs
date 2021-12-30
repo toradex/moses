@@ -21,7 +21,7 @@ namespace TorizonAppDeploymentAPI
             api = TorizonAPIManager.GetEulasApi();
         }
 
-        public async Task RefreshAsync(Action OnRefreshCompleted, bool full)
+        public async Task RefreshAsync(Action OnRefreshCompleted, bool full, bool reboot = false)
         {
             TorizonRestAPI.Model.Eula model = Utils.ObjectOrException<TorizonRestAPI.Model.Eula>(await api.EulaGetAsync(this.Id));
 
@@ -65,7 +65,7 @@ namespace TorizonAppDeploymentAPI
             api = TorizonAPIManager.GetEulasApi();
         }
 
-        public async Task RefreshAsync(Action OnRefreshCompleted, bool full)
+        public async Task RefreshAsync(Action OnRefreshCompleted, bool full, bool reboot = false)
         {
             List<TorizonRestAPI.Model.Eula> modeleulas = Utils.ObjectOrException<List<TorizonRestAPI.Model.Eula>>(await api.EulasGetAsync());
 
