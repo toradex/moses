@@ -430,9 +430,7 @@ paths:
           required: true
       responses:
         200:
-          description: Local port for SSH shell
-          schema:
-            type: integer
+          description: OK
         404:
           description: Device not found
         500:
@@ -458,9 +456,7 @@ paths:
           required: true
       responses:
         200:
-          description: Local port for SSH shell
-          schema:
-            type: integer
+          description: OK
         404:
           description: Device not found
         500:
