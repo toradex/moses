@@ -274,7 +274,8 @@ def validate_regexp(self: Any,
     :param userarg: regular expression that should match the value
     :type userarg: re.Pattern
     """
-    if userarg.match(value) is None:
+    listmatch = userarg.findall(value)
+    if listmatch is None or len(listmatch) == 0:
         return f"Value does not match regex {userarg.pattern}"
     return None
 
@@ -371,7 +372,7 @@ def validate_remote_path(self: Any,
 
 
 RELATIVE_OR_ABSOLUTE_PATH_REGEXP = re.compile(
-    r"([a-z0-9_\-\.]+/)+[a-z0-9_\-\.]*$|^[a-z0-9_\-\.]*$|^/([a-z0-9_\-\.]+/)+[a-z0-9_\-\.]*$")
+    r"([a-z0-9_\-\.]+/)+[a-z0-9_\-\.]*$|^[a-z0-9_\-\.]*$|^/([a-z0-9_\-\.])+[a-z0-9_\-\.]*$")
 
 def validate_path(self: Any,
                                 value: str,
