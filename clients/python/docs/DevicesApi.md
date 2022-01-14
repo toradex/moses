@@ -1819,7 +1819,7 @@ No authorization required
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
 
 # **device_reboot**
-> int device_reboot(device_id, password)
+> device_reboot(device_id, password)
 
 Reboot the device
 
@@ -1851,8 +1851,7 @@ with moses_client.ApiClient() as api_client:
     # example passing only required values which don't have defaults set
     try:
         # Reboot the device
-        api_response = api_instance.device_reboot(device_id, password)
-        pprint(api_response)
+        api_instance.device_reboot(device_id, password)
     except moses_client.ApiException as e:
         print("Exception when calling DevicesApi->device_reboot: %s\n" % e)
 ```
@@ -1867,7 +1866,7 @@ Name | Type | Description  | Notes
 
 ### Return type
 
-**int**
+void (empty response body)
 
 ### Authorization
 
@@ -1883,7 +1882,7 @@ No authorization required
 
 | Status code | Description | Response headers |
 |-------------|-------------|------------------|
-**200** | Local port for SSH shell |  -  |
+**200** | OK |  -  |
 **404** | Device not found |  -  |
 **500** | Unexpected exception. |  -  |
 **533** | SSH error. |  -  |
@@ -1892,7 +1891,7 @@ No authorization required
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
 
 # **device_shutdown**
-> int device_shutdown(device_id, password)
+> device_shutdown(device_id, password)
 
 Shutdown the device
 
@@ -1924,8 +1923,7 @@ with moses_client.ApiClient() as api_client:
     # example passing only required values which don't have defaults set
     try:
         # Shutdown the device
-        api_response = api_instance.device_shutdown(device_id, password)
-        pprint(api_response)
+        api_instance.device_shutdown(device_id, password)
     except moses_client.ApiException as e:
         print("Exception when calling DevicesApi->device_shutdown: %s\n" % e)
 ```
@@ -1940,7 +1938,7 @@ Name | Type | Description  | Notes
 
 ### Return type
 
-**int**
+void (empty response body)
 
 ### Authorization
 
@@ -1956,7 +1954,7 @@ No authorization required
 
 | Status code | Description | Response headers |
 |-------------|-------------|------------------|
-**200** | Local port for SSH shell |  -  |
+**200** | OK |  -  |
 **404** | Device not found |  -  |
 **500** | Unexpected exception. |  -  |
 **533** | SSH error. |  -  |

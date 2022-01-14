@@ -1983,7 +1983,7 @@ No authorization required
 
 ## DeviceReboot
 
-> int DeviceReboot (string deviceId, string password)
+> void DeviceReboot (string deviceId, string password)
 
 Reboot the device
 
@@ -2012,8 +2012,7 @@ namespace Example
             try
             {
                 // Reboot the device
-                int result = apiInstance.DeviceReboot(deviceId, password);
-                Debug.WriteLine(result);
+                apiInstance.DeviceReboot(deviceId, password);
             }
             catch (ApiException e)
             {
@@ -2036,7 +2035,7 @@ Name | Type | Description  | Notes
 
 ### Return type
 
-**int**
+void (empty response body)
 
 ### Authorization
 
@@ -2051,7 +2050,7 @@ No authorization required
 ### HTTP response details
 | Status code | Description | Response headers |
 |-------------|-------------|------------------|
-| **200** | Local port for SSH shell |  -  |
+| **200** | OK |  -  |
 | **404** | Device not found |  -  |
 | **500** | Unexpected exception. |  -  |
 | **533** | SSH error. |  -  |
@@ -2065,7 +2064,7 @@ No authorization required
 
 ## DeviceShutdown
 
-> int DeviceShutdown (string deviceId, string password)
+> void DeviceShutdown (string deviceId, string password)
 
 Shutdown the device
 
@@ -2094,8 +2093,7 @@ namespace Example
             try
             {
                 // Shutdown the device
-                int result = apiInstance.DeviceShutdown(deviceId, password);
-                Debug.WriteLine(result);
+                apiInstance.DeviceShutdown(deviceId, password);
             }
             catch (ApiException e)
             {
@@ -2118,7 +2116,7 @@ Name | Type | Description  | Notes
 
 ### Return type
 
-**int**
+void (empty response body)
 
 ### Authorization
 
@@ -2133,7 +2131,7 @@ No authorization required
 ### HTTP response details
 | Status code | Description | Response headers |
 |-------------|-------------|------------------|
-| **200** | Local port for SSH shell |  -  |
+| **200** | OK |  -  |
 | **404** | Device not found |  -  |
 | **500** | Unexpected exception. |  -  |
 | **533** | SSH error. |  -  |

@@ -562,8 +562,8 @@ namespace TorizonRestAPI.Api
         /// <exception cref="TorizonRestAPI.Client.ApiException">Thrown when fails to make API call</exception>
         /// <param name="deviceId">Target device serial number</param>
         /// <param name="password"></param>
-        /// <returns>int</returns>
-        int DeviceReboot (string deviceId, string password);
+        /// <returns></returns>
+        void DeviceReboot (string deviceId, string password);
 
         /// <summary>
         /// Reboot the device
@@ -574,8 +574,8 @@ namespace TorizonRestAPI.Api
         /// <exception cref="TorizonRestAPI.Client.ApiException">Thrown when fails to make API call</exception>
         /// <param name="deviceId">Target device serial number</param>
         /// <param name="password"></param>
-        /// <returns>ApiResponse of int</returns>
-        ApiResponse<int> DeviceRebootWithHttpInfo (string deviceId, string password);
+        /// <returns>ApiResponse of Object(void)</returns>
+        ApiResponse<Object> DeviceRebootWithHttpInfo (string deviceId, string password);
         /// <summary>
         /// Shutdown the device
         /// </summary>
@@ -585,8 +585,8 @@ namespace TorizonRestAPI.Api
         /// <exception cref="TorizonRestAPI.Client.ApiException">Thrown when fails to make API call</exception>
         /// <param name="deviceId">Target device serial number</param>
         /// <param name="password"></param>
-        /// <returns>int</returns>
-        int DeviceShutdown (string deviceId, string password);
+        /// <returns></returns>
+        void DeviceShutdown (string deviceId, string password);
 
         /// <summary>
         /// Shutdown the device
@@ -597,8 +597,8 @@ namespace TorizonRestAPI.Api
         /// <exception cref="TorizonRestAPI.Client.ApiException">Thrown when fails to make API call</exception>
         /// <param name="deviceId">Target device serial number</param>
         /// <param name="password"></param>
-        /// <returns>ApiResponse of int</returns>
-        ApiResponse<int> DeviceShutdownWithHttpInfo (string deviceId, string password);
+        /// <returns>ApiResponse of Object(void)</returns>
+        ApiResponse<Object> DeviceShutdownWithHttpInfo (string deviceId, string password);
         /// <summary>
         /// Synchronize folders
         /// </summary>
@@ -1375,8 +1375,8 @@ namespace TorizonRestAPI.Api
         /// <param name="deviceId">Target device serial number</param>
         /// <param name="password"></param>
         /// <param name="cancellationToken">Cancellation Token to cancel request (optional) </param>
-        /// <returns>Task of int</returns>
-        System.Threading.Tasks.Task<int> DeviceRebootAsync (string deviceId, string password, CancellationToken cancellationToken = default(CancellationToken));
+        /// <returns>Task of void</returns>
+        System.Threading.Tasks.Task DeviceRebootAsync (string deviceId, string password, CancellationToken cancellationToken = default(CancellationToken));
 
         /// <summary>
         /// Reboot the device
@@ -1388,8 +1388,8 @@ namespace TorizonRestAPI.Api
         /// <param name="deviceId">Target device serial number</param>
         /// <param name="password"></param>
         /// <param name="cancellationToken">Cancellation Token to cancel request (optional) </param>
-        /// <returns>Task of ApiResponse (int)</returns>
-        System.Threading.Tasks.Task<ApiResponse<int>> DeviceRebootWithHttpInfoAsync (string deviceId, string password, CancellationToken cancellationToken = default(CancellationToken));
+        /// <returns>Task of ApiResponse</returns>
+        System.Threading.Tasks.Task<ApiResponse<Object>> DeviceRebootWithHttpInfoAsync (string deviceId, string password, CancellationToken cancellationToken = default(CancellationToken));
         /// <summary>
         /// Shutdown the device
         /// </summary>
@@ -1400,8 +1400,8 @@ namespace TorizonRestAPI.Api
         /// <param name="deviceId">Target device serial number</param>
         /// <param name="password"></param>
         /// <param name="cancellationToken">Cancellation Token to cancel request (optional) </param>
-        /// <returns>Task of int</returns>
-        System.Threading.Tasks.Task<int> DeviceShutdownAsync (string deviceId, string password, CancellationToken cancellationToken = default(CancellationToken));
+        /// <returns>Task of void</returns>
+        System.Threading.Tasks.Task DeviceShutdownAsync (string deviceId, string password, CancellationToken cancellationToken = default(CancellationToken));
 
         /// <summary>
         /// Shutdown the device
@@ -1413,8 +1413,8 @@ namespace TorizonRestAPI.Api
         /// <param name="deviceId">Target device serial number</param>
         /// <param name="password"></param>
         /// <param name="cancellationToken">Cancellation Token to cancel request (optional) </param>
-        /// <returns>Task of ApiResponse (int)</returns>
-        System.Threading.Tasks.Task<ApiResponse<int>> DeviceShutdownWithHttpInfoAsync (string deviceId, string password, CancellationToken cancellationToken = default(CancellationToken));
+        /// <returns>Task of ApiResponse</returns>
+        System.Threading.Tasks.Task<ApiResponse<Object>> DeviceShutdownWithHttpInfoAsync (string deviceId, string password, CancellationToken cancellationToken = default(CancellationToken));
         /// <summary>
         /// Synchronize folders
         /// </summary>
@@ -5104,11 +5104,10 @@ namespace TorizonRestAPI.Api
         /// <exception cref="TorizonRestAPI.Client.ApiException">Thrown when fails to make API call</exception>
         /// <param name="deviceId">Target device serial number</param>
         /// <param name="password"></param>
-        /// <returns>int</returns>
-        public int DeviceReboot (string deviceId, string password)
+        /// <returns></returns>
+        public void DeviceReboot (string deviceId, string password)
         {
-             ApiResponse<int> localVarResponse = DeviceRebootWithHttpInfo(deviceId, password);
-             return localVarResponse.Data;
+             DeviceRebootWithHttpInfo(deviceId, password);
         }
 
         /// <summary>
@@ -5117,8 +5116,8 @@ namespace TorizonRestAPI.Api
         /// <exception cref="TorizonRestAPI.Client.ApiException">Thrown when fails to make API call</exception>
         /// <param name="deviceId">Target device serial number</param>
         /// <param name="password"></param>
-        /// <returns>ApiResponse of int</returns>
-        public ApiResponse<int> DeviceRebootWithHttpInfo (string deviceId, string password)
+        /// <returns>ApiResponse of Object(void)</returns>
+        public ApiResponse<Object> DeviceRebootWithHttpInfo (string deviceId, string password)
         {
             // verify the required parameter 'deviceId' is set
             if (deviceId == null)
@@ -5165,9 +5164,9 @@ namespace TorizonRestAPI.Api
                 if (exception != null) throw exception;
             }
 
-            return new ApiResponse<int>(localVarStatusCode,
+            return new ApiResponse<Object>(localVarStatusCode,
                 localVarResponse.Headers.ToDictionary(x => x.Name, x => string.Join(",", x.Value)),
-                (int) this.Configuration.ApiClient.Deserialize(localVarResponse, typeof(int)));
+                null);
         }
 
         /// <summary>
@@ -5177,11 +5176,10 @@ namespace TorizonRestAPI.Api
         /// <param name="deviceId">Target device serial number</param>
         /// <param name="password"></param>
         /// <param name="cancellationToken">Cancellation Token to cancel request (optional) </param>
-        /// <returns>Task of int</returns>
-        public async System.Threading.Tasks.Task<int> DeviceRebootAsync (string deviceId, string password, CancellationToken cancellationToken = default(CancellationToken))
+        /// <returns>Task of void</returns>
+        public async System.Threading.Tasks.Task DeviceRebootAsync (string deviceId, string password, CancellationToken cancellationToken = default(CancellationToken))
         {
-             ApiResponse<int> localVarResponse = await DeviceRebootWithHttpInfoAsync(deviceId, password, cancellationToken);
-             return localVarResponse.Data;
+             await DeviceRebootWithHttpInfoAsync(deviceId, password, cancellationToken);
 
         }
 
@@ -5192,8 +5190,8 @@ namespace TorizonRestAPI.Api
         /// <param name="deviceId">Target device serial number</param>
         /// <param name="password"></param>
         /// <param name="cancellationToken">Cancellation Token to cancel request (optional) </param>
-        /// <returns>Task of ApiResponse (int)</returns>
-        public async System.Threading.Tasks.Task<ApiResponse<int>> DeviceRebootWithHttpInfoAsync (string deviceId, string password, CancellationToken cancellationToken = default(CancellationToken))
+        /// <returns>Task of ApiResponse</returns>
+        public async System.Threading.Tasks.Task<ApiResponse<Object>> DeviceRebootWithHttpInfoAsync (string deviceId, string password, CancellationToken cancellationToken = default(CancellationToken))
         {
             // verify the required parameter 'deviceId' is set
             if (deviceId == null)
@@ -5240,9 +5238,9 @@ namespace TorizonRestAPI.Api
                 if (exception != null) throw exception;
             }
 
-            return new ApiResponse<int>(localVarStatusCode,
+            return new ApiResponse<Object>(localVarStatusCode,
                 localVarResponse.Headers.ToDictionary(x => x.Name, x => string.Join(",", x.Value)),
-                (int) this.Configuration.ApiClient.Deserialize(localVarResponse, typeof(int)));
+                null);
         }
 
         /// <summary>
@@ -5251,11 +5249,10 @@ namespace TorizonRestAPI.Api
         /// <exception cref="TorizonRestAPI.Client.ApiException">Thrown when fails to make API call</exception>
         /// <param name="deviceId">Target device serial number</param>
         /// <param name="password"></param>
-        /// <returns>int</returns>
-        public int DeviceShutdown (string deviceId, string password)
+        /// <returns></returns>
+        public void DeviceShutdown (string deviceId, string password)
         {
-             ApiResponse<int> localVarResponse = DeviceShutdownWithHttpInfo(deviceId, password);
-             return localVarResponse.Data;
+             DeviceShutdownWithHttpInfo(deviceId, password);
         }
 
         /// <summary>
@@ -5264,8 +5261,8 @@ namespace TorizonRestAPI.Api
         /// <exception cref="TorizonRestAPI.Client.ApiException">Thrown when fails to make API call</exception>
         /// <param name="deviceId">Target device serial number</param>
         /// <param name="password"></param>
-        /// <returns>ApiResponse of int</returns>
-        public ApiResponse<int> DeviceShutdownWithHttpInfo (string deviceId, string password)
+        /// <returns>ApiResponse of Object(void)</returns>
+        public ApiResponse<Object> DeviceShutdownWithHttpInfo (string deviceId, string password)
         {
             // verify the required parameter 'deviceId' is set
             if (deviceId == null)
@@ -5312,9 +5309,9 @@ namespace TorizonRestAPI.Api
                 if (exception != null) throw exception;
             }
 
-            return new ApiResponse<int>(localVarStatusCode,
+            return new ApiResponse<Object>(localVarStatusCode,
                 localVarResponse.Headers.ToDictionary(x => x.Name, x => string.Join(",", x.Value)),
-                (int) this.Configuration.ApiClient.Deserialize(localVarResponse, typeof(int)));
+                null);
         }
 
         /// <summary>
@@ -5324,11 +5321,10 @@ namespace TorizonRestAPI.Api
         /// <param name="deviceId">Target device serial number</param>
         /// <param name="password"></param>
         /// <param name="cancellationToken">Cancellation Token to cancel request (optional) </param>
-        /// <returns>Task of int</returns>
-        public async System.Threading.Tasks.Task<int> DeviceShutdownAsync (string deviceId, string password, CancellationToken cancellationToken = default(CancellationToken))
+        /// <returns>Task of void</returns>
+        public async System.Threading.Tasks.Task DeviceShutdownAsync (string deviceId, string password, CancellationToken cancellationToken = default(CancellationToken))
         {
-             ApiResponse<int> localVarResponse = await DeviceShutdownWithHttpInfoAsync(deviceId, password, cancellationToken);
-             return localVarResponse.Data;
+             await DeviceShutdownWithHttpInfoAsync(deviceId, password, cancellationToken);
 
         }
 
@@ -5339,8 +5335,8 @@ namespace TorizonRestAPI.Api
         /// <param name="deviceId">Target device serial number</param>
         /// <param name="password"></param>
         /// <param name="cancellationToken">Cancellation Token to cancel request (optional) </param>
-        /// <returns>Task of ApiResponse (int)</returns>
-        public async System.Threading.Tasks.Task<ApiResponse<int>> DeviceShutdownWithHttpInfoAsync (string deviceId, string password, CancellationToken cancellationToken = default(CancellationToken))
+        /// <returns>Task of ApiResponse</returns>
+        public async System.Threading.Tasks.Task<ApiResponse<Object>> DeviceShutdownWithHttpInfoAsync (string deviceId, string password, CancellationToken cancellationToken = default(CancellationToken))
         {
             // verify the required parameter 'deviceId' is set
             if (deviceId == null)
@@ -5387,9 +5383,9 @@ namespace TorizonRestAPI.Api
                 if (exception != null) throw exception;
             }
 
-            return new ApiResponse<int>(localVarStatusCode,
+            return new ApiResponse<Object>(localVarStatusCode,
                 localVarResponse.Headers.ToDictionary(x => x.Name, x => string.Join(",", x.Value)),
-                (int) this.Configuration.ApiClient.Deserialize(localVarResponse, typeof(int)));
+                null);
         }
 
         /// <summary>
