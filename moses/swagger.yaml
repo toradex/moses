@@ -1,7 +1,7 @@
 swagger: "2.0"
 info:
   description: Toradex API to build and deploy applications running as containers on Torizon
-  version: 1.1.2
+  version: 1.1.5
   title: Torizon IDE-backend API
 consumes:
   - application/json
