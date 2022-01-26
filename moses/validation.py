@@ -313,7 +313,7 @@ def validate_non_empty_string(self: Any,
         return "Value can't be an empty string"
     return None
 
-USERNAME_REGEXP = re.compile(r"^[a-z_]([a-z0-9_-]{0,31}|[a-z0-9_-]{0,30}\$)$")
+USERNAME_REGEXP = re.compile(r"^[A-Za-z_]([A-Za-z0-9_-]{0,31}|[A-Za-z0-9_-]{0,30}\$)$")
 
 # pylint: disable=unused-argument
 def validate_username(self: Any,
@@ -349,7 +349,7 @@ def validate_hostname(self: Any,
     if len(hostname) > 255:
         return "Hostname is too long."
     hostname = hostname.rstrip(".")
-    allowed = re.compile(r"(?!-)[A-Z\d\-\_]{1,63}(?<!-)$", re.IGNORECASE)
+    allowed = re.compile(r"(?!-)[A-Za-z\d\-\_]{1,63}(?<!-)$", re.IGNORECASE)
     if all(allowed.match(x) for x in hostname.split(".")):
         return None
     return "Value does not appear to be a valid hostname or IP address."
@@ -371,8 +371,10 @@ def validate_remote_path(self: Any,
     return None
 
 
+# pylint: disable=line-too-long
 RELATIVE_OR_ABSOLUTE_PATH_REGEXP = re.compile(
-    r"([a-z0-9_\-\.]+/)+[a-z0-9_\-\.]*$|^[a-z0-9_\-\.]*$|^/([a-z0-9_\-\.])+[a-z0-9_\-\.]*$")
+    r"([A-Za-z0-9_\-\.]+/)+[A-Za-z0-9_\-\.]*$|^[A-Za-z0-9_\-\.]*$|^/([A-Za-z0-9_\-\.])+[A-Za-z0-9_\-\.]*$")
+# pylint: enable=line-too-long
 
 def validate_path(self: Any,
                                 value: str,
@@ -390,7 +392,7 @@ def validate_path(self: Any,
         return "Value does not appear to be a valid relative file path."
     return None
 
-FILENAME_REGEXP = re.compile(r"[a-z0-9_\-\.]*$")
+FILENAME_REGEXP = re.compile(r"[A-Za-z0-9_\-\.]*$")
 
 def validate_filename(self: Any,
                       value: str,
@@ -409,7 +411,7 @@ def validate_filename(self: Any,
     return None
 
 
-RELATIVE_FILE_REGEXP = re.compile(r"^([a-z0-9_\-\.]+/)+[a-z0-9_\-\.]*$|^[a-z0-9_\-\.]*$")
+RELATIVE_FILE_REGEXP = re.compile(r"^([A-Za-z0-9_\-\.]+/)+[A-Za-z0-9_\-\.]*$|^[A-Za-z0-9_\-\.]*$")
 
 def validate_relative_file_path(self: Any,
                                 value: str,
@@ -428,7 +430,7 @@ def validate_relative_file_path(self: Any,
     return None
 
 DOCKER_NAME_REGEXP = re.compile(
-    r"^/?[a-zA-Z0-9][a-zA-Z0-9_.-]+$")
+    r"^/?[A-Za-zA-Za-z0-9][A-Za-zA-Za-z0-9_.-]+$")
 
 def validate_docker_name(self: Any,
                          value: str,
@@ -448,9 +450,9 @@ def validate_docker_name(self: Any,
 
 SEMANTIC_VERSION_REGEXP = re.compile(
     r"^(0|[1-9][0-9]*)\.(0|[1-9][0-9]*)\.(0|[1-9][0-9]*)"\
-    r"(?:-((?:0|[1-9][0-9]*|[0-9]*[a-zA-Z-][0-9a-zA-Z-]*)"\
-    r"(?:\.(?:0|[1-9][0-9]*|[0-9]*[a-zA-Z-][0-9a-zA-Z-]*))*))?"\
-    r"(?:\+([0-9a-zA-Z-]+(?:\.[0-9a-zA-Z-]+)*))?$")
+    r"(?:-((?:0|[1-9][0-9]*|[0-9]*[A-Za-zA-Za-z-][0-9A-Za-zA-Za-z-]*)"\
+    r"(?:\.(?:0|[1-9][0-9]*|[0-9]*[A-Za-zA-Za-z-][0-9A-Za-zA-Za-z-]*))*))?"\
+    r"(?:\+([0-9A-Za-zA-Za-z-]+(?:\.[0-9A-Za-zA-Za-z-]+)*))?$")
 
 def validate_semantic_version(self: Any,
                          value: str,
@@ -800,7 +802,7 @@ def validate_yaml_schema(self: Any,
         return f"YAML validation error: {str(ex)}"
     return None
 
-VALIDID_REGEXP = re.compile(r"^[a-zA-Z0-9_]+$")
+VALIDID_REGEXP = re.compile(r"^[A-Za-zA-Za-z0-9_]+$")
 
 # pylint: disable=unused-argument
 def validate_id(self: Any,
@@ -890,7 +892,7 @@ def validate_docker_command(self: Any,
 
     return None
 
-DEBIAN_PACKAGE_NAME_REGEXP = re.compile(r"^[a-z0-9][a-z0-9+-.]*$")
+DEBIAN_PACKAGE_NAME_REGEXP = re.compile(r"^[A-Za-z0-9][A-Za-z0-9+-.]*$")
 
 DEBIAN_ARCHITECTURES = {
     "amd64", "arm64", "armel", "armhf", "i386", "mips64el", "mipsel", "ppc64el", "s390x"
