@@ -15,6 +15,7 @@ import { RequestFile } from './models';
 export class ValidationResult {
     'errors'?: Array<string>;
     'warnings'?: Array<string>;
+    'isKey'?: Array<boolean>;
 
     static discriminator: string | undefined = undefined;
 
@@ -28,6 +29,11 @@ export class ValidationResult {
             "name": "warnings",
             "baseName": "warnings",
             "type": "Array<string>"
+        },
+        {
+            "name": "isKey",
+            "baseName": "isKey",
+            "type": "Array<boolean>"
         }    ];
 
     static getAttributeTypeMap() {

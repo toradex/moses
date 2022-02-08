@@ -2422,7 +2422,7 @@ No authorization required
 
 ## ApplicationValidateDictionaryEntry
 
-> ValidationResult ApplicationValidateDictionaryEntry (string applicationId, string configuration, string _parameter, string key, string value, bool newitem)
+> ValidationResult ApplicationValidateDictionaryEntry (string applicationId, string configuration, string _parameter, string key, string value, bool isKey, bool newitem)
 
 Validates a value for a parameter
 
@@ -2450,12 +2450,13 @@ namespace Example
             var _parameter = _parameter_example;  // string | 
             var key = key_example;  // string | 
             var value = value_example;  // string | 
+            var isKey = true;  // bool | 
             var newitem = true;  // bool | 
 
             try
             {
                 // Validates a value for a parameter
-                ValidationResult result = apiInstance.ApplicationValidateDictionaryEntry(applicationId, configuration, _parameter, key, value, newitem);
+                ValidationResult result = apiInstance.ApplicationValidateDictionaryEntry(applicationId, configuration, _parameter, key, value, isKey, newitem);
                 Debug.WriteLine(result);
             }
             catch (ApiException e)
@@ -2479,6 +2480,7 @@ Name | Type | Description  | Notes
  **_parameter** | **string**|  | 
  **key** | **string**|  | 
  **value** | **string**|  | 
+ **isKey** | **bool**|  | 
  **newitem** | **bool**|  | 
 
 ### Return type

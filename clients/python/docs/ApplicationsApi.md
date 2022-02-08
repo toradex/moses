@@ -2369,7 +2369,7 @@ No authorization required
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
 
 # **application_validate_dictionary_entry**
-> ValidationResult application_validate_dictionary_entry(application_id, configuration, parameter, key, value, newitem)
+> ValidationResult application_validate_dictionary_entry(application_id, configuration, parameter, key, value, is_key, newitem)
 
 Validates a value for a parameter
 
@@ -2401,12 +2401,13 @@ with moses_client.ApiClient() as api_client:
     parameter = "parameter_example" # str | 
     key = "key_example" # str | 
     value = "value_example" # str | 
+    is_key = True # bool | 
     newitem = True # bool | 
 
     # example passing only required values which don't have defaults set
     try:
         # Validates a value for a parameter
-        api_response = api_instance.application_validate_dictionary_entry(application_id, configuration, parameter, key, value, newitem)
+        api_response = api_instance.application_validate_dictionary_entry(application_id, configuration, parameter, key, value, is_key, newitem)
         pprint(api_response)
     except moses_client.ApiException as e:
         print("Exception when calling ApplicationsApi->application_validate_dictionary_entry: %s\n" % e)
@@ -2422,6 +2423,7 @@ Name | Type | Description  | Notes
  **parameter** | **str**|  |
  **key** | **str**|  |
  **value** | **str**|  |
+ **is_key** | **bool**|  |
  **newitem** | **bool**|  |
 
 ### Return type

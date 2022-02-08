@@ -749,9 +749,10 @@ namespace TorizonRestAPI.Api
         /// <param name="_parameter"></param>
         /// <param name="key"></param>
         /// <param name="value"></param>
+        /// <param name="isKey"></param>
         /// <param name="newitem"></param>
         /// <returns>ValidationResult</returns>
-        ValidationResult ApplicationValidateDictionaryEntry (string applicationId, string configuration, string _parameter, string key, string value, bool newitem);
+        ValidationResult ApplicationValidateDictionaryEntry (string applicationId, string configuration, string _parameter, string key, string value, bool isKey, bool newitem);
 
         /// <summary>
         /// Validates a value for a parameter
@@ -765,9 +766,10 @@ namespace TorizonRestAPI.Api
         /// <param name="_parameter"></param>
         /// <param name="key"></param>
         /// <param name="value"></param>
+        /// <param name="isKey"></param>
         /// <param name="newitem"></param>
         /// <returns>ApiResponse of ValidationResult</returns>
-        ApiResponse<ValidationResult> ApplicationValidateDictionaryEntryWithHttpInfo (string applicationId, string configuration, string _parameter, string key, string value, bool newitem);
+        ApiResponse<ValidationResult> ApplicationValidateDictionaryEntryWithHttpInfo (string applicationId, string configuration, string _parameter, string key, string value, bool isKey, bool newitem);
         /// <summary>
         /// Validates a value for a parameter
         /// </summary>
@@ -1623,10 +1625,11 @@ namespace TorizonRestAPI.Api
         /// <param name="_parameter"></param>
         /// <param name="key"></param>
         /// <param name="value"></param>
+        /// <param name="isKey"></param>
         /// <param name="newitem"></param>
         /// <param name="cancellationToken">Cancellation Token to cancel request (optional) </param>
         /// <returns>Task of ValidationResult</returns>
-        System.Threading.Tasks.Task<ValidationResult> ApplicationValidateDictionaryEntryAsync (string applicationId, string configuration, string _parameter, string key, string value, bool newitem, CancellationToken cancellationToken = default(CancellationToken));
+        System.Threading.Tasks.Task<ValidationResult> ApplicationValidateDictionaryEntryAsync (string applicationId, string configuration, string _parameter, string key, string value, bool isKey, bool newitem, CancellationToken cancellationToken = default(CancellationToken));
 
         /// <summary>
         /// Validates a value for a parameter
@@ -1640,10 +1643,11 @@ namespace TorizonRestAPI.Api
         /// <param name="_parameter"></param>
         /// <param name="key"></param>
         /// <param name="value"></param>
+        /// <param name="isKey"></param>
         /// <param name="newitem"></param>
         /// <param name="cancellationToken">Cancellation Token to cancel request (optional) </param>
         /// <returns>Task of ApiResponse (ValidationResult)</returns>
-        System.Threading.Tasks.Task<ApiResponse<ValidationResult>> ApplicationValidateDictionaryEntryWithHttpInfoAsync (string applicationId, string configuration, string _parameter, string key, string value, bool newitem, CancellationToken cancellationToken = default(CancellationToken));
+        System.Threading.Tasks.Task<ApiResponse<ValidationResult>> ApplicationValidateDictionaryEntryWithHttpInfoAsync (string applicationId, string configuration, string _parameter, string key, string value, bool isKey, bool newitem, CancellationToken cancellationToken = default(CancellationToken));
         /// <summary>
         /// Validates a value for a parameter
         /// </summary>
@@ -6235,11 +6239,12 @@ namespace TorizonRestAPI.Api
         /// <param name="_parameter"></param>
         /// <param name="key"></param>
         /// <param name="value"></param>
+        /// <param name="isKey"></param>
         /// <param name="newitem"></param>
         /// <returns>ValidationResult</returns>
-        public ValidationResult ApplicationValidateDictionaryEntry (string applicationId, string configuration, string _parameter, string key, string value, bool newitem)
+        public ValidationResult ApplicationValidateDictionaryEntry (string applicationId, string configuration, string _parameter, string key, string value, bool isKey, bool newitem)
         {
-             ApiResponse<ValidationResult> localVarResponse = ApplicationValidateDictionaryEntryWithHttpInfo(applicationId, configuration, _parameter, key, value, newitem);
+             ApiResponse<ValidationResult> localVarResponse = ApplicationValidateDictionaryEntryWithHttpInfo(applicationId, configuration, _parameter, key, value, isKey, newitem);
              return localVarResponse.Data;
         }
 
@@ -6252,9 +6257,10 @@ namespace TorizonRestAPI.Api
         /// <param name="_parameter"></param>
         /// <param name="key"></param>
         /// <param name="value"></param>
+        /// <param name="isKey"></param>
         /// <param name="newitem"></param>
         /// <returns>ApiResponse of ValidationResult</returns>
-        public ApiResponse<ValidationResult> ApplicationValidateDictionaryEntryWithHttpInfo (string applicationId, string configuration, string _parameter, string key, string value, bool newitem)
+        public ApiResponse<ValidationResult> ApplicationValidateDictionaryEntryWithHttpInfo (string applicationId, string configuration, string _parameter, string key, string value, bool isKey, bool newitem)
         {
             // verify the required parameter 'applicationId' is set
             if (applicationId == null)
@@ -6271,6 +6277,9 @@ namespace TorizonRestAPI.Api
             // verify the required parameter 'value' is set
             if (value == null)
                 throw new ApiException(400, "Missing required parameter 'value' when calling ApplicationsApi->ApplicationValidateDictionaryEntry");
+            // verify the required parameter 'isKey' is set
+            if (isKey == null)
+                throw new ApiException(400, "Missing required parameter 'isKey' when calling ApplicationsApi->ApplicationValidateDictionaryEntry");
             // verify the required parameter 'newitem' is set
             if (newitem == null)
                 throw new ApiException(400, "Missing required parameter 'newitem' when calling ApplicationsApi->ApplicationValidateDictionaryEntry");
@@ -6301,6 +6310,7 @@ namespace TorizonRestAPI.Api
             if (_parameter != null) localVarQueryParams.AddRange(this.Configuration.ApiClient.ParameterToKeyValuePairs("", "parameter", _parameter)); // query parameter
             if (key != null) localVarQueryParams.AddRange(this.Configuration.ApiClient.ParameterToKeyValuePairs("", "key", key)); // query parameter
             if (value != null) localVarQueryParams.AddRange(this.Configuration.ApiClient.ParameterToKeyValuePairs("", "value", value)); // query parameter
+            if (isKey != null) localVarQueryParams.AddRange(this.Configuration.ApiClient.ParameterToKeyValuePairs("", "isKey", isKey)); // query parameter
             if (newitem != null) localVarQueryParams.AddRange(this.Configuration.ApiClient.ParameterToKeyValuePairs("", "newitem", newitem)); // query parameter
 
 
@@ -6331,12 +6341,13 @@ namespace TorizonRestAPI.Api
         /// <param name="_parameter"></param>
         /// <param name="key"></param>
         /// <param name="value"></param>
+        /// <param name="isKey"></param>
         /// <param name="newitem"></param>
         /// <param name="cancellationToken">Cancellation Token to cancel request (optional) </param>
         /// <returns>Task of ValidationResult</returns>
-        public async System.Threading.Tasks.Task<ValidationResult> ApplicationValidateDictionaryEntryAsync (string applicationId, string configuration, string _parameter, string key, string value, bool newitem, CancellationToken cancellationToken = default(CancellationToken))
+        public async System.Threading.Tasks.Task<ValidationResult> ApplicationValidateDictionaryEntryAsync (string applicationId, string configuration, string _parameter, string key, string value, bool isKey, bool newitem, CancellationToken cancellationToken = default(CancellationToken))
         {
-             ApiResponse<ValidationResult> localVarResponse = await ApplicationValidateDictionaryEntryWithHttpInfoAsync(applicationId, configuration, _parameter, key, value, newitem, cancellationToken);
+             ApiResponse<ValidationResult> localVarResponse = await ApplicationValidateDictionaryEntryWithHttpInfoAsync(applicationId, configuration, _parameter, key, value, isKey, newitem, cancellationToken);
              return localVarResponse.Data;
 
         }
@@ -6350,10 +6361,11 @@ namespace TorizonRestAPI.Api
         /// <param name="_parameter"></param>
         /// <param name="key"></param>
         /// <param name="value"></param>
+        /// <param name="isKey"></param>
         /// <param name="newitem"></param>
         /// <param name="cancellationToken">Cancellation Token to cancel request (optional) </param>
         /// <returns>Task of ApiResponse (ValidationResult)</returns>
-        public async System.Threading.Tasks.Task<ApiResponse<ValidationResult>> ApplicationValidateDictionaryEntryWithHttpInfoAsync (string applicationId, string configuration, string _parameter, string key, string value, bool newitem, CancellationToken cancellationToken = default(CancellationToken))
+        public async System.Threading.Tasks.Task<ApiResponse<ValidationResult>> ApplicationValidateDictionaryEntryWithHttpInfoAsync (string applicationId, string configuration, string _parameter, string key, string value, bool isKey, bool newitem, CancellationToken cancellationToken = default(CancellationToken))
         {
             // verify the required parameter 'applicationId' is set
             if (applicationId == null)
@@ -6370,6 +6382,9 @@ namespace TorizonRestAPI.Api
             // verify the required parameter 'value' is set
             if (value == null)
                 throw new ApiException(400, "Missing required parameter 'value' when calling ApplicationsApi->ApplicationValidateDictionaryEntry");
+            // verify the required parameter 'isKey' is set
+            if (isKey == null)
+                throw new ApiException(400, "Missing required parameter 'isKey' when calling ApplicationsApi->ApplicationValidateDictionaryEntry");
             // verify the required parameter 'newitem' is set
             if (newitem == null)
                 throw new ApiException(400, "Missing required parameter 'newitem' when calling ApplicationsApi->ApplicationValidateDictionaryEntry");
@@ -6400,6 +6415,7 @@ namespace TorizonRestAPI.Api
             if (_parameter != null) localVarQueryParams.AddRange(this.Configuration.ApiClient.ParameterToKeyValuePairs("", "parameter", _parameter)); // query parameter
             if (key != null) localVarQueryParams.AddRange(this.Configuration.ApiClient.ParameterToKeyValuePairs("", "key", key)); // query parameter
             if (value != null) localVarQueryParams.AddRange(this.Configuration.ApiClient.ParameterToKeyValuePairs("", "value", value)); // query parameter
+            if (isKey != null) localVarQueryParams.AddRange(this.Configuration.ApiClient.ParameterToKeyValuePairs("", "isKey", isKey)); // query parameter
             if (newitem != null) localVarQueryParams.AddRange(this.Configuration.ApiClient.ParameterToKeyValuePairs("", "newitem", newitem)); // query parameter
 
 

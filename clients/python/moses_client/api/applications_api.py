@@ -2227,6 +2227,7 @@ class ApplicationsApi(object):
                     'parameter',
                     'key',
                     'value',
+                    'is_key',
                     'newitem',
                 ],
                 'required': [
@@ -2235,6 +2236,7 @@ class ApplicationsApi(object):
                     'parameter',
                     'key',
                     'value',
+                    'is_key',
                     'newitem',
                 ],
                 'nullable': [
@@ -2274,6 +2276,8 @@ class ApplicationsApi(object):
                         (str,),
                     'value':
                         (str,),
+                    'is_key':
+                        (bool,),
                     'newitem':
                         (bool,),
                 },
@@ -2283,6 +2287,7 @@ class ApplicationsApi(object):
                     'parameter': 'parameter',
                     'key': 'key',
                     'value': 'value',
+                    'is_key': 'isKey',
                     'newitem': 'newitem',
                 },
                 'location_map': {
@@ -2291,6 +2296,7 @@ class ApplicationsApi(object):
                     'parameter': 'query',
                     'key': 'query',
                     'value': 'query',
+                    'is_key': 'query',
                     'newitem': 'query',
                 },
                 'collection_format_map': {
@@ -4877,6 +4883,7 @@ class ApplicationsApi(object):
         parameter,
         key,
         value,
+        is_key,
         newitem,
         **kwargs
     ):
@@ -4886,7 +4893,7 @@ class ApplicationsApi(object):
         This method makes a synchronous HTTP request by default. To make an
         asynchronous HTTP request, please pass async_req=True
 
-        >>> thread = api.application_validate_dictionary_entry(application_id, configuration, parameter, key, value, newitem, async_req=True)
+        >>> thread = api.application_validate_dictionary_entry(application_id, configuration, parameter, key, value, is_key, newitem, async_req=True)
         >>> result = thread.get()
 
         Args:
@@ -4895,6 +4902,7 @@ class ApplicationsApi(object):
             parameter (str):
             key (str):
             value (str):
+            is_key (bool):
             newitem (bool):
 
         Keyword Args:
@@ -4964,6 +4972,8 @@ class ApplicationsApi(object):
             key
         kwargs['value'] = \
             value
+        kwargs['is_key'] = \
+            is_key
         kwargs['newitem'] = \
             newitem
         return self.application_validate_dictionary_entry_endpoint.call_with_http_info(**kwargs)

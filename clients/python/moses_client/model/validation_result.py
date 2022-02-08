@@ -83,6 +83,7 @@ class ValidationResult(ModelNormal):
         return {
             'errors': ([str],),  # noqa: E501
             'warnings': ([str],),  # noqa: E501
+            'is_key': ([bool],),  # noqa: E501
         }
 
     @cached_property
@@ -93,6 +94,7 @@ class ValidationResult(ModelNormal):
     attribute_map = {
         'errors': 'errors',  # noqa: E501
         'warnings': 'warnings',  # noqa: E501
+        'is_key': 'isKey',  # noqa: E501
     }
 
     read_only_vars = {
@@ -138,6 +140,7 @@ class ValidationResult(ModelNormal):
                                 _visited_composed_classes = (Animal,)
             errors ([str]): [optional]  # noqa: E501
             warnings ([str]): [optional]  # noqa: E501
+            is_key ([bool]): [optional]  # noqa: E501
         """
 
         _check_type = kwargs.pop('_check_type', True)
@@ -221,6 +224,7 @@ class ValidationResult(ModelNormal):
                                 _visited_composed_classes = (Animal,)
             errors ([str]): [optional]  # noqa: E501
             warnings ([str]): [optional]  # noqa: E501
+            is_key ([bool]): [optional]  # noqa: E501
         """
 
         _check_type = kwargs.pop('_check_type', True)

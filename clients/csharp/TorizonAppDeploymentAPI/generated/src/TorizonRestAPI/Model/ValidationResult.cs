@@ -35,10 +35,12 @@ namespace TorizonRestAPI.Model
         /// </summary>
         /// <param name="errors">errors.</param>
         /// <param name="warnings">warnings.</param>
-        public ValidationResult(List<string> errors = default(List<string>), List<string> warnings = default(List<string>))
+        /// <param name="isKey">isKey.</param>
+        public ValidationResult(List<string> errors = default(List<string>), List<string> warnings = default(List<string>), List<bool> isKey = default(List<bool>))
         {
             this.Errors = errors;
             this.Warnings = warnings;
+            this.IsKey = isKey;
         }
 
         /// <summary>
@@ -54,6 +56,12 @@ namespace TorizonRestAPI.Model
         public List<string> Warnings { get; set; }
 
         /// <summary>
+        /// Gets or Sets IsKey
+        /// </summary>
+        [DataMember(Name="isKey", EmitDefaultValue=false)]
+        public List<bool> IsKey { get; set; }
+
+        /// <summary>
         /// Returns the string presentation of the object
         /// </summary>
         /// <returns>String presentation of the object</returns>
@@ -63,6 +71,7 @@ namespace TorizonRestAPI.Model
             sb.Append("class ValidationResult {\n");
             sb.Append("  Errors: ").Append(Errors).Append("\n");
             sb.Append("  Warnings: ").Append(Warnings).Append("\n");
+            sb.Append("  IsKey: ").Append(IsKey).Append("\n");
             sb.Append("}\n");
             return sb.ToString();
         }
@@ -108,6 +117,12 @@ namespace TorizonRestAPI.Model
                     this.Warnings != null &&
                     input.Warnings != null &&
                     this.Warnings.SequenceEqual(input.Warnings)
+                ) && 
+                (
+                    this.IsKey == input.IsKey ||
+                    this.IsKey != null &&
+                    input.IsKey != null &&
+                    this.IsKey.SequenceEqual(input.IsKey)
                 );
         }
 
@@ -124,6 +139,8 @@ namespace TorizonRestAPI.Model
                     hashCode = hashCode * 59 + this.Errors.GetHashCode();
                 if (this.Warnings != null)
                     hashCode = hashCode * 59 + this.Warnings.GetHashCode();
+                if (this.IsKey != null)
+                    hashCode = hashCode * 59 + this.IsKey.GetHashCode();
                 return hashCode;
             }
         }

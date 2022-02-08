@@ -2529,9 +2529,10 @@ export class ApplicationsApi {
      * @param parameter 
      * @param key 
      * @param value 
+     * @param isKey 
      * @param newitem 
      */
-    public async applicationValidateDictionaryEntry (applicationId: string, configuration: string, parameter: string, key: string, value: string, newitem: boolean, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<{ response: http.IncomingMessage; body: ValidationResult;  }> {
+    public async applicationValidateDictionaryEntry (applicationId: string, configuration: string, parameter: string, key: string, value: string, isKey: boolean, newitem: boolean, options: {headers: {[name: string]: string}} = {headers: {}}) : Promise<{ response: http.IncomingMessage; body: ValidationResult;  }> {
         const localVarPath = this.basePath + '/applications/{application_id}/validate_dictionary_entry'
             .replace('{' + 'application_id' + '}', encodeURIComponent(String(applicationId)));
         let localVarQueryParameters: any = {};
@@ -2570,6 +2571,11 @@ export class ApplicationsApi {
             throw new Error('Required parameter value was null or undefined when calling applicationValidateDictionaryEntry.');
         }
 
+        // verify required parameter 'isKey' is not null or undefined
+        if (isKey === null || isKey === undefined) {
+            throw new Error('Required parameter isKey was null or undefined when calling applicationValidateDictionaryEntry.');
+        }
+
         // verify required parameter 'newitem' is not null or undefined
         if (newitem === null || newitem === undefined) {
             throw new Error('Required parameter newitem was null or undefined when calling applicationValidateDictionaryEntry.');
@@ -2589,6 +2595,10 @@ export class ApplicationsApi {
 
         if (value !== undefined) {
             localVarQueryParameters['value'] = ObjectSerializer.serialize(value, "string");
+        }
+
+        if (isKey !== undefined) {
+            localVarQueryParameters['isKey'] = ObjectSerializer.serialize(isKey, "boolean");
         }
 
         if (newitem !== undefined) {
