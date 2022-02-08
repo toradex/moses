@@ -1742,12 +1742,14 @@ def applications_application_validate_array_item_get(
     return (result, 200)
 
 
+# pylint: disable=invalid-name
 def applications_application_validate_dictionary_entry_get(
         application_id: str,
         configuration: str,
         parameter: str,
         key: str,
         value: str,
+        isKey: bool,
         newitem: bool) -> Any:
     """Validate an array parameter for an application.
 
@@ -1774,7 +1776,7 @@ def applications_application_validate_dictionary_entry_get(
     app = applications[application_id]
 
     result = app.validate_configuration_dictionary_entry(
-        configuration, parameter, key, value, newitem)
+        configuration, parameter, key, value, isKey, newitem)
     return (result, 200)
 
 def applications_application_tcb_deploy_get(

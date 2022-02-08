@@ -14,6 +14,10 @@ class ValidationResult:
         """Initialize the object."""
         self.errors : List[str] = []
         self.warnings : List[str] = []
+        # disabling the stupid snake case because on the cliente side we need
+        # to use the camel case 🙄
+        # pylint: disable=invalid-name
+        self.isKey : List[bool] = []
 
     def to_json(self) -> Dict[str, Any]:
         """Convert object to an array of json-compatible key-value pairs.
@@ -221,10 +225,13 @@ class ExtendedValidation(BasicValidation):
                     result.warnings.append(message)
         return result
 
+    # pylint: disable=too-many-arguments
+    # pylint: disable=invalid-name
     def validate_dictionary_entry(self,
                             parameter: str,
                             key: str,
                             value: str,
+                            isKey: bool,
                             newitem: bool) -> ValidationResult:
         """Validate a dictionary entry.
 
@@ -248,13 +255,23 @@ class ExtendedValidation(BasicValidation):
                 if self.is_single_parm_callable(validation_fn):
                     message = validation_fn(self,value,userarg)
                 else:
-                    message = validation_fn(self, dictionary, key, value, newitem, userarg)
+                    # handle the case for not valid yaml values for keys
+                    if (
+                        userarg is not None and
+                        callable(userarg[1]) and
+                        userarg[1].__name__ == "validate_yaml_schema" and isKey
+                    ):
+                        message = None
+                    else:
+                        message = validation_fn(self, dictionary, key, value, newitem, userarg)
 
                 if message is not None:
+                    result.isKey.append(isKey)
                     if error:
                         result.errors.append(message)
                         break
                     result.warnings.append(message)
+
         return result
 
 # validate functions

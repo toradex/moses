@@ -1845,6 +1845,10 @@ paths:
           in: query
           type: string
           required: true
+        - name: isKey
+          in: query
+          type: boolean
+          required: true
         - name: newitem
           in: query
           type: boolean
@@ -3905,6 +3909,10 @@ definitions:
         type: array
         items:
           type: string
+      isKey:
+        type: array
+        items:
+          type: boolean
 
 
 responses:

@@ -516,6 +516,7 @@ def validate_dictionary_entry(self: ApplicationConfigBase,
                               dictionary: str,
                               key: str,
                               value: str,
+                              isKey: bool,
                               newitem: bool) -> validation.ValidationResult:
     """Validate a configuration parameter.
 
@@ -535,6 +536,6 @@ def validate_dictionary_entry(self: ApplicationConfigBase,
     with configuration_lock:
         try:
             current_configuration = configuration
-            return self.validate_dictionary_entry(dictionary, key, value, newitem)
+            return self.validate_dictionary_entry(dictionary, key, value, isKey, newitem)
         finally:
             current_configuration = None
