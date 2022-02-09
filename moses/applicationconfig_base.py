@@ -197,12 +197,19 @@ class ApplicationConfigBase(
         fields = super().__getstate__()
         fields["id"] = self.id
         fields["sdksshaddress"] = self.sdksshaddress
-        if "logs" in fields:
-            del fields["logs"]
-        del fields["dictionary_validation_table"]
-        del fields["array_validation_table"]
-        del fields["skip_table"]
-        del fields["validation_table"]
+
+        check_del_fields = [
+            "logs",
+            "dictionary_validation_table",
+            "array_validation_table",
+            "skip_table",
+            "validation_table"
+        ]
+
+        for field in check_del_fields:
+            if field in fields:
+                del fields[field]
+
         return fields
 
     def to_json(self) -> Dict[str, Any]:
