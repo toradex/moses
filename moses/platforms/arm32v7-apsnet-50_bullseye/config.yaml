@@ -91,3 +91,4 @@ networks:
   debug: []
   release: []
 disabled: false
+deprecated: true
