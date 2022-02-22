@@ -8,7 +8,7 @@ Name | Type | Description | Notes
 **Id** | **string** | Unique name (should be filesystem-compatible) | [optional] [readonly] 
 **Name** | **string** | Platform mnemnonic name | [optional] [readonly] 
 **Standard** | **bool** | true if the platform is provided by Toradex and can&#39;t be modified | [optional] [readonly] 
-**Version** | **string** | Version of the image (not related to distro version) | [optional] [readonly] 
+**_Version** | **string** | Version of the image (not related to distro version) | [optional] [readonly] 
 **Runtimes** | **List&lt;string&gt;** | runtimes/languages supported by the container | [optional] 
 **Sdkcontainerusername** | **string** | ssh user supported by the SDK container | [optional] 
 **Sdkcontainerpassword** | **string** | password used to ssh inside the SDK container | [optional] 

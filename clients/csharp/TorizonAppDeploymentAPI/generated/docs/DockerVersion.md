@@ -7,7 +7,7 @@ Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
 **Platform** | [**DockerVersionPlatform**](DockerVersionPlatform.md) |  | [optional] 
 **Components** | [**List&lt;DockerVersionComponents&gt;**](DockerVersionComponents.md) |  | [optional] 
-**Version** | **string** |  | [optional] 
+**_Version** | **string** |  | [optional] 
 **ApiVersion** | **string** |  | [optional] 
 **MinAPIVersion** | **string** |  | [optional] 
 **GitCommit** | **string** |  | [optional] 

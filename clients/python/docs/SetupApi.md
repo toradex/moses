@@ -17,6 +17,7 @@ Uses an externa container that leverages binfmt and qemu to enable ARM32 and ARM
 
 ### Example
 
+
 ```python
 import time
 import moses_client
@@ -67,6 +68,7 @@ No authorization required
 
 
 ### HTTP response details
+
 | Status code | Description | Response headers |
 |-------------|-------------|------------------|
 **200** | OK |  -  |
@@ -84,6 +86,7 @@ Pulls container from docker repo
 Pulls all base and SDK base container for the configured platforms. This can also be used to update them.
 
 ### Example
+
 
 ```python
 import time
@@ -135,6 +138,7 @@ No authorization required
 
 
 ### HTTP response details
+
 | Status code | Description | Response headers |
 |-------------|-------------|------------------|
 **200** | OK |  -  |

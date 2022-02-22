@@ -29,6 +29,7 @@ Method | HTTP request | Description
 [**DeviceOpendocker**](DevicesApi.md#deviceopendocker) | **GET** /devices/{device_id}/docker/open | Expose remote docker
 [**DeviceOpenssh**](DevicesApi.md#deviceopenssh) | **GET** /devices/{device_id}/ssh/open | Expose shell via SSH
 [**DeviceReboot**](DevicesApi.md#devicereboot) | **GET** /devices/{device_id}/reboot | Reboot the device
+[**DeviceShutdown**](DevicesApi.md#deviceshutdown) | **GET** /devices/{device_id}/shutdown | Shutdown the device
 [**DeviceSyncfolders**](DevicesApi.md#devicesyncfolders) | **GET** /devices/{device_id}/syncfolders | Synchronize folders
 [**DeviceUpdate**](DevicesApi.md#deviceupdate) | **GET** /devices/{device_id}/update | Update device information
 [**DevicesGet**](DevicesApi.md#devicesget) | **GET** /devices | Get all devices
@@ -1981,7 +1982,7 @@ No authorization required
 
 ## DeviceReboot
 
-> int DeviceReboot (string deviceId, string password)
+> void DeviceReboot (string deviceId, string password)
 
 Reboot the device
 
@@ -2010,8 +2011,7 @@ namespace Example
             try
             {
                 // Reboot the device
-                int result = apiInstance.DeviceReboot(deviceId, password);
-                Debug.WriteLine(result);
+                apiInstance.DeviceReboot(deviceId, password);
             }
             catch (ApiException e)
             {
@@ -2034,7 +2034,7 @@ Name | Type | Description  | Notes
 
 ### Return type
 
-**int**
+void (empty response body)
 
 ### Authorization
 
@@ -2049,7 +2049,88 @@ No authorization required
 ### HTTP response details
 | Status code | Description | Response headers |
 |-------------|-------------|------------------|
-| **200** | Local port for SSH shell |  -  |
+| **200** | OK |  -  |
+| **404** | Device not found |  -  |
+| **500** | Unexpected exception. |  -  |
+| **533** | SSH error. |  -  |
+| **539** | SSH tunnel error. |  -  |
+
+[[Back to top]](#)
+[[Back to API list]](../README.md#documentation-for-api-endpoints)
+[[Back to Model list]](../README.md#documentation-for-models)
+[[Back to README]](../README.md)
+
+
+## DeviceShutdown
+
+> void DeviceShutdown (string deviceId, string password)
+
+Shutdown the device
+
+Perform a shutdown on a specified device
+
+### Example
+
+```csharp
+using System.Collections.Generic;
+using System.Diagnostics;
+using TorizonRestAPI.Api;
+using TorizonRestAPI.Client;
+using TorizonRestAPI.Model;
+
+namespace Example
+{
+    public class DeviceShutdownExample
+    {
+        public static void Main()
+        {
+            Configuration.Default.BasePath = "http://localhost:5000/api";
+            var apiInstance = new DevicesApi(Configuration.Default);
+            var deviceId = deviceId_example;  // string | Target device serial number
+            var password = password_example;  // string | 
+
+            try
+            {
+                // Shutdown the device
+                apiInstance.DeviceShutdown(deviceId, password);
+            }
+            catch (ApiException e)
+            {
+                Debug.Print("Exception when calling DevicesApi.DeviceShutdown: " + e.Message );
+                Debug.Print("Status Code: "+ e.ErrorCode);
+                Debug.Print(e.StackTrace);
+            }
+        }
+    }
+}
+```
+
+### Parameters
+
+
+Name | Type | Description  | Notes
+------------- | ------------- | ------------- | -------------
+ **deviceId** | **string**| Target device serial number | 
+ **password** | **string**|  | 
+
+### Return type
+
+void (empty response body)
+
+### Authorization
+
+No authorization required
+
+### HTTP request headers
+
+- **Content-Type**: Not defined
+- **Accept**: application/json
+
+
+### HTTP response details
+| Status code | Description | Response headers |
+|-------------|-------------|------------------|
+| **200** | OK |  -  |
 | **404** | Device not found |  -  |
 | **500** | Unexpected exception. |  -  |
 | **533** | SSH error. |  -  |

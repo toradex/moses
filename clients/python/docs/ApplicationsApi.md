@@ -36,6 +36,7 @@ Build application release or debug container
 
 ### Example
 
+
 ```python
 import time
 import moses_client
@@ -97,6 +98,7 @@ No authorization required
 
 
 ### HTTP response details
+
 | Status code | Description | Response headers |
 |-------------|-------------|------------------|
 **200** | OK |  -  |
@@ -115,6 +117,7 @@ Remove an application
 Remove an application and all the associated data and containers
 
 ### Example
+
 
 ```python
 import time
@@ -165,6 +168,7 @@ No authorization required
 
 
 ### HTTP response details
+
 | Status code | Description | Response headers |
 |-------------|-------------|------------------|
 **204** | OK |  -  |
@@ -182,6 +186,7 @@ Deploy container image
 Deploy application container to target
 
 ### Example
+
 
 ```python
 import time
@@ -246,6 +251,7 @@ No authorization required
 
 
 ### HTTP response details
+
 | Status code | Description | Response headers |
 |-------------|-------------|------------------|
 **200** | OK |  -  |
@@ -268,6 +274,7 @@ Get application
 Returns a specified application, knowing its id
 
 ### Example
+
 
 ```python
 import time
@@ -320,6 +327,7 @@ No authorization required
 
 
 ### HTTP response details
+
 | Status code | Description | Response headers |
 |-------------|-------------|------------------|
 **200** | Returns application |  -  |
@@ -336,6 +344,7 @@ Get container information
 Get detailed informations about container
 
 ### Example
+
 
 ```python
 import time
@@ -392,6 +401,7 @@ No authorization required
 
 
 ### HTTP response details
+
 | Status code | Description | Response headers |
 |-------------|-------------|------------------|
 **200** | Container information |  -  |
@@ -413,6 +423,7 @@ Get one of more lines from container logs
 Return one chunk of log (one or more lines), blocking if no data is available
 
 ### Example
+
 
 ```python
 import time
@@ -479,6 +490,7 @@ No authorization required
 
 
 ### HTTP response details
+
 | Status code | Description | Response headers |
 |-------------|-------------|------------------|
 **200** | Log entries as text |  -  |
@@ -498,6 +510,7 @@ Get docker command line to run the application/json
 Return the full docker command line that can be used to run the application container
 
 ### Example
+
 
 ```python
 import time
@@ -551,6 +564,7 @@ No authorization required
 
 
 ### HTTP response details
+
 | Status code | Description | Response headers |
 |-------------|-------------|------------------|
 **200** | Command line |  -  |
@@ -569,6 +583,7 @@ Get docker compose file
 Return docker-compose file that can be used to run the application container and its dependencies
 
 ### Example
+
 
 ```python
 import time
@@ -622,6 +637,7 @@ No authorization required
 
 
 ### HTTP response details
+
 | Status code | Description | Response headers |
 |-------------|-------------|------------------|
 **200** | Docker-compose file (string with *nix line endings) |  -  |
@@ -640,6 +656,7 @@ Get the path of the RSA private key
 Retrieve the path of the private key that allows passwordless connection to the container. The application stores the public key inside the container if ssh is enabled (usually for debug builds only)
 
 ### Example
+
 
 ```python
 import time
@@ -691,6 +708,7 @@ No authorization required
 
 
 ### HTTP response details
+
 | Status code | Description | Response headers |
 |-------------|-------------|------------------|
 **200** | Key path |  -  |
@@ -707,6 +725,7 @@ Change application properties
 Changes specified properties on an application
 
 ### Example
+
 
 ```python
 import time
@@ -823,6 +842,7 @@ No authorization required
 
 
 ### HTTP response details
+
 | Status code | Description | Response headers |
 |-------------|-------------|------------------|
 **200** | Application information |  -  |
@@ -841,6 +861,7 @@ Push application to docker registry
 Push application's container to a docker registry, using authentication
 
 ### Example
+
 
 ```python
 import time
@@ -907,6 +928,7 @@ No authorization required
 
 
 ### HTTP response details
+
 | Status code | Description | Response headers |
 |-------------|-------------|------------------|
 **200** | OK |  -  |
@@ -927,6 +949,7 @@ Clean id and keys from application configuration
 This operation make the application no longer valid, but allow you to upload it to a git repo from where it can be cloned/forked. Id and keys will be re-generated on next re-opening of the application, leading to different names for the images etc.
 
 ### Example
+
 
 ```python
 import time
@@ -976,6 +999,7 @@ No authorization required
 
 
 ### HTTP response details
+
 | Status code | Description | Response headers |
 |-------------|-------------|------------------|
 **200** | OK |  -  |
@@ -991,6 +1015,7 @@ Run container image
 Run the application release or debug container on target, if the application is already running, restarts it
 
 ### Example
+
 
 ```python
 import time
@@ -1058,6 +1083,7 @@ No authorization required
 
 
 ### HTTP response details
+
 | Status code | Description | Response headers |
 |-------------|-------------|------------------|
 **200** | Container information |  -  |
@@ -1080,6 +1106,7 @@ Run SDK containers
 Run SDK container and return its IP and SSH port
 
 ### Example
+
 
 ```python
 import time
@@ -1147,6 +1174,7 @@ No authorization required
 
 
 ### HTTP response details
+
 | Status code | Description | Response headers |
 |-------------|-------------|------------------|
 **200** | IP and port of the SSH port exposed by container (if any) |  -  |
@@ -1166,6 +1194,7 @@ Get SDK container
 Get SDK container information (can be used to check if it's running)
 
 ### Example
+
 
 ```python
 import time
@@ -1220,6 +1249,7 @@ No authorization required
 
 
 ### HTTP response details
+
 | Status code | Description | Response headers |
 |-------------|-------------|------------------|
 **200** | Container information |  -  |
@@ -1240,6 +1270,7 @@ Stop running container image
 Stop application release or debug container currently running on target, operation succeeds even if the container is not running
 
 ### Example
+
 
 ```python
 import time
@@ -1294,6 +1325,7 @@ No authorization required
 
 
 ### HTTP response details
+
 | Status code | Description | Response headers |
 |-------------|-------------|------------------|
 **200** | OK |  -  |
@@ -1312,6 +1344,7 @@ Synchronize folders
 Synchronizes folders between host/SDK container and the application container
 
 ### Example
+
 
 ```python
 import time
@@ -1382,6 +1415,7 @@ No authorization required
 
 
 ### HTTP response details
+
 | Status code | Description | Response headers |
 |-------------|-------------|------------------|
 **200** | OK |  -  |
@@ -1407,6 +1441,7 @@ Check if container image is up to date
 Check if some properties have been changed after the last build of the configuration-specific container image
 
 ### Example
+
 
 ```python
 import time
@@ -1460,6 +1495,7 @@ No authorization required
 
 
 ### HTTP response details
+
 | Status code | Description | Response headers |
 |-------------|-------------|------------------|
 **200** | true if container image is up to date |  -  |
@@ -1477,6 +1513,7 @@ Update SDK container
 Update the SDK container by adding new dev libraries or synchronizing sysroots
 
 ### Example
+
 
 ```python
 import time
@@ -1539,6 +1576,7 @@ No authorization required
 
 
 ### HTTP response details
+
 | Status code | Description | Response headers |
 |-------------|-------------|------------------|
 **200** | OK |  -  |
@@ -1559,6 +1597,7 @@ Create an application configuration
 Create a new application configuration
 
 ### Example
+
 
 ```python
 import time
@@ -1624,6 +1663,7 @@ No authorization required
 
 
 ### HTTP response details
+
 | Status code | Description | Response headers |
 |-------------|-------------|------------------|
 **200** | Application information |  -  |
@@ -1643,6 +1683,7 @@ Load an application configuration
 Load an application configuration from the local filesystem
 
 ### Example
+
 
 ```python
 import time
@@ -1695,6 +1736,7 @@ No authorization required
 
 
 ### HTTP response details
+
 | Status code | Description | Response headers |
 |-------------|-------------|------------------|
 **200** | Returns an application |  -  |

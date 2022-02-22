@@ -18,6 +18,7 @@ Return detailed information about a specific eula
 
 ### Example
 
+
 ```python
 import time
 import moses_client
@@ -69,6 +70,7 @@ No authorization required
 
 
 ### HTTP response details
+
 | Status code | Description | Response headers |
 |-------------|-------------|------------------|
 **200** | Eula Information |  -  |
@@ -85,6 +87,7 @@ Change eula properties
 Set eula as visualized and/or accepted
 
 ### Example
+
 
 ```python
 import time
@@ -151,6 +154,7 @@ No authorization required
 
 
 ### HTTP response details
+
 | Status code | Description | Response headers |
 |-------------|-------------|------------------|
 **200** | Eula information |  -  |
@@ -169,6 +173,7 @@ Get all eulas
 Returns information about all eulas required to run different platforms on the system
 
 ### Example
+
 
 ```python
 import time
@@ -217,6 +222,7 @@ No authorization required
 
 
 ### HTTP response details
+
 | Status code | Description | Response headers |
 |-------------|-------------|------------------|
 **200** | List of Eulas |  -  |
