@@ -200,34 +200,22 @@ def get_version_info_from_console(
 
 # dictionary with supported modules
 MODELS : Dict[str,List[str]] =  {
-"0014": ["colibri-imx6","Colibri iMX6S 256MB","arm7vl"],
 "0015": ["colibri-imx6","Colibri iMX6DL 512MB","arm7vl"],
-"0016": ["colibri-imx6","Colibri iMX6S 256MB IT","arm7vl"],
 "0017": ["colibri-imx6","Colibri iMX6DL 512MB IT","arm7vl"],
 "0027": ["apalis-imx6","Apalis iMX6Q 1GB","arm7vl"],
 "0028": ["apalis-imx6","Apalis iMX6Q 2GB IT","arm7vl"],
 "0029": ["apalis-imx6","Apalis iMX6D 512MB","arm7vl"],
-"0032": ["colibri-imx7","Colibri iMX7S 256MB","arm7vl"],
-"0033": ["colibri-imx7","Colibri iMX7D 512MB","arm7vl"],
-"0035": ["apalis-imx7","Apalis iMX6D 1GB IT","arm7vl"],
-"0036": ["colibri-imx6ull","Colibri iMX6ULL 256MB","arm7vl"],
+"0035": ["apalis-imx6","Apalis iMX6D 1GB IT","arm7vl"],
 "0037": ["apalis-imx8","Apalis iMX8QM 4GB WB IT","aarch64"],
 "0038": ["colibri-imx8","Colibri iMX8QXP 2GB WB IT","aarch64"],
 "0039": ["colibri-imx7","Colibri iMX7D 1GB","arm7vl"],
-"0040": ["colibri-imx6ull","Colibri iMX6ULL 512MB WB IT","arm7vl"],
-"0044": ["colibri-imx6ull","Colibri iMX6ULL 512MB IT","arm7vl"],
-"0045": ["colibri-imx6ull","Colibri iMX6ULL 512MB WB","arm7vl"],
-"0046": ["apalis-imx8x","Apalis iMX8QXP 2GB WB IT","aarch64"],
 "0047": ["apalis-imx8","Apalis iMX8QM 4GB IT","aarch64"],
 "0048": ["apalis-imx8","Apalis iMX8QP 2GB WB","aarch64"],
 "0049": ["apalis-imx8","Apalis iMX8QP 2GB","aarch64"],
 "0050": ["colibri-imx8","Colibri iMX8QXP 2GB IT","aarch64"],
 "0051": ["colibri-imx8","Colibri iMX8DX 1GB WB","aarch64"],
 "0052": ["colibri-imx8","Colibri iMX8DX 1GB","aarch64"],
-"0053": ["apalis-imx8x","Apalis iMX8QXP 2GB ECC IT","aarch64"],
-"0054": ["apalis-imx8x","Apalis iMX8DXP 1GB","aarch64"],
 "0055": ["verdin-imx8","Verdin iMX8M Mini Quad 2GB WB IT","aarch64"],
-"0056": ["verdin-imx8","Verdin iMX8M Nano Quad 1GB WB","aarch64"],
 "0057": ["verdin-imx8","Verdin iMX8M Mini DualLite 1GB","aarch64"],
 "0058": ["verdin-imx8","Verdin iMX8M Plus Quad 4GB WB IT","aarch64"],
 "0059": ["verdin-imx8","Verdin iMX8M Mini Quad 2GB IT","aarch64"],
@@ -236,8 +224,7 @@ MODELS : Dict[str,List[str]] =  {
 "0062": ["colibri-imx6ull","Colibri iMX6ULL 1GB IT","arm7vl"],
 "0063": ["verdin-imx8","Verdin iMX8M Plus Quad 4GB IT","aarch64"],
 "0064": ["verdin-imx8","Verdin iMX8M Plus Quad 2GB WB IT","aarch64"],
-"0065": ["verdin-imx8","Verdin iMX8M Plus QuadLite 1GB IT","aarch64"],
-"0066": ["verdin-imx8","Verdin iMX8M Plus Quad 8GB WB","aarch64"]
+"0065": ["verdin-imx8","Verdin iMX8M Plus QuadLite 1GB IT","aarch64"]
 }
 
 def _get_hostname_from_model(model: str) -> str:
