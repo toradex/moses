@@ -64,9 +64,9 @@ namespace Example
         {
             Configuration.Default.BasePath = "http://localhost:5000/api";
             var apiInstance = new ApplicationsApi(Configuration.Default);
-            var applicationId = applicationId_example;  // string | Id of an application (uuid)
-            var configuration = configuration_example;  // string | 
-            var progressId = progressId_example;  // string | Id of a progress cookie (uuid) (optional) 
+            var applicationId = "applicationId_example";  // string | Id of an application (uuid)
+            var configuration = "configuration_example";  // string | 
+            var progressId = "progressId_example";  // string | Id of a progress cookie (uuid) (optional) 
 
             try
             {
@@ -147,7 +147,7 @@ namespace Example
         {
             Configuration.Default.BasePath = "http://localhost:5000/api";
             var apiInstance = new ApplicationsApi(Configuration.Default);
-            var applicationId = applicationId_example;  // string | Id of an application (uuid)
+            var applicationId = "applicationId_example";  // string | Id of an application (uuid)
 
             try
             {
@@ -225,10 +225,10 @@ namespace Example
         {
             Configuration.Default.BasePath = "http://localhost:5000/api";
             var apiInstance = new ApplicationsApi(Configuration.Default);
-            var applicationId = applicationId_example;  // string | Id of an application (uuid)
-            var configuration = configuration_example;  // string | 
-            var deviceId = deviceId_example;  // string | Target device serial number
-            var progressId = progressId_example;  // string | Id of a progress cookie (uuid) (optional) 
+            var applicationId = "applicationId_example";  // string | Id of an application (uuid)
+            var configuration = "configuration_example";  // string | 
+            var deviceId = "deviceId_example";  // string | Target device serial number
+            var progressId = "progressId_example";  // string | Id of a progress cookie (uuid) (optional) 
 
             try
             {
@@ -314,7 +314,7 @@ namespace Example
         {
             Configuration.Default.BasePath = "http://localhost:5000/api";
             var apiInstance = new ApplicationsApi(Configuration.Default);
-            var applicationId = applicationId_example;  // string | Id of an application (uuid)
+            var applicationId = "applicationId_example";  // string | Id of an application (uuid)
 
             try
             {
@@ -392,9 +392,9 @@ namespace Example
         {
             Configuration.Default.BasePath = "http://localhost:5000/api";
             var apiInstance = new ApplicationsApi(Configuration.Default);
-            var applicationId = applicationId_example;  // string | Id of an application (uuid)
-            var configuration = configuration_example;  // string | 
-            var deviceId = deviceId_example;  // string | Target device serial number
+            var applicationId = "applicationId_example";  // string | Id of an application (uuid)
+            var configuration = "configuration_example";  // string | 
+            var deviceId = "deviceId_example";  // string | Target device serial number
 
             try
             {
@@ -479,10 +479,10 @@ namespace Example
         {
             Configuration.Default.BasePath = "http://localhost:5000/api";
             var apiInstance = new ApplicationsApi(Configuration.Default);
-            var applicationId = applicationId_example;  // string | Id of an application (uuid)
-            var configuration = configuration_example;  // string | 
-            var deviceId = deviceId_example;  // string | Target device serial number
-            var restart = true;  // bool? | when true reads the lock back from beginning (optional)  (default to false)
+            var applicationId = "applicationId_example";  // string | Id of an application (uuid)
+            var configuration = "configuration_example";  // string | 
+            var deviceId = "deviceId_example";  // string | Target device serial number
+            var restart = false;  // bool? | when true reads the lock back from beginning (optional)  (default to false)
 
             try
             {
@@ -566,8 +566,8 @@ namespace Example
         {
             Configuration.Default.BasePath = "http://localhost:5000/api";
             var apiInstance = new ApplicationsApi(Configuration.Default);
-            var applicationId = applicationId_example;  // string | Id of an application (uuid)
-            var configuration = configuration_example;  // string | 
+            var applicationId = "applicationId_example";  // string | Id of an application (uuid)
+            var configuration = "configuration_example";  // string | 
 
             try
             {
@@ -648,8 +648,8 @@ namespace Example
         {
             Configuration.Default.BasePath = "http://localhost:5000/api";
             var apiInstance = new ApplicationsApi(Configuration.Default);
-            var applicationId = applicationId_example;  // string | Id of an application (uuid)
-            var configuration = configuration_example;  // string | 
+            var applicationId = "applicationId_example";  // string | Id of an application (uuid)
+            var configuration = "configuration_example";  // string | 
 
             try
             {
@@ -730,7 +730,7 @@ namespace Example
         {
             Configuration.Default.BasePath = "http://localhost:5000/api";
             var apiInstance = new ApplicationsApi(Configuration.Default);
-            var applicationId = applicationId_example;  // string | Id of an application (uuid)
+            var applicationId = "applicationId_example";  // string | Id of an application (uuid)
 
             try
             {
@@ -808,7 +808,7 @@ namespace Example
         {
             Configuration.Default.BasePath = "http://localhost:5000/api";
             var apiInstance = new ApplicationsApi(Configuration.Default);
-            var applicationId = applicationId_example;  // string | Id of an application (uuid)
+            var applicationId = "applicationId_example";  // string | Id of an application (uuid)
             var application = new Application(); // Application |  (optional) 
 
             try
@@ -890,11 +890,11 @@ namespace Example
         {
             Configuration.Default.BasePath = "http://localhost:5000/api";
             var apiInstance = new ApplicationsApi(Configuration.Default);
-            var applicationId = applicationId_example;  // string | Id of an application (uuid)
-            var credentials = credentials_example;  // string | credentials file
-            var dockeruser = dockeruser_example;  // string | user for docker registry login
-            var dockerpass = dockerpass_example;  // string | password for docker registry login
-            var progressId = progressId_example;  // string | Id of a progress cookie (uuid) (optional) 
+            var applicationId = "applicationId_example";  // string | Id of an application (uuid)
+            var credentials = "credentials_example";  // string | credentials file
+            var dockeruser = "dockeruser_example";  // string | user for docker registry login
+            var dockerpass = "dockerpass_example";  // string | password for docker registry login
+            var progressId = "progressId_example";  // string | Id of a progress cookie (uuid) (optional) 
 
             try
             {
@@ -980,11 +980,11 @@ namespace Example
         {
             Configuration.Default.BasePath = "http://localhost:5000/api";
             var apiInstance = new ApplicationsApi(Configuration.Default);
-            var applicationId = applicationId_example;  // string | Id of an application (uuid)
-            var configuration = configuration_example;  // string | 
-            var username = username_example;  // string | 
-            var password = password_example;  // string | 
-            var progressId = progressId_example;  // string | Id of a progress cookie (uuid) (optional) 
+            var applicationId = "applicationId_example";  // string | Id of an application (uuid)
+            var configuration = "configuration_example";  // string | 
+            var username = "username_example";  // string | 
+            var password = "password_example";  // string | 
+            var progressId = "progressId_example";  // string | Id of a progress cookie (uuid) (optional) 
 
             try
             {
@@ -1069,7 +1069,7 @@ namespace Example
         {
             Configuration.Default.BasePath = "http://localhost:5000/api";
             var apiInstance = new ApplicationsApi(Configuration.Default);
-            var applicationId = applicationId_example;  // string | Id of an application (uuid)
+            var applicationId = "applicationId_example";  // string | Id of an application (uuid)
 
             try
             {
@@ -1145,10 +1145,10 @@ namespace Example
         {
             Configuration.Default.BasePath = "http://localhost:5000/api";
             var apiInstance = new ApplicationsApi(Configuration.Default);
-            var applicationId = applicationId_example;  // string | Id of an application (uuid)
-            var configuration = configuration_example;  // string | 
-            var deviceId = deviceId_example;  // string | Target device serial number
-            var progressId = progressId_example;  // string | Id of a progress cookie (uuid) (optional) 
+            var applicationId = "applicationId_example";  // string | Id of an application (uuid)
+            var configuration = "configuration_example";  // string | 
+            var deviceId = "deviceId_example";  // string | Target device serial number
+            var progressId = "progressId_example";  // string | Id of a progress cookie (uuid) (optional) 
 
             try
             {
@@ -1235,10 +1235,10 @@ namespace Example
         {
             Configuration.Default.BasePath = "http://localhost:5000/api";
             var apiInstance = new ApplicationsApi(Configuration.Default);
-            var applicationId = applicationId_example;  // string | Id of an application (uuid)
-            var configuration = configuration_example;  // string | 
+            var applicationId = "applicationId_example";  // string | Id of an application (uuid)
+            var configuration = "configuration_example";  // string | 
             var build = true;  // bool? |  (optional)  (default to true)
-            var progressId = progressId_example;  // string | Id of a progress cookie (uuid) (optional) 
+            var progressId = "progressId_example";  // string | Id of a progress cookie (uuid) (optional) 
 
             try
             {
@@ -1322,8 +1322,8 @@ namespace Example
         {
             Configuration.Default.BasePath = "http://localhost:5000/api";
             var apiInstance = new ApplicationsApi(Configuration.Default);
-            var applicationId = applicationId_example;  // string | Id of an application (uuid)
-            var configuration = configuration_example;  // string | 
+            var applicationId = "applicationId_example";  // string | Id of an application (uuid)
+            var configuration = "configuration_example";  // string | 
 
             try
             {
@@ -1406,9 +1406,9 @@ namespace Example
         {
             Configuration.Default.BasePath = "http://localhost:5000/api";
             var apiInstance = new ApplicationsApi(Configuration.Default);
-            var applicationId = applicationId_example;  // string | Id of an application (uuid)
-            var configuration = configuration_example;  // string | 
-            var deviceId = deviceId_example;  // string | Target device serial number
+            var applicationId = "applicationId_example";  // string | Id of an application (uuid)
+            var configuration = "configuration_example";  // string | 
+            var deviceId = "deviceId_example";  // string | Target device serial number
 
             try
             {
@@ -1489,13 +1489,13 @@ namespace Example
         {
             Configuration.Default.BasePath = "http://localhost:5000/api";
             var apiInstance = new ApplicationsApi(Configuration.Default);
-            var applicationId = applicationId_example;  // string | Id of an application (uuid)
-            var sourcefolder = sourcefolder_example;  // string | 
-            var configuration = configuration_example;  // string | 
-            var deviceId = deviceId_example;  // string | Target device serial number
-            var destfolder = destfolder_example;  // string | 
+            var applicationId = "applicationId_example";  // string | Id of an application (uuid)
+            var sourcefolder = "sourcefolder_example";  // string | 
+            var configuration = "configuration_example";  // string | 
+            var deviceId = "deviceId_example";  // string | Target device serial number
+            var destfolder = "destfolder_example";  // string | 
             var sourceIsSdk = true;  // bool? |  (optional) 
-            var progressId = progressId_example;  // string | Id of a progress cookie (uuid) (optional) 
+            var progressId = "progressId_example";  // string | Id of a progress cookie (uuid) (optional) 
 
             try
             {
@@ -1587,9 +1587,9 @@ namespace Example
         {
             Configuration.Default.BasePath = "http://localhost:5000/api";
             var apiInstance = new ApplicationsApi(Configuration.Default);
-            var applicationId = applicationId_example;  // string | Id of an application (uuid)
-            var yamlfilepath = yamlfilepath_example;  // string | the yaml file name from workspace path
-            var progressId = progressId_example;  // string | Id of a progress cookie (uuid) (optional) 
+            var applicationId = "applicationId_example";  // string | Id of an application (uuid)
+            var yamlfilepath = "yamlfilepath_example";  // string | the yaml file name from workspace path
+            var progressId = "progressId_example";  // string | Id of a progress cookie (uuid) (optional) 
 
             try
             {
@@ -1673,11 +1673,11 @@ namespace Example
         {
             Configuration.Default.BasePath = "http://localhost:5000/api";
             var apiInstance = new ApplicationsApi(Configuration.Default);
-            var applicationId = applicationId_example;  // string | Id of an application (uuid)
-            var host = host_example;  // string | the hostname or ip address of the device to be deployed
-            var username = username_example;  // string | the Torizon username of the device to be deployed
-            var password = password_example;  // string | the Torizon password of the device to be deployed
-            var progressId = progressId_example;  // string | Id of a progress cookie (uuid) (optional) 
+            var applicationId = "applicationId_example";  // string | Id of an application (uuid)
+            var host = "host_example";  // string | the hostname or ip address of the device to be deployed
+            var username = "username_example";  // string | the Torizon username of the device to be deployed
+            var password = "password_example";  // string | the Torizon password of the device to be deployed
+            var progressId = "progressId_example";  // string | Id of a progress cookie (uuid) (optional) 
 
             try
             {
@@ -1761,8 +1761,8 @@ namespace Example
         {
             Configuration.Default.BasePath = "http://localhost:5000/api";
             var apiInstance = new ApplicationsApi(Configuration.Default);
-            var applicationId = applicationId_example;  // string | Id of an application (uuid)
-            var progressId = progressId_example;  // string | Id of a progress cookie (uuid) (optional) 
+            var applicationId = "applicationId_example";  // string | Id of an application (uuid)
+            var progressId = "progressId_example";  // string | Id of a progress cookie (uuid) (optional) 
 
             try
             {
@@ -1845,12 +1845,12 @@ namespace Example
         {
             Configuration.Default.BasePath = "http://localhost:5000/api";
             var apiInstance = new ApplicationsApi(Configuration.Default);
-            var applicationId = applicationId_example;  // string | Id of an application (uuid)
-            var host = host_example;  // string | the hostname or ip address of the device to be deployed
-            var username = username_example;  // string | the Torizon username of the device to be deployed
-            var password = password_example;  // string | the Torizon password of the device to be deployed
-            var outputDir = outputDir_example;  // string | the direcotry path that the changes will be save
-            var progressId = progressId_example;  // string | Id of a progress cookie (uuid) (optional) 
+            var applicationId = "applicationId_example";  // string | Id of an application (uuid)
+            var host = "host_example";  // string | the hostname or ip address of the device to be deployed
+            var username = "username_example";  // string | the Torizon username of the device to be deployed
+            var password = "password_example";  // string | the Torizon password of the device to be deployed
+            var outputDir = "outputDir_example";  // string | the direcotry path that the changes will be save
+            var progressId = "progressId_example";  // string | Id of a progress cookie (uuid) (optional) 
 
             try
             {
@@ -1935,10 +1935,10 @@ namespace Example
         {
             Configuration.Default.BasePath = "http://localhost:5000/api";
             var apiInstance = new ApplicationsApi(Configuration.Default);
-            var applicationId = applicationId_example;  // string | Id of an application (uuid)
-            var branch = branch_example;  // string | union branch string
-            var credentials = credentials_example;  // string | credentials file path
-            var progressId = progressId_example;  // string | Id of a progress cookie (uuid) (optional) 
+            var applicationId = "applicationId_example";  // string | Id of an application (uuid)
+            var branch = "branch_example";  // string | union branch string
+            var credentials = "credentials_example";  // string | credentials file path
+            var progressId = "progressId_example";  // string | Id of a progress cookie (uuid) (optional) 
 
             try
             {
@@ -2023,9 +2023,9 @@ namespace Example
         {
             Configuration.Default.BasePath = "http://localhost:5000/api";
             var apiInstance = new ApplicationsApi(Configuration.Default);
-            var applicationId = applicationId_example;  // string | Id of an application (uuid)
-            var branch = branch_example;  // string | union branch string
-            var progressId = progressId_example;  // string | Id of a progress cookie (uuid) (optional) 
+            var applicationId = "applicationId_example";  // string | Id of an application (uuid)
+            var branch = "branch_example";  // string | union branch string
+            var progressId = "progressId_example";  // string | Id of a progress cookie (uuid) (optional) 
 
             try
             {
@@ -2109,9 +2109,9 @@ namespace Example
         {
             Configuration.Default.BasePath = "http://localhost:5000/api";
             var apiInstance = new ApplicationsApi(Configuration.Default);
-            var applicationId = applicationId_example;  // string | Id of an application (uuid)
-            var outputpath = outputpath_example;  // string | the output directory created by TorizonCore builder from workspace path
-            var progressId = progressId_example;  // string | Id of a progress cookie (uuid) (optional) 
+            var applicationId = "applicationId_example";  // string | Id of an application (uuid)
+            var outputpath = "outputpath_example";  // string | the output directory created by TorizonCore builder from workspace path
+            var progressId = "progressId_example";  // string | Id of a progress cookie (uuid) (optional) 
 
             try
             {
@@ -2193,8 +2193,8 @@ namespace Example
         {
             Configuration.Default.BasePath = "http://localhost:5000/api";
             var apiInstance = new ApplicationsApi(Configuration.Default);
-            var applicationId = applicationId_example;  // string | Id of an application (uuid)
-            var configuration = configuration_example;  // string | 
+            var applicationId = "applicationId_example";  // string | Id of an application (uuid)
+            var configuration = "configuration_example";  // string | 
 
             try
             {
@@ -2274,9 +2274,9 @@ namespace Example
         {
             Configuration.Default.BasePath = "http://localhost:5000/api";
             var apiInstance = new ApplicationsApi(Configuration.Default);
-            var applicationId = applicationId_example;  // string | Id of an application (uuid)
-            var configuration = configuration_example;  // string | 
-            var progressId = progressId_example;  // string | Id of a progress cookie (uuid) (optional) 
+            var applicationId = "applicationId_example";  // string | Id of an application (uuid)
+            var configuration = "configuration_example";  // string | 
+            var progressId = "progressId_example";  // string | Id of a progress cookie (uuid) (optional) 
 
             try
             {
@@ -2359,10 +2359,10 @@ namespace Example
         {
             Configuration.Default.BasePath = "http://localhost:5000/api";
             var apiInstance = new ApplicationsApi(Configuration.Default);
-            var applicationId = applicationId_example;  // string | Id of an application (uuid)
-            var configuration = configuration_example;  // string | 
-            var _parameter = _parameter_example;  // string | 
-            var value = value_example;  // string | 
+            var applicationId = "applicationId_example";  // string | Id of an application (uuid)
+            var configuration = "configuration_example";  // string | 
+            var _parameter = "_parameter_example";  // string | 
+            var value = "value_example";  // string | 
             var index = 56;  // int | 
 
             try
@@ -2445,11 +2445,11 @@ namespace Example
         {
             Configuration.Default.BasePath = "http://localhost:5000/api";
             var apiInstance = new ApplicationsApi(Configuration.Default);
-            var applicationId = applicationId_example;  // string | Id of an application (uuid)
-            var configuration = configuration_example;  // string | 
-            var _parameter = _parameter_example;  // string | 
-            var key = key_example;  // string | 
-            var value = value_example;  // string | 
+            var applicationId = "applicationId_example";  // string | Id of an application (uuid)
+            var configuration = "configuration_example";  // string | 
+            var _parameter = "_parameter_example";  // string | 
+            var key = "key_example";  // string | 
+            var value = "value_example";  // string | 
             var isKey = true;  // bool | 
             var newitem = true;  // bool | 
 
@@ -2535,10 +2535,10 @@ namespace Example
         {
             Configuration.Default.BasePath = "http://localhost:5000/api";
             var apiInstance = new ApplicationsApi(Configuration.Default);
-            var applicationId = applicationId_example;  // string | Id of an application (uuid)
-            var configuration = configuration_example;  // string | 
-            var _parameter = _parameter_example;  // string | 
-            var value = value_example;  // string | 
+            var applicationId = "applicationId_example";  // string | Id of an application (uuid)
+            var configuration = "configuration_example";  // string | 
+            var _parameter = "_parameter_example";  // string | 
+            var value = "value_example";  // string | 
 
             try
             {
@@ -2619,9 +2619,9 @@ namespace Example
         {
             Configuration.Default.BasePath = "http://localhost:5000/api";
             var apiInstance = new ApplicationsApi(Configuration.Default);
-            var platformId = platformId_example;  // string | 
-            var path = path_example;  // string | 
-            var username = username_example;  // string |  (optional) 
+            var platformId = "platformId_example";  // string | 
+            var path = "path_example";  // string | 
+            var username = "username_example";  // string |  (optional) 
 
             try
             {
@@ -2704,7 +2704,7 @@ namespace Example
         {
             Configuration.Default.BasePath = "http://localhost:5000/api";
             var apiInstance = new ApplicationsApi(Configuration.Default);
-            var path = path_example;  // string | 
+            var path = "path_example";  // string | 
 
             try
             {
