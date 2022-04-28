@@ -74,18 +74,22 @@ python -m setup install
 ```
 
 * now you can run moses.py (backend) or the command-line interface tdskt.py. Remember to activate your virtual enviroment every time you run those tools.
-* if you use Visual Studio Code for python development you can just add the following entry to your .vscode/.settings file to have it automatically activated on debug and used for auto-completition etc.
+* if you use Visual Studio Code for python development you can just add the following entry to your .vscode/settings.json file to have it automatically activated on debug and used for auto-completition etc.
 
 Linux:
 
 ```
-"python.pythonPath": "../../.pyenv/bin/python"
+{
+    "python.defaultInterpreterPath": "../.pyenv/bin/python"
+}
 ```
 
 Windows:
 
 ```
-"python.pythonPath": "..\\.pyenv\\Scripts\\python.exe"
+{
+    "python.defaultInterpreterPath": "..\\.pyenv\\Scripts\\python.exe"
+}
 ```
 
 ## Build executable for the backend
