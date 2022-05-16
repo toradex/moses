@@ -441,6 +441,12 @@ _compose_parms: Dict[str, Optional[Callable]] = {
     "cgroup_parent": None,
     "command": None,
     "devices": None,
+    "device_cgroup_rules": (
+        lambda x: (
+            "device_cgroup_rules",
+            _yaml_string_arrays_to_python_arrays(x[1])
+        )
+    ),
     "domainname": None,
     "dns": None,
     "dns_search": None,
