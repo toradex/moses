@@ -35,7 +35,7 @@ namespace Example
         {
             Configuration.Default.BasePath = "http://localhost:5000/api";
             var apiInstance = new PlatformsApi(Configuration.Default);
-            var platformId = platformId_example;  // string | Id of a platform formatted as name_version
+            var platformId = "platformId_example";  // string | Id of a platform formatted as name_version
 
             try
             {
@@ -113,7 +113,7 @@ namespace Example
         {
             Configuration.Default.BasePath = "http://localhost:5000/api";
             var apiInstance = new PlatformsApi(Configuration.Default);
-            var platformId = platformId_example;  // string | Id of a platform formatted as name_version
+            var platformId = "platformId_example";  // string | Id of a platform formatted as name_version
 
             try
             {
@@ -191,7 +191,7 @@ namespace Example
         {
             Configuration.Default.BasePath = "http://localhost:5000/api";
             var apiInstance = new PlatformsApi(Configuration.Default);
-            var runtime = runtime_example;  // string |  (optional) 
+            var runtime = "runtime_example";  // string |  (optional) 
 
             try
             {

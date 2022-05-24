@@ -35,7 +35,7 @@ namespace Example
         {
             Configuration.Default.BasePath = "http://localhost:5000/api";
             var apiInstance = new EulasApi(Configuration.Default);
-            var eulaId = eulaId_example;  // string | Id of an Eula
+            var eulaId = "eulaId_example";  // string | Id of an Eula
 
             try
             {
@@ -113,7 +113,7 @@ namespace Example
         {
             Configuration.Default.BasePath = "http://localhost:5000/api";
             var apiInstance = new EulasApi(Configuration.Default);
-            var eulaId = eulaId_example;  // string | Id of an Eula
+            var eulaId = "eulaId_example";  // string | Id of an Eula
             var e = new Eula(); // Eula |  (optional) 
 
             try

@@ -1099,7 +1099,7 @@ No authorization required
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
 
 # **application_runsdk**
-> InlineResponse200 application_runsdk(application_id, configuration)
+> ApplicationRunsdk200Response application_runsdk(application_id, configuration)
 
 Run SDK containers
 
@@ -1112,8 +1112,8 @@ Run SDK container and return its IP and SSH port
 import time
 import moses_client
 from moses_client.api import applications_api
-from moses_client.model.inline_response200 import InlineResponse200
 from moses_client.model.error_info import ErrorInfo
+from moses_client.model.application_runsdk200_response import ApplicationRunsdk200Response
 from pprint import pprint
 # Defining the host is optional and defaults to http://localhost:5000/api
 # See configuration.py for a list of all supported configuration parameters.
@@ -1161,7 +1161,7 @@ Name | Type | Description  | Notes
 
 ### Return type
 
-[**InlineResponse200**](InlineResponse200.md)
+[**ApplicationRunsdk200Response**](ApplicationRunsdk200Response.md)
 
 ### Authorization
 

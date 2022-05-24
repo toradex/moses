@@ -6,7 +6,7 @@ Information about docker version
 Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
 **platform** | [**DockerVersionPlatform**](DockerVersionPlatform.md) |  | [optional] 
-**components** | [**[DockerVersionComponents]**](DockerVersionComponents.md) |  | [optional] 
+**components** | [**[DockerVersionComponentsInner]**](DockerVersionComponentsInner.md) |  | [optional] 
 **version** | **str** |  | [optional] 
 **api_version** | **str** |  | [optional] 
 **min_api_version** | **str** |  | [optional] 

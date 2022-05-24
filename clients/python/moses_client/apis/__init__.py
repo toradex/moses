@@ -6,7 +6,7 @@
 # raise a `RecursionError`.
 # In order to avoid this, import only the API that you directly need like:
 #
-#   from .api.applications_api import ApplicationsApi
+#   from moses_client.api.applications_api import ApplicationsApi
 #
 # or import this package, but before doing it, use:
 #

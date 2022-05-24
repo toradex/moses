@@ -34,7 +34,7 @@ namespace Example
         {
             Configuration.Default.BasePath = "http://localhost:5000/api";
             var apiInstance = new SetupApi(Configuration.Default);
-            var progressId = progressId_example;  // string | Id of a progress cookie (uuid) (optional) 
+            var progressId = "progressId_example";  // string | Id of a progress cookie (uuid) (optional) 
 
             try
             {
@@ -112,7 +112,7 @@ namespace Example
         {
             Configuration.Default.BasePath = "http://localhost:5000/api";
             var apiInstance = new SetupApi(Configuration.Default);
-            var progressId = progressId_example;  // string | Id of a progress cookie (uuid) (optional) 
+            var progressId = "progressId_example";  // string | Id of a progress cookie (uuid) (optional) 
 
             try
             {

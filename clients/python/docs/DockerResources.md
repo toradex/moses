@@ -9,7 +9,7 @@ Name | Type | Description | Notes
 **memory** | **int** | Memory limit in bytes. | [optional]  if omitted the server will use the default value of 0
 **cgroup_parent** | **str** | Path to &#x60;cgroups&#x60; under which the container&#39;s &#x60;cgroup&#x60; is created. If the path is not absolute, the path is considered to be relative to the &#x60;cgroups&#x60; path of the init process. Cgroups are created if they do not already exist. | [optional] 
 **blkio_weight** | **int** | Block IO weight (relative weight). | [optional] 
-**blkio_weight_device** | [**[DockerResourcesBlkioWeightDevice]**](DockerResourcesBlkioWeightDevice.md) | Block IO weight (relative device weight) in the form &#x60;[{\&quot;Path\&quot;: \&quot;device_path\&quot;, \&quot;Weight\&quot;: weight}]&#x60;.  | [optional] 
+**blkio_weight_device** | [**[DockerResourcesBlkioWeightDeviceInner]**](DockerResourcesBlkioWeightDeviceInner.md) | Block IO weight (relative device weight) in the form &#x60;[{\&quot;Path\&quot;: \&quot;device_path\&quot;, \&quot;Weight\&quot;: weight}]&#x60;.  | [optional] 
 **blkio_device_read_bps** | [**[DockerThrottleDevice]**](DockerThrottleDevice.md) | Limit read rate (bytes per second) from a device, in the form &#x60;[{\&quot;Path\&quot;: \&quot;device_path\&quot;, \&quot;Rate\&quot;: rate}]&#x60;.  | [optional] 
 **blkio_device_write_bps** | [**[DockerThrottleDevice]**](DockerThrottleDevice.md) | Limit write rate (bytes per second) to a device, in the form &#x60;[{\&quot;Path\&quot;: \&quot;device_path\&quot;, \&quot;Rate\&quot;: rate}]&#x60;.  | [optional] 
 **blkio_device_read_i_ops** | [**[DockerThrottleDevice]**](DockerThrottleDevice.md) | Limit read rate (IO per second) from a device, in the form &#x60;[{\&quot;Path\&quot;: \&quot;device_path\&quot;, \&quot;Rate\&quot;: rate}]&#x60;.  | [optional] 
@@ -31,7 +31,7 @@ Name | Type | Description | Notes
 **oom_kill_disable** | **bool** | Disable OOM Killer for the container. | [optional] 
 **init** | **bool, none_type** | Run an init inside the container that forwards signals and reaps processes. This field is omitted if empty, and the default (as configured on the daemon) is used. | [optional] 
 **pids_limit** | **int, none_type** | Tune a container&#39;s pids limit. Set -1 for unlimited. | [optional] 
-**ulimits** | [**[DockerResourcesUlimits]**](DockerResourcesUlimits.md) | A list of resource limits to set in the container. For example: &#x60;{\&quot;Name\&quot;: \&quot;nofile\&quot;, \&quot;Soft\&quot;: 1024, \&quot;Hard\&quot;: 2048}&#x60;\&quot;  | [optional] 
+**ulimits** | [**[DockerResourcesUlimitsInner]**](DockerResourcesUlimitsInner.md) | A list of resource limits to set in the container. For example: &#x60;{\&quot;Name\&quot;: \&quot;nofile\&quot;, \&quot;Soft\&quot;: 1024, \&quot;Hard\&quot;: 2048}&#x60;\&quot;  | [optional] 
 **cpu_count** | **int** | The number of usable CPUs (Windows only).  On Windows Server containers, the processor resource controls are mutually exclusive. The order of precedence is &#x60;CPUCount&#x60; first, then &#x60;CPUShares&#x60;, and &#x60;CPUPercent&#x60; last.  | [optional] 
 **cpu_percent** | **int** | The usable percentage of the available CPUs (Windows only).  On Windows Server containers, the processor resource controls are mutually exclusive. The order of precedence is &#x60;CPUCount&#x60; first, then &#x60;CPUShares&#x60;, and &#x60;CPUPercent&#x60; last.  | [optional] 
 **io_maximum_i_ops** | **int** | Maximum IOps for the container system drive (Windows only) | [optional] 

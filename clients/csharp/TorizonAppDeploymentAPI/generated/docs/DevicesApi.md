@@ -65,9 +65,9 @@ namespace Example
         {
             Configuration.Default.BasePath = "http://localhost:5000/api";
             var apiInstance = new DevicesApi(Configuration.Default);
-            var deviceId = deviceId_example;  // string | Target device serial number
-            var containerId = containerId_example;  // string | Id of a container
-            var restart = true;  // bool? | when true reads the lock back from beginning (optional)  (default to false)
+            var deviceId = "deviceId_example";  // string | Target device serial number
+            var containerId = "containerId_example";  // string | Id of a container
+            var restart = false;  // bool? | when true reads the lock back from beginning (optional)  (default to false)
 
             try
             {
@@ -151,8 +151,8 @@ namespace Example
         {
             Configuration.Default.BasePath = "http://localhost:5000/api";
             var apiInstance = new DevicesApi(Configuration.Default);
-            var deviceId = deviceId_example;  // string | Target device serial number
-            var containerId = containerId_example;  // string | Id of a container
+            var deviceId = "deviceId_example";  // string | Target device serial number
+            var containerId = "containerId_example";  // string | Id of a container
 
             try
             {
@@ -233,8 +233,8 @@ namespace Example
         {
             Configuration.Default.BasePath = "http://localhost:5000/api";
             var apiInstance = new DevicesApi(Configuration.Default);
-            var deviceId = deviceId_example;  // string | Target device serial number
-            var containerId = containerId_example;  // string | Id of a container
+            var deviceId = "deviceId_example";  // string | Target device serial number
+            var containerId = "containerId_example";  // string | Id of a container
 
             try
             {
@@ -316,8 +316,8 @@ namespace Example
         {
             Configuration.Default.BasePath = "http://localhost:5000/api";
             var apiInstance = new DevicesApi(Configuration.Default);
-            var deviceId = deviceId_example;  // string | Target device serial number
-            var containerId = containerId_example;  // string | Id of a container
+            var deviceId = "deviceId_example";  // string | Target device serial number
+            var containerId = "containerId_example";  // string | Id of a container
 
             try
             {
@@ -399,8 +399,8 @@ namespace Example
         {
             Configuration.Default.BasePath = "http://localhost:5000/api";
             var apiInstance = new DevicesApi(Configuration.Default);
-            var deviceId = deviceId_example;  // string | Target device serial number
-            var containerId = containerId_example;  // string | Id of a container
+            var deviceId = "deviceId_example";  // string | Target device serial number
+            var containerId = "containerId_example";  // string | Id of a container
 
             try
             {
@@ -482,8 +482,8 @@ namespace Example
         {
             Configuration.Default.BasePath = "http://localhost:5000/api";
             var apiInstance = new DevicesApi(Configuration.Default);
-            var deviceId = deviceId_example;  // string | Target device serial number
-            var containerId = containerId_example;  // string | Id of a container
+            var deviceId = "deviceId_example";  // string | Target device serial number
+            var containerId = "containerId_example";  // string | Id of a container
 
             try
             {
@@ -565,8 +565,8 @@ namespace Example
         {
             Configuration.Default.BasePath = "http://localhost:5000/api";
             var apiInstance = new DevicesApi(Configuration.Default);
-            var deviceId = deviceId_example;  // string | Target device serial number
-            var containerId = containerId_example;  // string | Id of a container
+            var deviceId = "deviceId_example";  // string | Target device serial number
+            var containerId = "containerId_example";  // string | Id of a container
 
             try
             {
@@ -647,8 +647,8 @@ namespace Example
         {
             Configuration.Default.BasePath = "http://localhost:5000/api";
             var apiInstance = new DevicesApi(Configuration.Default);
-            var deviceId = deviceId_example;  // string | Target device serial number
-            var containerId = containerId_example;  // string | Id of a container
+            var deviceId = "deviceId_example";  // string | Target device serial number
+            var containerId = "containerId_example";  // string | Id of a container
 
             try
             {
@@ -730,7 +730,7 @@ namespace Example
         {
             Configuration.Default.BasePath = "http://localhost:5000/api";
             var apiInstance = new DevicesApi(Configuration.Default);
-            var deviceId = deviceId_example;  // string | Target device serial number
+            var deviceId = "deviceId_example";  // string | Target device serial number
 
             try
             {
@@ -807,7 +807,7 @@ namespace Example
         {
             Configuration.Default.BasePath = "http://localhost:5000/api";
             var apiInstance = new DevicesApi(Configuration.Default);
-            var deviceId = deviceId_example;  // string | Target device serial number
+            var deviceId = "deviceId_example";  // string | Target device serial number
 
             try
             {
@@ -884,7 +884,7 @@ namespace Example
         {
             Configuration.Default.BasePath = "http://localhost:5000/api";
             var apiInstance = new DevicesApi(Configuration.Default);
-            var deviceId = deviceId_example;  // string | Target device serial number
+            var deviceId = "deviceId_example";  // string | Target device serial number
 
             try
             {
@@ -964,7 +964,7 @@ namespace Example
         {
             Configuration.Default.BasePath = "http://localhost:5000/api";
             var apiInstance = new DevicesApi(Configuration.Default);
-            var deviceId = deviceId_example;  // string | Target device serial number
+            var deviceId = "deviceId_example";  // string | Target device serial number
 
             try
             {
@@ -1041,7 +1041,7 @@ namespace Example
         {
             Configuration.Default.BasePath = "http://localhost:5000/api";
             var apiInstance = new DevicesApi(Configuration.Default);
-            var deviceId = deviceId_example;  // string | Target device serial number
+            var deviceId = "deviceId_example";  // string | Target device serial number
 
             try
             {
@@ -1119,7 +1119,7 @@ namespace Example
         {
             Configuration.Default.BasePath = "http://localhost:5000/api";
             var apiInstance = new DevicesApi(Configuration.Default);
-            var deviceId = deviceId_example;  // string | Target device serial number
+            var deviceId = "deviceId_example";  // string | Target device serial number
 
             try
             {
@@ -1200,7 +1200,7 @@ namespace Example
         {
             Configuration.Default.BasePath = "http://localhost:5000/api";
             var apiInstance = new DevicesApi(Configuration.Default);
-            var deviceId = deviceId_example;  // string | Target device serial number
+            var deviceId = "deviceId_example";  // string | Target device serial number
 
             try
             {
@@ -1280,7 +1280,7 @@ namespace Example
         {
             Configuration.Default.BasePath = "http://localhost:5000/api";
             var apiInstance = new DevicesApi(Configuration.Default);
-            var deviceId = deviceId_example;  // string | Target device serial number
+            var deviceId = "deviceId_example";  // string | Target device serial number
 
             try
             {
@@ -1361,7 +1361,7 @@ namespace Example
         {
             Configuration.Default.BasePath = "http://localhost:5000/api";
             var apiInstance = new DevicesApi(Configuration.Default);
-            var deviceId = deviceId_example;  // string | Target device serial number
+            var deviceId = "deviceId_example";  // string | Target device serial number
 
             try
             {
@@ -1441,7 +1441,7 @@ namespace Example
         {
             Configuration.Default.BasePath = "http://localhost:5000/api";
             var apiInstance = new DevicesApi(Configuration.Default);
-            var deviceId = deviceId_example;  // string | Target device serial number
+            var deviceId = "deviceId_example";  // string | Target device serial number
 
             try
             {
@@ -1521,7 +1521,7 @@ namespace Example
         {
             Configuration.Default.BasePath = "http://localhost:5000/api";
             var apiInstance = new DevicesApi(Configuration.Default);
-            var deviceId = deviceId_example;  // string | Target device serial number
+            var deviceId = "deviceId_example";  // string | Target device serial number
 
             try
             {
@@ -1599,7 +1599,7 @@ namespace Example
         {
             Configuration.Default.BasePath = "http://localhost:5000/api";
             var apiInstance = new DevicesApi(Configuration.Default);
-            var deviceId = deviceId_example;  // string | Target device serial number
+            var deviceId = "deviceId_example";  // string | Target device serial number
 
             try
             {
@@ -1679,7 +1679,7 @@ namespace Example
         {
             Configuration.Default.BasePath = "http://localhost:5000/api";
             var apiInstance = new DevicesApi(Configuration.Default);
-            var deviceId = deviceId_example;  // string | Target device serial number
+            var deviceId = "deviceId_example";  // string | Target device serial number
 
             try
             {
@@ -1759,7 +1759,7 @@ namespace Example
         {
             Configuration.Default.BasePath = "http://localhost:5000/api";
             var apiInstance = new DevicesApi(Configuration.Default);
-            var deviceId = deviceId_example;  // string | Target device serial number
+            var deviceId = "deviceId_example";  // string | Target device serial number
             var device = new TargetDevice(); // TargetDevice |  (optional) 
 
             try
@@ -1841,7 +1841,7 @@ namespace Example
         {
             Configuration.Default.BasePath = "http://localhost:5000/api";
             var apiInstance = new DevicesApi(Configuration.Default);
-            var deviceId = deviceId_example;  // string | Target device serial number
+            var deviceId = "deviceId_example";  // string | Target device serial number
             var port = 56;  // int? |  (optional) 
 
             try
@@ -1923,7 +1923,7 @@ namespace Example
         {
             Configuration.Default.BasePath = "http://localhost:5000/api";
             var apiInstance = new DevicesApi(Configuration.Default);
-            var deviceId = deviceId_example;  // string | Target device serial number
+            var deviceId = "deviceId_example";  // string | Target device serial number
             var port = 56;  // int? |  (optional) 
 
             try
@@ -2005,8 +2005,8 @@ namespace Example
         {
             Configuration.Default.BasePath = "http://localhost:5000/api";
             var apiInstance = new DevicesApi(Configuration.Default);
-            var deviceId = deviceId_example;  // string | Target device serial number
-            var password = password_example;  // string | 
+            var deviceId = "deviceId_example";  // string | Target device serial number
+            var password = "password_example";  // string | 
 
             try
             {
@@ -2086,8 +2086,8 @@ namespace Example
         {
             Configuration.Default.BasePath = "http://localhost:5000/api";
             var apiInstance = new DevicesApi(Configuration.Default);
-            var deviceId = deviceId_example;  // string | Target device serial number
-            var password = password_example;  // string | 
+            var deviceId = "deviceId_example";  // string | Target device serial number
+            var password = "password_example";  // string | 
 
             try
             {
@@ -2167,10 +2167,10 @@ namespace Example
         {
             Configuration.Default.BasePath = "http://localhost:5000/api";
             var apiInstance = new DevicesApi(Configuration.Default);
-            var deviceId = deviceId_example;  // string | Target device serial number
-            var sourcefolder = sourcefolder_example;  // string | 
-            var destfolder = destfolder_example;  // string | 
-            var progressId = progressId_example;  // string | Id of a progress cookie (uuid) (optional) 
+            var deviceId = "deviceId_example";  // string | Target device serial number
+            var sourcefolder = "sourcefolder_example";  // string | 
+            var destfolder = "destfolder_example";  // string | 
+            var progressId = "progressId_example";  // string | Id of a progress cookie (uuid) (optional) 
 
             try
             {
@@ -2255,7 +2255,7 @@ namespace Example
         {
             Configuration.Default.BasePath = "http://localhost:5000/api";
             var apiInstance = new DevicesApi(Configuration.Default);
-            var deviceId = deviceId_example;  // string | Target device serial number
+            var deviceId = "deviceId_example";  // string | Target device serial number
 
             try
             {
@@ -2410,9 +2410,9 @@ namespace Example
         {
             Configuration.Default.BasePath = "http://localhost:5000/api";
             var apiInstance = new DevicesApi(Configuration.Default);
-            var hostname = hostname_example;  // string | 
-            var username = username_example;  // string | 
-            var password = password_example;  // string | 
+            var hostname = "hostname_example";  // string | 
+            var username = "username_example";  // string | 
+            var password = "password_example";  // string | 
 
             try
             {
@@ -2499,9 +2499,9 @@ namespace Example
         {
             Configuration.Default.BasePath = "http://localhost:5000/api";
             var apiInstance = new DevicesApi(Configuration.Default);
-            var port = port_example;  // string | 
-            var username = username_example;  // string | 
-            var password = password_example;  // string | 
+            var port = "port_example";  // string | 
+            var username = "username_example";  // string | 
+            var password = "password_example";  // string | 
 
             try
             {
@@ -2590,8 +2590,8 @@ namespace Example
         {
             Configuration.Default.BasePath = "http://localhost:5000/api";
             var apiInstance = new DevicesApi(Configuration.Default);
-            var deviceId = deviceId_example;  // string | Target device serial number
-            var imageId = imageId_example;  // string | Id of an image
+            var deviceId = "deviceId_example";  // string | Target device serial number
+            var imageId = "imageId_example";  // string | Id of an image
 
             try
             {
@@ -2672,8 +2672,8 @@ namespace Example
         {
             Configuration.Default.BasePath = "http://localhost:5000/api";
             var apiInstance = new DevicesApi(Configuration.Default);
-            var deviceId = deviceId_example;  // string | Target device serial number
-            var imageId = imageId_example;  // string | Id of an image
+            var deviceId = "deviceId_example";  // string | Target device serial number
+            var imageId = "imageId_example";  // string | Id of an image
 
             try
             {

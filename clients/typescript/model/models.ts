@@ -1,6 +1,7 @@
 import localVarRequest from 'request';
 
 export * from './application';
+export * from './applicationRunsdk200Response';
 export * from './dockerAddress';
 export * from './dockerContainer';
 export * from './dockerContainerConfig';
@@ -25,16 +26,15 @@ export * from './dockerMountVolumeOptionsDriverConfig';
 export * from './dockerNetworkSettings';
 export * from './dockerPortBinding';
 export * from './dockerResources';
-export * from './dockerResourcesBlkioWeightDevice';
-export * from './dockerResourcesUlimits';
+export * from './dockerResourcesBlkioWeightDeviceInner';
+export * from './dockerResourcesUlimitsInner';
 export * from './dockerRestartPolicy';
 export * from './dockerThrottleDevice';
 export * from './dockerVersion';
-export * from './dockerVersionComponents';
+export * from './dockerVersionComponentsInner';
 export * from './dockerVersionPlatform';
 export * from './errorInfo';
 export * from './eula';
-export * from './inlineResponse200';
 export * from './memInfo';
 export * from './mountPoint';
 export * from './platform';
@@ -56,6 +56,7 @@ export type RequestFile = string | Buffer | fs.ReadStream | RequestDetailedFile;
 
 
 import { Application } from './application';
+import { ApplicationRunsdk200Response } from './applicationRunsdk200Response';
 import { DockerAddress } from './dockerAddress';
 import { DockerContainer } from './dockerContainer';
 import { DockerContainerConfig } from './dockerContainerConfig';
@@ -80,16 +81,15 @@ import { DockerMountVolumeOptionsDriverConfig } from './dockerMountVolumeOptions
 import { DockerNetworkSettings } from './dockerNetworkSettings';
 import { DockerPortBinding } from './dockerPortBinding';
 import { DockerResources } from './dockerResources';
-import { DockerResourcesBlkioWeightDevice } from './dockerResourcesBlkioWeightDevice';
-import { DockerResourcesUlimits } from './dockerResourcesUlimits';
+import { DockerResourcesBlkioWeightDeviceInner } from './dockerResourcesBlkioWeightDeviceInner';
+import { DockerResourcesUlimitsInner } from './dockerResourcesUlimitsInner';
 import { DockerRestartPolicy } from './dockerRestartPolicy';
 import { DockerThrottleDevice } from './dockerThrottleDevice';
 import { DockerVersion } from './dockerVersion';
-import { DockerVersionComponents } from './dockerVersionComponents';
+import { DockerVersionComponentsInner } from './dockerVersionComponentsInner';
 import { DockerVersionPlatform } from './dockerVersionPlatform';
 import { ErrorInfo } from './errorInfo';
 import { Eula } from './eula';
-import { InlineResponse200 } from './inlineResponse200';
 import { MemInfo } from './memInfo';
 import { MountPoint } from './mountPoint';
 import { Platform } from './platform';
@@ -119,6 +119,7 @@ let enumsMap: {[index: string]: any} = {
 
 let typeMap: {[index: string]: any} = {
     "Application": Application,
+    "ApplicationRunsdk200Response": ApplicationRunsdk200Response,
     "DockerAddress": DockerAddress,
     "DockerContainer": DockerContainer,
     "DockerContainerConfig": DockerContainerConfig,
@@ -143,16 +144,15 @@ let typeMap: {[index: string]: any} = {
     "DockerNetworkSettings": DockerNetworkSettings,
     "DockerPortBinding": DockerPortBinding,
     "DockerResources": DockerResources,
-    "DockerResourcesBlkioWeightDevice": DockerResourcesBlkioWeightDevice,
-    "DockerResourcesUlimits": DockerResourcesUlimits,
+    "DockerResourcesBlkioWeightDeviceInner": DockerResourcesBlkioWeightDeviceInner,
+    "DockerResourcesUlimitsInner": DockerResourcesUlimitsInner,
     "DockerRestartPolicy": DockerRestartPolicy,
     "DockerThrottleDevice": DockerThrottleDevice,
     "DockerVersion": DockerVersion,
-    "DockerVersionComponents": DockerVersionComponents,
+    "DockerVersionComponentsInner": DockerVersionComponentsInner,
     "DockerVersionPlatform": DockerVersionPlatform,
     "ErrorInfo": ErrorInfo,
     "Eula": Eula,
-    "InlineResponse200": InlineResponse200,
     "MemInfo": MemInfo,
     "MountPoint": MountPoint,
     "Platform": Platform,
