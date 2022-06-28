@@ -71,6 +71,7 @@
     <Compile Include="generated\src\TorizonRestAPI\Client\IReadableConfiguration.cs" />
     <Compile Include="generated\src\TorizonRestAPI\Client\OpenAPIDateConverter.cs" />
     <Compile Include="generated\src\TorizonRestAPI\Model\Application.cs" />
+    <Compile Include="generated\src\TorizonRestAPI\Model\ApplicationRunsdk200Response.cs" />
     <Compile Include="generated\src\TorizonRestAPI\Model\DockerAddress.cs" />
     <Compile Include="generated\src\TorizonRestAPI\Model\DockerContainer.cs" />
     <Compile Include="generated\src\TorizonRestAPI\Model\DockerContainerConfig.cs" />
@@ -96,11 +97,14 @@
     <Compile Include="generated\src\TorizonRestAPI\Model\DockerPortBinding.cs" />
     <Compile Include="generated\src\TorizonRestAPI\Model\DockerResources.cs" />
     <Compile Include="generated\src\TorizonRestAPI\Model\DockerResourcesBlkioWeightDevice.cs" />
+    <Compile Include="generated\src\TorizonRestAPI\Model\DockerResourcesBlkioWeightDeviceInner.cs" />
     <Compile Include="generated\src\TorizonRestAPI\Model\DockerResourcesUlimits.cs" />
+    <Compile Include="generated\src\TorizonRestAPI\Model\DockerResourcesUlimitsInner.cs" />
     <Compile Include="generated\src\TorizonRestAPI\Model\DockerRestartPolicy.cs" />
     <Compile Include="generated\src\TorizonRestAPI\Model\DockerThrottleDevice.cs" />
     <Compile Include="generated\src\TorizonRestAPI\Model\DockerVersion.cs" />
     <Compile Include="generated\src\TorizonRestAPI\Model\DockerVersionComponents.cs" />
+    <Compile Include="generated\src\TorizonRestAPI\Model\DockerVersionComponentsInner.cs" />
     <Compile Include="generated\src\TorizonRestAPI\Model\DockerVersionPlatform.cs" />
     <Compile Include="generated\src\TorizonRestAPI\Model\ErrorInfo.cs" />
     <Compile Include="generated\src\TorizonRestAPI\Model\Eula.cs" />
