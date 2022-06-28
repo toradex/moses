@@ -1212,7 +1212,7 @@ No authorization required
 
 ## ApplicationRunsdk
 
-> InlineResponse200 ApplicationRunsdk (string applicationId, string configuration, bool? build = null, string progressId = null)
+> ApplicationRunsdk200Response ApplicationRunsdk (string applicationId, string configuration, bool? build = null, string progressId = null)
 
 Run SDK containers
 
@@ -1243,7 +1243,7 @@ namespace Example
             try
             {
                 // Run SDK containers
-                InlineResponse200 result = apiInstance.ApplicationRunsdk(applicationId, configuration, build, progressId);
+                ApplicationRunsdk200Response result = apiInstance.ApplicationRunsdk(applicationId, configuration, build, progressId);
                 Debug.WriteLine(result);
             }
             catch (ApiException e)
@@ -1269,7 +1269,7 @@ Name | Type | Description  | Notes
 
 ### Return type
 
-[**InlineResponse200**](InlineResponse200.md)
+[**ApplicationRunsdk200Response**](ApplicationRunsdk200Response.md)
 
 ### Authorization
 

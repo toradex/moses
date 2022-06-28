@@ -10,6 +10,7 @@
 # sys.setrecursionlimit(n)
 
 from moses_client.model.application import Application
+from moses_client.model.application_runsdk200_response import ApplicationRunsdk200Response
 from moses_client.model.docker_address import DockerAddress
 from moses_client.model.docker_container import DockerContainer
 from moses_client.model.docker_container_config import DockerContainerConfig
@@ -35,16 +36,15 @@ from moses_client.model.docker_network_settings import DockerNetworkSettings
 from moses_client.model.docker_port_binding import DockerPortBinding
 from moses_client.model.docker_port_map import DockerPortMap
 from moses_client.model.docker_resources import DockerResources
-from moses_client.model.docker_resources_blkio_weight_device import DockerResourcesBlkioWeightDevice
-from moses_client.model.docker_resources_ulimits import DockerResourcesUlimits
+from moses_client.model.docker_resources_blkio_weight_device_inner import DockerResourcesBlkioWeightDeviceInner
+from moses_client.model.docker_resources_ulimits_inner import DockerResourcesUlimitsInner
 from moses_client.model.docker_restart_policy import DockerRestartPolicy
 from moses_client.model.docker_throttle_device import DockerThrottleDevice
 from moses_client.model.docker_version import DockerVersion
-from moses_client.model.docker_version_components import DockerVersionComponents
+from moses_client.model.docker_version_components_inner import DockerVersionComponentsInner
 from moses_client.model.docker_version_platform import DockerVersionPlatform
 from moses_client.model.error_info import ErrorInfo
 from moses_client.model.eula import Eula
-from moses_client.model.inline_response200 import InlineResponse200
 from moses_client.model.mem_info import MemInfo
 from moses_client.model.mount_point import MountPoint
 from moses_client.model.platform import Platform
