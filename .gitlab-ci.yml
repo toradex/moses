@@ -1,6 +1,7 @@
 stages:
   - validate
   - build
+  - publish
 
 moses-validation:
   image: ubuntu:18.04
@@ -99,5 +100,16 @@ build-typescript-client:
     paths:
       - clients/typescript/torizonrestapi-$API_VERSION.tgz
 
+  tags:
+    - docker
+
+publish-moses-linux:
+  image: ubuntu:18.04
+  stage: publish
+  script:
+    - apt-get update -y
+    - apt-get install -y curl zip
+    - zip -r moses-linux.zip moses/dist/moses-linux/
+    - curl -u $ARTIFACTORY_USERNAME:$ARTIFACTORY_PASSWORD -X PUT "https://artifactory-horw.int.toradex.com/artifactory/ideextension-moses-prod-horw/moses-linux.zip" -T moses-linux.zip
   tags:
     - docker
