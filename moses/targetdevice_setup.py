@@ -224,7 +224,8 @@ MODELS : Dict[str,List[str]] =  {
 "0062": ["colibri-imx6ull","Colibri iMX6ULL 1GB IT","arm7vl"],
 "0063": ["verdin-imx8","Verdin iMX8M Plus Quad 4GB IT","aarch64"],
 "0064": ["verdin-imx8","Verdin iMX8M Plus Quad 2GB WB IT","aarch64"],
-"0065": ["verdin-imx8","Verdin iMX8M Plus QuadLite 1GB IT","aarch64"]
+"0065": ["verdin-imx8","Verdin iMX8M Plus QuadLite 1GB IT","aarch64"],
+"0067": ["apalis-imx8","Apalis iMX8QM 8GB WB IT","aarch64"]
 }
 
 def _get_hostname_from_model(model: str) -> str:
