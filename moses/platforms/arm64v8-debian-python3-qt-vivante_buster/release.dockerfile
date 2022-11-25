@@ -40,9 +40,9 @@ COPY work/requirements.txt /requirements.txt
 WORKDIR /
 RUN chmod a+x /setup.sh &&\
     chmod a+x /cleanup.sh &&\
-    /setup.sh debug &&\
+    /setup.sh release &&\
     pip install -r /requirements.txt &&\
-    /cleanup.sh debug
+    /cleanup.sh release
 
 COPY work/#%application.appname%# /#%application.appname%#
 
